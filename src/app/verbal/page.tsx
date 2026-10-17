@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/components/AuthContext";
 
 const VERBAL_DOMAINS = [
   {
@@ -52,6 +53,7 @@ const VERBAL_DOMAINS = [
 ];
 
 function VerbalContent() {
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const urlTopic = searchParams.get("topic");
 
@@ -156,6 +158,42 @@ function VerbalContent() {
           </div>
         </div>
       </div>
+
+      {/* User Personalized Track Banner */}
+      {user && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-600/10 via-indigo-500/10 to-transparent border border-purple-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 animate-ping" />
+            <span className="text-xs font-bold text-[var(--text-main)]">
+              Personalized Track:{" "}
+              <span className="text-purple-600 dark:text-purple-400 font-black uppercase font-mono">
+                {user.ieltsScore ? `IELTS ${user.ieltsScore} Fast-Track` : `${user.englishLevel} Track`}
+              </span>
+            </span>
+            <span className="text-xs text-[var(--text-muted)] hidden md:inline">
+              • {user.ieltsScore ? "Advanced comprehension verified; prioritize College Board trap distractors & rhetorical synthesis" : "Focus on sentence boundaries, modifiers, and transitions"}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                if (user.ieltsScore || user.englishLevel === "advanced" || user.englishLevel === "native_fluent") {
+                  setSelectedDifficulty("HARD");
+                } else if (user.englishLevel === "beginner") {
+                  setSelectedDifficulty("EASY");
+                } else {
+                  setSelectedDifficulty("MEDIUM");
+                }
+              }}
+              className="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500 text-purple-600 dark:text-purple-400 transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <Sparkles size={12} />
+              <span>Recommended For My Level</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Visual RW Diagram Showcase (Toggleable) */}
       {showVisualGuide && (

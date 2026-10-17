@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/components/AuthContext";
 
 const MATH_DOMAINS = [
   {
@@ -52,6 +53,7 @@ const MATH_DOMAINS = [
 ];
 
 function MathContent() {
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const urlTopic = searchParams.get("topic");
 
@@ -165,6 +167,43 @@ function MathContent() {
           </button>
         </div>
       </div>
+
+      {/* User Personalized Track Banner */}
+      {user && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-600/10 via-cyan-500/10 to-transparent border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-blue)] animate-ping" />
+            <span className="text-xs font-bold text-[var(--text-main)]">
+              Personalized Track:{" "}
+              <span className="text-[var(--accent-blue)] font-black uppercase font-mono">
+                {user.mathLevel.replace("_", " ")}
+              </span>{" "}
+              (Target: {user.mathLevel === "target_800" ? "800 Flawless" : "750+"})
+            </span>
+            <span className="text-xs text-[var(--text-muted)] hidden md:inline">
+              • Calibrated for your {user.targetSatScore || 1550}+ composite goal
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                if (user.mathLevel === "target_800" || user.mathLevel === "advanced") {
+                  setSelectedDifficulty("HARD");
+                } else if (user.mathLevel === "beginner") {
+                  setSelectedDifficulty("EASY");
+                } else {
+                  setSelectedDifficulty("MEDIUM");
+                }
+              }}
+              className="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--accent-blue)] transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <Sparkles size={12} />
+              <span>Recommended For My Level</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Visual Diagrams Guide (Toggleable) */}
       {showVisualGuide && (

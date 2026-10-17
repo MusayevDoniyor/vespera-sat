@@ -362,15 +362,13 @@ export default function CurriculumPage() {
                     </span>
                   </div>
 
-                  {/* Title & Uzbek Subtitle */}
+                  {/* Title & English Description */}
                   <h3 className="font-black text-base text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors mb-0.5">
                     {t.title_en}
                   </h3>
-                  {t.title_uz && (
-                    <p className="text-[11px] text-[var(--text-muted)] mb-3 font-medium">
-                      {t.title_uz}
-                    </p>
-                  )}
+                  <p className="text-[11px] text-[var(--text-muted)] mb-3 font-medium line-clamp-2">
+                    {t.description_en || meta?.description_en || `${t.domain} • Digital SAT Suite`}
+                  </p>
 
                   {/* College Panda Chapter Pill */}
                   {meta?.collegePandaChapter && (

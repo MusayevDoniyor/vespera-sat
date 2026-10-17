@@ -1132,7 +1132,7 @@ export default function BluebookMockPage() {
                           {q.explanationUz && (
                             <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
                               <span className="font-bold text-[var(--text-main)] block mb-1">
-                                🇺🇿 Rasmiy Tushuntirish (O'zbekcha):
+                                💡 Conceptual Breakdown & Intuition:
                               </span>
                               <div className="text-[var(--text-secondary)]">
                                 <KaTeXMath content={q.explanationUz} />
@@ -1143,7 +1143,7 @@ export default function BluebookMockPage() {
                           {q.explanationEn && (
                             <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
                               <span className="font-bold text-[var(--text-main)] block mb-1">
-                                🇺🇸 Official College Board Explanation (English):
+                                🇺🇸 Official College Board Explanation:
                               </span>
                               <div className="text-[var(--text-secondary)]">
                                 <KaTeXMath content={q.explanationEn} />

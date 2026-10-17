@@ -26,7 +26,7 @@ export default function OnboardingModal() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
-  // Dynamically generate the next 6 upcoming months from today + "Later / Keyinroq"
+  // Dynamically generate the next 6 upcoming months from today + "Later"
   const upcomingExamOptions = React.useMemo(() => {
     const monthNames = [
       "January",
@@ -51,7 +51,7 @@ export default function OnboardingModal() {
       const d = new Date(currentYear, currentMonth + i, 1);
       list.push(`${monthNames[d.getMonth()]} ${d.getFullYear()}`);
     }
-    list.push("Later / Keyinroq");
+    list.push("Later");
     return list;
   }, []);
 
@@ -213,7 +213,7 @@ export default function OnboardingModal() {
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {upcomingExamOptions.map((date) => {
-                  const isLater = date === "Later / Keyinroq";
+                  const isLater = date === "Later";
                   return (
                     <button
                       key={date}
@@ -249,7 +249,7 @@ export default function OnboardingModal() {
                   {
                     id: "beginner",
                     title: "Beginner",
-                    desc: "Need core formulas, basic arithmetic, and terminology in Uzbek/English.",
+                    desc: "Need core formulas, basic arithmetic, and fundamental algebraic rules.",
                   },
                   {
                     id: "intermediate",

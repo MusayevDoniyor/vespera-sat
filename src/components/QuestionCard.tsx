@@ -528,7 +528,7 @@ export default function QuestionCard({
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-blue-500/20 active:scale-95 transition-all"
                   >
                     <Sparkles size={13} className="text-amber-300 fill-amber-300" />
-                    <span>💡 AI Bilan Tushunish: Nega [{selectedChoice}] xato?</span>
+                    <span>💡 AI Diagnosis: Why is [{selectedChoice}] wrong?</span>
                   </button>
                 </div>
               )}

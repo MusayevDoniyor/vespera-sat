@@ -23,6 +23,8 @@ import {
   FileText,
   GraduationCap,
   LogIn,
+  Calendar,
+  Clock,
 } from "lucide-react";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
@@ -34,6 +36,51 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [materialsOpen, setMaterialsOpen] = useState(false);
   const [activeStrategy, setActiveStrategy] = useState<number | null>(0);
+
+  // Personalized Exam Countdown
+  const examCountdown = React.useMemo(() => {
+    if (!user?.examDate || user.examDate.toLowerCase().includes("later")) return null;
+    const parts = user.examDate.trim().split(" ");
+    if (parts.length < 2) return null;
+    const monthName = parts[0];
+    const year = parseInt(parts[1], 10);
+    const monthNames = [
+      "january", "february", "march", "april", "may", "june",
+      "july", "august", "september", "october", "november", "december"
+    ];
+    const monthIdx = monthNames.indexOf(monthName.toLowerCase());
+    if (monthIdx === -1 || isNaN(year)) return null;
+
+    const targetDate = new Date(year, monthIdx, 1);
+    const now = new Date();
+    const diffTime = targetDate.getTime() - now.getTime();
+    const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    return {
+      daysLeft: diffDays,
+      weeksLeft: Math.ceil(diffDays / 7),
+      targetMonth: `${monthName} ${year}`,
+    };
+  }, [user?.examDate]);
+
+  // Personalized Score Gap
+  const scoreGap = React.useMemo(() => {
+    if (!user?.targetSatScore) return null;
+    const current = user.currentSatScore || 0;
+    const target = user.targetSatScore;
+    const gap = current > 0 ? target - current : null;
+    return {
+      current,
+      target,
+      gap: gap !== null && gap > 0 ? gap : null,
+    };
+  }, [user?.targetSatScore, user?.currentSatScore]);
+
+  // Projected Study Hours
+  const dailyHoursRemaining = React.useMemo(() => {
+    if (!examCountdown || !user?.dailyGoalMinutes) return null;
+    const totalMinutes = examCountdown.daysLeft * user.dailyGoalMinutes;
+    return Math.round(totalMinutes / 60);
+  }, [examCountdown, user?.dailyGoalMinutes]);
 
   useEffect(() => {
     fetch("/api/stats")
@@ -251,6 +298,105 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Personalized Study Command Center */}
+      {user && (
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-[var(--bg-card)] via-[var(--bg-surface)] to-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-main)]">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white shadow-md">
+                <Target size={22} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono uppercase">
+                    Personalized Command Center
+                  </span>
+                  <span className="text-xs text-[var(--text-muted)] font-mono">
+                    Profile: {user.fullName}
+                  </span>
+                </div>
+                <h3 className="text-lg font-black text-[var(--text-main)] mt-0.5">
+                  Your Custom Digital SAT Blueprint
+                </h3>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={openOnboarding}
+                className="px-3.5 py-1.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs font-bold text-[var(--accent-blue)] flex items-center gap-1.5 transition-colors shadow-sm"
+              >
+                <Sliders size={13} />
+                <span>Adjust Goals</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Metric Cards Row */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            {/* 1. Exam Target & Countdown */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5 mb-1">
+                <Calendar size={12} className="text-indigo-500" />
+                <span>Target Exam</span>
+              </span>
+              <div className="text-base sm:text-lg font-black text-[var(--text-main)] truncate">
+                {user.examDate || "Flexible"}
+              </div>
+              <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-mono font-bold mt-1 block">
+                {examCountdown ? `${examCountdown.daysLeft} days remaining` : "Self-paced schedule"}
+              </span>
+            </div>
+
+            {/* 2. Score Target & Delta */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5 mb-1">
+                <Award size={12} className="text-emerald-500" />
+                <span>Score Goal</span>
+              </span>
+              <div className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400">
+                {user.targetSatScore || 1550}+
+              </div>
+              <span className="text-[11px] text-[var(--text-muted)] font-mono mt-1 block">
+                {scoreGap?.gap ? `+${scoreGap.gap} pts from baseline (${scoreGap.current})` : "Top 1% National Rank"}
+              </span>
+            </div>
+
+            {/* 3. Daily Study Pace */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5 mb-1">
+                <Clock size={12} className="text-[var(--accent-blue)]" />
+                <span>Daily Practice</span>
+              </span>
+              <div className="text-base sm:text-lg font-black text-[var(--text-main)]">
+                {user.dailyGoalMinutes || 45} min/day
+              </div>
+              <span className="text-[11px] text-[var(--text-muted)] font-mono mt-1 block">
+                {dailyHoursRemaining ? `~${dailyHoursRemaining} study hours left` : "Consistent daily drills"}
+              </span>
+            </div>
+
+            {/* 4. Priority Track */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5 mb-1">
+                <Sparkles size={12} className="text-amber-500" />
+                <span>Primary Track</span>
+              </span>
+              <div className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
+                {user.mathLevel === "target_800"
+                  ? "Math 800 Elite Track"
+                  : user.mathLevel === "beginner"
+                  ? "Math Foundations Track"
+                  : "Algebra & Pacing Track"}
+              </div>
+              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-mono font-bold mt-1 block">
+                {user.ieltsScore ? `IELTS ${user.ieltsScore} Reading Base` : `${user.englishLevel} English`}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Platform Telemetry & Inventory Ribbon */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-[var(--shadow-sm)] card-hover">
@@ -358,7 +504,7 @@ export default function DashboardPage() {
                     Math Terminology Dictionary
                   </h4>
                   <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
-                    Over 100 mathematical operations, arithmetic terms, and algebraic concepts translated into Uzbek.
+                    Over 100 mathematical operations, arithmetic terms, and algebraic concepts with College Board definitions.
                   </p>
                 </div>
                 <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">
@@ -400,7 +546,7 @@ export default function DashboardPage() {
                     Heart of Algebra & Radicals
                   </h4>
                   <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
-                    Interactive drill questions with step-by-step bilingual explanations and Desmos verification.
+                    Interactive drill questions with step-by-step Socratic explanations and Desmos verification.
                   </p>
                 </div>
                 <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">

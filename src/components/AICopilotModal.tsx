@@ -20,6 +20,7 @@ import {
 import KaTeXMath from "./KaTeXMath";
 import VesperaLogo from "./VesperaLogo";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import { useAuth } from "./AuthContext";
 
 interface Message {
   id: string;
@@ -58,20 +59,44 @@ export default function AICopilotModal({
   autoDiagnose,
   onClearContext,
 }: AICopilotModalProps) {
+  const { user } = useAuth();
   useBodyScrollLock(isOpen);
+
+  const getGreeting = () => {
+    if (user) {
+      const mathTarget = user.mathLevel === "target_800" ? "800 Elite" : "750+";
+      const ieltsClause = user.ieltsScore
+        ? ` Leveraging your **IELTS ${user.ieltsScore}** baseline, we're optimizing Verbal and accelerating Math.`
+        : "";
+      return `👋 Hello, ${user.fullName}! I am your personal **Vespera SAT AI Mentor**.\n\nPersonalized for your **${user.targetSatScore || 1550}+** composite target (Math **${mathTarget}**).${ieltsClause}\n\nAsk me to diagnose any mistake, show 10-second Desmos shortcuts, or reveal College Board trap answers!`;
+    }
+    return `👋 Hello! I am your personal **Vespera SAT AI Mentor**.\n\nTargeting a **1550+** composite score on the Digital SAT. Ask me to diagnose any mistake, show 10-second Desmos shortcuts, or reveal College Board trap answers!`;
+  };
 
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "initial-1",
       sender: "bot",
-      text: `👋 Assalomu alaykum, Doniyor! Men sizning shaxsiy **Vespera SAT AI Mentor**ingizman.\n\nSizning **IELTS 7.5 (Reading 9.0)** poydevoringiz orqali asosiy maqsadimiz — **Matematikani 800 ga olib chiqish** va **1550+** ball to'plashdir.\n\nMasala yechishda tuzoqqa tushsangiz yoki 10 soniyalik Desmos hiylasini bilmoqchi bo'lsangiz, bemalol so'rang!`,
-      timestamp: "Hozirgina",
+      text: getGreeting(),
+      timestamp: "Just now",
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [lastDiagnosedKey, setLastDiagnosedKey] = useState<string | null>(null);
+
+  // Update greeting when user changes
+  useEffect(() => {
+    if (user) {
+      setMessages((prev) => {
+        if (prev.length === 1 && prev[0].id === "initial-1") {
+          return [{ ...prev[0], text: getGreeting() }];
+        }
+        return prev;
+      });
+    }
+  }, [user]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -103,7 +128,7 @@ export default function AICopilotModal({
       if (lastDiagnosedKey !== diagKey) {
         setLastDiagnosedKey(diagKey);
         handleSend(
-          `Men [${userChoice}] variantini tanladim, ammo to'g'ri javob [${correctChoice}] ekan. Nega mening javobim xato, qaysi tuzoqqa tushdim va buni qanday qilib 10 soniyada to'g'ri yechish mumkin?`
+          `I selected option [${userChoice}], but the correct answer is [${correctChoice}]. Why is my answer wrong, which College Board trap did I fall into, and how do I solve this in 10 seconds?`
         );
       }
     }
@@ -142,6 +167,19 @@ export default function AICopilotModal({
           explanationUz,
           explanationEn,
           desmosTrick,
+          userProfile: user
+            ? {
+                fullName: user.fullName,
+                mathLevel: user.mathLevel,
+                englishLevel: user.englishLevel,
+                targetSatScore: user.targetSatScore,
+                ieltsScore: user.ieltsScore,
+                currentSatScore: user.currentSatScore,
+                dailyGoalMinutes: user.dailyGoalMinutes,
+                examDate: user.examDate,
+                priorityWeakness: user.priorityWeakness,
+              }
+            : null,
         }),
       });
 
@@ -151,7 +189,7 @@ export default function AICopilotModal({
         sender: "bot",
         text:
           data.answer ||
-          "Kechirasiz, tushuntirishni olishda xatolik yuz berdi. Iltimos, qayta so'rab ko'ring.",
+          "Sorry, an error occurred while retrieving the explanation. Please try asking again.",
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         source: data.source,
       };
@@ -163,7 +201,7 @@ export default function AICopilotModal({
         {
           id: "bot-err-" + Date.now(),
           sender: "bot",
-          text: "⚠️ AI Mentor bilan bog'lanishda internet uzilishi yuz berdi. Qayta urinib ko'ring.",
+          text: "⚠️ Connection issue with AI Mentor. Please check your connection and try again.",
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -183,8 +221,8 @@ export default function AICopilotModal({
       {
         id: "reset-" + Date.now(),
         sender: "bot",
-        text: `Muloqot yangilandi. Yangi SAT savoli, Desmos hiylasi yoki mantiqiy tushuntirish uchun tayyorman!`,
-        timestamp: "Hozirgina",
+        text: `Chat reset. Ready for your next SAT question, Desmos speed hack, or concept breakdown!`,
+        timestamp: "Just now",
       },
     ]);
   };
@@ -194,11 +232,11 @@ export default function AICopilotModal({
   };
 
   const quickPrompts = [
-    { label: "💡 Nega mening javobim xato?", query: "Nega mening tanlagan javobim xato bo'ldi va qaysi tuzoqqa tushdim?" },
-    { label: "⚡ 10s Desmos Hack", query: "Ushbu savolni Desmos orqali 10 soniyada qanday yechish mumkin?" },
-    { label: "🔍 College Board Tuzog'i", query: "Bu savolda College Board qanday asosiy tuzoqni qo'llagan?" },
-    { label: "🧠 Oddiy Analogiya", query: "Ushbu tushunchani yodlamasdan tushunish uchun oddiy hayotiy analogiya keltir" },
-    { label: "📖 Verbal Qoidasi", query: "Ushbu savol bo'yicha grammatika yoki ritorik qoidani tushuntirib ber" },
+    { label: "💡 Why is my choice wrong?", query: "Why is my selected option incorrect, and what College Board trap did I fall into?" },
+    { label: "⚡ 10s Desmos Hack", query: "How do I solve this question in Desmos in under 10 seconds without doing manual algebra?" },
+    { label: "🔍 College Board Trap", query: "What specific trick or misdirection is the College Board testing in this question?" },
+    { label: "🧠 Intuitive Analogy", query: "Give me an intuitive, real-world analogy to understand this concept without memorizing formulas." },
+    { label: "📖 Core SAT Rule", query: "What grammar or mathematical principle does this question test?" },
   ];
 
   const hasMistakeContext = userChoice && correctChoice && userChoice !== correctChoice;

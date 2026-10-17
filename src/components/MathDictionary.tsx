@@ -54,10 +54,10 @@ export default function MathDictionary() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] text-xs font-bold font-mono uppercase tracking-wider mb-2">
               <BookOpen size={14} />
-              <span>Bilingual SAT Math Vocabulary & Operations Bible</span>
+              <span>Official SAT Math Vocabulary & Operations Guide</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-[var(--text-main)] tracking-tight">
-              SAT Math Terminology Dictionary (English ↔ O'zbekcha)
+              SAT Math Terminology & Formulas Dictionary
             </h2>
             <p className="text-xs md:text-sm text-[var(--text-muted)] max-w-2xl leading-relaxed mt-1">
               Complete reference guide for all mathematical operations, phrases, algebraic invariants, and geometric terminology used on the official College Board Digital SAT.
@@ -79,7 +79,7 @@ export default function MathDictionary() {
           />
           <input
             type="text"
-            placeholder="Search any math term or operation in English or Uzbek (e.g., 'slope', 'reciprocal', 'sum', 'qiyalik', 'tub son')..."
+            placeholder="Search any math term or operation (e.g., 'slope', 'reciprocal', 'sum', 'vertex', 'discriminant')..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-sm focus:outline-none focus:border-[var(--accent-blue)] text-[var(--text-main)] placeholder:text-[var(--text-muted)] transition-colors"
@@ -168,7 +168,7 @@ export default function MathDictionary() {
                     <strong className="text-[var(--text-main)]">Definition:</strong> {t.definitionEn}
                   </div>
                   <div className="text-[var(--text-muted)] italic">
-                    <strong className="text-[var(--text-main)] not-italic">O'zbekcha:</strong> {t.definitionUz}
+                    <strong className="text-[var(--text-main)] not-italic">Uzbek Translation:</strong> {t.definitionUz}
                   </div>
                 </div>
               </div>

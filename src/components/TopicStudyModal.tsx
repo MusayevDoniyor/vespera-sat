@@ -263,10 +263,10 @@ export default function TopicStudyModal({
                   </p>
                 </div>
 
-                {/* Uzbek Summary */}
+                {/* Conceptual Summary */}
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-muted)] leading-relaxed">
                   <strong className="text-[var(--text-main)] block mb-1">
-                    🇺🇿 O'zbekcha konseptual sharh:
+                    💡 Intuitive Conceptual Summary:
                   </strong>
                   {topic.firstPrinciples.uzbekSummary}
                 </div>
