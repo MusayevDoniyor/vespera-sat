@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Calculator, BookMarked, Sparkles, Sun, Moon, X, PanelLeft, LogIn, User } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import { useSidebar } from "./SidebarContext";
@@ -103,13 +104,13 @@ export default function Navbar({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
               </span>
             </button>
           ) : (
-            <button
-              onClick={() => openAuthModal("login")}
+            <Link
+              href="/login"
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-sm shadow-blue-500/20"
             >
               <LogIn size={14} />
               <span>Sign In</span>
-            </button>
+            </Link>
           )}
         </div>
       </header>

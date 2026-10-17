@@ -307,13 +307,13 @@ export default function Sidebar() {
             </div>
           ) : (
             <div className="space-y-2.5">
-              <button
-                onClick={() => openAuthModal("register")}
+              <Link
+                href="/register"
                 className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition-all"
               >
                 <LogIn size={14} />
                 <span>Sign In / Register</span>
-              </button>
+              </Link>
               <div className="flex items-center justify-between px-1 text-[11px] text-[var(--text-muted)]">
                 <span className="flex items-center gap-1">
                   <User size={12} />
@@ -334,13 +334,13 @@ export default function Sidebar() {
                 {user.fullName.charAt(0).toUpperCase()}
               </button>
             ) : (
-              <button
-                onClick={() => openAuthModal("login")}
+              <Link
+                href="/login"
                 title="Sign In / Register to Vespera"
                 className="w-9 h-9 rounded-full bg-[var(--bg-surface)] hover:bg-[var(--accent-blue)]/15 text-[var(--text-muted)] hover:text-[var(--accent-blue)] flex items-center justify-center border border-[var(--border-main)] transition-all"
               >
                 <LogIn size={15} />
-              </button>
+              </Link>
             )}
             <div
               title={`${realStreak > 0 ? realStreak : 1} Day Streak`}

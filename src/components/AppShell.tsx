@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import DesmosCalculator from "./DesmosCalculator";
@@ -47,6 +48,17 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     window.addEventListener("vespera_open_copilot", handleOpenCopilot);
     return () => window.removeEventListener("vespera_open_copilot", handleOpenCopilot);
   }, []);
+
+  const pathname = usePathname();
+  const isAuthPage = pathname === "/login" || pathname === "/register";
+
+  if (isAuthPage) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] transition-colors">
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)] transition-colors">

@@ -66,9 +66,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // If user is logged in but hasn't completed onboarding, prompt onboarding
         if (data.user && !data.user.onboardingCompleted) {
           setIsOnboardingOpen(true);
+        } else if (!data.user) {
+          // If unauthenticated, auto-open registration modal on initial visit
+          if (typeof window !== "undefined") {
+            const path = window.location.pathname;
+            if (!path.startsWith("/login") && !path.startsWith("/register")) {
+              setAuthModalMode("register");
+              setIsAuthModalOpen(true);
+            }
+          }
         }
       } else {
         setUser(null);
+        if (typeof window !== "undefined") {
+          const path = window.location.pathname;
+          if (!path.startsWith("/login") && !path.startsWith("/register")) {
+            setAuthModalMode("register");
+            setIsAuthModalOpen(true);
+          }
+        }
       }
     } catch (err) {
       console.error("Failed to load user profile:", err);
