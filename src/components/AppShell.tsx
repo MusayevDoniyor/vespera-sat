@@ -11,13 +11,33 @@ import { SidebarProvider, useSidebar } from "./SidebarContext";
 function AppShellContent({ children }: { children: React.ReactNode }) {
   const [isDesmosOpen, setIsDesmosOpen] = useState(false);
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
-  const [copilotContext, setCopilotContext] = useState<{ question?: string; domain?: string } | null>(null);
+  const [copilotContext, setCopilotContext] = useState<{
+    question?: string;
+    domain?: string;
+    userChoice?: string | null;
+    correctChoice?: string | null;
+    options?: string[] | string | null;
+    explanationUz?: string | null;
+    explanationEn?: string | null;
+    desmosTrick?: string | null;
+    autoDiagnose?: boolean;
+  } | null>(null);
   const { isCollapsed } = useSidebar();
 
   useEffect(() => {
     const handleOpenCopilot = (e: any) => {
-      if (e.detail?.question || e.detail?.domain) {
-        setCopilotContext({ question: e.detail.question, domain: e.detail.domain });
+      if (e.detail) {
+        setCopilotContext({
+          question: e.detail.question,
+          domain: e.detail.domain,
+          userChoice: e.detail.userChoice,
+          correctChoice: e.detail.correctChoice,
+          options: e.detail.options,
+          explanationUz: e.detail.explanationUz,
+          explanationEn: e.detail.explanationEn,
+          desmosTrick: e.detail.desmosTrick,
+          autoDiagnose: e.detail.autoDiagnose,
+        });
       }
       setIsCopilotOpen(true);
     };
@@ -57,6 +77,13 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         onClose={() => setIsCopilotOpen(false)}
         contextQuestion={copilotContext?.question}
         topicDomain={copilotContext?.domain}
+        userChoice={copilotContext?.userChoice}
+        correctChoice={copilotContext?.correctChoice}
+        options={copilotContext?.options}
+        explanationUz={copilotContext?.explanationUz}
+        explanationEn={copilotContext?.explanationEn}
+        desmosTrick={copilotContext?.desmosTrick}
+        autoDiagnose={copilotContext?.autoDiagnose}
         onClearContext={() => setCopilotContext(null)}
       />
     </div>

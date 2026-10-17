@@ -1,208 +1,164 @@
 import { NextResponse } from "next/server";
 
+interface CopilotPayload {
+  questionPrompt?: string;
+  userQuestion?: string;
+  topicDomain?: string;
+  userChoice?: string | null;
+  correctChoice?: string | null;
+  options?: string[] | string | null;
+  explanationUz?: string | null;
+  explanationEn?: string | null;
+  desmosTrick?: string | null;
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { questionPrompt, userQuestion, topicDomain, currentExplanation } = body;
+    const body: CopilotPayload = await request.json();
+    const {
+      questionPrompt = "",
+      userQuestion = "",
+      topicDomain = "Digital SAT",
+      userChoice,
+      correctChoice,
+      options,
+      explanationUz,
+      explanationEn,
+      desmosTrick,
+    } = body;
 
     const userQ = (userQuestion || "").trim();
     const lowerQ = userQ.toLowerCase();
-    const isUzbek = /[a-z]*['`ʻʼ][a-z]*|bo['`ʻʼ]yicha|qanday|qiling|uchun|bilan|nega|xato|kerak|salom|tushuntir|qadam|bosing/i.test(userQ) || (!/[a-z]/.test(userQ) && lowerQ.length > 0);
+    const isUzbek =
+      /[a-z]*['`ʻʼ][a-z]*|bo['`ʻʼ]yicha|qanday|qiling|uchun|bilan|nega|xato|kerak|salom|tushuntir|qadam|bosing|javob/i.test(
+        userQ
+      ) || (!/[a-z]/.test(userQ) && lowerQ.length > 0) || !userQ;
 
-    let answer = "";
+    // Check for API Keys in environment
+    const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    const openAIKey = process.env.OPENAI_API_KEY;
 
-    // 1. GREETINGS & INTRODUCTIONS
-    if (/^(hi|hello|hey|salom|assalomu alaykum|qalaysiz|start|boshla)\b/i.test(lowerQ) && lowerQ.length < 25) {
-      if (isUzbek) {
-        answer = `👋 **Assalomu alaykum, Doniyor!**
+    let systemPrompt = `You are Vespera SAT AI Mentor, an elite, world-class Digital SAT tutor designed to help Doniyor achieve a 1550+ SAT score (IELTS 7.5, Reading 9.0 background, scaling Math from zero to 800).
+Rules:
+1. Always be supportive, highly structured, analytical, and laser-focused on College Board SAT test mechanics.
+2. If the user speaks Uzbek, respond in fluent, natural Uzbek with accurate SAT terminology. If English, respond in English.
+3. When analyzing mistakes, do NOT just recite the formula. Explain:
+   - Stage 1 (Trap Analysis): Exactly why the student's chosen choice is tempting, and the exact College Board trap family (e.g. Partial Answer, Sign Flip, Reading Out-of-Scope, Comma Splice).
+   - Stage 2 (First-Principles Intuition): A clean, intuitive mental model or real-world analogy.
+   - Stage 3 (10-Second Desmos Shortcut): The exact lines to type into the Desmos calculator to bypass manual algebra in 10-15 seconds.
+   - Stage 4 (Golden Mnemonic / Invariant): A single memorable rule to prevent repeat errors.
+4. Format math expressions in clean LaTeX syntax: $inline$ or $$display$$. Use bolding and clear lists.`;
 
-Men sizning shaxsiy **Vespera SAT AI Mentor**ingizman. Sizning **IELTS 7.5 (Reading 9.0)** bazangiz SAT Verbal uchun ajoyib poydevor hisoblanadi. Asosiy maqsadimiz — **Matematikani 0 dan 800 gacha** ko'tarish va Desmos orqali vaqtni 3 barobar tejash.
+    // 1. TRY LIVE GEMINI API IF KEY AVAILABLE
+    if (geminiKey && geminiKey.trim() !== "") {
+      try {
+        const promptText = `
+Context Information:
+- Current SAT Topic / Domain: ${topicDomain}
+- Question Prompt: ${questionPrompt || "N/A"}
+- Available Options: ${Array.isArray(options) ? options.join(" | ") : options || "N/A"}
+- Student's Selected Answer: ${userChoice || "Not specified"}
+- Correct Answer: ${correctChoice || "Not specified"}
+- Official Explanation (UZ): ${explanationUz || "N/A"}
+- Official Explanation (EN): ${explanationEn || "N/A"}
+- Desmos Speedhack: ${desmosTrick || "N/A"}
 
-Mendan quyidagilarni so'rashingiz mumkin:
-1. **⚡ 10 soniyalik Desmos Hacklari:** Har qanday tenglama yoki funksiyani qo'lda hisoblamasdan Desmos'da yechish yo'llari.
-2. **💡 Intuitiv Tushuntirish:** Formulalarni yodlamasdan, mantiqiy vizual modellar orqali tushunish.
-3. **🔍 College Board Tuzoqlari:** Nega chalg'ituvchi variantlar tanlanib qolishi va ulardan qanday saqlanish.
-4. **🎯 Joriy Masala Yechimi:** Istalgan savol shartini tashlang, qadamma-qadam tahlil qilamiz!`;
-      } else {
-        answer = `👋 **Hello Doniyor! Welcome to Vespera AI Mentor.**
+Student's Query: "${userQ || "Nega mening javobim xato bo'ldi va buni qanday to'g'ri yechish kerak?"}"
 
-Leveraging your **IELTS 7.5 (Reading 9.0)** foundation, we are targeting a **1550+ composite** with laser focus on scaling **Math from Zero to 800**.
+Please provide a structured, Socratic, and actionable SAT explanation.`;
 
-Feel free to ask me anything:
-1. **⚡ 10-Second Desmos Hacks:** Instant graphic shortcuts to bypass lengthy manual algebra.
-2. **💡 Intuitive Visual Analogies:** Deep conceptual models that stick without mindless memorization.
-3. **🔍 College Board Trap Breakdown:** Why tempting distractor choices fool students and how to spot them.
-4. **🎯 Question Dissection:** Paste any problem or ask about the current question on your screen!`;
-      }
-    }
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [{ text: `${systemPrompt}\n\n${promptText}` }],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.3,
+                maxOutputTokens: 1200,
+              },
+            }),
+          }
+        );
 
-    // 2. DESMOS SHORTCUTS & HACKS
-    else if (lowerQ.includes("desmos") || lowerQ.includes("grafik") || lowerQ.includes("calculator") || lowerQ.includes("kalkulyator") || lowerQ.includes("hack") || lowerQ.includes("10 second") || lowerQ.includes("tez yech")) {
-      if (questionPrompt && (questionPrompt.includes("=") || questionPrompt.includes("x"))) {
-        // Context-aware Desmos hack
-        if (isUzbek) {
-          answer = `⚡ **Joriy Masala Uchun 10 Soniyalik Desmos Hacki:**
-
-1. **Tenglamani to'g'ridan-to'g'ri kiriting:** Tenglamaning chap va o'ng tomonini alohida qatorga yozing: \`y_1 = \\text{chap tomon}\` va \`y_2 = \\text{o'ng tomon}\`.
-2. **Kesishtirish nuqtasiga bosing:** Desmos ikkala grafik kesishtirgan nuqtada kulrang halqa ko'rsatadi. Uning $x$ koordinatasi — sizning to'g'ridan-to'g'ri javobingiz!
-3. **Vertex (Cho'qqi) savollarida:** Funksiyani shunchaki $f(x)$ deb kiriting va egri chiziqning eng yuqori yoki eng quyi burilish nuqtasini bosing. Desmos $(h, k)$ koordinatasini darhol chiqaradi.
-4. **Slider usuli:** Agar formulada noma'lum parametr ($a$, $b$, $k$) bo'lsa, Desmos *"add slider"* tugmasini taklif qiladi. Uni bosing va parametrlarni moslang!`;
-        } else {
-          answer = `⚡ **10-Second Desmos Hack for this Problem:**
-
-1. **Direct Split Entry:** Type the left-hand side as line 1 (\`y = \\text{LHS}\`) and right-hand side as line 2 (\`y = \\text{RHS}\`).
-2. **Click the Intersection Dot:** Desmos displays an interactive gray dot at every intersection. The $x$-coordinate is your exact solution!
-3. **Vertex & Extreme Points:** Enter quadratic $f(x)$ directly. Desmos automatically marks the peak or valley with coordinates $(h, k)$. Maximum/minimum value is always $k$.
-4. **Regression Hack for Systems:** When points are given, create a table in Desmos with \`+\` and type \`y_1 ~ m x_1 + b\` or \`y_1 ~ a x_1^2 + b x_1 + c\` to solve unknown constants instantly!`;
+        if (geminiRes.ok) {
+          const geminiData = await geminiRes.json();
+          const generatedText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (generatedText) {
+            return NextResponse.json({
+              answer: generatedText,
+              source: "gemini-1.5-flash",
+              timestamp: new Date().toISOString(),
+            });
+          }
         }
-      } else {
-        if (isUzbek) {
-          answer = `⚡ **Digital SAT Uchun Eng Kuchli 4 ta Desmos Hacki:**
+      } catch (geminiErr) {
+        console.warn("Live Gemini API call failed, falling back to cognitive heuristics:", geminiErr);
+      }
+    }
 
-1. **Tenglamalar tizimi (Systems of Equations):**
-   Ikkala tenglamani ham o'zgartirmasdan Desmos'ga kiriting (masalan, $3x - 2y = 12$ va $y = 2x - 5$). Kesishtirish nuqtasiga bosing — $(x, y)$ darhol chiqadi.
-2. **Tenglamaning yechimlari soni (Number of Solutions):**
-   - Agar chiziqlar parallel bo'lsa $\\rightarrow$ **No solution** ($0$ ta yechim).
-   - Agar bitta nuqtada kesishsa $\\rightarrow$ **Exactly 1 solution** ($1$ ta yechim).
-   - Agar ustma-ust tushsa $\\rightarrow$ **Infinitely many solutions** (Cheksiz yechim).
-3. **Regression Hack (\`~\` belgisi):**
-   Agar jadval berilgan bo'lsa, Desmos'da jadval oching ($x_1, y_1$) va pastki qatorga \`y_1 ~ m x_1 + b\` yozing. Desmos $m$ (qiyalik) va $b$ ($y$-kesma) ni $0.001$ soniyada hisoblab beradi!
-4. **Noma'lum koeffitsiyentlar (Slider):**
-   Variantlardagi sonlarni birma-bir hisoblab o'tirmang — slider yarating va grafik berilgan shartga to'g'ri kelguncha suring!`;
-        } else {
-          answer = `⚡ **Top 4 Digital SAT Desmos Super-Hacks:**
+    // 2. TRY OPENAI API IF KEY AVAILABLE
+    if (openAIKey && openAIKey.trim() !== "") {
+      try {
+        const openAIRes = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${openAIKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              { role: "system", content: systemPrompt },
+              {
+                role: "user",
+                content: `Context: Question: ${questionPrompt}, User Choice: ${userChoice}, Correct: ${correctChoice}, Options: ${options}, Query: ${userQ}`,
+              },
+            ],
+            temperature: 0.3,
+          }),
+        });
 
-1. **System of Equations Intersection:**
-   Never do manual substitution or elimination. Type both equations directly into Desmos as given (e.g. $3x - 2y = 12$ and $y = 2x - 5$). Click the gray intersection dot to read $(x, y)$ immediately.
-2. **Number of Solutions Visualizer:**
-   - Parallel lines $\\rightarrow$ **No solution** (Slopes equal, y-intercepts different).
-   - Single intersection point $\\rightarrow$ **Exactly 1 solution**.
-   - Coinciding overlapping lines $\\rightarrow$ **Infinitely many solutions**.
-3. **Table Regression Hack (\`~\` tilde):**
-   Add a table with given points $(x_1, y_1)$, then type \`y_1 ~ m x_1 + b\` (linear) or \`y_1 ~ a(x_1 - h)^2 + k\` (vertex). Desmos solves all parameters instantly with $r^2 = 1$.
-4. **Slider Matching:**
-   Type the equation with a constant $k$ and activate the slider. Drag $k$ until the curve passes through the required coordinate!`;
+        if (openAIRes.ok) {
+          const openAIData = await openAIRes.json();
+          const generatedText = openAIData.choices?.[0]?.message?.content;
+          if (generatedText) {
+            return NextResponse.json({
+              answer: generatedText,
+              source: "gpt-4o-mini",
+              timestamp: new Date().toISOString(),
+            });
+          }
         }
+      } catch (openAiErr) {
+        console.warn("OpenAI API call failed, falling back to cognitive engine:", openAiErr);
       }
     }
 
-    // 3. TRAP ANALYSIS & WHY WRONG
-    else if (lowerQ.includes("trap") || lowerQ.includes("tuzoq") || lowerQ.includes("nega") || lowerQ.includes("xato") || lowerQ.includes("why") || lowerQ.includes("wrong")) {
-      if (isUzbek) {
-        answer = `🔍 **College Board SAT Tuzoqlari Tahlili:**
-
-SAT tuzuvchilari variantlar orasiga ataylab quyidagi 3 xil chalg'ituvchini qo'shishadi:
-
-1. **"Chala Yechim" Tuzog'i (Partial Answer Trap):**
-   Talaba $x$ ni to'g'ri topadi (masalan $x = 4$). Variantlar orasida $4$ turadi! Lekin savol oxirida $2x + 3$ yoki $x - 7$ so'ralgan bo'ladi. Har doim savol oxiridagi oxirgi gapni qayta o'qing!
-2. **"Ishora va Qavs" Tuzog'i (Sign Flip Trap):**
-   Tengsizlikda manfiy songa bo'lganda belgi o'zgarishi ($< \\rightarrow >$), yoki $-(x - 3) = -x + 3$ bo'lishi kerak bo'lgan joyda $-x - 3$ deb yuborish.
-3. **Verbal Tuzog'i (Plausible but Unmentioned):**
-   Variantdagi gap hayotiy haqiqat bo'lishi mumkin, lekin matnda (passage) unga to'g'ridan-to'g'ri dalil yo'q. Faqat matnda yozilgan qat'iy faktga ishoning!`;
-      } else {
-        answer = `🔍 **College Board Distractor Anatomy:**
-
-College Board psychometricians deliberately design the 3 incorrect options around predictable student errors:
-
-1. **The Partial Solver Trap:**
-   You execute 90% of the algebra correctly and find $x = 4$. Choice A proudly says $4$. But the final question prompt asked for $3x - 5$! Always underline the actual target variable before bubbling.
-2. **The Sign & Inequality Trap:**
-   Forgetting that dividing or multiplying by a negative number flips the inequality symbol ($a < b \\implies -a > -b$).
-3. **Verbal Out-of-Scope Trap:**
-   An answer choice that sounds highly sophisticated and scientifically true in real life, but is NOT explicitly corroborated by the passage lines. On SAT Reading, 100% of the answer must be proven by passage text.`;
-      }
-    }
-
-    // 4. INTUITIVE ANALOGIES & MENTAL MODELS
-    else if (lowerQ.includes("analogy") || lowerQ.includes("o'xshatish") || lowerQ.includes("tushuntir") || lowerQ.includes("intuition") || lowerQ.includes("noldan") || lowerQ.includes("concept")) {
-      if (isUzbek) {
-        answer = `💡 **Doniyor uchun Intuitiv Mantiqiy Model:**
-
-Matematika bu quruq formulalar to'plami emas, balki oddiy mantiq:
-
-1. **"Tarozi Qoidasi" (Algebra Tenglamalari):**
-   Tenglama ($=$) bu ikkala tomoni muvozanatda turgan palla tarozi. Chap pallaga nima qilsangiz ($+5$, $\\times 2$, $\\sqrt{}$), o'ng pallaga ham xuddi shuni qilishingiz shart. Muvozanat hech qachon buzilmasligi kerak!
-2. **"Quti Modeli" (O'zgaruvchi $x$):**
-   $x$ — bu ichida son yashiringan quti. Agar $3x + 4 = 19$ bo'lsa, demak 3 ta quti va 4 dona tanga jami 19 ga teng. 4 tangani olib tashlasangiz, 3 ta quti 15 bo'ladi. Har bir qutida 5 bor ($x = 5$)!
-3. **Qiyalik (Slope $m$ = $\\frac{\\Delta y}{\\Delta x}$):**
-   Bu shunchaki tog'ga chiqish tikligi. Har $1$ qadam o'ngga yursangiz, necha metr tepaga ko'tarilasiz? Agar $m = 3$ bo'lsa, har bir gorizontal qadamda 3 barobar balandlaysiz.`;
-      } else {
-        answer = `💡 **Intuitive Mental Model for High-Scorers:**
-
-Rather than memorizing abstract algebraic steps, use these visual analogies:
-
-1. **The Two-Pan Balance (Equations):**
-   An equal sign ($=$) is an antique balance scale. Whatever operation you execute on the left pan ($+7$, $\\div 3$, squaring), you must mirror identically on the right pan to preserve equilibrium.
-2. **The Mystery Box Metaphor ($x$):**
-   A variable $x$ is simply an opaque box containing an unknown number of coins. If $4x + 6 = 26$, removing the 6 free coins leaves $4$ identical boxes equal to $20$ coins. Each box holds $5$ coins ($x = 5$).
-3. **Slope as Vertical Return ($m = \\frac{\\Delta y}{\\Delta x}$):**
-   Slope is simply the staircase steepness: how many feet do you ascend vertically for every 1 step you take horizontally?`;
-      }
-    }
-
-    // 5. READING & WRITING (VERBAL) GUIDANCE
-    else if (lowerQ.includes("verbal") || lowerQ.includes("reading") || lowerQ.includes("writing") || lowerQ.includes("transition") || lowerQ.includes("boundary") || lowerQ.includes("comma") || lowerQ.includes("ielts")) {
-      if (isUzbek) {
-        answer = `📖 **SAT Reading & Writing: 780+ Ballik Master-Strategiya:**
-
-Sizning **IELTS Reading 9.0** darajangiz SAT matnlarini oson tahlil qilish imkonini beradi. Biroq SAT o'ziga xos 3 ta qoidaga ega:
-
-1. **Transitions (Bog'lovchilar) — 3 ta Asosiy Oila:**
-   - **Davomiylik (Continuance):** *Furthermore, In addition, Specifically, For instance* (Fikrni kuchaytiradi).
-   - **Zidlik (Contrast):** *However, Nevertheless, In contrast, Nonetheless* (Yo'nalishni 180° buradi).
-   - **Natija (Cause/Effect):** *Therefore, Consequently, As a result, Thus* (Mantiqiy xulosa).
-2. **Boundaries (Gap chegaralari) — Qat'iy Qoida:**
-   Mustaqil gap (Independent Clause) bilan mustaqil gapni shunchaki vergul bilan ulab bo'lmaydi (*Comma Splice* xatosi)! Faqat:
-   - Nuqta (\`.\`)
-   - Nuqtali vergul (\`;\`)
-   - Vergul + FANBOYS (*For, And, Nor, But, Or, Yet, So*)
-3. **Rhetorical Synthesis (Notes savollari):**
-   Butun matnni o'qimang! Savol oxiridagi topshiriqni toping (masalan, *"wants to emphasize the contrast between..."*). Variantlar orasidan faqat shu shartni bajargan bittasini tanlang!`;
-      } else {
-        answer = `📖 **SAT Reading & Writing: Strategy for IELTS 9.0 Readers:**
-
-With your top-tier vocabulary and comprehension, target **780+** by mastering College Board's mechanical grammar constraints:
-
-1. **Transition Word Categories:**
-   - **Continuance / Elaboration:** *Furthermore, Additionally, Specifically, For example* (Same trajectory).
-   - **Contrast / Reversal:** *However, Conversely, Nevertheless, In contrast* (180° direction change).
-   - **Causation / Consequence:** *Therefore, Consequently, Accordingly, Thus* (Direct causal payoff).
-2. **Sentence Boundary Axiom:**
-   Never link two independent clauses with only a comma (*Comma Splice*). Valid joins:
-   - Period: \`[IC]. [IC]\`
-   - Semicolon: \`[IC]; [IC]\`
-   - Comma + FANBOYS: \`[IC], and [IC]\`
-   - Colon: \`[IC]: [Explanation/List]\`
-3. **Rhetorical Synthesis (Student Notes):**
-   Ignore 80% of the bulleted notes! Jump directly to the final sentence asking for the student's goal (e.g. *"The student wants to introduce the discovery to an audience unfamiliar with..."*). Select the single choice directly addressing that objective.`;
-      }
-    }
-
-    // 6. DEFAULT INTELLIGENT SAT RESPONSE
-    else {
-      if (isUzbek) {
-        answer = `💡 **Doniyor uchun SAT Tahlili va Maslahat:**
-
-Siz bergan savol bo'yicha:
-1. **Asosiy Qonun:** SAT imtihonida har bir savol 1 daqiqa 15 soniyada yechilishi uchun mo'ljallangan. Agar algebraik yechim 2 daqiqadan oshsa, demak siz qisqaroq mantiqiy yo'lni yoki **Desmos** imkoniyatini o'tkazib yubordingiz.
-2. **Sonlar bilan Sinash (Plugging In):** Murakkab algebraik ifodalarda $x = 100$ yoki $x = 2$ qo'yib variantlarni tekshirish ko'pincha qo'lda yechishdan ancha xavfsizroqdir.
-3. **Desmos'ga yuklash:** Agar bu funksiya yoki tenglama bo'lsa, darhol ekrandagi Desmos oynasini oching va grafik koordinatalarini tekshiring!
-
-Qo'shimcha savolingiz bo'lsa yoki savoldagi aniq formulani tushunish kerak bo'lsa, bemalol yozing!`;
-      } else {
-        answer = `💡 **Expert SAT Solution Guidance:**
-
-Regarding your query:
-1. **The 75-Second Rule:** Every SAT problem is engineered for resolution in under 75 seconds. If manual algebra exceeds 90 seconds, a high-speed shortcut or Desmos visualization was intended by the test designers.
-2. **Back-solving & Smart Numbers:** When algebraic manipulation looks daunting, test clean numbers ($x = 2$ or $x = 100$) into the question and answer choices.
-3. **Desmos Rapid Validation:** Use the interactive Desmos panel to plot expressions and read intercepts, maximums, and intersection points immediately.
-
-Feel free to paste the exact equation or question text for step-by-step breakdown!`;
-      }
-    }
+    // 3. COGNITIVE HEURISTIC ENGINE (100% RELIABLE FALLBACK)
+    // Runs when no API key is provided or network/rate-limit occurs.
+    const answer = generateCognitiveExplanation({
+      questionPrompt,
+      userQuestion: userQ,
+      topicDomain,
+      userChoice,
+      correctChoice,
+      options,
+      explanationUz,
+      explanationEn,
+      desmosTrick,
+      isUzbek,
+    });
 
     return NextResponse.json({
       answer,
+      source: "vespera-cognitive-engine",
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
@@ -211,5 +167,210 @@ Feel free to paste the exact equation or question text for step-by-step breakdow
       { error: "Failed to generate AI explanation: " + error.message },
       { status: 500 }
     );
+  }
+}
+
+// =========================================================================
+// COGNITIVE HEURISTIC ENGINE
+// =========================================================================
+function generateCognitiveExplanation({
+  questionPrompt,
+  userQuestion,
+  topicDomain,
+  userChoice,
+  correctChoice,
+  options,
+  explanationUz,
+  explanationEn,
+  desmosTrick,
+  isUzbek,
+}: {
+  questionPrompt: string;
+  userQuestion: string;
+  topicDomain: string;
+  userChoice?: string | null;
+  correctChoice?: string | null;
+  options?: any;
+  explanationUz?: string | null;
+  explanationEn?: string | null;
+  desmosTrick?: string | null;
+  isUzbek: boolean;
+}): string {
+  const qLower = userQuestion.toLowerCase();
+  const promptLower = questionPrompt.toLowerCase();
+
+  // SCENARIO A: User is specifically diagnosing why their choice was wrong
+  if (userChoice && correctChoice && userChoice.toUpperCase() !== correctChoice.toUpperCase()) {
+    const wrong = userChoice.toUpperCase();
+    const right = correctChoice.toUpperCase();
+
+    if (isUzbek) {
+      return `### 💡 AI Xatolik Diagnostikasi: Nega [${wrong}] xato va to'g'ri javob [${right}]?
+
+> [!WARNING]
+> **Siz tanlagan javob:** \`Variant ${wrong}\` ❌  
+> **Rasmiy to'g'ri javob:** \`Variant ${right}\` ✅
+
+---
+
+#### 1. 🔍 Nega ${wrong} varianti sizni chalg'itdi (Tuzoq Tahlili)?
+College Board tuzuvchilari variantlar orasiga ataylab **chala yechim** yoki **ishora xatosi** bilan chiqadigan sonlarni kiritadi:
+* **"Chala Yechim" Tuzog'i:** Ko'pchilik talabalar tenglamani yechib $x$ ning qiymatini topishadi (bu aynan siz tanlagan **${wrong}** variantidagi son bo'lishi mumkin). Biroq savol shartida $x$ emas, balki boshqa ifoda (masalan, $2x + 6$, perimetr, yoki burchak tangensi) so'ralgan bo'ladi!
+* **Belgi va Qavs Tuzog'i:** Manfiy ishoraga bo'lishda tengsizlik ishorasi teskarisiga o'zgarishi yoki qavs ochishdagi $-(-a) = +a$ qoidasi e'tibordan chetda qolgan bo'lishi mumkin.
+
+---
+
+#### 2. 🟢 To'g'ri Yechim Mantiqi (Intuitiv Qadamlar):
+${explanationUz ? explanationUz : explanationEn || "Savol shartidagi asosiy mantiqiy bog'liqlikni qadam-baqadam tekshiring."}
+
+---
+
+#### 3. ⚡ 10 Soniyalik Desmos Cheat-Code:
+${
+  desmosTrick
+    ? `**Ushbu savol uchun Desmos tezkor hiylasi:**\n${desmosTrick}`
+    : `1. Tenglamaning chap va o'ng qismini alohida qatorga kiriting: \`y_1 = \\text{chap qism}\` va \`y_2 = \\text{o'ng qism}\`.\n2. Kulrang kesishish nuqtasiga bosing — $x$ koordinatasi sizga to'g'ridan-to'g'ri yechimni beradi!\n3. Parametrli tenglamalarda **Slider** yarating va to'g'ri keluvchi variantni toping.`
+}
+
+---
+
+#### 4. 🎯 Xotirada Saqlash Uchun Oltin Qoida:
+> **"Har doim savol oxiridagi oxirgi gapni qayta o'qing: SAT sizdan aynan nimani so'ramoqda?"**`;
+    } else {
+      return `### 💡 AI Error Diagnosis: Why Choice [${wrong}] is Wrong & Choice [${right}] is Correct
+
+> [!WARNING]
+> **Your Selection:** \`Choice ${wrong}\` ❌  
+> **Official Correct Answer:** \`Choice ${right}\` ✅
+
+---
+
+#### 1. 🔍 The College Board Distractor Anatomy (Why ${wrong} was chosen):
+College Board psychometricians deliberately engineered choice **${wrong}** around a predictable mistake:
+* **The Partial Solver Trap:** You likely executed the first 80% of the algebra correctly and derived $x$. Choice ${wrong} matched your intermediate value! However, the final question prompt asked for an altered expression (e.g. $2x + 6$, perimeter, or $\\tan(A)$).
+* **Sign Inversion Slip:** In algebraic manipulation, forgetting that division by a negative flips inequality signs, or dropping a negative inside parentheses.
+
+---
+
+#### 2. 🟢 Step-by-Step Resolution:
+${explanationEn || explanationUz || "Follow the invariant principles of this topic to reach the definitive answer."}
+
+---
+
+#### 3. ⚡ 10-Second Desmos Shortcut:
+${
+  desmosTrick
+    ? `**Desmos Bypass:**\n${desmosTrick}`
+    : `1. Split the equation: Type \`y = \\text{LHS}\` on line 1 and \`y = \\text{RHS}\` on line 2.\n2. Click the gray dot at the intersection — the $x$-coordinate is your exact solution without manual calculations.\n3. For functions, inspect vertex and intercepts directly on the graph.`
+}
+
+---
+
+#### 4. 🎯 Master Takeaway:
+> **"Always underline the final line of the prompt before selecting your answer: What is the exact target quantity?"**`;
+    }
+  }
+
+  // SCENARIO B: Greetings
+  if (/^(hi|hello|hey|salom|assalomu alaykum|qalaysiz|boshla|start)\b/i.test(qLower)) {
+    if (isUzbek) {
+      return `👋 **Assalomu alaykum, Doniyor!**
+
+Men sizning shaxsiy **Vespera SAT AI Mentor**ingizman. Sizning **IELTS 7.5 (Reading 9.0)** bazangiz SAT Verbal uchun ajoyib poydevor hisoblanadi. Asosiy maqsadimiz — **Matematikani 0 dan 800 gacha** ko'tarish va Desmos orqali vaqtni 3 barobar tejash.
+
+Mendan quyidagilarni so'rashingiz mumkin:
+1. **⚡ 10 soniyalik Desmos Hacklari:** Har qanday tenglama yoki funksiyani qo'lda hisoblamasdan Desmos'da yechish yo'llari.
+2. **💡 Intuitiv Tushuntirish:** Formulalarni yodlamasdan, mantiqiy vizual modellar orqali tushunish.
+3. **🔍 College Board Tuzoqlari:** Nega chalg'ituvchi variantlar tanlanib qolishi va ulardan qanday saqlanish.
+4. **🎯 Joriy Masala Yechimi:** Istalgan savol shartini tashlang, qadamma-qadam tahlil qilamiz!`;
+    } else {
+      return `👋 **Hello Doniyor! Welcome to Vespera AI Mentor.**
+
+Leveraging your **IELTS 7.5 (Reading 9.0)** foundation, we are targeting a **1550+ composite** with laser focus on scaling **Math from Zero to 800**.
+
+Feel free to ask me anything:
+1. **⚡ 10-Second Desmos Hacks:** Instant graphic shortcuts to bypass lengthy manual algebra.
+2. **💡 Intuitive Visual Analogies:** Deep conceptual models that stick without mindless memorization.
+3. **🔍 College Board Trap Breakdown:** Why tempting distractor choices fool students and how to spot them.
+4. **🎯 Question Dissection:** Paste any problem or ask about the current question on your screen!`;
+    }
+  }
+
+  // SCENARIO C: Desmos inquiries
+  if (
+    qLower.includes("desmos") ||
+    qLower.includes("grafik") ||
+    qLower.includes("kalkulyator") ||
+    qLower.includes("hack") ||
+    qLower.includes("10 second") ||
+    qLower.includes("tez yech")
+  ) {
+    if (questionPrompt && (promptLower.includes("=") || promptLower.includes("x") || promptLower.includes("f(x)"))) {
+      if (isUzbek) {
+        return `⚡ **Joriy Masala Uchun 10 Soniyalik Desmos Hacki:**
+
+1. **Tenglamani to'g'ridan-to'g'ri kiriting:** Tenglamaning chap va o'ng tomonini alohida qatorga yozing: \`y_1 = \\text{chap tomon}\` va \`y_2 = \\text{o'ng tomon}\`.
+2. **Kesishtirish nuqtasiga bosing:** Desmos ikkala grafik kesishtirgan nuqtada kulrang halqa ko'rsatadi. Uning $x$ koordinatasi — sizning to'g'ridan-to'g'ri javobingiz!
+3. **Vertex (Cho'qqi) savollarida:** Funksiyani shunchaki $f(x)$ deb kiriting va egri chiziqning eng yuqori yoki eng quyi burilish nuqtasini bosing. Desmos $(h, k)$ koordinatasini darhol chiqaradi.
+4. **Slider usuli:** Agar formulada noma'lum parametr ($a$, $b$, $k$) bo'lsa, Desmos *"add slider"* tugmasini taklif qiladi. Uni bosing va parametrlarni moslang!
+
+${desmosTrick ? `\n💡 **Ushbu savol bo'yicha maxsus ko'rsatma:** ${desmosTrick}` : ""}`;
+      } else {
+        return `⚡ **10-Second Desmos Hack for this Problem:**
+
+1. **Direct Split Entry:** Type the left-hand side as line 1 (\`y = \\text{LHS}\`) and right-hand side as line 2 (\`y = \\text{RHS}\`).
+2. **Click the Intersection Dot:** Desmos displays an interactive gray dot at every intersection. The $x$-coordinate is your exact solution!
+3. **Vertex & Extreme Points:** Enter quadratic $f(x)$ directly. Desmos automatically marks the peak or valley with coordinates $(h, k)$.
+4. **Regression Hack for Systems:** When points are given, create a table in Desmos with \`+\` and type \`y_1 ~ m x_1 + b\` or \`y_1 ~ a x_1^2 + b x_1 + c\` to solve unknown constants instantly!
+
+${desmosTrick ? `\n💡 **Specific Problem Advice:** ${desmosTrick}` : ""}`;
+      }
+    }
+  }
+
+  // SCENARIO D: General Question Analysis
+  if (questionPrompt) {
+    if (isUzbek) {
+      return `### 🎯 Savolning Qadamma-Qadam Tahlili:
+
+**Mavzu / Domen:** \`${topicDomain}\`
+
+${explanationUz ? `#### 1. Mantiqiy Yechim:\n${explanationUz}` : ""}
+${explanationEn ? `\n#### 2. Rasmiy SAT Formulasi:\n${explanationEn}` : ""}
+${desmosTrick ? `\n#### 3. ⚡ Desmos Hack:\n${desmosTrick}` : ""}
+
+---
+💬 **Savolingiz bo'lsa:** Ushbu masalaning qaysi bosqichi tushunarsiz tuyuldi? Qayta boshqacha usulda tushuntirib berishim mumkin!`;
+    } else {
+      return `### 🎯 Question Breakdown:
+
+**Domain:** \`${topicDomain}\`
+
+${explanationEn ? `#### 1. Step-by-Step Logic:\n${explanationEn}` : ""}
+${explanationUz ? `\n#### 2. Conceptual Overview:\n${explanationUz}` : ""}
+${desmosTrick ? `\n#### 3. ⚡ Desmos Shortcut:\n${desmosTrick}` : ""}
+
+---
+💬 **Need clarification?** Tell me which step feels unclear and we will unpack it together!`;
+    }
+  }
+
+  // SCENARIO E: Default intelligent guidance
+  if (isUzbek) {
+    return `💡 **Doniyor uchun SAT Master Maslahati:**
+
+1. **75 Soniyalik Qoida:** Digital SAT dagi har bir masala 1 daqiqa 15 soniyada yechilishi uchun mo'ljallangan. Agar algebraik hisob-kitob 90 soniyadan oshib ketsa, demak Desmos yoki mantiqiy qisqartma yo'li bor.
+2. **Desmos'dan foydalanish:** Funksiyalar, tenglamalar sistemasi, burchaklar va statistik jadvallarni har doim Desmos'ga kiritib tekshiring.
+3. **Tuzoqlar:** Savol oxiridagi topshiriqni har doim qalam bilan belgilang. $x$ emas, $x + 5$ so'ralgan bo'lishi mumkin!
+
+Istalgan savol matnini bu yerga yozing yoki ekrandagi masalani muhokama qilamiz!`;
+  } else {
+    return `💡 **Master SAT Strategy for 1550+:**
+
+1. **The 75-Second Rule:** Every Digital SAT problem is engineered for resolution in under 75 seconds. If manual calculation stretches beyond 90 seconds, you are bypassing an intended Desmos shortcut.
+2. **Desmos Exploitation:** Systems, quadratics, circle equations, and regressions should almost always be inspected graphically first.
+3. **Distractor Spotting:** Always underline the exact quantity sought in the final question sentence.
+
+Paste any problem or question text for immediate interactive dissection!`;
   }
 }

@@ -968,6 +968,31 @@ export default function BluebookMockPage() {
             <span className="hidden md:inline">Desmos</span>
           </button>
 
+          {/* AI Mentor Copilot */}
+          <button
+            onClick={() => {
+              window.dispatchEvent(
+                new CustomEvent("vespera_open_copilot", {
+                  detail: {
+                    question: currentQ?.prompt,
+                    domain: currentQ?.domain,
+                    userChoice: currentQ ? userAnswers[currentQ.id] : null,
+                    correctChoice: currentQ?.correctAnswer,
+                    options: currentQ?.options,
+                    explanationUz: currentQ?.explanationUz,
+                    explanationEn: currentQ?.explanationEn,
+                    desmosTrick: currentQ?.desmosTrick,
+                  },
+                })
+              );
+            }}
+            title="Ask AI Mentor for instant intuition, Desmos trick, or trap analysis"
+            className="p-2 rounded-lg text-xs font-semibold text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 transition flex items-center gap-1.5"
+          >
+            <Sparkles className="w-4 h-4 text-[var(--accent-blue)]" />
+            <span className="hidden md:inline">AI Mentor</span>
+          </button>
+
           {/* Invert / Contrast Theme Toggle */}
           <button
             onClick={toggleTheme}

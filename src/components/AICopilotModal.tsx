@@ -14,6 +14,8 @@ import {
   ArrowRight,
   HelpCircle,
   Lightbulb,
+  AlertTriangle,
+  Zap,
 } from "lucide-react";
 import KaTeXMath from "./KaTeXMath";
 import VesperaLogo from "./VesperaLogo";
@@ -24,13 +26,21 @@ interface Message {
   sender: "user" | "bot";
   text: string;
   timestamp: string;
+  source?: string;
 }
 
-interface AICopilotModalProps {
+export interface AICopilotModalProps {
   isOpen: boolean;
   onClose: () => void;
   contextQuestion?: string;
   topicDomain?: string;
+  userChoice?: string | null;
+  correctChoice?: string | null;
+  options?: string[] | string | null;
+  explanationUz?: string | null;
+  explanationEn?: string | null;
+  desmosTrick?: string | null;
+  autoDiagnose?: boolean;
   onClearContext?: () => void;
 }
 
@@ -39,6 +49,13 @@ export default function AICopilotModal({
   onClose,
   contextQuestion,
   topicDomain,
+  userChoice,
+  correctChoice,
+  options,
+  explanationUz,
+  explanationEn,
+  desmosTrick,
+  autoDiagnose,
   onClearContext,
 }: AICopilotModalProps) {
   useBodyScrollLock(isOpen);
@@ -47,13 +64,14 @@ export default function AICopilotModal({
     {
       id: "initial-1",
       sender: "bot",
-      text: `Hello Doniyor! I am your **Vespera SAT AI Mentor**.\n\nWhether you need a **10-second Desmos shortcut** to bypass algebraic calculation, or want an **intuitive visual analogy** tailored to your *IELTS 7.5 (Reading 9.0)* profile, ask me anything!`,
-      timestamp: "Just now",
+      text: `👋 Assalomu alaykum, Doniyor! Men sizning shaxsiy **Vespera SAT AI Mentor**ingizman.\n\nSizning **IELTS 7.5 (Reading 9.0)** poydevoringiz orqali asosiy maqsadimiz — **Matematikani 800 ga olib chiqish** va **1550+** ball to'plashdir.\n\nMasala yechishda tuzoqqa tushsangiz yoki 10 soniyalik Desmos hiylasini bilmoqchi bo'lsangiz, bemalol so'rang!`,
+      timestamp: "Hozirgina",
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [lastDiagnosedKey, setLastDiagnosedKey] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +84,30 @@ export default function AICopilotModal({
       scrollToBottom();
     }
   }, [messages, isOpen]);
+
+  // Listen for ESC key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Auto-diagnose when triggered from an incorrect answer
+  useEffect(() => {
+    if (isOpen && autoDiagnose && userChoice && correctChoice) {
+      const diagKey = `${contextQuestion}_${userChoice}_${correctChoice}`;
+      if (lastDiagnosedKey !== diagKey) {
+        setLastDiagnosedKey(diagKey);
+        handleSend(
+          `Men [${userChoice}] variantini tanladim, ammo to'g'ri javob [${correctChoice}] ekan. Nega mening javobim xato, qaysi tuzoqqa tushdim va buni qanday qilib 10 soniyada to'g'ri yechish mumkin?`
+        );
+      }
+    }
+  }, [isOpen, autoDiagnose, userChoice, correctChoice, contextQuestion]);
 
   if (!isOpen) return null;
 
@@ -94,6 +136,12 @@ export default function AICopilotModal({
           questionPrompt: contextQuestion,
           userQuestion: q,
           topicDomain,
+          userChoice,
+          correctChoice,
+          options,
+          explanationUz,
+          explanationEn,
+          desmosTrick,
         }),
       });
 
@@ -103,8 +151,9 @@ export default function AICopilotModal({
         sender: "bot",
         text:
           data.answer ||
-          "I encountered an error retrieving the explanation. Please try asking again.",
+          "Kechirasiz, tushuntirishni olishda xatolik yuz berdi. Iltimos, qayta so'rab ko'ring.",
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        source: data.source,
       };
 
       setMessages((prev) => [...prev, botResponse]);
@@ -114,7 +163,7 @@ export default function AICopilotModal({
         {
           id: "bot-err-" + Date.now(),
           sender: "bot",
-          text: "⚠️ Network connectivity issue while contacting AI Mentor. Please check connection and retry.",
+          text: "⚠️ AI Mentor bilan bog'lanishda internet uzilishi yuz berdi. Qayta urinib ko'ring.",
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -134,22 +183,29 @@ export default function AICopilotModal({
       {
         id: "reset-" + Date.now(),
         sender: "bot",
-        text: `Chat cleared. Ready for your next SAT problem, Desmos shortcut, or concept explanation!`,
-        timestamp: "Just now",
+        text: `Muloqot yangilandi. Yangi SAT savoli, Desmos hiylasi yoki mantiqiy tushuntirish uchun tayyorman!`,
+        timestamp: "Hozirgina",
       },
     ]);
   };
 
+  const handleOpenDesmos = () => {
+    window.dispatchEvent(new CustomEvent("vespera_desmos_load", { detail: { latex: "y = 2x + 4" } }));
+  };
+
   const quickPrompts = [
-    { label: "⚡ 10-s Desmos Hack", query: "How can I solve this in Desmos in under 10 seconds?" },
-    { label: "🔍 Trap Analysis", query: "What is the classic College Board trap on this question?" },
-    { label: "💡 Intuitive Analogy", query: "Explain this using an intuitive visual analogy for an IELTS 9.0 reader" },
-    { label: "📖 Verbal Boundaries", query: "What are the core sentence boundary and transition rules for 780+ Verbal?" },
+    { label: "💡 Nega mening javobim xato?", query: "Nega mening tanlagan javobim xato bo'ldi va qaysi tuzoqqa tushdim?" },
+    { label: "⚡ 10s Desmos Hack", query: "Ushbu savolni Desmos orqali 10 soniyada qanday yechish mumkin?" },
+    { label: "🔍 College Board Tuzog'i", query: "Bu savolda College Board qanday asosiy tuzoqni qo'llagan?" },
+    { label: "🧠 Oddiy Analogiya", query: "Ushbu tushunchani yodlamasdan tushunish uchun oddiy hayotiy analogiya keltir" },
+    { label: "📖 Verbal Qoidasi", query: "Ushbu savol bo'yicha grammatika yoki ritorik qoidani tushuntirib ber" },
   ];
 
+  const hasMistakeContext = userChoice && correctChoice && userChoice !== correctChoice;
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm overflow-hidden">
-      <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl w-full max-w-2xl h-[650px] max-h-[90vh] flex flex-col overflow-hidden shadow-2xl transition-all my-auto">
+    <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm overflow-hidden animate-fadeIn">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl w-full max-w-2xl h-[680px] max-h-[92vh] flex flex-col overflow-hidden shadow-2xl transition-all my-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)] shrink-0">
           <div className="flex items-center gap-3">
@@ -161,11 +217,11 @@ export default function AICopilotModal({
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--accent-green)]/15 text-[var(--accent-green)] font-bold font-mono flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-green)] animate-ping"></span>
-                  Active Copilot
+                  Socratic SAT Engine
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] font-medium">
-                1-on-1 Autonomous SAT Math & Verbal Strategy Engine
+                1550+ Maqsadli Shaxsiy SAT Murabbiyi (Desmos Speedhacks & Trap Analysis)
               </p>
             </div>
           </div>
@@ -173,14 +229,14 @@ export default function AICopilotModal({
           <div className="flex items-center gap-1.5">
             <button
               onClick={handleClearChat}
-              title="Reset Conversation"
+              title="Muloqotni Tozalash"
               className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card)] border border-transparent hover:border-[var(--border-main)] transition-colors"
             >
               <RotateCcw size={16} />
             </button>
             <button
               onClick={onClose}
-              title="Close Mentor (Esc)"
+              title="Yopish (Esc)"
               className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card)] border border-transparent hover:border-[var(--border-main)] transition-colors"
             >
               <X size={18} />
@@ -188,12 +244,29 @@ export default function AICopilotModal({
           </div>
         </div>
 
-        {/* Active Context Banner (If triggered from a question) */}
+        {/* Active Context Banner */}
         {contextQuestion && (
-          <div className="px-6 py-2 bg-[var(--accent-blue)]/10 border-b border-[var(--accent-blue)]/20 flex items-center justify-between text-xs text-[var(--accent-blue)] shrink-0">
+          <div
+            className={`px-6 py-2.5 border-b flex items-center justify-between text-xs shrink-0 ${
+              hasMistakeContext
+                ? "bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400"
+                : "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)]/20 text-[var(--accent-blue)]"
+            }`}
+          >
             <div className="flex items-center gap-2 truncate">
-              <Compass size={14} className="shrink-0" />
-              <span className="font-bold shrink-0">Active Problem Context:</span>
+              {hasMistakeContext ? (
+                <AlertTriangle size={15} className="shrink-0 text-rose-500" />
+              ) : (
+                <Compass size={15} className="shrink-0" />
+              )}
+              <span className="font-bold shrink-0">
+                {hasMistakeContext ? "Xatolik Konteksti:" : "Joriy Savol:"}
+              </span>
+              {hasMistakeContext && (
+                <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-black/10 dark:bg-white/10 shrink-0">
+                  Tanlovingiz: [{userChoice}] ❌ → To'g'ri: [{correctChoice}] ✅
+                </span>
+              )}
               <span className="truncate opacity-80">{contextQuestion}</span>
             </div>
             {onClearContext && (
@@ -201,7 +274,7 @@ export default function AICopilotModal({
                 onClick={onClearContext}
                 className="text-[10px] underline hover:opacity-100 ml-2 font-mono shrink-0"
               >
-                Clear
+                Tozalash
               </button>
             )}
           </div>
@@ -225,20 +298,25 @@ export default function AICopilotModal({
                 )}
 
                 {/* Message Bubble Container */}
-                <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[84%]`}>
+                <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[85%]`}>
                   {/* Sender & Timestamp Header */}
                   <div className="flex items-center gap-2 mb-1 px-1">
                     <span className="text-[11px] font-bold text-[var(--text-muted)]">
-                      {isUser ? "Doniyor (You)" : "Vespera AI Mentor"}
+                      {isUser ? "Doniyor (Siz)" : "Vespera AI Mentor"}
                     </span>
                     <span className="text-[10px] text-[var(--text-muted)] font-mono opacity-60">
                       {m.timestamp}
                     </span>
+                    {m.source && (
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-[var(--bg-surface)] text-[var(--text-muted)] font-mono border border-[var(--border-main)]">
+                        {m.source}
+                      </span>
+                    )}
                   </div>
 
                   {/* Message Bubble */}
                   <div
-                    className={`relative group p-4 sm:p-4.5 rounded-2xl leading-relaxed text-xs sm:text-sm shadow-sm transition-all ${
+                    className={`relative group p-4 sm:p-5 rounded-2xl leading-relaxed text-xs sm:text-sm shadow-sm transition-all ${
                       isUser
                         ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-tr-sm"
                         : "bg-[var(--bg-surface)] text-[var(--text-main)] border border-[var(--border-main)] rounded-tl-sm"
@@ -246,12 +324,18 @@ export default function AICopilotModal({
                   >
                     <KaTeXMath content={m.text} />
 
-                    {/* Copy Action Button */}
+                    {/* Footer Actions */}
                     {!isUser && (
-                      <div className="mt-3 pt-2.5 border-t border-[var(--border-main)]/50 flex items-center justify-between text-[11px] text-[var(--text-muted)]">
-                        <span className="font-mono text-[10px] opacity-70">
-                          Digital SAT Strategy Guide
-                        </span>
+                      <div className="mt-3.5 pt-2.5 border-t border-[var(--border-main)]/60 flex items-center justify-between text-[11px] text-[var(--text-muted)]">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={handleOpenDesmos}
+                            className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-[var(--accent-green)]/10 text-[var(--accent-green)] border border-[var(--accent-green)]/20 hover:bg-[var(--accent-green)]/20 transition-all font-semibold text-[10px]"
+                          >
+                            <Calculator size={11} />
+                            <span>Desmos'da Sinash</span>
+                          </button>
+                        </div>
                         <button
                           onClick={() => handleCopy(m.id, m.text)}
                           className="flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-[var(--bg-card)] border border-transparent hover:border-[var(--border-main)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -259,12 +343,12 @@ export default function AICopilotModal({
                           {copiedId === m.id ? (
                             <>
                               <Check size={12} className="text-[var(--accent-green)]" />
-                              <span className="text-[var(--accent-green)] font-semibold">Copied!</span>
+                              <span className="text-[var(--accent-green)] font-semibold">Nusxalandi!</span>
                             </>
                           ) : (
                             <>
                               <Copy size={12} />
-                              <span>Copy explanation</span>
+                              <span>Nusxa olish</span>
                             </>
                           )}
                         </button>
@@ -286,11 +370,11 @@ export default function AICopilotModal({
           {/* Typing Indicator */}
           {isLoading && (
             <div className="flex items-center gap-3 text-xs text-[var(--text-muted)] pl-11">
-              <div className="flex items-center gap-1 py-1.5 px-3 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              <div className="flex items-center gap-1.5 py-2 px-3.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)] shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-blue)] animate-bounce [animation-delay:-0.3s]"></span>
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-blue)] animate-bounce [animation-delay:-0.15s]"></span>
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-blue)] animate-bounce"></span>
-                <span className="ml-2 font-medium text-[11px]">Mentor is synthesizing guidance...</span>
+                <span className="ml-2 font-medium text-[11px]">AI Mentor savolni tahlil qilmoqda...</span>
               </div>
             </div>
           )}
@@ -302,7 +386,7 @@ export default function AICopilotModal({
         <div className="px-5 py-2.5 bg-[var(--bg-surface)] border-t border-[var(--border-main)] flex items-center gap-2 overflow-x-auto text-xs scrollbar-none shrink-0">
           <span className="text-[var(--text-muted)] font-semibold text-[11px] whitespace-nowrap flex items-center gap-1">
             <Lightbulb size={13} className="text-amber-500" />
-            Quick Prompts:
+            Tezkor Savollar:
           </span>
           {quickPrompts.map((p, i) => (
             <button
@@ -329,7 +413,7 @@ export default function AICopilotModal({
                   handleSend();
                 }
               }}
-              placeholder="Ask mentor anything (e.g. Desmos hack, formula intuition, trap breakdown)..."
+              placeholder="Mentorga istalgan savol bering (masalan: nega B xato, Desmos hiylasi, tuzoqlar)..."
               className="w-full bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-2xl px-4 py-3 text-xs sm:text-sm text-[var(--text-main)] placeholder-[var(--text-muted)] outline-none focus:border-[var(--accent-blue)] focus:ring-2 focus:ring-[var(--accent-blue)]/15 transition-all"
             />
           </div>
@@ -337,7 +421,7 @@ export default function AICopilotModal({
           <button
             onClick={() => handleSend()}
             disabled={!inputText.trim() || isLoading}
-            title="Send Message (Enter)"
+            title="Yuborish (Enter)"
             className="p-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:hover:brightness-100 transition-all shadow-md shadow-blue-500/20 shrink-0"
           >
             <Send size={16} />

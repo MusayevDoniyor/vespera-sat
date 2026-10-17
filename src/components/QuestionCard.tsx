@@ -264,6 +264,13 @@ export default function QuestionCard({
                   detail: {
                     question: question.prompt,
                     domain: question.domain,
+                    userChoice: selectedChoice,
+                    correctChoice: question.correct_answer,
+                    options: optionsArray,
+                    explanationUz: question.explanation_uz,
+                    explanationEn: question.explanation_en,
+                    desmosTrick: question.desmos_trick,
+                    autoDiagnose: isSubmitted && !isCorrect,
                   },
                 })
               );
@@ -483,20 +490,46 @@ export default function QuestionCard({
                 </div>
               )}
 
-              {/* Mistake Logger (If Incorrect) */}
+              {/* Mistake Logger & AI Explainer Button (If Incorrect) */}
               {!isCorrect && (
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-[var(--text-muted)] text-[11px]">Error Type:</span>
-                  <select
-                    value={mistakeType}
-                    onChange={(e) => setMistakeType(e.target.value)}
-                    className="bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-2.5 py-1 text-xs outline-none font-medium"
+                <div className="flex flex-wrap items-center gap-2.5 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[var(--text-muted)] text-[11px]">Xato Turi:</span>
+                    <select
+                      value={mistakeType}
+                      onChange={(e) => setMistakeType(e.target.value)}
+                      className="bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-2.5 py-1 text-xs outline-none font-medium"
+                    >
+                      <option value="CONCEPT_GAP">Concept / Formula Gap</option>
+                      <option value="CALCULATION_SLIP">Calculation Slip</option>
+                      <option value="MISREAD_QUESTION">Misread Question Stem</option>
+                      <option value="DESMOS_MISSED">Missed Desmos Shortcut</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      window.dispatchEvent(
+                        new CustomEvent("vespera_open_copilot", {
+                          detail: {
+                            question: question.prompt,
+                            domain: question.domain,
+                            userChoice: selectedChoice,
+                            correctChoice: question.correct_answer,
+                            options: optionsArray,
+                            explanationUz: question.explanation_uz,
+                            explanationEn: question.explanation_en,
+                            desmosTrick: question.desmos_trick,
+                            autoDiagnose: true,
+                          },
+                        })
+                      );
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-blue-500/20 active:scale-95 transition-all"
                   >
-                    <option value="CONCEPT_GAP">Concept / Formula Gap</option>
-                    <option value="CALCULATION_SLIP">Calculation Slip</option>
-                    <option value="MISREAD_QUESTION">Misread Question Stem</option>
-                    <option value="DESMOS_MISSED">Missed Desmos Shortcut</option>
-                  </select>
+                    <Sparkles size={13} className="text-amber-300 fill-amber-300" />
+                    <span>💡 AI Bilan Tushunish: Nega [{selectedChoice}] xato?</span>
+                  </button>
                 </div>
               )}
             </div>
