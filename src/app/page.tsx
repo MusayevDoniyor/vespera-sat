@@ -168,10 +168,10 @@ export default function DashboardPage() {
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] text-xs font-semibold border border-[var(--accent-blue)]/20 font-mono">
               <span className="w-2 h-2 rounded-full bg-[var(--accent-green)] animate-live-pulse"></span>
-              Autonomous SAT Mastery Cockpit
+              Digital SAT Suite
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--text-main)] tracking-tight flex flex-wrap items-center gap-3">
-              <span>{user ? `Welcome back, ${user.fullName}!` : "Welcome to Vespera SAT!"}</span>
+              <span>{user ? `Welcome back, ${user.fullName}!` : "Welcome to Vespera"}</span>
               <span
                 onClick={user ? openOnboarding : () => openAuthModal("register")}
                 className="text-xs px-2.5 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-mono font-bold tracking-wider uppercase cursor-pointer hover:opacity-90 transition-opacity"
@@ -184,16 +184,16 @@ export default function DashboardPage() {
               {user ? (
                 user.ieltsScore ? (
                   <>
-                    Personalized for your <strong className="text-[var(--text-main)]">IELTS {user.ieltsScore}</strong> profile: tailored focus on catapulting <strong className="text-[var(--accent-blue)]">Math to {user.mathLevel === "target_800" ? "800 (Elite)" : "800"}</strong> and mastering high-speed Desmos strategies to lock in a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> composite score before {user.examDate || "exam day"}.
+                    Personalized for your <strong className="text-[var(--text-main)]">IELTS {user.ieltsScore}</strong> profile: tailored focus on catapulting <strong className="text-[var(--accent-blue)]">Math to {user.mathLevel === "target_800" ? "800" : "800"}</strong> and mastering Desmos strategies for a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> score before {user.examDate || "exam day"}.
                   </>
                 ) : (
                   <>
-                    Personalized for your <strong className="text-[var(--text-main)]">{user.mathLevel.replace("_", " ")}</strong> Math & <strong className="text-[var(--text-main)]">{user.englishLevel}</strong> Verbal profile: daily commitment of <strong className="text-[var(--accent-blue)]">{user.dailyGoalMinutes} min/day</strong> targeting a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> composite score before {user.examDate || "exam day"}.
+                    Personalized for your <strong className="text-[var(--text-main)]">{user.mathLevel.replace("_", " ")}</strong> Math & <strong className="text-[var(--text-main)]">{user.englishLevel}</strong> Verbal profile: daily commitment of <strong className="text-[var(--accent-blue)]">{user.dailyGoalMinutes} min/day</strong> targeting <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong>.
                   </>
                 )
               ) : (
                 <>
-                  Autonomous Digital SAT suite equipped with <strong className="text-[var(--text-main)]">212 authentic questions</strong>, 16 visual models, 10-second Desmos hacks, and AI error diagnosis. <span className="text-[var(--accent-blue)] font-semibold cursor-pointer underline hover:opacity-80" onClick={() => openAuthModal("register")}>Sign in or create a free account</span> to track your score progression and personalize your roadmap.
+                  Complete Digital SAT preparation with <strong className="text-[var(--text-main)]">212 authentic questions</strong>, 16 visual models, and Desmos speed hacks. Create an account to save your progress and customize your study plan.
                 </>
               )}
             </p>
@@ -205,7 +205,7 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] transition-colors shadow-sm"
                 >
                   <Sliders size={13} className="text-[var(--accent-blue)]" />
-                  <span>Customize SAT Goals & Levels</span>
+                  <span>Edit Goals</span>
                 </button>
                 {user.priorityWeakness && (
                   <span className="text-xs text-[var(--text-muted)] font-mono hidden sm:inline">
@@ -220,7 +220,7 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
                 >
                   <LogIn size={14} />
-                  <span>Get Started Free (No Verification Required)</span>
+                  <span>Get Started Free</span>
                 </button>
               </div>
             )}
@@ -321,15 +321,15 @@ export default function DashboardPage() {
                   Adaptive AI Roadmap
                 </span>
                 <span className="text-xs text-[var(--text-muted)] font-mono">
-                  {user ? `${user.fullName}'s Personalized Focus` : "Recommended Path for 1550+ Candidate"}
+                  {user ? `${user.fullName}'s Study Focus` : "Recommended Study Path"}
                 </span>
               </div>
               <h3 className="text-lg font-black text-[var(--text-main)] mt-0.5">
                 {user?.mathLevel === "beginner"
-                  ? "Phase 1: Math Foundations, Terminology & Formula Vault"
+                  ? "Math Foundations & Formula Vault"
                   : user?.mathLevel === "target_800"
-                  ? "Phase 3: 8-Second Desmos Hacks & Hard Module 2 Speedrun"
-                  : "Phase 2: High-Yield Algebra, Quadratic Vertices & Pacing"}
+                  ? "Desmos Speedrun & Hard Module 2"
+                  : "High-Yield Algebra & Quadratic Pacing"}
               </h3>
             </div>
           </div>
@@ -339,7 +339,7 @@ export default function DashboardPage() {
             className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--accent-blue)] flex items-center gap-1.5 transition-colors"
           >
             <Sliders size={13} />
-            <span>Tune Learning Track</span>
+            <span>Edit Track</span>
           </button>
         </div>
 

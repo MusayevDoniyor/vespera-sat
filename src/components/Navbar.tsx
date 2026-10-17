@@ -33,7 +33,7 @@ export default function Navbar({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
 
           <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 flex items-center gap-2 font-mono">
             <span className="w-2 h-2 rounded-full bg-[var(--accent-green)] animate-live-pulse"></span>
-            Digital SAT Autonomous Suite
+            Digital SAT Suite
           </span>
         </div>
 

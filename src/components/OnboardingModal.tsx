@@ -86,13 +86,13 @@ export default function OnboardingModal() {
             </div>
             <div>
               <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--accent-blue)]">
-                Personalized Onboarding • Step {step} of 4
+                Step {step} of 4
               </span>
               <h2 className="text-base sm:text-lg font-black text-[var(--text-main)]">
-                {step === 1 && "Define Your Target SAT Benchmark"}
-                {step === 2 && "Self-Assess Your Math & Verbal Strengths"}
-                {step === 3 && "Standardized Test Baseline (Optional)"}
-                {step === 4 && "Daily Study Commitment & Priorities"}
+                {step === 1 && "Target Score & Exam Window"}
+                {step === 2 && "Proficiency Levels"}
+                {step === 3 && "Prior Scores (Optional)"}
+                {step === 4 && "Daily Study Schedule"}
               </h2>
             </div>
           </div>
@@ -119,13 +119,13 @@ export default function OnboardingModal() {
             <div className="space-y-2">
               <label className="text-xs font-bold text-[var(--text-main)] flex items-center gap-2">
                 <Target size={16} className="text-[var(--accent-blue)]" />
-                <span>What is your ultimate SAT Composite Score Goal?</span>
+                <span>Target Composite Score</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { score: 1400, label: "Competitive", rank: "Top 7%" },
                   { score: 1500, label: "Ivy League Tier", rank: "Top 2%" },
-                  { score: 1550, label: "Elite Scholar", rank: "Top 1% (Recommended)" },
+                  { score: 1550, label: "Elite Scholar", rank: "Top 1%" },
                   { score: 1600, label: "Perfect Score", rank: "Top 0.1%" },
                 ].map((item) => (
                   <button
@@ -153,7 +153,7 @@ export default function OnboardingModal() {
             <div className="space-y-2">
               <label className="text-xs font-bold text-[var(--text-main)] flex items-center gap-2">
                 <Calendar size={16} className="text-indigo-500" />
-                <span>When are you planning to sit for the official Digital SAT?</span>
+                <span>Target Exam Month</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {[
@@ -286,9 +286,7 @@ export default function OnboardingModal() {
         {step === 3 && (
           <div className="space-y-6">
             <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              If you have previously taken IELTS or SAT, entering your score allows Vespera to
-              calculate your exact score trajectory and pinpoint whether Math or Verbal needs higher
-              weekly focus. Both are completely optional.
+              Optional: Enter any prior scores to calibrate your diagnostic baseline.
             </p>
 
             {/* IELTS Score */}
@@ -532,12 +530,12 @@ export default function OnboardingModal() {
               {submitting ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Personalizing Platform...</span>
+                  <span>Saving...</span>
                 </span>
               ) : (
                 <>
-                  <span>Complete & Launch Dashboard</span>
-                  <Sparkles size={16} />
+                  <span>Save & Continue</span>
+                  <ArrowRight size={16} />
                 </>
               )}
             </button>

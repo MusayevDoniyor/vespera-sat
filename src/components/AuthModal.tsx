@@ -85,12 +85,12 @@ export default function AuthModal() {
             <VesperaLogo size={42} />
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight">
-            {mode === "login" ? "Welcome Back to Vespera" : "Create Your Vespera Account"}
+            {mode === "login" ? "Sign In" : "Create Account"}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--text-muted)] max-w-xs leading-relaxed">
             {mode === "login"
-              ? "Access your 1550+ roadmap, saved spaced-repetition cards, and AI error analysis."
-              : "Zero friction. No email verification needed. Start your 1550+ personalized SAT prep immediately."}
+              ? "Access your saved practice tests, error log, and study roadmap."
+              : "Track your progress and personalize your SAT prep."}
           </p>
         </div>
 
@@ -207,37 +207,17 @@ export default function AuthModal() {
               </span>
             ) : mode === "login" ? (
               <>
-                <span>Sign In to Dashboard</span>
+                <span>Sign In</span>
                 <ArrowRight size={16} />
               </>
             ) : (
               <>
-                <span>Create Account & Personalize</span>
-                <Sparkles size={16} />
+                <span>Create Account</span>
+                <ArrowRight size={16} />
               </>
             )}
           </button>
         </form>
-
-        {/* Feature Highlights */}
-        <div className="mt-6 pt-5 border-t border-[var(--border-main)] grid grid-cols-2 gap-2 text-[11px] text-[var(--text-muted)]">
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
-            <span>Instant Access</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
-            <span>Multi-device Sync</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
-            <span>Personalized Goals</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
-            <span>AI Error Diagnosis</span>
-          </div>
-        </div>
       </div>
     </div>
   );

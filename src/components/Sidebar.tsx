@@ -312,7 +312,7 @@ export default function Sidebar() {
                 className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition-all"
               >
                 <LogIn size={14} />
-                <span>Sign In / Join Free</span>
+                <span>Sign In / Register</span>
               </button>
               <div className="flex items-center justify-between px-1 text-[11px] text-[var(--text-muted)]">
                 <span className="flex items-center gap-1">
