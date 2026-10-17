@@ -213,7 +213,7 @@ export default function AICopilotModal({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-extrabold text-sm text-[var(--text-main)] tracking-wide">
-                  VESPERA AI MENTOR
+                  VESPERA AI COPILOT
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--accent-green)]/15 text-[var(--accent-green)] font-bold font-mono flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-green)] animate-ping"></span>
@@ -221,7 +221,7 @@ export default function AICopilotModal({
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] font-medium">
-                1550+ Maqsadli Shaxsiy SAT Murabbiyi (Desmos Speedhacks & Trap Analysis)
+                Personal 1550+ SAT Mentor (Desmos Speedhacks & Trap Taxonomy)
               </p>
             </div>
           </div>
@@ -229,14 +229,14 @@ export default function AICopilotModal({
           <div className="flex items-center gap-1.5">
             <button
               onClick={handleClearChat}
-              title="Muloqotni Tozalash"
+              title="Clear Conversation"
               className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card)] border border-transparent hover:border-[var(--border-main)] transition-colors"
             >
               <RotateCcw size={16} />
             </button>
             <button
               onClick={onClose}
-              title="Yopish (Esc)"
+              title="Close (Esc)"
               className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card)] border border-transparent hover:border-[var(--border-main)] transition-colors"
             >
               <X size={18} />
@@ -260,11 +260,11 @@ export default function AICopilotModal({
                 <Compass size={15} className="shrink-0" />
               )}
               <span className="font-bold shrink-0">
-                {hasMistakeContext ? "Xatolik Konteksti:" : "Joriy Savol:"}
+                {hasMistakeContext ? "Error Context:" : "Active Question:"}
               </span>
               {hasMistakeContext && (
                 <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-black/10 dark:bg-white/10 shrink-0">
-                  Tanlovingiz: [{userChoice}] ❌ → To'g'ri: [{correctChoice}] ✅
+                  Your choice: [{userChoice}] ❌ → Correct: [{correctChoice}] ✅
                 </span>
               )}
               <span className="truncate opacity-80">{contextQuestion}</span>
@@ -374,7 +374,7 @@ export default function AICopilotModal({
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-blue)] animate-bounce [animation-delay:-0.3s]"></span>
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-blue)] animate-bounce [animation-delay:-0.15s]"></span>
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-blue)] animate-bounce"></span>
-                <span className="ml-2 font-medium text-[11px]">AI Mentor savolni tahlil qilmoqda...</span>
+                <span className="ml-2 font-medium text-[11px]">AI Copilot analyzing problem...</span>
               </div>
             </div>
           )}
@@ -386,7 +386,7 @@ export default function AICopilotModal({
         <div className="px-5 py-2.5 bg-[var(--bg-surface)] border-t border-[var(--border-main)] flex items-center gap-2 overflow-x-auto text-xs scrollbar-none shrink-0">
           <span className="text-[var(--text-muted)] font-semibold text-[11px] whitespace-nowrap flex items-center gap-1">
             <Lightbulb size={13} className="text-amber-500" />
-            Tezkor Savollar:
+            Quick Prompts:
           </span>
           {quickPrompts.map((p, i) => (
             <button
@@ -413,7 +413,7 @@ export default function AICopilotModal({
                   handleSend();
                 }
               }}
-              placeholder="Mentorga istalgan savol bering (masalan: nega B xato, Desmos hiylasi, tuzoqlar)..."
+              placeholder="Ask anything (e.g. why B is wrong, 10s Desmos shortcut, College Board trap)..."
               className="w-full bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-2xl px-4 py-3 text-xs sm:text-sm text-[var(--text-main)] placeholder-[var(--text-muted)] outline-none focus:border-[var(--accent-blue)] focus:ring-2 focus:ring-[var(--accent-blue)]/15 transition-all"
             />
           </div>
@@ -421,7 +421,7 @@ export default function AICopilotModal({
           <button
             onClick={() => handleSend()}
             disabled={!inputText.trim() || isLoading}
-            title="Yuborish (Enter)"
+            title="Send (Enter)"
             className="p-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:hover:brightness-100 transition-all shadow-md shadow-blue-500/20 shrink-0"
           >
             <Send size={16} />

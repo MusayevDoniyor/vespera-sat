@@ -437,11 +437,11 @@ export default function BluebookMockPage() {
               className="text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition"
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>Bosh Sahifa</span>
+              <span>Return to Dashboard</span>
             </Link>
             <button
               onClick={toggleTheme}
-              title={theme === "dark" ? "Light Mode ga o'tish" : "Dark Mode ga o'tish"}
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
               className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm flex items-center gap-2 text-xs font-medium"
             >
               {theme === "dark" ? (
@@ -536,14 +536,14 @@ export default function BluebookMockPage() {
             <div className="flex items-center gap-3">
               <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
               <span>
-                <strong>Bluebook qoidalari:</strong> Har bir modul yakunida tekshiruv (Section Review) ekrani ochiladi. Modul yakunlangach, unga qaytib bo'lmaydi. Reading & Writing va Math o'rtasida 10 daqiqalik tanaffus mavjud.
+                <strong>Official Bluebook Rules:</strong> A Section Review screen appears before ending each module. Once submitted, modules cannot be revisited. A scheduled 10-minute break occurs between Section 1 and Section 2.
               </span>
             </div>
             <Link
               href="/"
               className="text-[var(--text-muted)] hover:text-[var(--text-main)] transition whitespace-nowrap underline underline-offset-4"
             >
-              Bosh sahifaga qaytish
+              Return to Dashboard
             </Link>
           </div>
         </div>
@@ -564,10 +564,10 @@ export default function BluebookMockPage() {
 
           <div className="space-y-2">
             <h2 className="text-2xl md:text-3xl font-black text-[var(--text-main)]">
-              10 Daqiqalik Rasmiy Tanaffus
+              Official 10-Minute Break
             </h2>
             <p className="text-sm text-[var(--text-muted)]">
-              Section 1 (Reading & Writing) yakunlandi. Endi biroz dam oling, suv iching va ko'zingizni dam oldiring.
+              Section 1 (Reading and Writing) is complete. Take a short rest, stretch, hydrate, and prepare for the Math section.
             </p>
           </div>
 
@@ -575,7 +575,7 @@ export default function BluebookMockPage() {
             <div className="text-6xl md:text-7xl font-mono font-bold tracking-tight text-amber-500">
               {formatTime(breakTimeLeft)}
             </div>
-            <p className="text-xs text-[var(--text-muted)] mt-2">Qolgan tanaffus vaqti</p>
+            <p className="text-xs text-[var(--text-muted)] mt-2">Break Time Remaining</p>
           </div>
 
           <div className="space-y-3 pt-4 border-t border-[var(--border-main)]">
@@ -583,11 +583,11 @@ export default function BluebookMockPage() {
               onClick={startMathSection}
               className="w-full py-3.5 px-6 rounded-2xl font-bold text-sm bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 transition flex items-center justify-center gap-2 active:scale-95"
             >
-              <span>Tanaffusni tugatib, Math Bo'limiga o'tish</span>
+              <span>Resume Testing: Begin Math Section</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <p className="text-xs text-[var(--text-muted)]">
-              Math bo'limida 2 ta adaptiv modul (har biri 35 daqiqa) va rasmiy Desmos kalkulyatori mavjud.
+              The Math section consists of 2 adaptive 35-minute modules with an embedded Desmos graphing calculator.
             </p>
           </div>
         </div>
@@ -618,19 +618,19 @@ export default function BluebookMockPage() {
               {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"} - Module {currentModuleNum} Review
             </h2>
             <p className="text-xs text-[var(--text-muted)]">
-              Barcha savollaringizni tekshirib chiqing. Har qanday savolga bosib qaytishingiz mumkin.
+              Review your questions below. Click on any question to view or modify your response.
             </p>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <span className="text-xs text-[var(--text-muted)] block">Qolgan vaqt</span>
+              <span className="text-xs text-[var(--text-muted)] block">Time Remaining</span>
               <span className="text-sm font-mono font-bold text-[var(--accent-blue)]">{formatTime(timeLeft)}</span>
             </div>
             <button
               onClick={() => setShowLeaveConfirmation(true)}
               className="py-2 px-5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/30 transition flex items-center gap-2"
             >
-              <span>Modulni Yakunlash</span>
+              <span>Submit & End Module</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -649,7 +649,7 @@ export default function BluebookMockPage() {
               }`}
             >
               <div className="text-2xl font-bold">{activeQuestions.length}</div>
-              <div className="text-xs text-[var(--text-muted)] mt-1">Barcha Savollar</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">All Questions</div>
             </button>
             <button
               onClick={() => setGridFilter("unanswered")}
@@ -660,7 +660,7 @@ export default function BluebookMockPage() {
               }`}
             >
               <div className="text-2xl font-bold text-rose-500">{unansweredCount}</div>
-              <div className="text-xs text-[var(--text-muted)] mt-1">Belgilanmagan (Unanswered)</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Unanswered</div>
             </button>
             <button
               onClick={() => setGridFilter("flagged")}
@@ -671,7 +671,7 @@ export default function BluebookMockPage() {
               }`}
             >
               <div className="text-2xl font-bold text-amber-500">{flaggedCount}</div>
-              <div className="text-xs text-[var(--text-muted)] mt-1">Belgilangan (For Review)</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">For Review</div>
             </button>
           </div>
 
@@ -721,13 +721,13 @@ export default function BluebookMockPage() {
               className="py-2.5 px-6 rounded-xl border border-[var(--border-main)] hover:bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] flex items-center gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>Savollarga Qaytish</span>
+              <span>Return to Questions</span>
             </button>
             <button
               onClick={() => setShowLeaveConfirmation(true)}
               className="py-2.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-lg shadow-blue-600/30 flex items-center gap-2"
             >
-              <span>Modulni Yakunlash</span>
+              <span>Submit & End Module</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -739,13 +739,13 @@ export default function BluebookMockPage() {
             <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
               <div className="flex items-center gap-3 text-amber-500">
                 <AlertCircle className="w-6 h-6" />
-                <h3 className="text-lg font-bold text-[var(--text-main)]">Haqiqatan ham yakunlamoqchimisiz?</h3>
+                <h3 className="text-lg font-bold text-[var(--text-main)]">Are you sure you want to end this module?</h3>
               </div>
               <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Ushbu modulni yakunlaganingizdan so'ng, uning savollariga qayta kira olmaysiz.
+                Once you submit and end this module, you cannot return to these questions or change your answers.
                 {unansweredCount > 0 && (
                   <span className="block mt-2 font-bold text-rose-500">
-                    Diqqat: Sizda {unansweredCount} ta belgilanmagan savol qolgan!
+                    Warning: You still have {unansweredCount} unanswered questions!
                   </span>
                 )}
               </p>
@@ -754,13 +754,13 @@ export default function BluebookMockPage() {
                   onClick={() => setShowLeaveConfirmation(false)}
                   className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition"
                 >
-                  Tekshirishda davom etish
+                  Continue Reviewing
                 </button>
                 <button
                   onClick={submitCurrentModule}
                   className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition"
                 >
-                  Ha, Yakunlash
+                  Yes, End Module
                 </button>
               </div>
             </div>
@@ -781,10 +781,10 @@ export default function BluebookMockPage() {
           <div className="text-center space-y-2">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs font-bold uppercase tracking-wider">
               <CheckCircle2 className="w-4 h-4" />
-              Imtihon Muvaffaqiyatli Yakunlandi
+              Exam Completed Successfully
             </div>
             <h1 className="text-3xl md:text-5xl font-black text-[var(--text-main)]">
-              Sizning SAT Natijangiz
+              Your Digital SAT Score Report
             </h1>
             <p className="text-xs md:text-sm text-[var(--text-muted)]">
               {selectedExam.title} ({selectedExam.formCode})
@@ -796,12 +796,12 @@ export default function BluebookMockPage() {
             {/* Total Scaled Score */}
             <div className="md:col-span-1 rounded-3xl bg-gradient-to-b from-[var(--accent-blue)]/15 to-[var(--bg-card)] border border-[var(--accent-blue)]/30 p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-2xl">
               <span className="text-xs uppercase tracking-widest text-[var(--accent-blue)] font-bold mb-2">
-                Umumiy SAT Balli
+                Total Scaled Score
               </span>
               <div className="text-6xl md:text-7xl font-mono font-black text-[var(--text-main)] tracking-tight">
                 {scoreResult.totalScore}
               </div>
-              <span className="text-xs text-[var(--text-muted)] mt-1">400 — 1600 shkala</span>
+              <span className="text-xs text-[var(--text-muted)] mt-1">400 — 1600 Scale</span>
               <div className="mt-4 px-3 py-1.5 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] text-xs font-bold">
                 Top {100 - scoreResult.percentile}% (Percentile: {scoreResult.percentile}th)
               </div>
@@ -821,11 +821,11 @@ export default function BluebookMockPage() {
                 </div>
                 <div className="pt-4 border-t border-[var(--border-main)] space-y-1 text-xs text-[var(--text-muted)]">
                   <div className="flex justify-between">
-                    <span>To'g'ri javoblar:</span>
-                    <span className="font-bold text-emerald-500">{scoreResult.rwCorrect} ta</span>
+                    <span>Correct Answers:</span>
+                    <span className="font-bold text-emerald-500">{scoreResult.rwCorrect}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Yo'nalish:</span>
+                    <span>Target Tier:</span>
                     <span className="font-bold text-[var(--accent-blue)]">{scoreResult.rwTier}</span>
                   </div>
                 </div>
@@ -835,7 +835,7 @@ export default function BluebookMockPage() {
               <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 flex flex-col justify-between shadow-sm">
                 <div className="space-y-1">
                   <span className="text-xs uppercase font-bold text-[var(--text-muted)]">Section 2</span>
-                  <h3 className="text-base font-bold text-[var(--text-main)]">Math (Kalkulyator bilan)</h3>
+                  <h3 className="text-base font-bold text-[var(--text-main)]">Math (Calculator Allowed)</h3>
                   <div className="text-4xl font-mono font-black text-emerald-500 mt-2">
                     {scoreResult.mathScore}
                     <span className="text-xs text-[var(--text-muted)] font-sans font-normal ml-1">/ 800</span>
@@ -843,11 +843,11 @@ export default function BluebookMockPage() {
                 </div>
                 <div className="pt-4 border-t border-[var(--border-main)] space-y-1 text-xs text-[var(--text-muted)]">
                   <div className="flex justify-between">
-                    <span>To'g'ri javoblar:</span>
-                    <span className="font-bold text-emerald-500">{scoreResult.mathCorrect} ta</span>
+                    <span>Correct Answers:</span>
+                    <span className="font-bold text-emerald-500">{scoreResult.mathCorrect}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Yo'nalish:</span>
+                    <span>Target Tier:</span>
                     <span className="font-bold text-emerald-500">{scoreResult.mathTier}</span>
                   </div>
                 </div>
@@ -862,14 +862,14 @@ export default function BluebookMockPage() {
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 active:scale-95"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>Boshqa Testni Tanlash</span>
+              <span>Select Another Exam</span>
             </button>
             <Link
               href="/curriculum"
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-main)] font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm"
             >
               <BookOpen className="w-4 h-4 text-[var(--accent-blue)]" />
-              <span>Xatolarni Tahlil Qilish (Curriculum)</span>
+              <span>Deep-Dive in Curriculum</span>
             </Link>
           </div>
 
@@ -879,20 +879,20 @@ export default function BluebookMockPage() {
               <div>
                 <h2 className="text-xl md:text-2xl font-black text-[var(--text-main)] flex items-center gap-2">
                   <Award className="w-6 h-6 text-[var(--accent-blue)]" />
-                  <span>Imtihon Savollari Tahlili va Diagnostikasi</span>
+                  <span>Exam Question Analysis & Diagnostics</span>
                 </h2>
                 <p className="text-xs text-[var(--text-muted)] mt-1">
-                  Har bir savolning to'g'ri javobi, sizning variantingiz va AI Mentor izohi
+                  Detailed review of every question, your response, correct keys, and AI Copilot explanations
                 </p>
               </div>
 
               {/* Filter Tabs */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
                 {[
-                  { id: "all", label: `Barchasi (${servedQuestions.length})` },
+                  { id: "all", label: `All (${servedQuestions.length})` },
                   {
                     id: "incorrect",
-                    label: `Xatolar (${
+                    label: `Incorrect (${
                       servedQuestions.filter((q) => {
                         const ans = userAnswers[q.id]?.trim().toUpperCase();
                         return !ans || ans !== q.correctAnswer.trim().toUpperCase();
@@ -902,7 +902,7 @@ export default function BluebookMockPage() {
                   },
                   {
                     id: "correct",
-                    label: `To'g'rilar (${
+                    label: `Correct (${
                       servedQuestions.filter((q) => {
                         const ans = userAnswers[q.id]?.trim().toUpperCase();
                         return ans === q.correctAnswer.trim().toUpperCase();
@@ -912,7 +912,7 @@ export default function BluebookMockPage() {
                   },
                   {
                     id: "flagged",
-                    label: `Belgilangan (${
+                    label: `Flagged (${
                       servedQuestions.filter((q) => flagged[q.id]).length
                     })`,
                   },
@@ -991,17 +991,17 @@ export default function BluebookMockPage() {
                           {isCorrect ? (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold font-mono">
                               <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>To'g'ri ({q.correctAnswer})</span>
+                              <span>Correct ({q.correctAnswer})</span>
                             </span>
                           ) : isAnswered ? (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs font-bold font-mono">
                               <XCircle className="w-3.5 h-3.5" />
-                              <span>Sizniki: {userAns} • To'g'ri: {q.correctAnswer}</span>
+                              <span>Your Choice: {userAns} • Correct: {q.correctAnswer}</span>
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-xs font-bold font-mono">
                               <AlertCircle className="w-3.5 h-3.5" />
-                              <span>Belgilanmagan • To'g'ri: {q.correctAnswer}</span>
+                              <span>Omitted • Correct: {q.correctAnswer}</span>
                             </span>
                           )}
                         </div>
@@ -1060,12 +1060,12 @@ export default function BluebookMockPage() {
 
                                 {isThisCorrect && (
                                   <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono px-2 py-0.5 rounded bg-emerald-500/15">
-                                    To'g'ri Javob
+                                    Correct Key
                                   </span>
                                 )}
                                 {isUserWrongHere && (
                                   <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 font-mono px-2 py-0.5 rounded bg-rose-500/15">
-                                    Sizning tanlovingiz (Xato)
+                                    Your Choice (Incorrect)
                                   </span>
                                 )}
                               </div>
@@ -1078,10 +1078,10 @@ export default function BluebookMockPage() {
                       {q.type === "spr" && (
                         <div className="mt-4 p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between text-xs font-mono">
                           <span className="text-[var(--text-muted)]">
-                            Sizning javobingiz: <strong className={isCorrect ? "text-emerald-500" : "text-rose-500"}>{userAns || "Bo'sh"}</strong>
+                            Your response: <strong className={isCorrect ? "text-emerald-500" : "text-rose-500"}>{userAns || "Omitted"}</strong>
                           </span>
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-                            To'g'ri qiymat: {q.correctAnswer}
+                            Correct Value: {q.correctAnswer}
                           </span>
                         </div>
                       )}
@@ -1098,7 +1098,7 @@ export default function BluebookMockPage() {
                           className="text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition"
                         >
                           <FileText className="w-3.5 h-3.5" />
-                          <span>{isExpanded ? "Tushuntirishni Yopish" : "Tushuntirishni Ko'rish"}</span>
+                          <span>{isExpanded ? "Hide Explanation" : "View Explanation"}</span>
                         </button>
 
                         {/* AI Mentor Button */}
@@ -1122,7 +1122,7 @@ export default function BluebookMockPage() {
                           className="px-3.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold flex items-center gap-1.5 transition border border-purple-500/20 active:scale-95 shadow-sm"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-                          <span>💡 AI Mentor Tahlili (Nega xato?)</span>
+                          <span>💡 AI Copilot Breakdown (Why wrong?)</span>
                         </button>
                       </div>
 
@@ -1592,7 +1592,7 @@ export default function BluebookMockPage() {
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                Savollar ro'yxati (Question Grid)
+                Question Grid
               </span>
               <button
                 onClick={() => setShowQuestionGrid(false)}
@@ -1636,11 +1636,11 @@ export default function BluebookMockPage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded bg-blue-600" />
-                  <span>Joriy savol</span>
+                  <span>Current</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded bg-[var(--bg-surface)] border border-[var(--border-main)]" />
-                  <span>Belgilangan</span>
+                  <span>Answered</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
@@ -1654,7 +1654,7 @@ export default function BluebookMockPage() {
                 }}
                 className="text-[var(--accent-blue)] hover:underline font-bold"
               >
-                Section Review Ekranini Ochish
+                Open Section Review Screen
               </button>
             </div>
           </div>
@@ -1668,7 +1668,7 @@ export default function BluebookMockPage() {
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-[var(--text-main)] flex items-center gap-2">
                 <Info className="w-5 h-5 text-[var(--accent-blue)]" />
-                Rasmiy College Board Yo'riqnomasi
+                Official Section Directions
               </h3>
               <button onClick={() => setShowDirections(false)} className="text-[var(--text-muted)] hover:text-[var(--text-main)]">
                 <X className="w-4 h-4" />
@@ -1678,25 +1678,25 @@ export default function BluebookMockPage() {
               {currentSection === "READING_WRITING" ? (
                 <>
                   <p>
-                    <strong>Reading and Writing Section:</strong> 2 ta moduldan iborat. Har bir modul uchun 32 daqiqa ajratilgan.
+                    <strong>Reading and Writing Section:</strong> Divided into 2 modules. You have 32 minutes to answer the questions in each module.
                   </p>
                   <p>
-                    Har bir savolda bitta matn yoki jadval berilgan. Matnni diqqat bilan o'qib, eng to'g'ri variantni (A, B, C, D) tanlang. Har bir savol faqat bitta to'g'ri javobga ega.
+                    Each question features one or more short passages, possibly with an accompanying table or chart. Read each passage and prompt carefully, then choose the best answer from the four choices (A, B, C, D). Each question has exactly one correct answer.
                   </p>
                   <p>
-                    <strong>Maslahat:</strong> Noto'g'ri javoblarga ball chegirilmaydi (no negative marking). Shuning uchun barcha savollarga javob belgilash tavsiya etiladi.
+                    <strong>Test Strategy:</strong> There is no penalty for guessing. We strongly recommend selecting an answer for every single question before time runs out.
                   </p>
                 </>
               ) : (
                 <>
                   <p>
-                    <strong>Math Section:</strong> 2 ta adaptiv moduldan iborat. Har bir modul uchun 35 daqiqa ajratilgan.
+                    <strong>Math Section:</strong> Divided into 2 adaptive modules. You have 35 minutes to complete each module.
                   </p>
                   <p>
-                    Barcha savollar uchun o'rnatilgan Desmos kalkulyatoridan va yuqori paneldagi Reference formulas varaqasidan foydalanishga ruxsat etiladi.
+                    An embedded official Desmos graphing calculator is available throughout all math questions. A reference sheet of formulas is accessible at any time from the top toolbar.
                   </p>
                   <p>
-                    Savollarning 75% qismi variantli, 25% qismi esa Student-Produced Response (qiymatni to'g'ridan-to'g'ri kiritish) shaklida bo'ladi.
+                    Approximately 75% of questions are multiple-choice, and 25% are Student-Produced Response (SPR) where you enter the numeric value directly into the grid.
                   </p>
                 </>
               )}
@@ -1706,7 +1706,7 @@ export default function BluebookMockPage() {
                 onClick={() => setShowDirections(false)}
                 className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white"
               >
-                Tushundim
+                Close Directions
               </button>
             </div>
           </div>
@@ -1720,15 +1720,15 @@ export default function BluebookMockPage() {
             <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto">
               <Clock className="w-6 h-6 animate-pulse" />
             </div>
-            <h3 className="text-base font-bold text-[var(--text-main)]">5 Daqiqa Qoldi!</h3>
+            <h3 className="text-base font-bold text-[var(--text-main)]">5 Minutes Remaining!</h3>
             <p className="text-xs text-[var(--text-muted)]">
-              Ushbu modulni yakunlash uchun 5 daqiqa vaqtingiz qoldi. Belgilanmagan savollarni tekshirishni unutmang.
+              You have 5 minutes remaining in this module. Review any unanswered or flagged questions before time runs out.
             </p>
             <button
               onClick={() => setShowFiveMinAlert(false)}
               className="w-full py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold"
             >
-              Imtihonni davom ettirish
+              Continue Testing
             </button>
           </div>
         </div>
@@ -1798,36 +1798,36 @@ export default function BluebookMockPage() {
             {formulaTab === "cb" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--text-secondary)]">
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--text-main)]">Aylana / Circle</div>
-                  <div><KaTeXMath content="Area: A = \pi r^2" /></div>
-                  <div><KaTeXMath content="Circumference: C = 2\pi r" /></div>
-                  <div className="text-[var(--text-muted)] text-[11px]">360° = 2π radian</div>
+                  <div className="font-bold text-[var(--text-main)]">Circle / Aylana</div>
+                  <div><KaTeXMath content="\text{Area: } A = \pi r^2" /></div>
+                  <div><KaTeXMath content="\text{Circumference: } C = 2\pi r" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">360° = 2π radians</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--text-main)]">To'g'ri to'rtburchak / Rectangle</div>
-                  <div><KaTeXMath content="Area: A = l \cdot w" /></div>
-                  <div><KaTeXMath content="Perimeter: P = 2l + 2w" /></div>
+                  <div className="font-bold text-[var(--text-main)]">Rectangle / To'rtburchak</div>
+                  <div><KaTeXMath content="\text{Area: } A = l \cdot w" /></div>
+                  <div><KaTeXMath content="\text{Perimeter: } P = 2l + 2w" /></div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--text-main)]">Uchburchak / Triangle</div>
-                  <div><KaTeXMath content="Area: A = \frac{1}{2}bh" /></div>
-                  <div><KaTeXMath content="Pythagorean: a^2 + b^2 = c^2" /></div>
-                  <div className="text-[var(--text-muted)] text-[11px]">Ichki burchaklar yig'indisi: 180°</div>
+                  <div className="font-bold text-[var(--text-main)]">Triangle / Uchburchak</div>
+                  <div><KaTeXMath content="\text{Area: } A = \frac{1}{2}bh" /></div>
+                  <div><KaTeXMath content="\text{Pythagorean: } a^2 + b^2 = c^2" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">Sum of interior angles: 180°</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--text-main)]">Maxsus to'g'ri burchakli uchburchaklar</div>
+                  <div className="font-bold text-[var(--text-main)]">Special Right Triangles</div>
                   <div><KaTeXMath content="45^\circ - 45^\circ - 90^\circ: x, x, x\sqrt{2}" /></div>
                   <div><KaTeXMath content="30^\circ - 60^\circ - 90^\circ: x, x\sqrt{3}, 2x" /></div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--text-main)]">Hajm formulalari / Volumes</div>
-                  <div><KaTeXMath content="Cylinder: V = \pi r^2 h" /></div>
-                  <div><KaTeXMath content="Sphere: V = \frac{4}{3}\pi r^3" /></div>
-                  <div><KaTeXMath content="Cone: V = \frac{1}{3}\pi r^2 h" /></div>
-                  <div><KaTeXMath content="Pyramid: V = \frac{1}{3}lwh" /></div>
+                  <div className="font-bold text-[var(--text-main)]">Volume Formulas / Hajm</div>
+                  <div><KaTeXMath content="\text{Cylinder: } V = \pi r^2 h" /></div>
+                  <div><KaTeXMath content="\text{Sphere: } V = \frac{4}{3}\pi r^3" /></div>
+                  <div><KaTeXMath content="\text{Cone: } V = \frac{1}{3}\pi r^2 h" /></div>
+                  <div><KaTeXMath content="\text{Pyramid: } V = \frac{1}{3}lwh" /></div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--text-main)]">Trigonometriya / Trig Ratios</div>
+                  <div className="font-bold text-[var(--text-main)]">Trigonometric Ratios</div>
                   <div><KaTeXMath content="\sin(\theta) = \frac{\text{Opposite}}{\text{Hypotenuse}}" /></div>
                   <div><KaTeXMath content="\cos(\theta) = \frac{\text{Adjacent}}{\text{Hypotenuse}}" /></div>
                   <div><KaTeXMath content="\tan(\theta) = \frac{\text{Opposite}}{\text{Adjacent}}" /></div>
@@ -1849,15 +1849,15 @@ export default function BluebookMockPage() {
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
                   <div className="font-bold text-[var(--accent-blue)]">Discriminant & Solutions</div>
                   <div><KaTeXMath content="D = b^2 - 4ac" /></div>
-                  <div><KaTeXMath content="D > 0 \implies \text{2 Real Solutions (Kesishadi)}" /></div>
-                  <div><KaTeXMath content="D = 0 \implies \text{1 Real Solution (Urinadi / Tangent)}" /></div>
-                  <div><KaTeXMath content="D < 0 \implies \text{0 Real Solutions (Tegmaydi)}" /></div>
+                  <div><KaTeXMath content="D > 0 \implies \text{2 Real Solutions (Two Intersections)}" /></div>
+                  <div><KaTeXMath content="D = 0 \implies \text{1 Real Solution (Tangent / Single Root)}" /></div>
+                  <div><KaTeXMath content="D < 0 \implies \text{0 Real Solutions (No Intersections)}" /></div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <div className="font-bold text-[var(--accent-blue)]">2x2 Chiziqli Sistemalar</div>
+                  <div className="font-bold text-[var(--accent-blue)]">2x2 Linear Systems (Chiziqli Sistemalar)</div>
                   <div><KaTeXMath content="\frac{a_1}{a_2} \ne \frac{b_1}{b_2} \implies \text{1 Solution}" /></div>
-                  <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} \ne \frac{c_1}{c_2} \implies \text{No Solution (Parallel)}" /></div>
-                  <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} = \frac{c_1}{c_2} \implies \text{Infinitely Many (Ustma-ust)}" /></div>
+                  <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} \ne \frac{c_1}{c_2} \implies \text{No Solution (Parallel Lines)}" /></div>
+                  <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} = \frac{c_1}{c_2} \implies \text{Infinitely Many (Coincident Lines)}" /></div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
                   <div className="font-bold text-[var(--accent-blue)]">Perpendicular Invariant & Altitude</div>
@@ -1868,13 +1868,13 @@ export default function BluebookMockPage() {
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
                   <div className="font-bold text-[var(--accent-blue)]">Circle Equation in xy-plane</div>
                   <div><KaTeXMath content="(x - h)^2 + (y - k)^2 = r^2" /></div>
-                  <div className="text-[var(--text-muted)] text-[11px]">Markaz: (h, k), Radius: r. To'la kvadratga ajratish: <KaTeXMath content="(\frac{b}{2})^2" /> qo'shiladi.</div>
+                  <div className="text-[var(--text-muted)] text-[11px]">Center: (h, k), Radius: r. Completing square: add <KaTeXMath content="(\frac{b}{2})^2" />.</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
                   <div className="font-bold text-[var(--accent-blue)]">Margin of Error & Box Plots</div>
                   <div><KaTeXMath content="\text{MoE} \propto \frac{1}{\sqrt{n}} \quad (\uparrow n \implies \downarrow \text{MoE})" /></div>
                   <div><KaTeXMath content="\text{IQR} = Q_3 - Q_1, \quad \text{Range} = \text{Max} - \text{Min}" /></div>
-                  <div className="text-[var(--text-muted)] text-[11px]">O'rta 50% ma'lumot quti (box) ichida joylashgan!</div>
+                  <div className="text-[var(--text-muted)] text-[11px]">Middle 50% of distribution is enclosed in the box!</div>
                 </div>
               </div>
             )}
@@ -1883,27 +1883,27 @@ export default function BluebookMockPage() {
             {formulaTab === "desmos" && (
               <div className="space-y-3 text-xs text-[var(--text-secondary)]">
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
-                  <div className="font-bold text-emerald-500 font-mono">1. Tenglamani to'g'ridan-to'g'ri yozish (Root Finding)</div>
+                  <div className="font-bold text-emerald-500 font-mono">1. Direct Equation Root Finding</div>
                   <p>
-                    Masalan: <code className="px-1.5 py-0.5 rounded bg-[var(--bg-card)] border border-[var(--border-main)] font-mono">4x + 12 = 36</code> deb yozsangiz, Desmos avtomatik ravishda <code className="font-mono font-bold">x = 6</code> da vertikal to'g'ri chiziq chizadi!
+                    Type any one-variable equation directly, e.g., <code className="px-1.5 py-0.5 rounded bg-[var(--bg-card)] border border-[var(--border-main)] font-mono">4x + 12 = 36</code>. Desmos automatically plots vertical lines at the exact root <code className="font-mono font-bold">x = 6</code>!
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
-                  <div className="font-bold text-emerald-500 font-mono">2. Regression orqali formulani topish (Table + ~)</div>
+                  <div className="font-bold text-emerald-500 font-mono">2. Table Regression Shortcut (Table + ~)</div>
                   <p>
-                    Jadval qo'shing va qiymatlarni kiriting. Keyingi qatorga:
+                    Add a table (+) and insert coordinates. On the next line, type regression syntax:
                   </p>
                   <ul className="list-disc list-inside space-y-1 pl-2 font-mono">
-                    <li>Chiziqli model: <span className="text-blue-500">y1 ~ mx1 + b</span></li>
-                    <li>Parabola: <span className="text-blue-500">y1 ~ ax1^2 + bx1 + c</span></li>
-                    <li>Ko'rsatkichli: <span className="text-blue-500">y1 ~ ab^(x1)</span></li>
+                    <li>Linear: <span className="text-blue-500">y1 ~ mx1 + b</span></li>
+                    <li>Quadratic: <span className="text-blue-500">y1 ~ ax1^2 + bx1 + c</span></li>
+                    <li>Exponential: <span className="text-blue-500">y1 ~ ab^(x1)</span></li>
                   </ul>
-                  <p className="text-[var(--text-muted)] text-[11px]">Parametrlar soniyalarda aniq hisoblab beriladi!</p>
+                  <p className="text-[var(--text-muted)] text-[11px]">Parameters calculated instantly with zero manual algebra!</p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
-                  <div className="font-bold text-emerald-500 font-mono">3. Tenglamalar tizimi kesishuv nuqtasi (Intersection)</div>
+                  <div className="font-bold text-emerald-500 font-mono">3. System Intersection Click Shortcut</div>
                   <p>
-                    Ikkala tenglamani ham Desmos'ga kiriting. Grafiklarning kesishgan nuqtasiga bosing — koordinatalar <code className="font-mono">(x, y)</code> darhol ekranda namoyon bo'ladi!
+                    Type both linear/nonlinear equations. Click directly on the intersection point — coordinates <code className="font-mono">(x, y)</code> appear instantly!
                   </p>
                 </div>
               </div>
@@ -1915,30 +1915,30 @@ export default function BluebookMockPage() {
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
                   <div className="font-bold text-indigo-500">1. 3x1 Elimination Tactic (SATashkent Gramilliy)</div>
                   <p>
-                    Agar 3 ta variant bir xil grammatik toifaga mansub bo'lsa (masalan: 3 tasi o'tgan zamon, 1 tasi hozirgi zamon yoki 3 tasi vergul bilan mustaqil gap ulagan comma splice), o'sha 1 ta farq qiluvchi outlier variant 95% ehtimol bilan to'g'ri bo'ladi!
+                    If 3 answer choices share the identical grammatical feature or structural flaw (e.g., 3 are past tense while 1 is present tense, or 3 produce comma splices), the 1 distinct outlier choice has a 95%+ probability of being correct!
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
                   <div className="font-bold text-indigo-500">2. Punctuation Invariants (Semicolon vs Colon)</div>
                   <ul className="list-disc list-inside space-y-1 pl-2">
-                    <li><strong>Semicolon (;):</strong> <KaTeXMath content="\text{Independent Clause ; Independent Clause}" /></li>
-                    <li><strong>Colon (:):</strong> Chap tomoni MUSTAQIL to'liq gap bo'lishi SHART! O'ng tomoni esa tushuntirish, ro'yxat yoki bitta so'z bo'lishi mumkin.</li>
-                    <li><strong>Comma Splice xatosi:</strong> <KaTeXMath content="\text{IC , IC} \quad \text{(NOTO'G'RI! FANBOYS yoki nuqtali vergul kerak)}" /></li>
+                    <li><strong>Semicolon (;):</strong> <KaTeXMath content="\text{Independent Clause ; Independent Clause}" /> (Identical to a period in function).</li>
+                    <li><strong>Colon (:):</strong> Left side MUST be a complete independent clause! The right side provides an explanation, list, or dramatic elaboration.</li>
+                    <li><strong>Comma Splice Trap:</strong> <KaTeXMath content="\text{IC , IC} \quad \text{(ERROR! Requires FANBOYS or semicolon)}" /></li>
                   </ul>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
                   <div className="font-bold text-indigo-500">3. Modifier Placement (Dangling Modifier Trap)</div>
                   <p>
-                    Kirish iborasi <KaTeXMath content="\text{[Having studied...]}, \text{[Subject]}" /> bo'lsa, verguldan keyin darhol harakatni bajargan shaxs/predmet kelishi SHART!
+                    For introductory phrases <KaTeXMath content="\text{[Having studied...]}, \text{[Subject]}" />, the exact agent performing the introductory action MUST immediately follow the comma.
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
-                  <div className="font-bold text-indigo-500">4. Transitions (O'tish so'zlari matritsasi)</div>
+                  <div className="font-bold text-indigo-500">4. Transition Signal Matrix</div>
                   <p>
-                    <strong>Qo'shimcha:</strong> Furthermore, In addition, Moreover. <br />
-                    <strong>Qarama-qarshilik:</strong> However, Nevertheless, In contrast. <br />
-                    <strong>Sabab-Oqibat:</strong> Consequently, Therefore, As a result. <br />
-                    <strong>Aniqlashtirish:</strong> Specifically, For instance, In particular.
+                    <strong>Addition:</strong> Furthermore, In addition, Moreover. <br />
+                    <strong>Contrast:</strong> However, Nevertheless, In contrast, On the other hand. <br />
+                    <strong>Cause & Effect:</strong> Consequently, Therefore, As a result, Thus. <br />
+                    <strong>Exemplification:</strong> Specifically, For instance, In particular.
                   </p>
                 </div>
               </div>

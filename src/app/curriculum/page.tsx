@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import TopicStudyModal from "@/components/TopicStudyModal";
 import SATashkentVault from "@/components/SATashkentVault";
+import MathDictionary from "@/components/MathDictionary";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 
 // Fallback initial dataset to guarantee 0ms instant render without network delay
@@ -47,7 +48,7 @@ export default function CurriculumPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedFormula, setExpandedFormula] = useState<string | null>(null);
   const [studyModalTopicCode, setStudyModalTopicCode] = useState<string | null>(null);
-  const [mainView, setMainView] = useState<"topics" | "satashkent">("topics");
+  const [mainView, setMainView] = useState<"topics" | "dictionary" | "satashkent">("topics");
 
   // Fetch live stats and counts from database in background
   useEffect(() => {
@@ -217,17 +218,34 @@ export default function CurriculumPage() {
           <span>28 Official Domains & Formula Taxonomy</span>
         </button>
 
+        <button
+          onClick={() => setMainView("dictionary")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
+            mainView === "dictionary"
+              ? "bg-emerald-600 text-white shadow-sm font-bold"
+              : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
+          }`}
+        >
+          <BookOpen size={15} />
+          <span>📘 SAT Math Terminology & Operations Dictionary</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold">
+            82 Terms
+          </span>
+        </button>
+
         <Link
           href="/satashkent"
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 border border-purple-500/20"
         >
           <GraduationCap size={15} />
-          <span>🇺🇿 SAT Tashkent Dedicated Vault & Archive (39 Books) →</span>
+          <span>🇺🇿 SAT Tashkent Dedicated Vault & Archive (41 Books) →</span>
         </Link>
       </div>
 
       {mainView === "satashkent" ? (
         <SATashkentVault />
+      ) : mainView === "dictionary" ? (
+        <MathDictionary />
       ) : (
         <>
           {/* Domain Secondary Filter Bar & Search */}

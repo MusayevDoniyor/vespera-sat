@@ -7,7 +7,7 @@ import SATashkentVault from "@/components/SATashkentVault";
 export const metadata: Metadata = {
   title: "SAT Tashkent Masterclass Vault & Archive | Vespera SAT",
   description:
-    "Exhaustive 39-book archive, Gramilliy grammar bible, Vocabook 3.0 (420 pages), Math Hard Books 1.0 & 2.0, and 1,819+ real exam questions from SAT Tashkent.",
+    "Exhaustive 41-book archive, Gramilliy grammar bible, Vocabook 3.0 (420 pages), Math Hard Books 1.0 & 2.0, Wiley Math Bible, and 1,819+ real exam questions from SAT Tashkent.",
 };
 
 export default function SATashkentPage() {

@@ -82,7 +82,7 @@ export default function SATashkentVault() {
             </span>
             <span className="text-[var(--text-muted)]">•</span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              39 Primary Textbooks & 1,819+ Real Questions
+              41 Primary Textbooks & 1,819+ Real Questions
             </span>
           </div>
 
@@ -92,14 +92,14 @@ export default function SATashkentVault() {
           </h2>
 
           <p className="text-xs text-[var(--text-muted)] mt-2 max-w-2xl leading-relaxed">
-            The complete national curriculum archive: 20 modular math textbooks, Gramilliy grammar bible, Vocabook 3.0 (420 pages), Math Hard Books 1.0 & 2.0, SAToplam archives (1,819 real exam questions), Bluebook tests, and the signature 6-page Math Cheat Sheet.
+            The complete national curriculum archive: 20 modular math textbooks, Gramilliy grammar bible, Vocabook 3.0 (420 pages), Math Hard Books 1.0 & 2.0, SAToplam archives (1,819 real exam questions), Bluebook tests, Wiley Math Bible, and the signature 6-page Math Cheat Sheet.
           </p>
         </div>
 
         {/* Global Statistics Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0 text-center font-mono">
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
-            <div className="text-xl font-black text-[var(--accent-blue)]">39</div>
+            <div className="text-xl font-black text-[var(--accent-blue)]">{SATASHKENT_LIBRARY.length}</div>
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Textbooks</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
@@ -235,7 +235,7 @@ export default function SATashkentVault() {
               />
               <input
                 type="text"
-                placeholder="Search all 39 books..."
+                placeholder="Search all 41 books & sources..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-blue)]"

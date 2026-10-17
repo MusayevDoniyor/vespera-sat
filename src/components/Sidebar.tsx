@@ -64,7 +64,7 @@ export default function Sidebar() {
       label: "SAT Tashkent Vault",
       href: "/satashkent",
       icon: GraduationCap,
-      badge: "39 Books",
+      badge: "41 Books",
     },
     {
       label: "Curriculum Map",

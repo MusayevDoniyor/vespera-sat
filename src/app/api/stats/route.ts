@@ -126,7 +126,7 @@ export async function GET() {
       totalCorrect: mathCorrect + verbalCorrect,
       totalTopics,
       totalDiagrams: 16,
-      totalMaterials: 39,
+      totalMaterials: 41,
       totalMockExams: 7, // 7 Full Bluebook practice exams available
       userMockStats: mockStats,
       dueReviewsCount: dueRes.rows[0]?.due_count || 0,

@@ -148,6 +148,8 @@ export default function DashboardPage() {
     { name: "SAT Math Problem Solving and Data Analysis Revision file.pdf", topic: "DAT-01-04 (149 Bluebook Sets)", pages: 149, type: "SAT Tashkent Data Revision" },
     { name: "SATakror.pdf", topic: "Multi-Version Real Exam Variants", pages: 103, type: "SAT Tashkent Variant Bank" },
     { name: "All in One.pdf", topic: "4-Stage Preparation Syllabus", pages: 5, type: "SAT Tashkent Master Roadmap" },
+    { name: "facts-and-formulas-0.pdf", topic: "All Math Domains / Fast Formula Vault", pages: 6, type: "Erik the Red SAT Math" },
+    { name: "jerry-phd-bobrowdale-ma-johnson-joe-ma-skinner-mastering-sat-math.pdf", topic: "Comprehensive SAT Math Bible (All Domains)", pages: 312, type: "Wiley SAT Math Guide" },
   ];
 
   return (
@@ -241,16 +243,16 @@ export default function DashboardPage() {
             Source Materials
           </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-[var(--text-main)]">39</span>
+            <span className="text-2xl font-black text-[var(--text-main)]">{materialsList.length}</span>
             <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 font-mono">Books/PDFs</span>
           </div>
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
-            SATashkent + Panda + Bluebook
+            SATashkent + Panda + Bluebook + Bobrow
           </span>
         </div>
       </div>
 
-      {/* SAT Tashkent Masterclass & 39-Book Archive Showcase Banner */}
+      {/* SAT Tashkent Masterclass & 41-Book Archive Showcase Banner */}
       <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-purple-500/10 via-[var(--bg-card)] to-[var(--accent-blue)]/10 border border-purple-500/25 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -258,7 +260,7 @@ export default function DashboardPage() {
               🇺🇿 Official SAT Tashkent Curriculum Hub
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              39 Textbooks • 1,819+ Real Questions • 420-Page Vocabook
+              41 Textbooks • 1,819+ Real Questions • 420-Page Vocabook
             </span>
           </div>
           <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-2.5">
@@ -275,7 +277,7 @@ export default function DashboardPage() {
             href="/satashkent"
             className="px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
           >
-            <span>Explore 39 Books & Studio</span>
+            <span>Explore 41 Books & Studio</span>
             <ArrowRight size={15} />
           </Link>
         </div>
@@ -611,13 +613,13 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-[var(--text-main)] flex items-center gap-2">
-                <span>Integrated Study Materials Vault (39 Primary PDF Sources & Books)</span>
+                <span>Integrated Study Materials Vault (41 Primary PDF Sources & Books)</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono">
                   100% Indexed
                 </span>
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                All {stats?.totalQuestions || 212}+ practice problems, 7 official Bluebook mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, October SAT, and all 39 primary SAT Tashkent textbooks.
+                All {stats?.totalQuestions || 212}+ practice problems, 7 official Bluebook mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, October SAT, and all 41 primary SAT Tashkent textbooks and authoritative references.
               </p>
             </div>
           </div>
