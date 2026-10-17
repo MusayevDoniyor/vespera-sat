@@ -156,7 +156,7 @@ export default function DashboardPage() {
       <div className="relative overflow-hidden rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] p-8 md:p-10 shadow-[var(--shadow-md)]">
         {/* Subtle Watermark Emblem */}
         <div className="absolute -right-6 -bottom-6 pointer-events-none opacity-[0.06] dark:opacity-[0.12] select-none">
-          <VesperaLogo size={260} />
+          <VesperaLogo size={260} variant="mark" />
         </div>
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
