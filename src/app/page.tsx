@@ -184,11 +184,11 @@ export default function DashboardPage() {
               {user ? (
                 user.ieltsScore ? (
                   <>
-                    Personalized for your <strong className="text-[var(--text-main)]">IELTS {user.ieltsScore}</strong> profile: tailored focus on catapulting <strong className="text-[var(--accent-blue)]">Math to {user.mathLevel === "target_800" ? "800" : "800"}</strong> and mastering Desmos strategies for a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> score before {user.examDate || "exam day"}.
+                    Personalized for your <strong className="text-[var(--text-main)]">IELTS {user.ieltsScore}</strong> profile: tailored focus on catapulting <strong className="text-[var(--accent-blue)]">Math to {user.mathLevel === "target_800" ? "800" : "800"}</strong> and mastering Desmos strategies for a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> score before {user.examDate ? (user.examDate.includes("Later") ? "your target exam" : user.examDate) : "exam day"}.
                   </>
                 ) : (
                   <>
-                    Personalized for your <strong className="text-[var(--text-main)]">{user.mathLevel.replace("_", " ")}</strong> Math & <strong className="text-[var(--text-main)]">{user.englishLevel}</strong> Verbal profile: daily commitment of <strong className="text-[var(--accent-blue)]">{user.dailyGoalMinutes} min/day</strong> targeting <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong>.
+                    Personalized for your <strong className="text-[var(--text-main)]">{user.mathLevel.replace("_", " ")}</strong> Math & <strong className="text-[var(--text-main)]">{user.englishLevel}</strong> Verbal profile: daily commitment of <strong className="text-[var(--accent-blue)]">{user.dailyGoalMinutes} min/day</strong> targeting <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> before {user.examDate ? (user.examDate.includes("Later") ? "your target exam" : user.examDate) : "exam day"}.
                   </>
                 )
               ) : (

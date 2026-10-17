@@ -26,7 +26,36 @@ export default function OnboardingModal() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
-  // Form State initialized from user profile or sensible defaults
+  // Dynamically generate the next 6 upcoming months from today + "Later / Keyinroq"
+  const upcomingExamOptions = React.useMemo(() => {
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    const list: string[] = [];
+    for (let i = 0; i < 6; i++) {
+      const d = new Date(currentYear, currentMonth + i, 1);
+      list.push(`${monthNames[d.getMonth()]} ${d.getFullYear()}`);
+    }
+    list.push("Later / Keyinroq");
+    return list;
+  }, []);
+
+  // Form State initialized from user profile or dynamic defaults
   const [targetSatScore, setTargetSatScore] = useState<number>(user?.targetSatScore || 1550);
   const [mathLevel, setMathLevel] = useState<string>(user?.mathLevel || "intermediate");
   const [englishLevel, setEnglishLevel] = useState<string>(user?.englishLevel || "intermediate");
@@ -37,10 +66,37 @@ export default function OnboardingModal() {
   );
   const [hasPriorSat, setHasPriorSat] = useState<boolean>(Boolean(user?.currentSatScore));
   const [dailyGoalMinutes, setDailyGoalMinutes] = useState<number>(user?.dailyGoalMinutes || 45);
-  const [examDate, setExamDate] = useState<string>(user?.examDate || "August 2026");
+  const [examDate, setExamDate] = useState<string>(() => {
+    if (user?.examDate && user.examDate !== "August 2026") {
+      return user.examDate;
+    }
+    return upcomingExamOptions[1] || upcomingExamOptions[0];
+  });
   const [priorityWeakness, setPriorityWeakness] = useState<string>(
     user?.priorityWeakness || "Math 0 to 800 & Desmos Speed Lab"
   );
+
+  // Sync state if user profile changes
+  React.useEffect(() => {
+    if (user) {
+      if (user.targetSatScore) setTargetSatScore(user.targetSatScore);
+      if (user.mathLevel) setMathLevel(user.mathLevel);
+      if (user.englishLevel) setEnglishLevel(user.englishLevel);
+      if (user.ieltsScore) {
+        setIeltsScore(user.ieltsScore);
+        setHasIelts(true);
+      }
+      if (user.currentSatScore) {
+        setCurrentSatScore(String(user.currentSatScore));
+        setHasPriorSat(true);
+      }
+      if (user.dailyGoalMinutes) setDailyGoalMinutes(user.dailyGoalMinutes);
+      if (user.examDate && user.examDate !== "August 2026") {
+        setExamDate(user.examDate);
+      }
+      if (user.priorityWeakness) setPriorityWeakness(user.priorityWeakness);
+    }
+  }, [user]);
 
   if (!isOnboardingOpen) return null;
 
@@ -155,28 +211,26 @@ export default function OnboardingModal() {
                 <Calendar size={16} className="text-indigo-500" />
                 <span>Target Exam Month</span>
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {[
-                  "May 2026",
-                  "June 2026",
-                  "August 2026",
-                  "October 2026",
-                  "November 2026",
-                  "December 2026",
-                ].map((date) => (
-                  <button
-                    key={date}
-                    type="button"
-                    onClick={() => setExamDate(date)}
-                    className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all text-center ${
-                      examDate === date
-                        ? "bg-indigo-500/15 border-indigo-500 text-indigo-600 dark:text-indigo-400 font-mono shadow-sm"
-                        : "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
-                    }`}
-                  >
-                    {date}
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {upcomingExamOptions.map((date) => {
+                  const isLater = date === "Later / Keyinroq";
+                  return (
+                    <button
+                      key={date}
+                      type="button"
+                      onClick={() => setExamDate(date)}
+                      className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all text-center ${
+                        isLater ? "col-span-2 sm:col-span-2" : "col-span-1"
+                      } ${
+                        examDate === date
+                          ? "bg-indigo-500/15 border-indigo-500 text-indigo-600 dark:text-indigo-400 font-mono shadow-sm"
+                          : "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                      }`}
+                    >
+                      {date}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
