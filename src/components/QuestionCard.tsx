@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import KaTeXMath from "./KaTeXMath";
+import QuestionDiagram from "./QuestionDiagram";
 import {
   CheckCircle2,
   XCircle,
@@ -34,6 +35,8 @@ interface QuestionCardProps {
     reference_formula?: string | null;
     topic_title_uz?: string;
     topic_title_en?: string;
+    diagramPreset?: string | null;
+    diagramSvg?: string | null;
   };
   onAnswerSubmitted?: (isCorrect: boolean) => void;
   onOpenDesmosWithEquation?: (equation: string) => void;
@@ -294,6 +297,14 @@ export default function QuestionCard({
             <div className="whitespace-pre-line">{question.passage}</div>
           </div>
         )}
+
+        {/* Visual Reference Figure if available or auto-detected */}
+        <QuestionDiagram
+          preset={question.diagramPreset}
+          customSvg={question.diagramSvg}
+          prompt={question.prompt}
+          domain={question.domain}
+        />
 
         {/* Question Prompt */}
         <div className="text-base text-[var(--text-main)] font-medium leading-relaxed">

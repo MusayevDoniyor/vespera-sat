@@ -15,6 +15,8 @@ export interface BluebookQuestion {
   explanationUz: string;
   desmosTrick?: string | null;
   referenceFormula?: string | null;
+  diagramPreset?: string | null;
+  diagramSvg?: string | null;
 }
 
 export interface BluebookExamForm {
@@ -336,6 +338,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Right Triangles and Trigonometry",
         difficulty: "Hard",
         prompt: "In right triangle $ABC$, the measure of angle $C$ is $90^\\circ$. If $\\sin(A) = \\frac{5}{13}$, what is the value of $\\tan(A)$?",
+        diagramPreset: "right_triangle_trig",
         type: "multiple_choice",
         options: ["A) 5/12", "B) 12/13", "C) 12/5", "D) 13/12"],
         correctAnswer: "A",
@@ -352,6 +355,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Circles",
         difficulty: "Hard",
         prompt: "The equation of a circle in the $xy$-plane is $x^2 + y^2 - 6x + 8y = 24$. What is the radius of the circle?",
+        diagramPreset: "circle_coordinate",
         type: "spr", // Student Produced Response!
         correctAnswer: "7",
         explanationEn: "Complete the square for $x$ and $y$:\n$(x^2 - 6x + 9) + (y^2 + 8y + 16) = 24 + 9 + 16$\n$(x - 3)^2 + (y + 4)^2 = 49 = 7^2$.\nThe radius is $\\sqrt{49} = 7$.",
@@ -533,6 +537,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Functions and Translations",
         difficulty: "Hard",
         prompt: "The graph of $g(x) = f(x - 3) + 5$ is obtained by shifting the graph of $f(x)$. What transformation occurred?",
+        diagramPreset: "function_shift",
         type: "multiple_choice",
         options: [
           "A) Shift 3 units left and 5 units up",
@@ -675,6 +680,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Area and Perimeter",
         difficulty: "Medium",
         prompt: "A rectangle has a width of $n$ yards and a length of $(n + 7)$ yards. If the rectangle has an area of $120$ square yards, what is the perimeter of the rectangle, in yards?",
+        diagramPreset: "rectangle_area",
         type: "spr",
         correctAnswer: "46",
         explanationEn: "Area $= n(n + 7) = 120 \\implies n^2 + 7n - 120 = 0$.\nFactor: $(n + 15)(n - 8) = 0 \\implies n = 8$ (since width must be positive).\nLength $= 8 + 7 = 15$.\nPerimeter $= 2(\\text{width} + \\text{length}) = 2(8 + 15) = 2(23) = 46$.",
@@ -837,6 +843,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Trigonometric Invariants",
         difficulty: "Hard",
         prompt: "In a right triangle, angle $A$ and angle $B$ are acute angles. If $\\sin(A) = \\frac{5}{13}$, what is the value of $\\cos(90^\\circ - B)$?",
+        diagramPreset: "right_triangle_trig",
         type: "spr",
         correctAnswer: "5/13",
         explanationEn: "In a right triangle, acute angles $A$ and $B$ are complementary: $A + B = 90^\\circ \\implies B = 90^\\circ - A$. Therefore, $90^\\circ - B = A$. So $\\cos(90^\\circ - B) = \\cos(A)$. Since $\\sin^2(A) + \\cos^2(A) = 1$, $\\cos(A) = \\sqrt{1 - (5/13)^2} = \\frac{12}{13}$! Wait, $\\cos(90^\\circ - B) = \\sin(B)$ by cofunction identity! Since $B = 90^\\circ - A$, $\\sin(B) = \\cos(A) = 12/13$. Or if question is $\\cos(B) = \\sin(A) = 5/13$. Let's test: $\\cos(90 - B) = \\sin(B)$. If $A$ and $B$ are acute in right triangle, $\\sin(A) = 5/13 \\implies \\cos(B) = 5/13$ and $\\sin(B) = 12/13$. Since $90^\\circ - B = A$, $\\cos(90^\\circ - B) = \\cos(A) = 12/13$.",
@@ -855,6 +862,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Circle Equations",
         difficulty: "Hard",
         prompt: "The equation of a circle in the $xy$-plane is given by $x^2 + y^2 - 10x + 6y + 9 = 0$. What is the radius of the circle?",
+        diagramPreset: "circle_coordinate",
         type: "spr",
         correctAnswer: "5",
         explanationEn: "Complete the square:\n$(x^2 - 10x + 25) + (y^2 + 6y + 9) = -9 + 25 + 9$\n$(x - 5)^2 + (y + 3)^2 = 25$\nRadius $r = \\sqrt{25} = 5$.",
@@ -967,6 +975,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Discriminant & Number of Solutions",
         difficulty: "Hard",
         prompt: "In the quadratic equation $3x^2 - 12x + c = 0$, where $c$ is a constant, the equation has exactly one real solution. What is the value of $c$?",
+        diagramPreset: "parabola_tangent",
         type: "spr",
         correctAnswer: "12",
         explanationEn: "A quadratic equation $ax^2 + bx + c = 0$ has exactly one real solution if and only if its discriminant equals zero: $b^2 - 4ac = 0$.\n$(-12)^2 - 4(3)(c) = 0$\n$144 - 12c = 0 \\implies 12c = 144 \\implies c = 12$.",
@@ -985,6 +994,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Margin of Error and Sample Size",
         difficulty: "Hard",
         prompt: "A sociological research team surveyed a random sample of $1,200$ registered voters in a city and estimated that $64\\%$ favor a new municipal transit bond, with an associated margin of error of $2.8\\%$ at a $95\\%$ confidence level. Which of the following changes would be expected to produce a smaller margin of error at the same confidence level?",
+        diagramPreset: "normal_distribution",
         type: "multiple_choice",
         options: [
           "A) Decreasing the survey sample size to 600 registered voters",
@@ -1102,6 +1112,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Linear Invariants & Parallel Lines",
         difficulty: "Medium",
         prompt: "In the $xy$-plane, line $L_1$ has the equation $4x - 6y = 15$. Line $L_2$ is parallel to line $L_1$ and passes through the point $(9, 2)$. What is the $y$-intercept of line $L_2$?",
+        diagramPreset: "parallel_lines",
         type: "spr",
         correctAnswer: "-4",
         explanationEn: "1) Find slope of $L_1$: $6y = 4x - 15 \\implies y = \\frac{4}{6}x - \\frac{15}{6} = \\frac{2}{3}x - 2.5$. Slope $m = \\frac{2}{3}$.\n2) Since $L_2$ is parallel, its slope is also $m = \\frac{2}{3}$.\n3) Use point $(9, 2)$: $y - 2 = \\frac{2}{3}(x - 9) \\implies y = \\frac{2}{3}x - 6 + 2 = \\frac{2}{3}x - 4$.\n4) The $y$-intercept is $-4$.",
@@ -1232,6 +1243,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Perpendicular Lines & Reciprocal Slopes",
         difficulty: "Hard",
         prompt: "In the $xy$-plane, line $j$ passes through the points $(3, 11)$ and $(7, 3)$. Line $k$ is perpendicular to line $j$ and passes through the point $(5, -2)$. If the equation of line $k$ is written in slope-intercept form as $y = mx + b$, what is the value of $b$?",
+        diagramPreset: "perpendicular_lines",
         type: "spr",
         correctAnswer: "-9/2",
         explanationEn: "1) Calculate slope of line $j$: $m_j = \\frac{3 - 11}{7 - 3} = \\frac{-8}{4} = -2$.\n2) Since line $k$ is perpendicular, its slope is the negative reciprocal: $m_k = -\\frac{1}{-2} = \\frac{1}{2}$.\n3) Line $k$ passes through $(5, -2)$: $y - (-2) = \\frac{1}{2}(x - 5) \\implies y + 2 = \\frac{1}{2}x - \\frac{5}{2} \\implies y = \\frac{1}{2}x - \\frac{9}{2}$.\n4) Thus $b = -\\frac{9}{2}$ (or -4.5).",
@@ -1248,6 +1260,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Nonlinear Systems & Tangent Points",
         difficulty: "Hard",
         prompt: "In the given system of equations, $k$ is a constant:\n$$\\begin{cases} y = x^2 - 6x + 14 \\\\ y = 2x + k \\end{cases}$$\nIf the system has exactly one solution $(x, y)$, what is the value of $k$?",
+        diagramPreset: "parabola_tangent",
         type: "spr",
         correctAnswer: "-2",
         explanationEn: "Equate the expressions for $y$:\n$x^2 - 6x + 14 = 2x + k \\implies x^2 - 8x + (14 - k) = 0$.\nFor exactly one solution, the discriminant must equal zero: $b^2 - 4ac = 0$.\n$(-8)^2 - 4(1)(14 - k) = 0$\n$64 - 56 + 4k = 0 \\implies 8 + 4k = 0 \\implies 4k = -8 \\implies k = -2$.",
@@ -1266,6 +1279,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Right Triangle Altitude & Geometric Mean",
         difficulty: "Hard",
         prompt: "In right triangle $ABC$, the right angle is at $C$. An altitude is drawn from $C$ to hypotenuse $AB$, intersecting $AB$ at point $D$. If $AD = 4$ and $DB = 9$, what is the length of altitude $CD$?",
+        diagramPreset: "right_triangle_altitude",
         type: "spr",
         correctAnswer: "6",
         explanationEn: "By the Right Triangle Altitude Geometric Mean Theorem, the altitude to the hypotenuse is the geometric mean of the two segments of the hypotenuse: $CD = \\sqrt{AD \\cdot DB}$.\n$CD = \\sqrt{4 \\cdot 9} = \\sqrt{36} = 6$.",
@@ -1284,6 +1298,7 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         skill: "Circle Area",
         difficulty: "Easy",
         prompt: "A circle has a diameter of $16$ centimeters. What is the area of the circle, in square centimeters, in terms of $\\pi$ (enter the coefficient of $\\pi$)?",
+        diagramPreset: "circle_general",
         type: "spr",
         correctAnswer: "64",
         explanationEn: "Radius $r = \\frac{16}{2} = 8$ cm. Area $= \\pi r^2 = \\pi (8)^2 = 64\\pi$. The coefficient is $64$.",

@@ -42,6 +42,7 @@ import {
 import Link from "next/link";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { useTheme } from "@/components/ThemeContext";
+import QuestionDiagram from "@/components/QuestionDiagram";
 import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion } from "@/lib/bluebook-tests";
 
 type ExamStage =
@@ -1018,6 +1019,16 @@ export default function BluebookMockPage() {
                     </button>
                   </div>
 
+                  {/* Visual Reference Figure if available */}
+                  {(currentQ.diagramPreset || currentQ.diagramSvg) && (
+                    <QuestionDiagram
+                      preset={currentQ.diagramPreset}
+                      customSvg={currentQ.diagramSvg}
+                      prompt={currentQ.prompt}
+                      domain={currentQ.domain}
+                    />
+                  )}
+
                   {/* Question stem */}
                   <div className="text-sm md:text-base font-medium text-[var(--text-main)] leading-relaxed">
                     <KaTeXMath content={currentQ.prompt} />
@@ -1105,6 +1116,14 @@ export default function BluebookMockPage() {
                     <span>Mark for Review</span>
                   </button>
                 </div>
+
+                {/* Visual Reference Figure if available */}
+                <QuestionDiagram
+                  preset={currentQ.diagramPreset}
+                  customSvg={currentQ.diagramSvg}
+                  prompt={currentQ.prompt}
+                  domain={currentQ.domain}
+                />
 
                 {/* Math Prompt with LaTeX */}
                 <div className="text-base md:text-lg text-[var(--text-main)] font-medium leading-relaxed">
