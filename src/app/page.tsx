@@ -22,11 +22,14 @@ import {
   HelpCircle,
   FileText,
   GraduationCap,
+  LogIn,
 } from "lucide-react";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
+import { useAuth } from "@/components/AuthContext";
 
 export default function DashboardPage() {
+  const { user, openAuthModal, openOnboarding } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [materialsOpen, setMaterialsOpen] = useState(false);
@@ -43,7 +46,7 @@ export default function DashboardPage() {
         console.error("Failed to fetch stats:", err);
         setLoading(false);
       });
-  }, []);
+  }, [user]);
 
   // Top 6 YouTube / 800-Scorer Speedrun Strategies
   const masterclassHacks = [
@@ -167,15 +170,60 @@ export default function DashboardPage() {
               <span className="w-2 h-2 rounded-full bg-[var(--accent-green)] animate-live-pulse"></span>
               Autonomous SAT Mastery Cockpit
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--text-main)] tracking-tight flex items-center gap-3">
-              <span>Welcome back, Doniyor!</span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-mono font-bold tracking-wider uppercase">
-                Target 1550+
+            <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--text-main)] tracking-tight flex flex-wrap items-center gap-3">
+              <span>{user ? `Welcome back, ${user.fullName}!` : "Welcome to Vespera SAT!"}</span>
+              <span
+                onClick={user ? openOnboarding : () => openAuthModal("register")}
+                className="text-xs px-2.5 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-mono font-bold tracking-wider uppercase cursor-pointer hover:opacity-90 transition-opacity"
+                title="Click to edit score target"
+              >
+                Target {user?.targetSatScore || 1550}+
               </span>
             </h2>
             <p className="text-sm text-[var(--text-muted)] max-w-xl leading-relaxed">
-              Personalized for your <strong className="text-[var(--text-main)]">IELTS 7.5 (Reading 9.0)</strong> profile: rigorous focus on catapulting <strong className="text-[var(--accent-blue)]">Math from Zero to 800</strong> and mastering high-speed Desmos strategies to lock in a <strong className="text-[var(--accent-green)]">1550+</strong> composite score.
+              {user ? (
+                user.ieltsScore ? (
+                  <>
+                    Personalized for your <strong className="text-[var(--text-main)]">IELTS {user.ieltsScore}</strong> profile: tailored focus on catapulting <strong className="text-[var(--accent-blue)]">Math to {user.mathLevel === "target_800" ? "800 (Elite)" : "800"}</strong> and mastering high-speed Desmos strategies to lock in a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> composite score before {user.examDate || "exam day"}.
+                  </>
+                ) : (
+                  <>
+                    Personalized for your <strong className="text-[var(--text-main)]">{user.mathLevel.replace("_", " ")}</strong> Math & <strong className="text-[var(--text-main)]">{user.englishLevel}</strong> Verbal profile: daily commitment of <strong className="text-[var(--accent-blue)]">{user.dailyGoalMinutes} min/day</strong> targeting a <strong className="text-[var(--accent-green)]">{user.targetSatScore || 1550}+</strong> composite score before {user.examDate || "exam day"}.
+                  </>
+                )
+              ) : (
+                <>
+                  Autonomous Digital SAT suite equipped with <strong className="text-[var(--text-main)]">212 authentic questions</strong>, 16 visual models, 10-second Desmos hacks, and AI error diagnosis. <span className="text-[var(--accent-blue)] font-semibold cursor-pointer underline hover:opacity-80" onClick={() => openAuthModal("register")}>Sign in or create a free account</span> to track your score progression and personalize your roadmap.
+                </>
+              )}
             </p>
+
+            {user ? (
+              <div className="pt-1 flex items-center gap-3">
+                <button
+                  onClick={openOnboarding}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] transition-colors shadow-sm"
+                >
+                  <Sliders size={13} className="text-[var(--accent-blue)]" />
+                  <span>Customize SAT Goals & Levels</span>
+                </button>
+                {user.priorityWeakness && (
+                  <span className="text-xs text-[var(--text-muted)] font-mono hidden sm:inline">
+                    Priority: <span className="text-[var(--accent-blue)] font-bold">{user.priorityWeakness}</span>
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div className="pt-1 flex items-center gap-3">
+                <button
+                  onClick={() => openAuthModal("register")}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
+                >
+                  <LogIn size={14} />
+                  <span>Get Started Free (No Verification Required)</span>
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-4 bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border-main)] shadow-inner shrink-0">
@@ -186,10 +234,18 @@ export default function DashboardPage() {
               </span>
               <span className="text-[11px] text-[var(--text-muted)] block font-mono mt-1">/ 1600 Points</span>
             </div>
-            <div className="text-center px-4">
+            <div
+              onClick={user ? openOnboarding : () => openAuthModal("login")}
+              className="text-center px-4 cursor-pointer group"
+              title="Click to adjust goal"
+            >
               <span className="text-xs text-[var(--text-muted)] block font-medium mb-1">Goal Score</span>
-              <span className="text-3xl font-black text-[var(--accent-blue)]">1550+</span>
-              <span className="text-[11px] text-[var(--accent-green)] font-semibold block font-mono mt-1">Top 1% Rank</span>
+              <span className="text-3xl font-black text-[var(--accent-blue)] group-hover:scale-105 transition-transform">
+                {user?.targetSatScore || 1550}+
+              </span>
+              <span className="text-[11px] text-[var(--accent-green)] font-semibold block font-mono mt-1">
+                {user?.targetSatScore && user.targetSatScore >= 1550 ? "Top 1% Rank" : "Competitive"}
+              </span>
             </div>
           </div>
         </div>
@@ -249,6 +305,241 @@ export default function DashboardPage() {
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
             SATashkent + Panda + Bluebook + Bobrow
           </span>
+        </div>
+      </div>
+
+      {/* Personalized Study Roadmap Card */}
+      <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-[var(--shadow-sm)] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[var(--border-main)]">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-2xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 shadow-sm">
+              <Zap size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 font-mono uppercase">
+                  Adaptive AI Roadmap
+                </span>
+                <span className="text-xs text-[var(--text-muted)] font-mono">
+                  {user ? `${user.fullName}'s Personalized Focus` : "Recommended Path for 1550+ Candidate"}
+                </span>
+              </div>
+              <h3 className="text-lg font-black text-[var(--text-main)] mt-0.5">
+                {user?.mathLevel === "beginner"
+                  ? "Phase 1: Math Foundations, Terminology & Formula Vault"
+                  : user?.mathLevel === "target_800"
+                  ? "Phase 3: 8-Second Desmos Hacks & Hard Module 2 Speedrun"
+                  : "Phase 2: High-Yield Algebra, Quadratic Vertices & Pacing"}
+              </h3>
+            </div>
+          </div>
+
+          <button
+            onClick={user ? openOnboarding : () => openAuthModal("register")}
+            className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--accent-blue)] flex items-center gap-1.5 transition-colors"
+          >
+            <Sliders size={13} />
+            <span>Tune Learning Track</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          {user?.mathLevel === "beginner" ? (
+            <>
+              <Link
+                href="/math"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-purple-600 dark:text-purple-400 block mb-1">
+                    Step 1 • Terminology
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
+                    Math Terminology Dictionary
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Over 100 mathematical operations, arithmetic terms, and algebraic concepts translated into Uzbek.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">
+                  <span>Open Dictionary</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href="/satashkent"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-emerald-500/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-emerald-600 dark:text-emerald-400 block mb-1">
+                    Step 2 • Formulas
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-emerald-500 transition-colors">
+                    Erik the Red Formula Sheet
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    6-page condensed formula reference covering every tested geometric, algebraic, and statistic law.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                  <span>Study Cheat Sheet</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href="/math"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-[var(--accent-blue)] block mb-1">
+                    Step 3 • Foundations Drill
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
+                    Heart of Algebra & Radicals
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Interactive drill questions with step-by-step bilingual explanations and Desmos verification.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">
+                  <span>Start Practice (0 → 650)</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </>
+          ) : user?.mathLevel === "target_800" ? (
+            <>
+              <Link
+                href="/desmos"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-[var(--accent-blue)] block mb-1">
+                    Hack 1 • Desmos Speedrun
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
+                    Regression Table Cheat (~)
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Solve any coordinate table or quadratic model in 8 seconds with zero manual arithmetic.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">
+                  <span>Master Desmos Hacks</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href="/satashkent"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-purple-500/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-purple-600 dark:text-purple-400 block mb-1">
+                    Hard Module 2 • Book 2.0
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-purple-500 transition-colors">
+                    SATashkent Hard Book 2.0
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    The 145 most punishing 800-gatekeeper problems collected from real 2024-2025 Digital SAT administrations.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-purple-600 dark:text-purple-400">
+                  <span>View Hard Book 2.0</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href="/mock"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-emerald-500/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-emerald-600 dark:text-emerald-400 block mb-1">
+                    Simulation • Bluebook
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-emerald-500 transition-colors">
+                    Practice Test 7 Adaptive Exam
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Full Bluebook test simulation with authentic College Board UI, countdown timer, and automated scoring.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                  <span>Launch Simulator</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/desmos"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-[var(--accent-blue)] block mb-1">
+                    Core Skill • Speed
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
+                    Constant Sliders & Systems
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Bypass lengthy discriminant and substitution algebra by sliding constants directly in Desmos.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">
+                  <span>Practice Speed Hacks</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href="/verbal"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-amber-500/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-amber-600 dark:text-amber-400 block mb-1">
+                    Verbal • 5-Sec Rule
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-amber-500 transition-colors">
+                    Punctuation & Semicolon Elimination
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Instantly eliminate duplicate period and semicolon options on Standard English Conventions questions.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                  <span>Explore Verbal Hacks</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              <Link
+                href="/error-log"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-rose-500/50 transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold uppercase font-mono text-rose-600 dark:text-rose-400 block mb-1">
+                    Active Recall • SM-2
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-rose-500 transition-colors">
+                    Spaced Repetition Error Vault
+                  </h4>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
+                    Re-test questions you missed until mastery is locked into permanent memory. Zero repeat mistakes.
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">
+                  <span>Open Error Log</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 

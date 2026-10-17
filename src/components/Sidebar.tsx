@@ -16,13 +16,19 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   GraduationCap,
+  LogIn,
+  LogOut,
+  Sliders,
+  User,
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
+import { useAuth } from "./AuthContext";
 import VesperaLogo from "./VesperaLogo";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar } = useSidebar();
+  const { user, openAuthModal, openOnboarding, logout } = useAuth();
   const [realStreak, setRealStreak] = useState<number>(0);
 
   useEffect(() => {
@@ -34,7 +40,7 @@ export default function Sidebar() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [user]);
 
   const coreNav = [
     {
@@ -239,44 +245,103 @@ export default function Sidebar() {
       {/* Refined Student Profile & Target Pill */}
       <div className="pt-4 border-t border-[var(--border-main)] shrink-0">
         {!isCollapsed ? (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] flex items-center justify-center font-bold text-xs font-mono border border-[var(--accent-blue)]/30 shrink-0">
-                  D
+          user ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center font-bold text-xs font-mono shadow-sm shrink-0">
+                    {user.fullName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 truncate">
+                    <span className="text-xs font-bold text-[var(--text-main)] block truncate">
+                      {user.fullName}
+                    </span>
+                    <span className="text-[11px] text-[var(--text-muted)] block font-mono truncate">
+                      {user.ieltsScore
+                        ? `IELTS ${user.ieltsScore}`
+                        : user.currentSatScore
+                        ? `SAT ${user.currentSatScore}`
+                        : `${user.mathLevel.replace("_", " ").toUpperCase()}`}
+                    </span>
+                  </div>
                 </div>
-                <div className="min-w-0 truncate">
-                  <span className="text-xs font-bold text-[var(--text-main)] block truncate">
-                    Doniyor
-                  </span>
-                  <span className="text-[11px] text-[var(--text-muted)] block font-mono truncate">
-                    IELTS 7.5 (R 9.0)
-                  </span>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={openOnboarding}
+                    title="Customize SAT Goals & Level"
+                    className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition-colors"
+                  >
+                    <Sliders size={14} />
+                  </button>
+                  <button
+                    onClick={logout}
+                    title="Sign Out"
+                    className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+                  >
+                    <LogOut size={14} />
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400 font-mono shrink-0">
-                <Flame size={13} className="fill-current text-amber-500" />
-                <span>{realStreak > 0 ? `${realStreak}d` : "Day 1"}</span>
+              <div className="flex items-center justify-between gap-2">
+                <div
+                  onClick={openOnboarding}
+                  className="px-3 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between text-xs flex-1 cursor-pointer hover:border-[var(--border-hover)] transition-all group"
+                  title="Click to adjust target score"
+                >
+                  <span className="text-[var(--text-muted)] font-medium flex items-center gap-1.5 truncate">
+                    <Award size={13} className="text-emerald-500 shrink-0" />
+                    Target
+                  </span>
+                  <span className="font-extrabold text-[var(--accent-green)] font-mono group-hover:scale-105 transition-transform">
+                    {user.targetSatScore || 1550}+
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1 px-2.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400 font-mono shrink-0">
+                  <Flame size={13} className="fill-current text-amber-500" />
+                  <span>{realStreak > 0 ? `${realStreak}d` : "1d"}</span>
+                </div>
               </div>
             </div>
-
-            <div className="px-3 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between text-xs">
-              <span className="text-[var(--text-muted)] font-medium flex items-center gap-1.5">
-                <Award size={13} className="text-emerald-500 shrink-0" />
-                Target Composite
-              </span>
-              <span className="font-extrabold text-[var(--accent-green)] font-mono">1550+</span>
+          ) : (
+            <div className="space-y-2.5">
+              <button
+                onClick={() => openAuthModal("register")}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition-all"
+              >
+                <LogIn size={14} />
+                <span>Sign In / Join Free</span>
+              </button>
+              <div className="flex items-center justify-between px-1 text-[11px] text-[var(--text-muted)]">
+                <span className="flex items-center gap-1">
+                  <User size={12} />
+                  Guest Mode
+                </span>
+                <span className="font-mono text-[var(--accent-green)] font-bold">1550+ Goal</span>
+              </div>
             </div>
-          </div>
+          )
         ) : (
           <div className="flex flex-col items-center gap-2">
-            <div
-              title="Doniyor • IELTS 7.5 (Reading 9.0) • Goal 1550+"
-              className="w-9 h-9 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] flex items-center justify-center font-bold text-xs font-mono border border-[var(--accent-blue)]/30 cursor-pointer"
-            >
-              D
-            </div>
+            {user ? (
+              <button
+                onClick={openOnboarding}
+                title={`${user.fullName} • Goal: ${user.targetSatScore || 1550}+ • Click to edit profile`}
+                className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center font-bold text-xs font-mono shadow-sm hover:scale-105 transition-transform"
+              >
+                {user.fullName.charAt(0).toUpperCase()}
+              </button>
+            ) : (
+              <button
+                onClick={() => openAuthModal("login")}
+                title="Sign In / Register to Vespera"
+                className="w-9 h-9 rounded-full bg-[var(--bg-surface)] hover:bg-[var(--accent-blue)]/15 text-[var(--text-muted)] hover:text-[var(--accent-blue)] flex items-center justify-center border border-[var(--border-main)] transition-all"
+              >
+                <LogIn size={15} />
+              </button>
+            )}
             <div
               title={`${realStreak > 0 ? realStreak : 1} Day Streak`}
               className="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 cursor-pointer"

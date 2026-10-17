@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Calculator, BookMarked, Sparkles, Sun, Moon, X, PanelLeft } from "lucide-react";
+import { Calculator, BookMarked, Sparkles, Sun, Moon, X, PanelLeft, LogIn, User } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import { useSidebar } from "./SidebarContext";
+import { useAuth } from "./AuthContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 interface NavbarProps {
@@ -16,6 +17,7 @@ export default function Navbar({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
   useBodyScrollLock(showFormulaSheet);
   const { theme, toggleTheme } = useTheme();
   const { isCollapsed, toggleSidebar } = useSidebar();
+  const { user, openAuthModal, openOnboarding } = useAuth();
 
   return (
     <>
@@ -80,6 +82,33 @@ export default function Navbar({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
               <Calculator size={15} />
               <span>Desmos</span>
               {isDesmosOpen && <span className="text-[10px] ml-0.5 font-bold font-mono">Active</span>}
+            </button>
+          )}
+
+          {/* User Account / Sign In Pill */}
+          {user ? (
+            <button
+              onClick={openOnboarding}
+              title={`Personalized as ${user.fullName} • Goal: ${user.targetSatScore || 1550}+`}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--border-hover)] transition-all shadow-sm text-xs font-bold"
+            >
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center text-[10px] font-mono">
+                {user.fullName.charAt(0).toUpperCase()}
+              </div>
+              <span className="hidden sm:inline text-[var(--text-main)] max-w-[100px] truncate">
+                {user.fullName}
+              </span>
+              <span className="text-[10px] font-mono text-[var(--accent-green)] font-bold">
+                {user.targetSatScore || 1550}+
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={() => openAuthModal("login")}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-sm shadow-blue-500/20"
+            >
+              <LogIn size={14} />
+              <span>Sign In</span>
             </button>
           )}
         </div>

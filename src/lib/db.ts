@@ -92,6 +92,38 @@ export async function initDb() {
         time_spent INTEGER NOT NULL,
         completed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
+
+      CREATE TABLE IF NOT EXISTS vespera.users (
+        id TEXT PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        role TEXT DEFAULT 'student',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS vespera.user_profiles (
+        id TEXT PRIMARY KEY,
+        user_id TEXT UNIQUE REFERENCES vespera.users(id) ON DELETE CASCADE,
+        full_name TEXT NOT NULL,
+        math_level TEXT DEFAULT 'intermediate',
+        english_level TEXT DEFAULT 'intermediate',
+        ielts_score TEXT,
+        current_sat_score INTEGER,
+        target_sat_score INTEGER DEFAULT 1550,
+        exam_date TEXT,
+        daily_goal_minutes INTEGER DEFAULT 45,
+        priority_weakness TEXT,
+        onboarding_completed BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      ALTER TABLE vespera.user_progress ADD COLUMN IF NOT EXISTS user_id TEXT;
+      ALTER TABLE vespera.error_logs ADD COLUMN IF NOT EXISTS user_id TEXT;
+      ALTER TABLE vespera.mock_exams ADD COLUMN IF NOT EXISTS user_id TEXT;
+      CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON vespera.user_progress(user_id);
+      CREATE INDEX IF NOT EXISTS idx_error_logs_user_id ON vespera.error_logs(user_id);
+      CREATE INDEX IF NOT EXISTS idx_mock_exams_user_id ON mock_exams(user_id);
     `);
 
     // Check if topics exist

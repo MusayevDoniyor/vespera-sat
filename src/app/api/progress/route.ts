@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { pool, initDb } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
     await initDb();
+    const session = await getSessionUser();
+    const userId = session?.userId || null;
+
     const body = await request.json();
     const { questionId, userChoice, timeSpent, mistakeType, qualityRating } = body;
 
@@ -22,21 +26,21 @@ export async function POST(request: Request) {
     const isCorrect = chosenLetter === correctAnswer;
     const status = isCorrect ? "CORRECT" : "INCORRECT";
 
-    // 2. Upsert user progress
-    const progressId = `up_${questionId}`;
+    // 2. Upsert user progress (partitioned by userId if logged in)
+    const progressId = userId ? `up_${userId}_${questionId}` : `up_${questionId}`;
     await pool.query(
-      `INSERT INTO user_progress (id, question_id, status, user_choice, time_spent, updated_at)
-       VALUES ($1, $2, $3, $4, $5, NOW())
+      `INSERT INTO user_progress (id, question_id, user_id, status, user_choice, time_spent, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW())
        ON CONFLICT (id) DO UPDATE SET
          status = EXCLUDED.status,
          user_choice = EXCLUDED.user_choice,
          time_spent = user_progress.time_spent + EXCLUDED.time_spent,
          updated_at = NOW();`,
-      [progressId, questionId, status, chosenLetter, timeSpent || 30]
+      [progressId, questionId, userId, status, chosenLetter, timeSpent || 30]
     );
 
     // 3. SM-2 Spaced Repetition Algorithm Implementation
-    const errLogId = `err_${questionId}`;
+    const errLogId = userId ? `err_${userId}_${questionId}` : `err_${questionId}`;
     const existingLogRes = await pool.query(
       "SELECT ease_factor, repetitions, interval_days, retention_score FROM error_logs WHERE id = $1;",
       [errLogId]
@@ -88,8 +92,8 @@ export async function POST(request: Request) {
     // If it's incorrect OR already tracked, update error_logs
     if (!isCorrect || existingLogRes.rows.length > 0) {
       await pool.query(
-        `INSERT INTO error_logs (id, question_id, mistake_type, stage, next_review_at, is_resolved, ease_factor, repetitions, interval_days, last_quality, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW())
+        `INSERT INTO error_logs (id, question_id, user_id, mistake_type, stage, next_review_at, is_resolved, ease_factor, repetitions, interval_days, last_quality, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
          ON CONFLICT (id) DO UPDATE SET
            mistake_type = COALESCE(EXCLUDED.mistake_type, error_logs.mistake_type),
            stage = EXCLUDED.stage,
@@ -102,6 +106,7 @@ export async function POST(request: Request) {
         [
           errLogId,
           questionId,
+          userId,
           mistakeType || (isCorrect ? "MASTERED" : "CONCEPT_GAP"),
           stage,
           nextReviewAt,

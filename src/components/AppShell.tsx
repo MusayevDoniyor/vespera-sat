@@ -7,6 +7,9 @@ import DesmosCalculator from "./DesmosCalculator";
 import AICopilotModal from "./AICopilotModal";
 import { ThemeProvider } from "./ThemeContext";
 import { SidebarProvider, useSidebar } from "./SidebarContext";
+import { AuthProvider } from "./AuthContext";
+import AuthModal from "./AuthModal";
+import OnboardingModal from "./OnboardingModal";
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
   const [isDesmosOpen, setIsDesmosOpen] = useState(false);
@@ -86,6 +89,10 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         autoDiagnose={copilotContext?.autoDiagnose}
         onClearContext={() => setCopilotContext(null)}
       />
+
+      {/* Authentication & Personalization Modals */}
+      <AuthModal />
+      <OnboardingModal />
     </div>
   );
 }
@@ -93,9 +100,11 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
-      <SidebarProvider>
-        <AppShellContent>{children}</AppShellContent>
-      </SidebarProvider>
+      <AuthProvider>
+        <SidebarProvider>
+          <AppShellContent>{children}</AppShellContent>
+        </SidebarProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
