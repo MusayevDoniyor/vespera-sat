@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Topic {
+  id            String     @id @default(cuid())
+  section       String     // "MATH" | "READING_WRITING"
+  domain        String     // e.g. "Algebra", "Advanced Math", "Craft & Structure"
+  code          String     @unique // e.g. "ALG-01", "ENG-TRANS"
+  titleUz       String
+  titleEn       String
+  descriptionUz String
+  desmosTips    String?
+  order         Int        @default(0)
+  questions     Question[]
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Question {
+  id               String         @id @default(cuid())
+  topicId          String
+  topic            Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  section          String         // "MATH" | "READING_WRITING"
+  domain           String
+  difficulty       String         // "Easy" | "Medium" | "Hard"
+  prompt           String         // The question text (contains LaTeX like $y = mx + b$)
+  passage          String?        // Reading passage, student notes, or context
+  options          String         // JSON array: ["A. ...", "B. ...", "C. ...", "D. ..."]
+  correctAnswer    String         // "A" | "B" | "C" | "D" (or direct value)
+  explanationUz    String         // Step 1: O'zbekcha sodda hayotiy analogiya
+  explanationEn    String         // Step 2: SAT rasmiy inglizcha yechimi va formulasi
+  desmosTrick      String?        // Step 3: Desmos cheat-code (10-15s shortcut)
+  referenceFormula String?        // LaTeX formula
+  
+  progress         UserProgress[]
+  errorLogs        ErrorLog[]
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model UserProgress {
+  id          String   @id @default(cuid())
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  status      String   // "CORRECT" | "INCORRECT" | "BOOKMARKED"
+  userChoice  String?
+  timeSpent   Int      @default(0) // seconds
+  notes       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ErrorLog {
+  id           String    @id @default(cuid())
+  questionId   String
+  question     Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  mistakeType  String    // "CONCEPT_GAP" | "CALCULATION_SLIP" | "MISREAD_QUESTION" | "DESMOS_MISSED"
+  notes        String?
+  stage        String    @default("STAGE_1_DAY") // "STAGE_1_DAY" | "STAGE_3_DAYS" | "STAGE_7_DAYS" | "MASTERED"
+  nextReviewAt DateTime
+  isResolved   Boolean   @default(false)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model MockExam {
+  id             String   @id @default(cuid())
+  title          String
+  section        String   // "FULL" | "MATH" | "READING_WRITING"
+  score          Int
+  mathScore      Int?
+  readingScore   Int?
+  totalQuestions Int
+  correctCount   Int
+  timeSpent      Int
+  completedAt    DateTime @default(now())
+}

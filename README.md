@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 VESPERA — Digital SAT Autonomous AI Mastery Platform
 
-## Getting Started
+> **"From Absolute Zero to 1600"**  
+> Maxsus ravishda ingliz tili yuqori bo'lgan (IELTS 7.5 / Reading 9), ammo matematikadan 0 darajadan boshlayotgan talaba uchun qurilgan Digital SAT super-platformasi.
 
-First, run the development server:
+---
 
+## ⚡ Asosiy Imkoniyatlar (Core Features)
+
+1. **Zero-to-Hero Math Engine:**
+   - Har bir matematik masala **3 qavatli tushuntirish** bilan berilgan:
+     - 🇺🇿 **1-qavat:** O'zbekcha sodda hayotiy analogiya (Tarozi usuli, yo'l xaritasi, sodda mantiq).
+     - 🇬🇧 **2-qavat:** Official CollegeBoard English Formula & KaTeX LaTeX yechimi.
+     - ⚡ **3-qavat:** Desmos 10s Hack (Qo'lda hisoblamasdan grafik orqali 10 soniyada yechish siri).
+2. **Desmos Split-Screen Simulator:**
+   - Masalalar yonida to'g'ridan-to'g'ri o'rnatilgan rasmiy Desmos Graphing Calculator.
+   - SAT presetlari (Linear, Parabola Vertex, Circle, Regression `~`).
+3. **IELTS 7.5+ Verbal Accelerator:**
+   - Oddiy o'qish emas — faqat SATga xos tuzoqlar: *Rhetorical Synthesis*, *Transitions*, *Boundaries & Semicolons*.
+4. **AI Error Log & Spaced Repetition:**
+   - Xato qilingan masalalar avtomatik ravishda 24h, 72h va 7 kunlik oraliqda qayta eslatiladi (Ebbinghaus unutilish egri chizig'i).
+5. **Bluebook Exam Simulator:**
+   - 100% rasmiy Bluebook ko'rinishi: Taymer, savollar matritsasi, Strikethrough, Mark for Review va 1600 ballik shkala.
+6. **Local PostgreSQL Integratsiyasi:**
+   - Barcha progress va xatolar kompyuteringizdagi local PostgreSQL (`kaizo:2009@localhost:5432/vespera`) bazasida to'liq saqlanadi.
+
+---
+
+## 🛠 Ishga Tushirish (Quick Start)
+
+Dastur hozirda kompyuteringizda ishga tushirilgan va quyidagi manzilda ochiq:
+
+👉 **[http://localhost:3000](http://localhost:3000)**
+
+Serverni qayta yoqish uchun:
 ```bash
+cd C:\vespera
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Bazani qayta seed qilish uchun:
+```bash
+node scripts/seed-pg.mjs
+```

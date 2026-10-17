@@ -1,0 +1,22 @@
+{
+  "name": "Vespera SAT | Autonomous Digital SAT Mastery",
+  "short_name": "Vespera SAT",
+  "description": "Autonomous Digital SAT learning platform with interactive Desmos simulations, visual models, and adaptive drills.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

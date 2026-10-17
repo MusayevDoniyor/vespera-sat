@@ -1,0 +1,1432 @@
+"use client";
+
+import React, { useEffect, useState, useRef } from "react";
+import KaTeXMath from "@/components/KaTeXMath";
+import DesmosCalculator from "@/components/DesmosCalculator";
+import {
+  Clock,
+  Bookmark,
+  ChevronLeft,
+  ChevronRight,
+  Calculator,
+  Grid,
+  CheckCircle2,
+  XCircle,
+  Strikethrough,
+  RotateCcw,
+  Award,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Zap,
+  Sparkles,
+  BookOpen,
+  Coffee,
+  ArrowRight,
+  BookMarked,
+  Layers,
+  X,
+  Target,
+  ShieldCheck,
+  Highlighter,
+  ChevronDown,
+  Info,
+  Maximize2,
+  Minimize2,
+  HelpCircle,
+  Check,
+  FileText
+} from "lucide-react";
+import Link from "next/link";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion } from "@/lib/bluebook-tests";
+
+type ExamStage =
+  | "lobby"
+  | "testing"
+  | "section_review"
+  | "break"
+  | "completed";
+
+export default function BluebookMockPage() {
+  // Active selected test
+  const [selectedExam, setSelectedExam] = useState<BluebookExamForm>(BLUEBOOK_EXAMS[0]);
+  const [stage, setStage] = useState<ExamStage>("lobby");
+
+  // Section & Module state
+  const [currentSection, setCurrentSection] = useState<"READING_WRITING" | "MATH">("READING_WRITING");
+  const [currentModuleNum, setCurrentModuleNum] = useState<1 | 2>(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Active question sets
+  const [activeQuestions, setActiveQuestions] = useState<BluebookQuestion[]>([]);
+  const [isHardModule2, setIsHardModule2] = useState<boolean | null>(null);
+
+  // User state
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+  const [flagged, setFlagged] = useState<Record<string, boolean>>({});
+  const [struckOut, setStruckOut] = useState<Record<string, boolean>>({});
+  const [highlights, setHighlights] = useState<Record<string, string[]>>({});
+  const [userNotes, setUserNotes] = useState<Record<string, string>>({});
+
+  // Tool states
+  const [isOptionEliminatorActive, setIsOptionEliminatorActive] = useState(false);
+  const [showDirections, setShowDirections] = useState(false);
+  const [showFormulaSheet, setShowFormulaSheet] = useState(false);
+  const [isDesmosOpen, setIsDesmosOpen] = useState(false);
+  const [showQuestionGrid, setShowQuestionGrid] = useState(false);
+  const [showLeaveConfirmation, setShowLeaveConfirmation] = useState(false);
+  const [showFiveMinAlert, setShowFiveMinAlert] = useState(false);
+  const [hasShownFiveMinAlert, setHasShownFiveMinAlert] = useState(false);
+
+  // Scroll lock on open modals
+  useBodyScrollLock(showFormulaSheet || showDirections || showLeaveConfirmation || showFiveMinAlert);
+
+  // Timer states
+  const [timeLeft, setTimeLeft] = useState(32 * 60);
+  const [showTimer, setShowTimer] = useState(true);
+  const [breakTimeLeft, setBreakTimeLeft] = useState(10 * 60);
+
+  // Review Drawer filter
+  const [gridFilter, setGridFilter] = useState<"all" | "unanswered" | "flagged">("all");
+
+  // Final Results
+  const [scoreResult, setScoreResult] = useState<{
+    totalScore: number;
+    rwScore: number;
+    mathScore: number;
+    rwCorrect: number;
+    mathCorrect: number;
+    totalCorrect: number;
+    totalQuestions: number;
+    percentile: number;
+    rwTier: string;
+    mathTier: string;
+  } | null>(null);
+
+  const currentQ = activeQuestions[currentIndex];
+
+  // Helper to format MM:SS
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+  // Timer countdown
+  useEffect(() => {
+    if (stage !== "testing" && stage !== "section_review") return;
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        // Trigger 5-minute warning alert once
+        if (prev === 300 && !hasShownFiveMinAlert) {
+          setShowTimer(true);
+          setShowFiveMinAlert(true);
+          setHasShownFiveMinAlert(true);
+        }
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleTimeExpired();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [stage, hasShownFiveMinAlert]);
+
+  // Break timer countdown
+  useEffect(() => {
+    if (stage !== "break") return;
+    const interval = setInterval(() => {
+      setBreakTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          startMathSection();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [stage]);
+
+  // Keyboard navigation & shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (stage !== "testing" || !currentQ) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target as HTMLElement)?.isContentEditable
+      ) {
+        return;
+      }
+
+      const key = e.key.toUpperCase();
+      if (["A", "B", "C", "D"].includes(key) && currentQ.type === "multiple_choice") {
+        e.preventDefault();
+        handleSelectOption(key);
+      } else if (key === "F") {
+        e.preventDefault();
+        toggleFlag();
+      } else if (key === "E") {
+        e.preventDefault();
+        setIsOptionEliminatorActive((prev) => !prev);
+      } else if (e.key === "ArrowRight") {
+        if (currentIndex < activeQuestions.length - 1) {
+          e.preventDefault();
+          setCurrentIndex((prev) => prev + 1);
+        } else {
+          e.preventDefault();
+          setStage("section_review");
+        }
+      } else if (e.key === "ArrowLeft") {
+        if (currentIndex > 0) {
+          e.preventDefault();
+          setCurrentIndex((prev) => prev - 1);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex, stage, currentQ, activeQuestions.length]);
+
+  // Start Exam
+  const startExam = (exam: BluebookExamForm) => {
+    setSelectedExam(exam);
+    setCurrentSection("READING_WRITING");
+    setCurrentModuleNum(1);
+    setActiveQuestions(exam.rwModule1);
+    setCurrentIndex(0);
+    setTimeLeft(exam.rwTimingMinutes * 60);
+    setShowTimer(true);
+    setHasShownFiveMinAlert(false);
+    setUserAnswers({});
+    setFlagged({});
+    setStruckOut({});
+    setIsHardModule2(null);
+    setStage("testing");
+  };
+
+  const handleSelectOption = (letter: string) => {
+    if (!currentQ) return;
+    setUserAnswers((prev) => ({
+      ...prev,
+      [currentQ.id]: letter,
+    }));
+  };
+
+  const handleSPRInput = (val: string) => {
+    if (!currentQ) return;
+    setUserAnswers((prev) => ({
+      ...prev,
+      [currentQ.id]: val,
+    }));
+  };
+
+  const toggleFlag = () => {
+    if (!currentQ) return;
+    setFlagged((prev) => ({
+      ...prev,
+      [currentQ.id]: !prev[currentQ.id],
+    }));
+  };
+
+  const toggleStrike = (letter: string) => {
+    if (!currentQ) return;
+    const key = `${currentQ.id}_${letter}`;
+    setStruckOut((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  // Complete Module and Multistage Adaptive Routing
+  const handleTimeExpired = () => {
+    if (stage === "testing" || stage === "section_review") {
+      submitCurrentModule();
+    }
+  };
+
+  const submitCurrentModule = () => {
+    setShowLeaveConfirmation(false);
+    setShowQuestionGrid(false);
+
+    if (currentSection === "READING_WRITING" && currentModuleNum === 1) {
+      // Evaluate RW Module 1 score for MST routing
+      let correctCount = 0;
+      selectedExam.rwModule1.forEach((q) => {
+        if (userAnswers[q.id]?.trim().toUpperCase() === q.correctAnswer.trim().toUpperCase()) {
+          correctCount++;
+        }
+      });
+
+      const accuracy = correctCount / (selectedExam.rwModule1.length || 1);
+      const isHard = accuracy >= 0.6; // If >= 60% correct, route to Hard module
+      setIsHardModule2(isHard);
+
+      const nextQuestions = isHard
+        ? selectedExam.rwModule2Hard.length > 0
+          ? selectedExam.rwModule2Hard
+          : selectedExam.rwModule1
+        : selectedExam.rwModule2Easy.length > 0
+        ? selectedExam.rwModule2Easy
+        : selectedExam.rwModule1;
+
+      setCurrentModuleNum(2);
+      setActiveQuestions(nextQuestions);
+      setCurrentIndex(0);
+      setTimeLeft(selectedExam.rwTimingMinutes * 60);
+      setHasShownFiveMinAlert(false);
+      setStage("testing");
+    } else if (currentSection === "READING_WRITING" && currentModuleNum === 2) {
+      // Transition to Scheduled Break (10 minutes)
+      setBreakTimeLeft(10 * 60);
+      setStage("break");
+    } else if (currentSection === "MATH" && currentModuleNum === 1) {
+      // Evaluate Math Module 1 score for MST routing
+      let correctCount = 0;
+      selectedExam.mathModule1.forEach((q) => {
+        if (userAnswers[q.id]?.trim().toUpperCase() === q.correctAnswer.trim().toUpperCase()) {
+          correctCount++;
+        }
+      });
+
+      const accuracy = correctCount / (selectedExam.mathModule1.length || 1);
+      const isHard = accuracy >= 0.6;
+      setIsHardModule2(isHard);
+
+      const nextQuestions = isHard
+        ? selectedExam.mathModule2Hard.length > 0
+          ? selectedExam.mathModule2Hard
+          : selectedExam.mathModule1
+        : selectedExam.mathModule2Easy.length > 0
+        ? selectedExam.mathModule2Easy
+        : selectedExam.mathModule1;
+
+      setCurrentModuleNum(2);
+      setActiveQuestions(nextQuestions);
+      setCurrentIndex(0);
+      setTimeLeft(selectedExam.mathTimingMinutes * 60);
+      setHasShownFiveMinAlert(false);
+      setStage("testing");
+    } else if (currentSection === "MATH" && currentModuleNum === 2) {
+      // Complete entire exam and compute scaled College Board score
+      finalizeExamScore();
+    }
+  };
+
+  const startMathSection = () => {
+    setCurrentSection("MATH");
+    setCurrentModuleNum(1);
+    setActiveQuestions(selectedExam.mathModule1);
+    setCurrentIndex(0);
+    setTimeLeft(selectedExam.mathTimingMinutes * 60);
+    setHasShownFiveMinAlert(false);
+    setIsHardModule2(null);
+    setStage("testing");
+  };
+
+  const finalizeExamScore = () => {
+    let rwCorrect = 0;
+    let rwTotal = 0;
+    let mathCorrect = 0;
+    let mathTotal = 0;
+
+    // Check RW questions answered
+    const allRW = [
+      ...selectedExam.rwModule1,
+      ...selectedExam.rwModule2Hard,
+      ...selectedExam.rwModule2Easy,
+    ];
+    allRW.forEach((q) => {
+      if (userAnswers[q.id]) {
+        rwTotal++;
+        if (userAnswers[q.id]?.trim().toUpperCase() === q.correctAnswer.trim().toUpperCase()) {
+          rwCorrect++;
+        }
+      }
+    });
+
+    // Check Math questions answered
+    const allMath = [
+      ...selectedExam.mathModule1,
+      ...selectedExam.mathModule2Hard,
+      ...selectedExam.mathModule2Easy,
+    ];
+    allMath.forEach((q) => {
+      if (userAnswers[q.id]) {
+        mathTotal++;
+        if (userAnswers[q.id]?.trim().toUpperCase() === q.correctAnswer.trim().toUpperCase()) {
+          mathCorrect++;
+        }
+      }
+    });
+
+    const rwRatio = rwTotal > 0 ? rwCorrect / rwTotal : 0.75;
+    const mathRatio = mathTotal > 0 ? mathCorrect / mathTotal : 0.8;
+
+    // College Board scaled scoring: 200 - 800 with 10 pt steps
+    const rwScore = Math.round((200 + rwRatio * 600) / 10) * 10;
+    const mathScore = Math.round((200 + mathRatio * 600) / 10) * 10;
+    const totalScore = rwScore + mathScore;
+
+    // Estimate percentile
+    let percentile = 50;
+    if (totalScore >= 1550) percentile = 99;
+    else if (totalScore >= 1500) percentile = 98;
+    else if (totalScore >= 1400) percentile = 93;
+    else if (totalScore >= 1300) percentile = 86;
+    else if (totalScore >= 1200) percentile = 74;
+    else if (totalScore >= 1100) percentile = 60;
+    else percentile = Math.max(20, Math.round((totalScore - 400) / 12));
+
+    const result = {
+      totalScore,
+      rwScore,
+      mathScore,
+      rwCorrect,
+      mathCorrect,
+      totalCorrect: rwCorrect + mathCorrect,
+      totalQuestions: rwTotal + mathTotal || 1,
+      percentile,
+      rwTier: isHardModule2 ? "Adaptive Tier 2 (Hard - 700-800 Capable)" : "Adaptive Tier 2 (Standard)",
+      mathTier: isHardModule2 ? "Adaptive Tier 2 (Hard - 750-800 Capable)" : "Adaptive Tier 2 (Standard)",
+    };
+
+    setScoreResult(result);
+    setStage("completed");
+
+    // Persist attempt to database
+    fetch("/api/stats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: selectedExam.title,
+        section: "FULL",
+        score: totalScore,
+        mathScore,
+        readingScore: rwScore,
+        totalQuestions: result.totalQuestions,
+        correctCount: result.totalCorrect,
+        timeSpent: (selectedExam.rwTimingMinutes + selectedExam.mathTimingMinutes) * 60 - timeLeft,
+      }),
+    }).catch(() => {});
+  };
+
+  // =========================================================================
+  // RENDER: LOBBY (Test Selector)
+  // =========================================================================
+  if (stage === "lobby") {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-8">
+        <div className="w-full max-w-5xl space-y-8">
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold tracking-wide uppercase">
+              <ShieldCheck className="w-4 h-4 text-blue-400" />
+              1:1 Official College Board Bluebook Ecosystem
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white">
+              Digital SAT Bluebook Simulator
+            </h1>
+            <p className="text-sm md:text-base text-slate-400 max-w-2xl mx-auto">
+              Haqiqiy Bluebook interfeysi, rasmiy College Board va SAT Tashkent testlari, 2-bosqichli adaptiv Multistage Testing (MST) marshrutlash tizimi va Desmos integratsiyasi.
+            </p>
+          </div>
+
+          {/* Test Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {BLUEBOOK_EXAMS.map((exam) => (
+              <div
+                key={exam.id}
+                onClick={() => setSelectedExam(exam)}
+                className={`relative rounded-2xl p-6 cursor-pointer border transition-all duration-200 flex flex-col justify-between ${
+                  selectedExam.id === exam.id
+                    ? "bg-blue-950/40 border-blue-500 shadow-xl shadow-blue-500/10 ring-2 ring-blue-500/20"
+                    : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                }`}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      {exam.badge}
+                    </span>
+                    <span className="text-xs text-slate-400 font-mono">
+                      {exam.formCode}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400">
+                      {exam.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                      {exam.descriptionUz}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs text-slate-300">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-blue-400" />
+                      <span>{exam.rwTimingMinutes + exam.mathTimingMinutes} daqiqa</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Layers className="w-3.5 h-3.5 text-amber-400" />
+                      <span>4 Adaptiv Modul</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startExam(exam);
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 active:scale-95"
+                  >
+                    <span>Imtihonni Boshlash</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Guidelines */}
+          <div className="rounded-2xl bg-slate-900/40 border border-slate-800 p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div className="flex items-center gap-3">
+              <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+              <span>
+                <strong>Bluebook qoidalari:</strong> Har bir modul yakunida tekshiruv (Section Review) ekrani ochiladi. Modul yakunlangach, unga qaytib bo'lmaydi. Reading & Writing va Math o'rtasida 10 daqiqalik tanaffus mavjud.
+              </span>
+            </div>
+            <Link
+              href="/"
+              className="text-slate-400 hover:text-white transition whitespace-nowrap underline underline-offset-4"
+            >
+              Bosh sahifaga qaytish
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // RENDER: 10-MINUTE BREAK SCREEN
+  // =========================================================================
+  if (stage === "break") {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-full max-w-xl bg-slate-900/90 border border-slate-800 rounded-3xl p-8 md:p-12 space-y-6 shadow-2xl shadow-blue-500/5">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+            <Coffee className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl md:text-3xl font-black text-white">
+              10 Daqiqalik Rasmiy Tanaffus
+            </h2>
+            <p className="text-sm text-slate-400">
+              Section 1 (Reading & Writing) yakunlandi. Endi biroz dam oling, suv iching va ko'zingizni dam oldiring.
+            </p>
+          </div>
+
+          <div className="py-4">
+            <div className="text-6xl md:text-7xl font-mono font-bold tracking-tight text-amber-400">
+              {formatTime(breakTimeLeft)}
+            </div>
+            <p className="text-xs text-slate-500 mt-2">Qolgan tanaffus vaqti</p>
+          </div>
+
+          <div className="space-y-3 pt-4 border-t border-slate-800">
+            <button
+              onClick={startMathSection}
+              className="w-full py-3.5 px-6 rounded-2xl font-bold text-sm bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 transition flex items-center justify-center gap-2"
+            >
+              <span>Tanaffusni tugatib, Math Bo'limiga o'tish</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="text-xs text-slate-500">
+              Math bo'limida 2 ta adaptiv modul (har biri 35 daqiqa) va rasmiy Desmos kalkulyatori mavjud.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // RENDER: MODULE REVIEW SCREEN (College Board Authentic)
+  // =========================================================================
+  if (stage === "section_review") {
+    const answeredCount = activeQuestions.filter((q) => !!userAnswers[q.id]).length;
+    const unansweredCount = activeQuestions.length - answeredCount;
+    const flaggedCount = activeQuestions.filter((q) => !!flagged[q.id]).length;
+
+    const filteredQuestions = activeQuestions.filter((q) => {
+      if (gridFilter === "unanswered") return !userAnswers[q.id];
+      if (gridFilter === "flagged") return !!flagged[q.id];
+      return true;
+    });
+
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+        {/* Top bar */}
+        <header className="h-16 border-b border-slate-800 bg-slate-900/90 px-6 flex items-center justify-between sticky top-0 z-20">
+          <div>
+            <h2 className="text-base font-bold text-white">
+              {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"} - Module {currentModuleNum} Review
+            </h2>
+            <p className="text-xs text-slate-400">
+              Barcha savollaringizni tekshirib chiqing. Har qanday savolga bosib qaytishingiz mumkin.
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <span className="text-xs text-slate-400 block">Qolgan vaqt</span>
+              <span className="text-sm font-mono font-bold text-blue-400">{formatTime(timeLeft)}</span>
+            </div>
+            <button
+              onClick={() => setShowLeaveConfirmation(true)}
+              className="py-2 px-5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/30 transition flex items-center gap-2"
+            >
+              <span>Modulni Yakunlash</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </header>
+
+        {/* Content */}
+        <main className="flex-1 p-6 max-w-5xl mx-auto w-full space-y-6">
+          {/* Summary stats */}
+          <div className="grid grid-cols-3 gap-4">
+            <button
+              onClick={() => setGridFilter("all")}
+              className={`p-4 rounded-2xl border text-left transition ${
+                gridFilter === "all"
+                  ? "bg-blue-950/40 border-blue-500 text-white"
+                  : "bg-slate-900/60 border-slate-800 text-slate-300"
+              }`}
+            >
+              <div className="text-2xl font-bold">{activeQuestions.length}</div>
+              <div className="text-xs text-slate-400 mt-1">Barcha Savollar</div>
+            </button>
+            <button
+              onClick={() => setGridFilter("unanswered")}
+              className={`p-4 rounded-2xl border text-left transition ${
+                gridFilter === "unanswered"
+                  ? "bg-rose-950/40 border-rose-500 text-white"
+                  : "bg-slate-900/60 border-slate-800 text-slate-300"
+              }`}
+            >
+              <div className="text-2xl font-bold text-rose-400">{unansweredCount}</div>
+              <div className="text-xs text-slate-400 mt-1">Belgilanmagan (Unanswered)</div>
+            </button>
+            <button
+              onClick={() => setGridFilter("flagged")}
+              className={`p-4 rounded-2xl border text-left transition ${
+                gridFilter === "flagged"
+                  ? "bg-amber-950/40 border-amber-500 text-white"
+                  : "bg-slate-900/60 border-slate-800 text-slate-300"
+              }`}
+            >
+              <div className="text-2xl font-bold text-amber-400">{flaggedCount}</div>
+              <div className="text-xs text-slate-400 mt-1">Belgilangan (For Review)</div>
+            </button>
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {filteredQuestions.map((q) => {
+              const origIndex = activeQuestions.findIndex((orig) => orig.id === q.id);
+              const isAnswered = !!userAnswers[q.id];
+              const isFlagged = !!flagged[q.id];
+
+              return (
+                <div
+                  key={q.id}
+                  onClick={() => {
+                    setCurrentIndex(origIndex);
+                    setStage("testing");
+                  }}
+                  className={`p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between h-24 hover:scale-[1.02] ${
+                    isAnswered
+                      ? "bg-slate-900 border-slate-700 hover:border-blue-400"
+                      : "bg-rose-950/20 border-rose-900/40 hover:border-rose-500"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-white">Q {origIndex + 1}</span>
+                    {isFlagged && <Bookmark className="w-4 h-4 text-amber-400 fill-amber-400" />}
+                  </div>
+                  <div className="text-xs flex items-center justify-between">
+                    <span className="text-slate-400 truncate max-w-[80px]">{q.domain}</span>
+                    <span
+                      className={`font-mono font-bold text-xs ${
+                        isAnswered ? "text-emerald-400" : "text-rose-400"
+                      }`}
+                    >
+                      {isAnswered ? userAnswers[q.id] : "—"}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Back button */}
+          <div className="pt-4 flex justify-between items-center">
+            <button
+              onClick={() => setStage("testing")}
+              className="py-2.5 px-6 rounded-xl border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-300 flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Savollarga Qaytish</span>
+            </button>
+            <button
+              onClick={() => setShowLeaveConfirmation(true)}
+              className="py-2.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-lg shadow-blue-600/30 flex items-center gap-2"
+            >
+              <span>Modulni Yakunlash</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </main>
+
+        {/* Confirmation Modal */}
+        {showLeaveConfirmation && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+              <div className="flex items-center gap-3 text-amber-400">
+                <AlertCircle className="w-6 h-6" />
+                <h3 className="text-lg font-bold text-white">Haqiqatan ham yakunlamoqchimisiz?</h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Ushbu modulni yakunlaganingizdan so'ng, uning savollariga qayta kira olmaysiz.
+                {unansweredCount > 0 && (
+                  <span className="block mt-2 font-bold text-rose-400">
+                    Diqqat: Sizda {unansweredCount} ta belgilanmagan savol qolgan!
+                  </span>
+                )}
+              </p>
+              <div className="flex items-center justify-end gap-3 pt-3">
+                <button
+                  onClick={() => setShowLeaveConfirmation(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                >
+                  Tekshirishda davom etish
+                </button>
+                <button
+                  onClick={submitCurrentModule}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition"
+                >
+                  Ha, Yakunlash
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // RENDER: COMPLETED SCORE DASHBOARD
+  // =========================================================================
+  if (stage === "completed" && scoreResult) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-8">
+        <div className="w-full max-w-4xl space-y-8">
+          {/* Top Banner */}
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+              <CheckCircle2 className="w-4 h-4" />
+              Imtihon Muvaffaqiyatli Yakunlandi
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black text-white">
+              Sizning SAT Natijangiz
+            </h1>
+            <p className="text-xs md:text-sm text-slate-400">
+              {selectedExam.title} ({selectedExam.formCode})
+            </p>
+          </div>
+
+          {/* Main Score Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Total Scaled Score */}
+            <div className="md:col-span-1 rounded-3xl bg-gradient-to-b from-blue-900/40 to-slate-900 border border-blue-500/40 p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-2xl shadow-blue-500/10">
+              <span className="text-xs uppercase tracking-widest text-blue-300 font-bold mb-2">
+                Umumiy SAT Balli
+              </span>
+              <div className="text-6xl md:text-7xl font-mono font-black text-white tracking-tight">
+                {scoreResult.totalScore}
+              </div>
+              <span className="text-xs text-slate-400 mt-1">400 — 1600 shkala</span>
+              <div className="mt-4 px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold">
+                Top {100 - scoreResult.percentile}% (Percentile: {scoreResult.percentile}th)
+              </div>
+            </div>
+
+            {/* Section Scores */}
+            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Reading & Writing */}
+              <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 flex flex-col justify-between">
+                <div className="space-y-1">
+                  <span className="text-xs uppercase font-bold text-slate-400">Section 1</span>
+                  <h3 className="text-base font-bold text-white">Reading & Writing</h3>
+                  <div className="text-4xl font-mono font-black text-blue-400 mt-2">
+                    {scoreResult.rwScore}
+                    <span className="text-xs text-slate-500 font-sans font-normal ml-1">/ 800</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
+                  <div className="flex justify-between">
+                    <span>To'g'ri javoblar:</span>
+                    <span className="font-bold text-emerald-400">{scoreResult.rwCorrect} ta</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Yo'nalish:</span>
+                    <span className="font-bold text-blue-300">{scoreResult.rwTier}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Math */}
+              <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 flex flex-col justify-between">
+                <div className="space-y-1">
+                  <span className="text-xs uppercase font-bold text-slate-400">Section 2</span>
+                  <h3 className="text-base font-bold text-white">Math (Kalkulyator bilan)</h3>
+                  <div className="text-4xl font-mono font-black text-emerald-400 mt-2">
+                    {scoreResult.mathScore}
+                    <span className="text-xs text-slate-500 font-sans font-normal ml-1">/ 800</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
+                  <div className="flex justify-between">
+                    <span>To'g'ri javoblar:</span>
+                    <span className="font-bold text-emerald-400">{scoreResult.mathCorrect} ta</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Yo'nalish:</span>
+                    <span className="font-bold text-emerald-300">{scoreResult.mathTier}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <button
+              onClick={() => setStage("lobby")}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Boshqa Testni Tanlash</span>
+            </button>
+            <Link
+              href="/curriculum"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition flex items-center justify-center gap-2"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Xatolarni Tahlil Qilish (Curriculum)</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // RENDER: LIVE BLUEBOOK TESTING APPLICATION (1:1 College Board Layout)
+  // =========================================================================
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col select-none">
+      {/* ================= TOP BAR (College Board Bluebook Header) ================= */}
+      <header className="h-14 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
+        {/* Left: Section & Module info + Directions toggle */}
+        <div className="flex items-center gap-3">
+          <div className="text-xs md:text-sm font-bold text-white tracking-wide">
+            {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"}
+            <span className="text-slate-400 font-normal ml-1.5 hidden sm:inline">
+              Module {currentModuleNum}
+            </span>
+          </div>
+          <button
+            onClick={() => setShowDirections((prev) => !prev)}
+            className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-semibold px-2 py-1 rounded hover:bg-slate-800 transition"
+          >
+            <span>Directions</span>
+            <ChevronDown className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Center: Countdown Timer */}
+        <div className="flex items-center gap-2">
+          {showTimer ? (
+            <div
+              className={`flex items-center gap-1.5 font-mono text-sm md:text-base font-bold px-3 py-1 rounded-md border ${
+                timeLeft <= 300
+                  ? "bg-rose-950/60 border-rose-500 text-rose-300 animate-pulse"
+                  : "bg-slate-800/80 border-slate-700 text-white"
+              }`}
+            >
+              <Clock className="w-4 h-4 text-slate-400" />
+              <span>{formatTime(timeLeft)}</span>
+            </div>
+          ) : (
+            <div className="p-1 text-slate-400">
+              <Clock className="w-4 h-4" />
+            </div>
+          )}
+          <button
+            onClick={() => setShowTimer((prev) => !prev)}
+            className="text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded hover:bg-slate-800 transition font-medium"
+          >
+            {showTimer ? "Hide" : "Show"}
+          </button>
+        </div>
+
+        {/* Right: Testing Tools */}
+        <div className="flex items-center gap-1.5 md:gap-3">
+          {/* Option Eliminator Toggle */}
+          {currentQ?.type === "multiple_choice" && (
+            <button
+              onClick={() => setIsOptionEliminatorActive((prev) => !prev)}
+              title="Option Eliminator (Strikethrough)"
+              className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+                isOptionEliminatorActive
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800"
+              }`}
+            >
+              <Strikethrough className="w-4 h-4" />
+              <span className="hidden md:inline">ABC</span>
+            </button>
+          )}
+
+          {/* Formula Reference Sheet (Math or general) */}
+          <button
+            onClick={() => setShowFormulaSheet(true)}
+            title="College Board Reference Sheet"
+            className="p-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="hidden md:inline">Reference</span>
+          </button>
+
+          {/* Desmos Graphing Calculator */}
+          <button
+            onClick={() => setIsDesmosOpen((prev) => !prev)}
+            title="Open Desmos Graphing Calculator"
+            className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+              isDesmosOpen
+                ? "bg-emerald-600 text-white"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            <Calculator className="w-4 h-4 text-emerald-400" />
+            <span className="hidden md:inline">Desmos</span>
+          </button>
+        </div>
+      </header>
+
+      {/* ================= WORKSPACE (Reading 2-Column or Math 1-Column) ================= */}
+      <main className="flex-1 flex overflow-hidden">
+        {currentQ ? (
+          currentQ.section === "READING_WRITING" ? (
+            /* 2-COLUMN SPLIT FOR READING AND WRITING */
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800 overflow-y-auto">
+              {/* Left Column: Passage / Stimulus */}
+              <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] text-slate-200 leading-relaxed text-sm md:text-base font-serif">
+                {currentQ.passage ? (
+                  <div className="space-y-4 whitespace-pre-line selection:bg-yellow-500/30 selection:text-white">
+                    {currentQ.passage}
+                  </div>
+                ) : (
+                  <div className="text-slate-500 italic">No passage required for this question.</div>
+                )}
+              </div>
+
+              {/* Right Column: Stem & Multiple Choice Options */}
+              <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] flex flex-col justify-between space-y-6">
+                <div className="space-y-6">
+                  {/* Question header + Bookmark */}
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                    <span className="font-mono font-bold text-xs uppercase tracking-wider text-slate-400">
+                      Question {currentIndex + 1} of {activeQuestions.length}
+                    </span>
+                    <button
+                      onClick={toggleFlag}
+                      className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded transition ${
+                        flagged[currentQ.id]
+                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                      }`}
+                    >
+                      <Bookmark
+                        className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-400 text-amber-400" : ""}`}
+                      />
+                      <span>Mark for Review</span>
+                    </button>
+                  </div>
+
+                  {/* Question stem */}
+                  <div className="text-sm md:text-base font-medium text-white leading-relaxed">
+                    <KaTeXMath content={currentQ.prompt} />
+                  </div>
+
+                  {/* Options */}
+                  <div className="space-y-3 pt-2">
+                    {currentQ.options?.map((opt) => {
+                      const letter = opt.substring(0, 1);
+                      const text = opt.substring(3);
+                      const isSelected = userAnswers[currentQ.id] === letter;
+                      const isStruck = !!struckOut[`${currentQ.id}_${letter}`];
+
+                      return (
+                        <div
+                          key={opt}
+                          onClick={() => !isStruck && handleSelectOption(letter)}
+                          className={`relative group rounded-xl p-3.5 border transition cursor-pointer flex items-start justify-between gap-3 ${
+                            isStruck
+                              ? "opacity-35 line-through bg-slate-900/40 border-slate-800/60"
+                              : isSelected
+                              ? "bg-blue-950/40 border-blue-500 shadow-md ring-1 ring-blue-500"
+                              : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3 flex-1">
+                            <span
+                              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition ${
+                                isSelected
+                                  ? "bg-blue-500 text-white"
+                                  : "border border-slate-700 text-slate-400 group-hover:border-slate-500"
+                              }`}
+                            >
+                              {letter}
+                            </span>
+                            <span className="text-xs md:text-sm text-slate-200 mt-0.5 leading-snug">
+                              <KaTeXMath content={text} />
+                            </span>
+                          </div>
+
+                          {/* Strikethrough button */}
+                          {isOptionEliminatorActive && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleStrike(letter);
+                              }}
+                              className={`p-1 rounded text-xs transition ${
+                                isStruck
+                                  ? "text-rose-400 hover:bg-rose-950/40"
+                                  : "text-slate-500 hover:text-rose-400 hover:bg-slate-800"
+                              }`}
+                              title={isStruck ? "Restore option" : "Cross out option"}
+                            >
+                              <Strikethrough className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* CENTERED LAYOUT FOR MATH WITH SPR GRID-IN & DESMOS */
+            <div className="flex-1 flex overflow-y-auto justify-center p-6 md:p-12">
+              <div className="w-full max-w-2xl space-y-8">
+                {/* Question header + Bookmark */}
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span className="font-mono font-bold text-xs uppercase tracking-wider text-slate-400">
+                    Question {currentIndex + 1} of {activeQuestions.length} (Math)
+                  </span>
+                  <button
+                    onClick={toggleFlag}
+                    className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded transition ${
+                      flagged[currentQ.id]
+                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                        : "text-slate-400 hover:text-white hover:bg-slate-800"
+                    }`}
+                  >
+                    <Bookmark
+                      className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-400 text-amber-400" : ""}`}
+                    />
+                    <span>Mark for Review</span>
+                  </button>
+                </div>
+
+                {/* Math Prompt with LaTeX */}
+                <div className="text-base md:text-lg text-white font-medium leading-relaxed">
+                  <KaTeXMath content={currentQ.prompt} />
+                </div>
+
+                {/* Multiple Choice OR Student Produced Response (SPR) */}
+                {currentQ.type === "spr" ? (
+                  <div className="space-y-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      Student-Produced Response (Javobni kiriting):
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="text"
+                        value={userAnswers[currentQ.id] || ""}
+                        onChange={(e) => handleSPRInput(e.target.value)}
+                        placeholder="Masalan: 14 yoki 7/2"
+                        className="px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono text-lg font-bold w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      {userAnswers[currentQ.id] && (
+                        <button
+                          onClick={() => handleSPRInput("")}
+                          className="text-xs text-slate-500 hover:text-slate-300"
+                        >
+                          Tozalash
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500">
+                      Raqam, o'nli kasr (masalan: 3.5) yoki oddiy kasr (masalan: 7/2) shaklida kiriting.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {currentQ.options?.map((opt) => {
+                      const letter = opt.substring(0, 1);
+                      const text = opt.substring(3);
+                      const isSelected = userAnswers[currentQ.id] === letter;
+                      const isStruck = !!struckOut[`${currentQ.id}_${letter}`];
+
+                      return (
+                        <div
+                          key={opt}
+                          onClick={() => !isStruck && handleSelectOption(letter)}
+                          className={`relative group rounded-xl p-4 border transition cursor-pointer flex items-start justify-between gap-3 ${
+                            isStruck
+                              ? "opacity-35 line-through bg-slate-900/40 border-slate-800/60"
+                              : isSelected
+                              ? "bg-blue-950/40 border-blue-500 shadow-md ring-1 ring-blue-500"
+                              : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3 flex-1">
+                            <span
+                              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition ${
+                                isSelected
+                                  ? "bg-blue-500 text-white"
+                                  : "border border-slate-700 text-slate-400 group-hover:border-slate-500"
+                              }`}
+                            >
+                              {letter}
+                            </span>
+                            <span className="text-sm text-slate-200 mt-0.5 leading-snug">
+                              <KaTeXMath content={text} />
+                            </span>
+                          </div>
+
+                          {isOptionEliminatorActive && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleStrike(letter);
+                              }}
+                              className="text-slate-500 hover:text-rose-400 p-1"
+                            >
+                              <Strikethrough className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        ) : null}
+      </main>
+
+      {/* ================= BOTTOM BAR (Navigation + Question Grid Drawer) ================= */}
+      <footer className="h-16 border-t border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky bottom-0 z-30">
+        {/* Left: Back */}
+        <button
+          onClick={() => currentIndex > 0 && setCurrentIndex((prev) => prev - 1)}
+          disabled={currentIndex === 0}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ${
+            currentIndex === 0
+              ? "opacity-30 cursor-not-allowed text-slate-500"
+              : "text-slate-300 hover:text-white hover:bg-slate-800"
+          }`}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span>Back</span>
+        </button>
+
+        {/* Center: Question Grid Button */}
+        <button
+          onClick={() => setShowQuestionGrid((prev) => !prev)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-xs font-bold text-white transition shadow-sm"
+        >
+          <span>Question {currentIndex + 1} of {activeQuestions.length}</span>
+          <ChevronDown
+            className={`w-3.5 h-3.5 transition-transform duration-200 ${
+              showQuestionGrid ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {/* Right: Next or Review */}
+        {currentIndex < activeQuestions.length - 1 ? (
+          <button
+            onClick={() => setCurrentIndex((prev) => prev + 1)}
+            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 transition flex items-center gap-1.5"
+          >
+            <span>Next</span>
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        ) : (
+          <button
+            onClick={() => setStage("section_review")}
+            className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5"
+          >
+            <span>Review Section</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
+      </footer>
+
+      {/* ================= QUESTION GRID DRAWER (Bottom Pop-up) ================= */}
+      {showQuestionGrid && (
+        <div className="fixed inset-x-0 bottom-16 z-40 bg-slate-900/98 border-t border-slate-700 p-6 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-6 duration-200">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Savollar ro'yxati (Question Grid)
+              </span>
+              <button
+                onClick={() => setShowQuestionGrid(false)}
+                className="text-slate-400 hover:text-white p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-7 sm:grid-cols-9 md:grid-cols-14 gap-2">
+              {activeQuestions.map((q, idx) => {
+                const isCurrent = idx === currentIndex;
+                const isAnswered = !!userAnswers[q.id];
+                const isFlagged = !!flagged[q.id];
+
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => {
+                      setCurrentIndex(idx);
+                      setShowQuestionGrid(false);
+                    }}
+                    className={`relative w-10 h-10 rounded-lg text-xs font-bold transition flex items-center justify-center border ${
+                      isCurrent
+                        ? "ring-2 ring-blue-400 bg-blue-600 text-white border-blue-400"
+                        : isAnswered
+                        ? "bg-slate-800 text-slate-100 border-slate-600 hover:border-slate-400"
+                        : "border-dashed border-slate-700 text-slate-400 hover:border-slate-500 bg-slate-950/50"
+                    }`}
+                  >
+                    <span>{idx + 1}</span>
+                    {isFlagged && (
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full ring-2 ring-slate-900" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded bg-blue-600" />
+                  <span>Joriy savol</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded bg-slate-800 border border-slate-600" />
+                  <span>Belgilangan</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                  <span>For Review</span>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowQuestionGrid(false);
+                  setStage("section_review");
+                }}
+                className="text-blue-400 hover:text-blue-300 font-bold underline underline-offset-4"
+              >
+                Section Review Ekranini Ochish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: DIRECTIONS ================= */}
+      {showDirections && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 md:p-8 max-w-lg w-full space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Info className="w-5 h-5 text-blue-400" />
+                Rasmiy College Board Yo'riqnomasi
+              </h3>
+              <button onClick={() => setShowDirections(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="text-xs text-slate-300 leading-relaxed space-y-3">
+              {currentSection === "READING_WRITING" ? (
+                <>
+                  <p>
+                    <strong>Reading and Writing Section:</strong> 2 ta moduldan iborat. Har bir modul uchun 32 daqiqa ajratilgan.
+                  </p>
+                  <p>
+                    Har bir savolda bitta matn yoki jadval berilgan. Matnni diqqat bilan o'qib, eng to'g'ri variantni (A, B, C, D) tanlang. Har bir savol faqat bitta to'g'ri javobga ega.
+                  </p>
+                  <p>
+                    <strong>Maslahat:</strong> Noto'g'ri javoblarga ball chegirilmaydi (no negative marking). Shuning uchun barcha savollarga javob belgilash tavsiya etiladi.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>
+                    <strong>Math Section:</strong> 2 ta adaptiv moduldan iborat. Har bir modul uchun 35 daqiqa ajratilgan.
+                  </p>
+                  <p>
+                    Barcha savollar uchun o'rnatilgan Desmos kalkulyatoridan va yuqori paneldagi Reference formulas varaqasidan foydalanishga ruxsat etiladi.
+                  </p>
+                  <p>
+                    Savollarning 75% qismi variantli, 25% qismi esa Student-Produced Response (qiymatni to'g'ridan-to'g'ri kiritish) shaklida bo'ladi.
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setShowDirections(false)}
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white"
+              >
+                Tushundim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: 5 MINUTES LEFT ALERT ================= */}
+      {showFiveMinAlert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center">
+            <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
+              <Clock className="w-6 h-6 animate-pulse" />
+            </div>
+            <h3 className="text-base font-bold text-white">5 Daqiqa Qoldi!</h3>
+            <p className="text-xs text-slate-300">
+              Ushbu modulni yakunlash uchun 5 daqiqa vaqtingiz qoldi. Belgilanmagan savollarni tekshirishni unutmang.
+            </p>
+            <button
+              onClick={() => setShowFiveMinAlert(false)}
+              className="w-full py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold"
+            >
+              Imtihonni davom ettirish
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: FORMULA REFERENCE SHEET ================= */}
+      {showFormulaSheet && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh] overscroll-contain">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-400" />
+                College Board Official Math Reference Sheet
+              </h3>
+              <button onClick={() => setShowFormulaSheet(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-300">
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <div className="font-bold text-white">Aylana / Circle</div>
+                <div>Area: $A = \pi r^2$</div>
+                <div>Circumference: $C = 2\pi r$</div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <div className="font-bold text-white">To'g'ri to'rtburchak / Rectangle</div>
+                <div>Area: $A = lw$</div>
+                <div>Perimeter: $P = 2l + 2w$</div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <div className="font-bold text-white">Uchburchak / Triangle</div>
+                <div>Area: $A = \frac{1}{2}bh$</div>
+                <div>Pythagorean Theorem: $a^2 + b^2 = c^2$</div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <div className="font-bold text-white">Maxsus to'g'ri burchakli uchburchaklar</div>
+                <div>$45^\circ - 45^\circ - 90^\circ$: $x, x, x\sqrt{2}$</div>
+                <div>$30^\circ - 60^\circ - 90^\circ$: $x, x\sqrt{3}, 2x$</div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <div className="font-bold text-white">Hajm formulalari / Volume</div>
+                <div>Cylinder: $V = \pi r^2 h$</div>
+                <div>Sphere: $V = \frac{4}{3}\pi r^3$</div>
+                <div>Cone: $V = \frac{1}{3}\pi r^2 h$</div>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <div className="font-bold text-white">Burchaklar / Angles</div>
+                <div>Uchburchak ichki burchaklari yig'indisi: $180^\circ$</div>
+                <div>Aylana to'liq burchagi: $360^\circ$ yoki $2\pi$ rad</div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setShowFormulaSheet(false)}
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white"
+              >
+                Yopish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= DESMOS FLOATING PANEL ================= */}
+      {isDesmosOpen && (
+        <div className="fixed right-4 bottom-20 z-50 w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-4 overflow-hidden">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+              <Calculator className="w-4 h-4" />
+              Desmos Graphing Calculator
+            </span>
+            <button onClick={() => setIsDesmosOpen(false)} className="text-slate-400 hover:text-white">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="h-80 pt-2">
+            <DesmosCalculator onClose={() => setIsDesmosOpen(false)} isFloating={false} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

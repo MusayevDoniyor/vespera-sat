@@ -1,0 +1,5 @@
+# Ignore large materials folder from Vercel deployment payload
+materials/
+scripts/
+*.pdf
+.system_generated/

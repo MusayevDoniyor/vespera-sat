@@ -1,0 +1,600 @@
+import { Pool } from "pg";
+
+const connectionString =
+  process.env.DATABASE_URL || "postgresql://kaizo:2009@localhost:5432/vespera";
+
+const globalForPg = globalThis as unknown as {
+  pgPool: Pool | undefined;
+};
+
+export const pool =
+  globalForPg.pgPool ??
+  new Pool({
+    connectionString,
+    max: 10,
+    idleTimeoutMillis: 30000,
+  });
+
+(pool as any).on("connect", (client: any) => {
+  client.query("SET search_path TO vespera, public;").catch(() => {});
+});
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPg.pgPool = pool;
+}
+
+export async function initDb() {
+  const client = await pool.connect();
+  try {
+    await client.query("CREATE SCHEMA IF NOT EXISTS vespera; SET search_path TO vespera, public;");
+    // 1. Create tables
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS topics (
+        id TEXT PRIMARY KEY,
+        section TEXT NOT NULL,
+        domain TEXT NOT NULL,
+        code TEXT UNIQUE NOT NULL,
+        title_uz TEXT NOT NULL,
+        title_en TEXT NOT NULL,
+        description_uz TEXT NOT NULL,
+        desmos_tips TEXT,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS questions (
+        id TEXT PRIMARY KEY,
+        topic_code TEXT REFERENCES topics(code) ON DELETE CASCADE,
+        section TEXT NOT NULL,
+        domain TEXT NOT NULL,
+        difficulty TEXT NOT NULL,
+        prompt TEXT NOT NULL,
+        passage TEXT,
+        options JSONB NOT NULL,
+        correct_answer TEXT NOT NULL,
+        explanation_uz TEXT NOT NULL,
+        explanation_en TEXT NOT NULL,
+        desmos_trick TEXT,
+        reference_formula TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS user_progress (
+        id TEXT PRIMARY KEY,
+        question_id TEXT REFERENCES questions(id) ON DELETE CASCADE,
+        status TEXT NOT NULL,
+        user_choice TEXT,
+        time_spent INTEGER DEFAULT 0,
+        notes TEXT,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS error_logs (
+        id TEXT PRIMARY KEY,
+        question_id TEXT REFERENCES questions(id) ON DELETE CASCADE,
+        mistake_type TEXT NOT NULL,
+        notes TEXT,
+        stage TEXT DEFAULT 'STAGE_1_DAY',
+        next_review_at TIMESTAMP WITH TIME ZONE NOT NULL,
+        is_resolved BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS mock_exams (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        section TEXT NOT NULL,
+        score INTEGER NOT NULL,
+        math_score INTEGER,
+        reading_score INTEGER,
+        total_questions INTEGER NOT NULL,
+        correct_count INTEGER NOT NULL,
+        time_spent INTEGER NOT NULL,
+        completed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+    `);
+
+    // Check if topics exist
+    const { rows } = await client.query("SELECT COUNT(*) FROM topics;");
+    if (parseInt(rows[0].count, 10) === 0) {
+      console.log("Empty DB detected. Seeding full Vespera curriculum and questions...");
+      await seedDefaultData(client);
+    }
+  } finally {
+    client.release();
+  }
+}
+
+async function seedDefaultData(client: any) {
+  const topics = [
+    // MATH - ALGEBRA
+    {
+      id: "t_alg_01",
+      code: "ALG-01",
+      section: "MATH",
+      domain: "Algebra",
+      title_uz: "Bir o'zgaruvchili chiziqli tenglamalar",
+      title_en: "Linear Equations in One Variable",
+      description_uz: "Tenglamalarni yechish, no solution va infinitely many solutions qoidalari, matnli masalalarni tuzish.",
+      desmos_tips: "Tenglamani Desmos'ga to'g'ridan-to'g'ri yozing (masalan, 4x + 12 = 32). Desmos vertikal chiziq chizib, to'g'ri x qiymatini darhol ko'rsatadi!",
+      sort_order: 1,
+    },
+    {
+      id: "t_alg_02",
+      code: "ALG-02",
+      section: "MATH",
+      domain: "Algebra",
+      title_uz: "Ikki o'zgaruvchili chiziqli tenglamalar va grafiklar",
+      title_en: "Linear Equations in Two Variables",
+      description_uz: "Slope (qiyalik m), y-intercept (b), y = mx + b shakli, parallel va perpendikulyar to'g'ri chiziqlar.",
+      desmos_tips: "Tenglamani y = mx + b shaklida yozing. 'm' va 'b' uchun slider qo'shib, to'g'ri chiziq qanday harakatlanishini jonli ko'ring.",
+      sort_order: 2,
+    },
+    {
+      id: "t_alg_03",
+      code: "ALG-03",
+      section: "MATH",
+      domain: "Algebra",
+      title_uz: "Chiziqli tenglamalar sistemasi",
+      title_en: "Systems of Linear Equations",
+      description_uz: "Substitution va elimination usullari, 1 ta yechim, cheksiz yechim yoki yechim yo'qligini aniqlash.",
+      desmos_tips: "Ikkala tenglamani Desmos'da 1- va 2-qatorlarga yozing. Chiziqlar kesishgan nuqtaga bosing — (x, y) koordinatalari bir zumda ko'rinadi!",
+      sort_order: 3,
+    },
+    {
+      id: "t_alg_04",
+      code: "ALG-04",
+      section: "MATH",
+      domain: "Algebra",
+      title_uz: "Chiziqli tengsizliklar va sohalar",
+      title_en: "Linear Inequalities in One or Two Variables",
+      description_uz: "Tengsizliklar koordinata tekisligida, yechimlar sohasi va sohadagi nuqtalarni tekshirish.",
+      desmos_tips: "Tengsizlik belgisini (masalan, y > 2x - 4) Desmos'ga yozing — bo'yalgan soha paydo bo'ladi. Variantdagi nuqtalar shu sohada yotishini ko'ring.",
+      sort_order: 4,
+    },
+
+    // MATH - ADVANCED MATH
+    {
+      id: "t_adv_01",
+      code: "ADV-01",
+      section: "MATH",
+      domain: "Advanced Math",
+      title_uz: "Ekvivalent ifodalar va Ko'phadlar",
+      title_en: "Equivalent Expressions & Factoring",
+      description_uz: "Ko'phadlarni ko'paytuvchilarga ajratish, qisqa ko'paytirish formulalari, kasrlarni soddalashtirish.",
+      desmos_tips: "Asl ifodani 1-qatorga, variantlardagi ifodani 2-qatorga yozing. Agar ikkala grafik ustma-ust tushsa, ular 100% ekvivalent!",
+      sort_order: 5,
+    },
+    {
+      id: "t_adv_02",
+      code: "ADV-02",
+      section: "MATH",
+      domain: "Advanced Math",
+      title_uz: "Daraja va ildizlar qoidalari",
+      title_en: "Laws of Exponents & Radicals",
+      description_uz: "Kasr darajalar (x^(a/b) = ildiz), manfiy darajalar va darajalar ustida amallar.",
+      desmos_tips: "Ildizli va darajali ifodalarga biror son (masalan x = 3) berib, Desmos'da qiymatini hisoblab taqqoslang.",
+      sort_order: 6,
+    },
+    {
+      id: "t_adv_03",
+      code: "ADV-03",
+      section: "MATH",
+      domain: "Advanced Math",
+      title_uz: "Kvadrat tenglamalar va Parabola",
+      title_en: "Quadratic Equations and Functions",
+      description_uz: "Diskriminant (D = b^2 - 4ac), ildizlar soni, Vertex form y = a(x-h)^2 + k, eng katta/kichik qiymat.",
+      desmos_tips: "Parabolani kiriting va uning cho'qqisiga (vertex) yoki x o'qini kesgan nuqtalariga (zeros) bosing. Desmos koordinatalarni darhol chiqaradi.",
+      sort_order: 7,
+    },
+    {
+      id: "t_adv_04",
+      code: "ADV-04",
+      section: "MATH",
+      domain: "Advanced Math",
+      title_uz: "Ko'rsatkichli funksiyalar (Growth & Decay)",
+      title_en: "Exponential Functions & Word Problems",
+      description_uz: "y = a * b^x formulasi, murakkab foiz, aholi o'sishi va radioaktiv parchalanish modellari.",
+      desmos_tips: "Regression usuli: jadvalga ma'lumotlarni yozing va y1 ~ a * b^x1 formulasini kiriting — a va b darhol topiladi!",
+      sort_order: 8,
+    },
+    {
+      id: "t_adv_05",
+      code: "ADV-05",
+      section: "MATH",
+      domain: "Advanced Math",
+      title_uz: "Chiziqli bo'lmagan funksiyalar va sistemalar",
+      title_en: "Nonlinear Systems & Function Graphs",
+      description_uz: "Parabola va to'g'ri chiziqning kesishishi, modul va kubik funksiyalar tahlili.",
+      desmos_tips: "Tenglamalarni kiritib, kesishish nuqtalarini sanang: 2 ta bo'lsa 2 yechim, urinsa 1 yechim, tegmasa 0 yechim.",
+      sort_order: 9,
+    },
+
+    // MATH - PROBLEM SOLVING & DATA
+    {
+      id: "t_dat_01",
+      code: "DAT-01",
+      section: "MATH",
+      domain: "Problem Solving & Data Analysis",
+      title_uz: "Nisbat, tezlik, proporsiya va foizlar",
+      title_en: "Ratios, Rates, Proportions & Percentages",
+      description_uz: "Unit conversion (o'lchov birliklari), Percent increase/decrease, zichlik va tezlik masalalari.",
+      desmos_tips: "Desmos'dan kalkulyator sifatida foydalaning: (Yangi - Eski) / Eski * 100 orqali foiz o'zgarishini bir qatorda hisoblang.",
+      sort_order: 10,
+    },
+    {
+      id: "t_dat_02",
+      code: "DAT-02",
+      section: "MATH",
+      domain: "Problem Solving & Data Analysis",
+      title_uz: "Statistika: O'rta qiymat, Mediana va Og'ish",
+      title_en: "One-Variable Statistics & Outliers",
+      description_uz: "Mean, Median, Mode, Range, Standard Deviation (tarqoqlik) va chetga chiquvchi outlierlar ta'siri.",
+      desmos_tips: "Desmos'da mean([1, 2, 5, 8, 9]) yoki median([1, 2, 5, 8, 9]) deb yozing — qo'lda sanash shart emas!",
+      sort_order: 11,
+    },
+    {
+      id: "t_dat_03",
+      code: "DAT-03",
+      section: "MATH",
+      domain: "Problem Solving & Data Analysis",
+      title_uz: "Jadvallar, Scatterplots va Ehtimollik",
+      title_en: "Two-Variable Data, Tables & Probability",
+      description_uz: "Line of best fit, ikki tomonlama chastota jadvallari (two-way tables) va shartli ehtimollik.",
+      desmos_tips: "Jadval tuzib, x1 va y1 nuqtalariga y1 ~ m*x1 + b deb yozsangiz, eng mos chiziq tenglamasini chiqaradi.",
+      sort_order: 12,
+    },
+    {
+      id: "t_dat_04",
+      code: "DAT-04",
+      section: "MATH",
+      domain: "Problem Solving & Data Analysis",
+      title_uz: "Tanlanma va Xatolik chegarasi (Margin of Error)",
+      title_en: "Data Collection, Sampling & Inferences",
+      description_uz: "Tasodifiy tanlanma (random sampling), margin of error va statistik xulosalar ishonchliligi.",
+      desmos_tips: "Margin of error masalalarida interval [o'rtacha - xato, o'rtacha + xato] orasida bo'lishini tekshiring.",
+      sort_order: 13,
+    },
+
+    // MATH - GEOMETRY & TRIG
+    {
+      id: "t_geo_01",
+      code: "GEO-01",
+      section: "MATH",
+      domain: "Geometry & Trigonometry",
+      title_uz: "Yuza va Hajm formulalari",
+      title_en: "Area and Volume Formulas",
+      description_uz: "Uchburchaklar, to'g'ri to'rtburchaklar, silindr, konus va shar yuzalari va hajmlari.",
+      desmos_tips: "Bluebook formula ma'lumotnomasidagi formulalarni Desmos'da o'zgaruvchilar bilan qulay hisoblang.",
+      sort_order: 14,
+    },
+    {
+      id: "t_geo_02",
+      code: "GEO-02",
+      section: "MATH",
+      domain: "Geometry & Trigonometry",
+      title_uz: "Chiziqlar, burchaklar va Pifagor uchburchaklari",
+      title_en: "Lines, Angles, and Triangles",
+      description_uz: "Parallel chiziqlar burchaklari, Pifagor teoremasi, 30-60-90 va 45-45-90 maxsus uchburchaklar.",
+      desmos_tips: "Pifagor formulasi c = sqrt(a^2 + b^2) ni Desmos'da tez hisoblang.",
+      sort_order: 15,
+    },
+    {
+      id: "t_geo_03",
+      code: "GEO-03",
+      section: "MATH",
+      domain: "Geometry & Trigonometry",
+      title_uz: "Aylana va Doira tenglamalari",
+      title_en: "Circles & Circle Equations",
+      description_uz: "Koordinatadagi aylana: (x-h)^2 + (y-k)^2 = r^2, yoy uzunligi va sektor yuzasi.",
+      desmos_tips: "Aylana tenglamasini to'liq ko'rinishida yozsangiz, Desmos uning markazini va radiusini darhol vizual ko'rsatadi!",
+      sort_order: 16,
+    },
+    {
+      id: "t_geo_04",
+      code: "GEO-04",
+      section: "MATH",
+      domain: "Geometry & Trigonometry",
+      title_uz: "Trigonometriya asoslari",
+      title_en: "Trigonometry & Radians",
+      description_uz: "sin, cos, tan nisbatlari, sin(x) = cos(90 - x) xossasi, gradus va radian almashtirish.",
+      desmos_tips: "Desmos'ning pastki o'ng tomonidagi sozlamalarida 'Degrees' yoki 'Radians' rejimini to'g'ri tanlashni unutmang!",
+      sort_order: 17,
+    },
+
+    // READING & WRITING
+    {
+      id: "t_eng_wic",
+      code: "ENG-WIC",
+      section: "READING_WRITING",
+      domain: "Craft and Structure",
+      title_uz: "Kontekstda So'z Boyligi",
+      title_en: "Words in Context",
+      description_uz: "Akademik so'zlarning kontekstga mos ma'nosi va so'zlarning ikkilamchi nozik ma'nolari.",
+      desmos_tips: null,
+      sort_order: 18,
+    },
+    {
+      id: "t_eng_pur",
+      code: "ENG-PUR",
+      section: "READING_WRITING",
+      domain: "Craft and Structure",
+      title_uz: "Matn Tuzilishi va Maqsad",
+      title_en: "Text Structure and Purpose",
+      description_uz: "Muayyan jumlaning vazifasini aniqlash, muallifning umumiy maqsadini belgilash.",
+      desmos_tips: null,
+      sort_order: 19,
+    },
+    {
+      id: "t_eng_cro",
+      code: "ENG-CRO",
+      section: "READING_WRITING",
+      domain: "Craft and Structure",
+      title_uz: "Matnlararo Bog'liqlik",
+      title_en: "Cross-Text Connections",
+      description_uz: "Bitta ilmiy mavzuga doir ikki muallif nuqtai nazarini qiyoslash va munosabatini aniqlash.",
+      desmos_tips: null,
+      sort_order: 20,
+    },
+    {
+      id: "t_eng_cid",
+      code: "ENG-CID",
+      section: "READING_WRITING",
+      domain: "Information and Ideas",
+      title_uz: "Asosiy G'oya va Detallar",
+      title_en: "Central Ideas and Details",
+      description_uz: "Matndagi asosiy g'oyani va uni quvvatlovchi dalillarni aniq topish texnikasi.",
+      desmos_tips: null,
+      sort_order: 21,
+    },
+    {
+      id: "t_eng_coe",
+      code: "ENG-COE",
+      section: "READING_WRITING",
+      domain: "Information and Ideas",
+      title_uz: "Dalillar Nazorati (Matnli va Grafiklar)",
+      title_en: "Command of Evidence",
+      description_uz: "Ilmiy gipotezani tasdiqlovchi eng kuchli iqtibosni yoki grafik/jadvaldagi raqamli dalilni tanlash.",
+      desmos_tips: null,
+      sort_order: 22,
+    },
+    {
+      id: "t_eng_inf",
+      code: "ENG-INF",
+      section: "READING_WRITING",
+      domain: "Information and Ideas",
+      title_uz: "Mantiqiy Xulosalar",
+      title_en: "Inferences",
+      description_uz: "Matn oxiridagi bo'sh joyni mantiqan eng to'g'ri va ilmiy xulosa bilan yakunlash.",
+      desmos_tips: null,
+      sort_order: 23,
+    },
+    {
+      id: "t_eng_syn",
+      code: "ENG-SYN",
+      section: "READING_WRITING",
+      domain: "Expression of Ideas",
+      title_uz: "Ritorik Sintez (Qaydlar bilan ishlash)",
+      title_en: "Rhetorical Synthesis",
+      description_uz: "Talaba konspektidagi ma'lumotlar asosida berilgan aniq maqsadga (goal) xizmat qiluvchi gapni tuzish.",
+      desmos_tips: null,
+      sort_order: 24,
+    },
+    {
+      id: "t_eng_tra",
+      code: "ENG-TRA",
+      section: "READING_WRITING",
+      domain: "Expression of Ideas",
+      title_uz: "O'tish So'zlari va Mantiqiy Bog'lovchilar",
+      title_en: "Transitions",
+      description_uz: "However, Furthermore, Consequently, Specifically, In contrast kabi bog'lovchilar matritsasi.",
+      desmos_tips: null,
+      sort_order: 25,
+    },
+    {
+      id: "t_eng_bou",
+      code: "ENG-BOU",
+      section: "READING_WRITING",
+      domain: "Standard English Conventions",
+      title_uz: "Gap Chegaralari va Tinish Belgilari",
+      title_en: "Boundaries & Punctuation",
+      description_uz: "Semicolons (;), Colons (:), Dashes (—), Comma splice xatolari va mustaqil gaplarni ulash qoidalari.",
+      desmos_tips: null,
+      sort_order: 26,
+    },
+    {
+      id: "t_eng_agr",
+      code: "ENG-AGR",
+      section: "READING_WRITING",
+      domain: "Standard English Conventions",
+      title_uz: "Fe'l va Ot Moslashuvi",
+      title_en: "Form, Structure, and Sense",
+      description_uz: "Subject-Verb agreement, Pronoun-Antecedent, Fe'l zamonlari ketma-ketligi.",
+      desmos_tips: null,
+      sort_order: 27,
+    },
+    {
+      id: "t_eng_mod",
+      code: "ENG-MOD",
+      section: "READING_WRITING",
+      domain: "Standard English Conventions",
+      title_uz: "Aniqlovchilarning O'rni (Modifiers)",
+      title_en: "Modifier Placement",
+      description_uz: "Dangling modifiers va misplaced modifiers xatolarini tuzatish usullari.",
+      desmos_tips: null,
+      sort_order: 28,
+    },
+  ];
+
+  for (const t of topics) {
+    await client.query(
+      `INSERT INTO topics (id, code, section, domain, title_uz, title_en, description_uz, desmos_tips, sort_order)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (code) DO NOTHING;`,
+      [t.id, t.code, t.section, t.domain, t.title_uz, t.title_en, t.description_uz, t.desmos_tips, t.sort_order]
+    );
+  }
+
+  const questions = [
+    {
+      id: "q_alg_01_1",
+      topic_code: "ALG-01",
+      section: "MATH",
+      domain: "Algebra",
+      difficulty: "Easy",
+      prompt: "If $4x + 12 = 36$, what is the value of $2x - 3$?",
+      passage: null,
+      options: JSON.stringify(["A. 6", "B. 9", "C. 12", "D. 15"]),
+      correct_answer: "B",
+      explanation_uz: "QADAM 1 (Hayotiy tushuntirish): Bu tarozi kabi. Tenglikning ikkala tomonidan 12 ni ayiramiz: 4x = 24. Keyin 4 ga bo'lamiz: x = 6. Savol 2x - 3 ni so'ragan: 2*(6) - 3 = 12 - 3 = 9.",
+      explanation_en: "Solve for $x$: $4x = 36 - 12 \\implies 4x = 24 \\implies x = 6$. Then calculate $2(6) - 3 = 12 - 3 = 9$.",
+      desmos_trick: "Desmos'da '4x + 12 = 36' deb yozing. U vertikal chiziq chizib x = 6 ni ko'rsatadi. Keyin '2(6) - 3' deb yozing — natija 9!",
+      reference_formula: "ax + b = c \\implies x = \\frac{c - b}{a}",
+    },
+    {
+      id: "q_alg_01_2",
+      topic_code: "ALG-01",
+      section: "MATH",
+      domain: "Algebra",
+      difficulty: "Medium",
+      prompt: "In the equation $kx + 18 = 6(2x + 3)$, $k$ is a constant. If the equation has infinitely many solutions, what is the value of $k$?",
+      passage: null,
+      options: JSON.stringify(["A. 6", "B. 12", "C. 18", "D. 24"]),
+      correct_answer: "B",
+      explanation_uz: "QADAM 1 (Sodda mantiq): 'Cheksiz ko'p yechim' (Infinitely many solutions) degani — tenglamaning chap va o'ng tomoni 100% bir xil egizak bo'lishi kerak. Qavsni ochsak: 6*(2x + 3) = 12x + 18. Chap tomonda: kx + 18 turibdi. Demak kx qismi 12x ga teng bo'lishi shart! k = 12.",
+      explanation_en: "Expand the right side: $6(2x + 3) = 12x + 18$. For infinitely many solutions: $kx + 18 = 12x + 18 \\implies k = 12$.",
+      desmos_trick: "Desmos'ga 'kx + 18 = 6(2x + 3)' deb yozing va k ga slider bering. k = 12 bo'lgandagina butun ekran yechimga aylanadi!",
+      reference_formula: "Ax + B = Cx + D \\text{ has } \\infty \\text{ solutions when } A = C \\text{ and } B = D.",
+    },
+    {
+      id: "q_alg_03_1",
+      topic_code: "ALG-03",
+      section: "MATH",
+      domain: "Algebra",
+      difficulty: "Medium",
+      prompt: "Consider the system of equations:\n$$\\begin{cases} 3x - y = 7 \\\\ 2x + 3y = 23 \\end{cases}$$\nWhat is the value of $x + y$?",
+      passage: null,
+      options: JSON.stringify(["A. 5", "B. 7", "C. 9", "D. 11"]),
+      correct_answer: "C",
+      explanation_uz: "QADAM 1: Birinchi tenglamadan y ni topamiz: y = 3x - 7. Ikkinchi tenglamaga qo'yamiz: 2x + 3(3x - 7) = 23 -> 11x = 44 -> x = 4. Unda y = 3(4) - 7 = 5. Bizdan x + y so'ralgan: 4 + 5 = 9.",
+      explanation_en: "Substitute $y = 3x - 7$: $2x + 3(3x - 7) = 23 \\implies 11x - 21 = 23 \\implies x = 4$. Then $y = 5$. Thus $x + y = 9$.",
+      desmos_trick: "⚡ DESMOS CHEAT CODE: 1-qatorga '3x - y = 7', 2-qatorga '2x + 3y = 23' deb yozing. Kesishgan nuqtaga bosing: (4, 5). 4 + 5 = 9. 10 soniyada tayyor!",
+      reference_formula: "\\text{Intersection of lines } \\implies (x, y)",
+    },
+    {
+      id: "q_adv_03_1",
+      topic_code: "ADV-03",
+      section: "MATH",
+      domain: "Advanced Math",
+      difficulty: "Hard",
+      prompt: "The function $f(x) = 2(x - 4)^2 - 18$ is graphed in the $xy$-plane. Which of the following gives the $x$-intercepts of the graph?",
+      passage: null,
+      options: JSON.stringify(["A. (1, 0) and (7, 0)", "B. (-1, 0) and (7, 0)", "C. (4, -18)", "D. (-4, 18)"]),
+      correct_answer: "A",
+      explanation_uz: "QADAM 1: x-intercept degani y = 0 degani! 2(x - 4)^2 - 18 = 0 -> 2(x - 4)^2 = 18 -> (x - 4)^2 = 9. Ildiz olsak: x - 4 = +3 yoki -3. Demak x = 7 yoki x = 1. Nuqtalar: (1, 0) va (7, 0).",
+      explanation_en: "Set $f(x) = 0$: $2(x - 4)^2 = 18 \\implies (x - 4)^2 = 9 \\implies x - 4 = \\pm 3 \\implies x = 7, 1$.",
+      desmos_trick: "⚡ DESMOS CHEAT CODE: Desmos'ga 'y = 2(x - 4)^2 - 18' deb yozing. Grafikning x o'qini kesgan nuqtalariga bosing: (1, 0) va (7, 0) chiqadi!",
+      reference_formula: "y = a(x - h)^2 + k",
+    },
+    {
+      id: "q_geo_03_1",
+      topic_code: "GEO-03",
+      section: "MATH",
+      domain: "Geometry & Trigonometry",
+      difficulty: "Medium",
+      prompt: "The equation of a circle in the $xy$-plane is $(x + 5)^2 + (y - 3)^2 = 49$. What is the radius of the circle, and what are the coordinates of its center?",
+      passage: null,
+      options: JSON.stringify([
+        "A. Center: (-5, 3), Radius: 7",
+        "B. Center: (5, -3), Radius: 7",
+        "C. Center: (-5, 3), Radius: 49",
+        "D. Center: (5, -3), Radius: 49",
+      ]),
+      correct_answer: "A",
+      explanation_uz: "QADAM 1: Standart formula: (x - h)^2 + (y - k)^2 = r^2. Markaz (h, k), radius r. Bizda (x + 5) bor, demak h = -5. (y - 3) bor, k = 3. r^2 = 49 bo'lsa, r = 7. Markaz: (-5, 3), radius: 7.",
+      explanation_en: "Circle equation: $(x - h)^2 + (y - k)^2 = r^2$. Center is $(-5, 3)$ and $r = \\sqrt{49} = 7$.",
+      desmos_trick: "⚡ DESMOS CHEAT CODE: Tenglamani Desmos'ga yozing: '(x + 5)^2 + (y - 3)^2 = 49'. Grafikda doira markazi (-5, 3) va radiusi 7 ekani yaqqol ko'rinadi!",
+      reference_formula: "(x - h)^2 + (y - k)^2 = r^2",
+    },
+    {
+      id: "q_eng_syn_1",
+      topic_code: "ENG-SYN",
+      section: "READING_WRITING",
+      domain: "Expression of Ideas",
+      difficulty: "Hard",
+      prompt: "The student wants to emphasize the difference in the primary dietary sources of the two penguin species. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      passage: "While researching a topic, a student has taken the following notes:\n• The Adélie penguin (*Pygoscelis adeliae*) lives along the coast of the Antarctic continent.\n• Its diet primarily consists of Antarctic krill.\n• The gentoo penguin (*Pygoscelis papua*) inhabits sub-Antarctic islands and the Antarctic Peninsula.\n• Its diet consists mainly of fish, squid, and krill in varying proportions depending on location.\n• Both species are classified under the genus *Pygoscelis*.",
+      options: JSON.stringify([
+        "A. Although both species belong to the genus Pygoscelis, the Adélie penguin feeds predominantly on Antarctic krill, whereas the gentoo penguin's diet is more varied, consisting largely of fish and squid alongside krill.",
+        "B. Belonging to the genus Pygoscelis, the Adélie penguin and gentoo penguin inhabit distinct Antarctic and sub-Antarctic regions.",
+        "C. The diet of the gentoo penguin consists mainly of fish, squid, and krill, which it hunts across sub-Antarctic islands.",
+        "D. Antarctic krill is a dietary staple for penguins living along the coast of the Antarctic continent, including the Adélie penguin.",
+      ]),
+      correct_answer: "A",
+      explanation_uz: "QADAM 1 (IELTS 7.5 talabasi uchun SAT qoidasi): Savol maqsadini (goal) tekshiring: 'emphasize the difference in the primary dietary sources of the two penguin species'. Demak, ikkala tur va ularning ozuqa farqi bo'lishi kerak. Faqat A variantda ikkala tur ozuqasi taqqoslangan ('whereas the gentoo penguin's diet is more varied'). B variantda ozuqa yo'q, C faqat bitta tur, D faqat bitta tur haqida.",
+      explanation_en: "Option A directly satisfies the goal by contrasting both species' diets. Options B, C, and D fail the specific prompt constraint.",
+      desmos_trick: null,
+      reference_formula: "\\text{Goal Matching: Both Entities + Contrast in Diet}",
+    },
+    {
+      id: "q_eng_tra_1",
+      topic_code: "ENG-TRA",
+      section: "READING_WRITING",
+      domain: "Expression of Ideas",
+      difficulty: "Medium",
+      prompt: "Astronomers initially hypothesized that the exoplanet WASP-121b was completely devoid of water vapor in its upper atmosphere. Recent observations using the James Webb Space Telescope detected unmistakable spectral signatures of vaporized water and carbon monoxide. _______ researchers have revised their chemical models of ultra-hot Jupiter atmospheres.",
+      passage: null,
+      options: JSON.stringify(["A. In contrast,", "B. Consequently,", "C. For instance,", "D. Furthermore,"]),
+      correct_answer: "B",
+      explanation_uz: "QADAM 1: Oldingi gapda yangi ma'lumot topilgani aytildi (Sabab). Keyingi gapda esa olimlar o'z modellarini o'zgartirishgani aytildi (Natija). Demak, Sabab-Oqibat (Cause-Effect) mantiqi bor. 'Consequently' (Natijada / Shu sababli) aynan shu vazifani bajaradi.",
+      explanation_en: "The revision of models is the result of the new observation. 'Consequently' correctly indicates the cause-and-effect relationship.",
+      desmos_trick: null,
+      reference_formula: "\\text{Cause } \\implies \\text{Consequently} \\implies \\text{Effect}",
+    },
+    {
+      id: "q_eng_bou_1",
+      topic_code: "ENG-BOU",
+      section: "READING_WRITING",
+      domain: "Standard English Conventions",
+      difficulty: "Medium",
+      prompt: "The discovery of the Burgess Shale fossils in 1909 dramatically altered paleontologists' understanding of the Cambrian _______ exquisite soft-tissue preservation provided unprecedented detail regarding early animal body plans.",
+      passage: null,
+      options: JSON.stringify([
+        "A. explosion its",
+        "B. explosion, its",
+        "C. explosion; its",
+        "D. explosion whose",
+      ]),
+      correct_answer: "C",
+      explanation_uz: "QADAM 1: Birinchi qism mustaqil to'liq gap (Independent Clause 1). Ikkinchi qism ham alohida mustaqil to'liq gap (Independent Clause 2). Ikkita mustaqil gapni shunchaki vergul bilan ulab bo'lmaydi (Comma splice xatosi). Ularni to'g'ri ulash uchun Semicolon (;) kerak! To'g'ri javob: C.",
+      explanation_en: "Both clauses are independent. Joining them requires either a period, a semicolon, or a comma + coordinating conjunction. A semicolon (choice C) is grammatically required.",
+      desmos_trick: null,
+      reference_formula: "\\text{Independent Clause } ; \\text{ Independent Clause}",
+    },
+  ];
+
+  for (const q of questions) {
+    await client.query(
+      `INSERT INTO questions (id, topic_code, section, domain, difficulty, prompt, passage, options, correct_answer, explanation_uz, explanation_en, desmos_trick, reference_formula)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+       ON CONFLICT (id) DO NOTHING;`,
+      [
+        q.id,
+        q.topic_code,
+        q.section,
+        q.domain,
+        q.difficulty,
+        q.prompt,
+        q.passage,
+        q.options,
+        q.correct_answer,
+        q.explanation_uz,
+        q.explanation_en,
+        q.desmos_trick,
+        q.reference_formula,
+      ]
+    );
+  }
+
+  console.log(`✅ Default curriculum & questions successfully seeded into PostgreSQL 'vespera'!`);
+}
