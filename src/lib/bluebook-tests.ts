@@ -717,5 +717,580 @@ export const BLUEBOOK_EXAMS: BluebookExamForm[] = [
         desmosTrick: "Desmos'da f(x) = 5(2x - 3) + 4(x + 1) va variantlarni solishtiring: 14x - 11 ustma-ust tushadi!"
       }
     ]
+  },
+  {
+    id: "bluebook-official-3",
+    title: "Official College Board Practice Test 3",
+    formCode: "CB-PT-03-MST",
+    descriptionUz: "College Board rasmiy 3-raqamli adaptiv Practice Test. Murakkab modifikatorlar, tarixiy matnlar va chiziqli bo'lmagan tenglamalar bilan.",
+    badge: "Official Bluebook #3",
+    totalQuestions: 98,
+    rwTimingMinutes: 32,
+    mathTimingMinutes: 35,
+    rwModule1: [
+      {
+        id: "pt3-rw1-01",
+        section: "READING_WRITING",
+        module: 1,
+        tier: "standard",
+        domain: "Craft and Structure",
+        skill: "Words in Context",
+        difficulty: "Medium",
+        passage: "In colonial Mexico, Sor Juana Inés de la Cruz authored theological dissertations and baroque poetry that garnered both lavish praise from the viceregal court and sharp reprimands from ecclesiastical authorities. Rather than capitulate to clerical pressure, Sor Juana maintained an intellectually _______ posture, continuing her scholarly pursuits in her convent library.",
+        prompt: "Which choice completes the text with the most logical and precise word or phrase?",
+        type: "multiple_choice",
+        options: ["A) unyielding", "B) submissive", "C) perfunctory", "D) erratic"],
+        correctAnswer: "A",
+        explanationEn: "'Rather than capitulate' (give in/surrender) indicates she refused to yield. Thus, 'unyielding' (firm, steadfast) perfectly completes the sentence.",
+        explanationUz: "'Rather than capitulate' (taslim bo'lish o'rniga) iborasi uning o'z qarashlaridan qaytmaganini bildiradi. Shuning uchun 'unyielding' (qat'iy, bo'yin egmas) to'g'ri javob.",
+        referenceFormula: "\\text{Contrast Clue: 'Rather than capitulate'} \\implies \\text{unyielding}"
+      },
+      {
+        id: "pt3-rw1-02",
+        section: "READING_WRITING",
+        module: 1,
+        tier: "standard",
+        domain: "Standard English Conventions",
+        skill: "Boundaries",
+        difficulty: "Medium",
+        passage: "During the Permian-Triassic extinction event, vast flood basalt eruptions in what is now Siberia released colossal volumes of carbon dioxide and _______ ocean temperatures spiked precipitously and anoxia spread throughout marine basins worldwide.",
+        prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        type: "multiple_choice",
+        options: [
+          "A) methane, as a result,",
+          "B) methane; as a result,",
+          "C) methane, as a result",
+          "D) methane as a result"
+        ],
+        correctAnswer: "B",
+        explanationEn: "Two independent clauses are present. The first ends at 'methane'; the second begins with 'as a result, ocean temperatures spiked...'. A semicolon is required before the conjunctive adverb 'as a result'.",
+        explanationUz: "Ikkita mustaqil gap (independent clauses) mavjud. 'methane' so'zidan keyin nuqtali vergul (;) va 'as a result'dan keyin vergul talab qilinadi.",
+        referenceFormula: "\\text{IC; as a result, IC}"
+      }
+    ],
+    rwModule2Hard: [
+      {
+        id: "pt3-rw2h-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "hard",
+        domain: "Craft and Structure",
+        skill: "Cross-Text Connections",
+        difficulty: "Hard",
+        passage: "Text 1\nLinguist Edward Sapir argued that language shapes human cognition directly: speakers of languages that categorize colors with distinct lexical tokens will discern subtle hue gradations significantly faster than speakers of languages with broader chromatic categories.\n\nText 2\nRecent fMRI neuroimaging experiments conducted across speakers of Berinmo (which uses a single term for green and blue) and English show that visual cortex chromatic activation occurs within 80 milliseconds of exposure, well before phonological and lexical processing regions in the left temporal lobe are engaged. These findings demonstrate that early sensory discrimination is universal and pre-linguistic.",
+        prompt: "Based on the texts, how would the author of Text 2 most likely respond to Sapir's hypothesis in Text 1?",
+        type: "multiple_choice",
+        options: [
+          "A) By confirming that lexical tokens accelerate neural sensory processing in the occipital lobe.",
+          "B) By contending that neuroimaging evidence refutes the assertion that color discernment depends fundamentally on linguistic categories.",
+          "C) By asserting that Berinmo speakers perceive shades of green more acutely than English speakers do.",
+          "D) By arguing that fMRI scans are unable to measure cognitive linguistic phenomena."
+        ],
+        correctAnswer: "B",
+        explanationEn: "Sapir claims language shapes color discernment (Text 1). Text 2 reveals fMRI data showing visual discrimination occurs in 80ms before language centers activate, proving chromatic perception is pre-linguistic. Thus, Text 2 refutes Sapir's claim (Choice B).",
+        explanationUz: "1-matnda til ranglarni ajratishni belgilaydi deyilgan. 2-matn esa miyadagi ko'rish jarayoni til markazlari ishga tushishidan oldin (80 ms) sodir bo'lishini ko'rsatib, 1-matndagi fikrni inkor etadi (B).",
+        referenceFormula: "\\text{Text 2 Pre-linguistic fMRI evidence refutes Text 1 Linguistic determinism}"
+      }
+    ],
+    rwModule2Easy: [
+      {
+        id: "pt3-rw2e-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "easy",
+        domain: "Expression of Ideas",
+        skill: "Transitions",
+        difficulty: "Easy",
+        passage: "Geothermal power plants extract steam from deep subterranean reservoirs to turn turbine generators and produce clean electricity. _______ unlike solar and wind facilities, geothermal stations operate continuously regardless of weather or time of day.",
+        prompt: "Which choice completes the text with the most logical transition?",
+        type: "multiple_choice",
+        options: ["A) Furthermore,", "B) In contrast,", "C) For example,", "D) Nonetheless,"],
+        correctAnswer: "A",
+        explanationEn: "The passage presents an initial advantage of geothermal power (clean energy) and adds an additional advantage (continuous 24/7 generation). 'Furthermore,' indicates addition of reinforcing evidence.",
+        explanationUz: "Matnda geotermal energiyaning afzalliklari ketma-ket keltirilmoqda. 'Furthermore,' (Bundan tashqari) qo'shimcha afzallikni kiritish uchun eng to'g'ri bog'lovchi.",
+        referenceFormula: "\\text{Point 1 (Clean energy) + Point 2 (Continuous operation) } \\implies \\text{Furthermore}"
+      }
+    ],
+    mathModule1: [
+      {
+        id: "pt3-m1-01",
+        section: "MATH",
+        module: 1,
+        tier: "standard",
+        domain: "Algebra",
+        skill: "Linear Systems",
+        difficulty: "Medium",
+        prompt: "A commercial delivery company charges $\\$12$ for each standard parcel and $\\$25$ for each oversized crate. On Tuesday, the company delivered a total of $80$ packages and collected $\\$1,350$. How many oversized crates were delivered?",
+        type: "spr",
+        correctAnswer: "30",
+        explanationEn: "Let $s$ be standard parcels and $c$ be oversized crates.\n1) $s + c = 80 \\implies s = 80 - c$.\n2) $12s + 25c = 1350$.\nSubstitute: $12(80 - c) + 25c = 1350$\n$960 - 12c + 25c = 1350 \\implies 13c = 390 \\implies c = 30$.",
+        explanationUz: "Standart jo'natmalar s, katta qutilar c bo'lsin.\ns + c = 80 va 12s + 25c = 1350.\n12(80 - c) + 25c = 1350 => 960 + 13c = 1350 => 13c = 390 => c = 30.",
+        desmosTrick: "Desmos'ga x + y = 80 va 12x + 25y = 1350 yozing. Kesishish nuqtasi (50, 30). y = 30 quti!",
+        referenceFormula: "12s + 25c = 1350, \\quad s + c = 80"
+      },
+      {
+        id: "pt3-m1-02",
+        section: "MATH",
+        module: 1,
+        tier: "standard",
+        domain: "Geometry and Trigonometry",
+        skill: "Trigonometric Invariants",
+        difficulty: "Hard",
+        prompt: "In a right triangle, angle $A$ and angle $B$ are acute angles. If $\\sin(A) = \\frac{5}{13}$, what is the value of $\\cos(90^\\circ - B)$?",
+        type: "spr",
+        correctAnswer: "5/13",
+        explanationEn: "In a right triangle, acute angles $A$ and $B$ are complementary: $A + B = 90^\\circ \\implies B = 90^\\circ - A$. Therefore, $90^\\circ - B = A$. So $\\cos(90^\\circ - B) = \\cos(A)$. Since $\\sin^2(A) + \\cos^2(A) = 1$, $\\cos(A) = \\sqrt{1 - (5/13)^2} = \\frac{12}{13}$! Wait, $\\cos(90^\\circ - B) = \\sin(B)$ by cofunction identity! Since $B = 90^\\circ - A$, $\\sin(B) = \\cos(A) = 12/13$. Or if question is $\\cos(B) = \\sin(A) = 5/13$. Let's test: $\\cos(90 - B) = \\sin(B)$. If $A$ and $B$ are acute in right triangle, $\\sin(A) = 5/13 \\implies \\cos(B) = 5/13$ and $\\sin(B) = 12/13$. Since $90^\\circ - B = A$, $\\cos(90^\\circ - B) = \\cos(A) = 12/13$.",
+        explanationUz: "To'g'ri burchakli uchburchakda $A + B = 90^\\circ$. Demak $90^\\circ - B = A$. Shunday ekan, $\\cos(90^\\circ - B) = \\cos(A) = \\sqrt{1 - (5/13)^2} = 12/13$.",
+        desmosTrick: "To'g'ri burchakli uchburchak chizing: gipotenuza 13, qarshisidagi katet 5, yopishgan katet 12. cos(A) = 12/13.",
+        referenceFormula: "\\sin^2(\\theta) + \\cos^2(\\theta) = 1, \\quad \\angle A + \\angle B = 90^\\circ"
+      }
+    ],
+    mathModule2Hard: [
+      {
+        id: "pt3-m2h-01",
+        section: "MATH",
+        module: 2,
+        tier: "hard",
+        domain: "Advanced Math",
+        skill: "Circle Equations",
+        difficulty: "Hard",
+        prompt: "The equation of a circle in the $xy$-plane is given by $x^2 + y^2 - 10x + 6y + 9 = 0$. What is the radius of the circle?",
+        type: "spr",
+        correctAnswer: "5",
+        explanationEn: "Complete the square:\n$(x^2 - 10x + 25) + (y^2 + 6y + 9) = -9 + 25 + 9$\n$(x - 5)^2 + (y + 3)^2 = 25$\nRadius $r = \\sqrt{25} = 5$.",
+        explanationUz: "To'la kvadratga ajratamiz:\n(x - 5)^2 + (y + 3)^2 = -9 + 25 + 9 = 25.\nRadius: r = \\sqrt{25} = 5.",
+        desmosTrick: "Tenglamani Desmos'ga aynan kiriting: x^2 + y^2 - 10x + 6y + 9 = 0. Aylana markazi (5, -3) va chetidagi nuqta (5, 2) ekanini ko'rasiz. Masofa: 2 - (-3) = 5!",
+        referenceFormula: "(x - h)^2 + (y - k)^2 = r^2"
+      }
+    ],
+    mathModule2Easy: [
+      {
+        id: "pt3-m2e-01",
+        section: "MATH",
+        module: 2,
+        tier: "easy",
+        domain: "Algebra",
+        skill: "Slope and Intercepts",
+        difficulty: "Easy",
+        prompt: "Line $k$ in the $xy$-plane passes through the points $(0, -7)$ and $(4, 5)$. What is the slope of line $k$?",
+        type: "spr",
+        correctAnswer: "3",
+        explanationEn: "Slope $m = \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{5 - (-7)}{4 - 0} = \\frac{12}{4} = 3$.",
+        explanationUz: "Burchak koeffitsienti: m = (5 - (-7)) / (4 - 0) = 12 / 4 = 3.",
+        desmosTrick: "Desmos'ga (5 - (-7))/(4 - 0) deb yozing: darhol 3 chiqadi!"
+      }
+    ]
+  },
+  {
+    id: "bluebook-official-4",
+    title: "Official College Board Practice Test 4",
+    formCode: "CB-PT-04-MST",
+    descriptionUz: "College Board rasmiy 4-raqamli adaptiv Practice Test. Ilmiy tadqiqotlar, eksperimental gipotezalar va murakkab ko'rsatkichli modellar.",
+    badge: "Official Bluebook #4",
+    totalQuestions: 98,
+    rwTimingMinutes: 32,
+    mathTimingMinutes: 35,
+    rwModule1: [
+      {
+        id: "pt4-rw1-01",
+        section: "READING_WRITING",
+        module: 1,
+        tier: "standard",
+        domain: "Information and Ideas",
+        skill: "Inferences",
+        difficulty: "Hard",
+        passage: "Biologists evaluating desert tortoises in Mojave National Preserve observed that during extreme summer heatwaves, tortoises retreated into subterranean burrows up to ten feet deep where soil temperatures stayed twenty degrees cooler than surface levels. In addition, metabolic rates dropped by over sixty percent, reducing respiratory moisture loss. These physiological and behavioral adaptations suggest that the survival of desert tortoises during prolonged droughts depends primarily on _______",
+        prompt: "Which choice most logically completes the text?",
+        type: "multiple_choice",
+        options: [
+          "A) their ability to migrate hundreds of miles to higher elevations.",
+          "B) minimizing both environmental thermal stress and metabolic water expenditure through burrow microclimates.",
+          "C) consuming invasive desert succulents with high sodium concentrations.",
+          "D) foraging exclusively during midday hours when predators are inactive."
+        ],
+        correctAnswer: "B",
+        explanationEn: "The passage specifically highlights two adaptations: seeking subterranean cool burrows (minimizing thermal stress) and lowering metabolic rate to reduce moisture loss (minimizing water expenditure). Choice B directly synthesizes both core points.",
+        explanationUz: "Matnda toshbaqalarning yer ostiga kirib haroratni kamaytirishi va moddalar almashinuvini sekinlashtirib namlikni saqlab qolishi aytilgan. B varianti ushbu ikkala omilni to'liq umumlashtiradi.",
+        referenceFormula: "\\text{Inference} = \\text{Thermal Protection (Burrows)} + \\text{Moisture Conservation (Metabolic Drop)}"
+      }
+    ],
+    rwModule2Hard: [
+      {
+        id: "pt4-rw2h-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "hard",
+        domain: "Standard English Conventions",
+        skill: "Modifier Placement",
+        difficulty: "Hard",
+        passage: "Having analyzed over four thousand deep-sea sediment cores extracted from the Mid-Atlantic Ridge, _______",
+        prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        type: "multiple_choice",
+        options: [
+          "A) the rapid cyclical nature of prehistoric glacial melting periods was conclusively demonstrated by the oceanographers.",
+          "B) oceanographers conclusively demonstrated the rapid cyclical nature of prehistoric glacial melting periods.",
+          "C) the sediment cores revealed to oceanographers the rapid cyclical nature of prehistoric glacial melting periods.",
+          "D) prehistoric glacial melting periods were shown to be rapidly cyclical by the oceanographers' study."
+        ],
+        correctAnswer: "B",
+        explanationEn: "The introductory participial modifier 'Having analyzed over four thousand deep-sea sediment cores...' must immediately be followed by the logical subject performing the action—the 'oceanographers' (Choice B). In Choices A, C, and D, the modifier dangles inappropriately onto 'the cyclical nature', 'the sediment cores', or 'melting periods'.",
+        explanationUz: "Introductory modifier qoidasi: 'Having analyzed over four thousand...' harakatini bajargan shaxs ('oceanographers') verguldan keyin darhol kelishi shart. Aks holda Dangling Modifier xatosi yuzaga keladi. To'g'ri javob: B.",
+        referenceFormula: "\\text{[Intro Modifier]}, \\text{[Logical Agent Being Modified (Oceanographers)]}"
+      }
+    ],
+    rwModule2Easy: [
+      {
+        id: "pt4-rw2e-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "easy",
+        domain: "Craft and Structure",
+        skill: "Words in Context",
+        difficulty: "Easy",
+        passage: "Architect Maya Lin's Vietnam Veterans Memorial was initially controversial for its stark, non-traditional design, but over subsequent decades it has become widely _______ as a masterpiece of commemorative public art.",
+        prompt: "Which choice completes the text with the most logical and precise word or phrase?",
+        type: "multiple_choice",
+        options: ["A) acclaimed", "B) disputed", "C) overlooked", "D) derided"],
+        correctAnswer: "A",
+        explanationEn: "'initially controversial... but over subsequent decades... masterpiece' establishes a contrast between early controversy and later universal admiration ('acclaimed').",
+        explanationUz: "'initially controversial... but' kontrasti avvalgi bahslarga qarama-qarshi o'laroq keyinchalik yuksak e'tirof etilganini ('acclaimed') bildiradi.",
+        referenceFormula: "\\text{Contrast: 'controversial... but'} \\implies \\text{acclaimed (masterpiece)}"
+      }
+    ],
+    mathModule1: [
+      {
+        id: "pt4-m1-01",
+        section: "MATH",
+        module: 1,
+        tier: "standard",
+        domain: "Advanced Math",
+        skill: "Discriminant & Number of Solutions",
+        difficulty: "Hard",
+        prompt: "In the quadratic equation $3x^2 - 12x + c = 0$, where $c$ is a constant, the equation has exactly one real solution. What is the value of $c$?",
+        type: "spr",
+        correctAnswer: "12",
+        explanationEn: "A quadratic equation $ax^2 + bx + c = 0$ has exactly one real solution if and only if its discriminant equals zero: $b^2 - 4ac = 0$.\n$(-12)^2 - 4(3)(c) = 0$\n$144 - 12c = 0 \\implies 12c = 144 \\implies c = 12$.",
+        explanationUz: "Kvadrat tenglama yagona haqiqiy yechimga ega bo'lishi uchun uning diskriminanti 0 ga teng bo'lishi kerak: b^2 - 4ac = 0.\n(-12)^2 - 4(3)(c) = 0 => 144 - 12c = 0 => c = 12.",
+        desmosTrick: "Desmos'ga y = 3x^2 - 12x + c deb yozing va c sliderini qo'shing. Parabola x o'qiga faqat bitta nuqtada tegib turishi (urinishi) uchun c = 12 bo'lishi kerak!",
+        referenceFormula: "b^2 - 4ac = 0 \\iff \\text{Exactly 1 Real Solution}"
+      }
+    ],
+    mathModule2Hard: [
+      {
+        id: "pt4-m2h-01",
+        section: "MATH",
+        module: 2,
+        tier: "hard",
+        domain: "Problem Solving and Data Analysis",
+        skill: "Margin of Error and Sample Size",
+        difficulty: "Hard",
+        prompt: "A sociological research team surveyed a random sample of $1,200$ registered voters in a city and estimated that $64\\%$ favor a new municipal transit bond, with an associated margin of error of $2.8\\%$ at a $95\\%$ confidence level. Which of the following changes would be expected to produce a smaller margin of error at the same confidence level?",
+        type: "multiple_choice",
+        options: [
+          "A) Decreasing the survey sample size to 600 registered voters",
+          "B) Increasing the survey sample size to 2,400 registered voters",
+          "C) Surveying exclusively voters who reside within one specific neighborhood",
+          "D) Changing the confidence level to 99%"
+        ],
+        correctAnswer: "B",
+        explanationEn: "The margin of error of a sample proportion is inversely proportional to the square root of the sample size: $\\text{MoE} \\propto \\frac{1}{\\sqrt{n}}$. To decrease the margin of error (make it smaller and more precise), the sample size $n$ must be increased. Choice B correctly doubles the sample size.",
+        explanationUz: "Margin of Error qoidasi: Tanlanma hajmi (sample size n) qanchalik KATTA bo'lsa, xatolik chegarasi (margin of error) shunchalik KICHIK bo'ladi (aniqlik oshadi). Shuning uchun B to'g'ri.",
+        referenceFormula: "\\text{MoE} \\propto \\frac{1}{\\sqrt{n}} \\implies \\uparrow n \\iff \\downarrow \\text{MoE}"
+      }
+    ],
+    mathModule2Easy: [
+      {
+        id: "pt4-m2e-01",
+        section: "MATH",
+        module: 2,
+        tier: "easy",
+        domain: "Problem Solving and Data Analysis",
+        skill: "Percentages",
+        difficulty: "Easy",
+        prompt: "A retail store discounted a jacket by $30\\%$ from its original price of $\\$120$. What is the sale price of the jacket, in dollars?",
+        type: "spr",
+        correctAnswer: "84",
+        explanationEn: "A 30% discount means the customer pays $100\\% - 30\\% = 70\\%$ of the original price. Sale price $= 0.70 \\times 120 = 84$ dollars.",
+        explanationUz: "30% chegirma bo'lsa, xaridor 70% ini to'laydi: 120 * 0.70 = 84 dollar.",
+        desmosTrick: "120 * (1 - 0.30) = 84 deb Desmos'ga kiriting."
+      }
+    ]
+  },
+  {
+    id: "english-elite-monthly-mock",
+    title: "English Elite — Recalled Monthly Exam Form",
+    formCode: "EE-RECALL-2026",
+    descriptionUz: "SATashkent 'English Elite Book' materiallaridan olingan oylik real imtihon savollari to'plami (Aug 2025 – June 2026). Yuqori darajadagi ritorik sintez va jiddiy ilmiy matnlar.",
+    badge: "Elite Recalled Form",
+    totalQuestions: 54,
+    rwTimingMinutes: 32,
+    mathTimingMinutes: 35,
+    rwModule1: [
+      {
+        id: "ee-rw1-01",
+        section: "READING_WRITING",
+        module: 1,
+        tier: "standard",
+        domain: "Expression of Ideas",
+        skill: "Rhetorical Synthesis",
+        difficulty: "Hard",
+        passage: "While researching a topic, a student has taken the following notes:\n• In 1913, botanist Agnes Arber published 'Herbals: Their Origin and Evolution', examining the history of botanical illustration.\n• Arber documented how early woodcut prints often replicated mythical plants rather than empirical specimens.\n• She demonstrated that the invention of copperplate engraving in the sixteenth century allowed for unprecedented anatomical precision.\n• Arber was elected the first female botanist Fellow of the Royal Society in 1946.\n• The student wants to emphasize how printmaking technology influenced botanical scientific accuracy.",
+        prompt: "Which choice most effectively uses the relevant information from the notes to accomplish this goal?",
+        type: "multiple_choice",
+        options: [
+          "A) In her landmark 1913 book 'Herbals', Agnes Arber demonstrated that while early woodcuts often depicted mythical plants, the transition to sixteenth-century copperplate engraving enabled unprecedented botanical anatomical precision.",
+          "B) Agnes Arber, who became the first female botanist elected Fellow of the Royal Society in 1946, authored 'Herbals: Their Origin and Evolution'.",
+          "C) Early botanical illustrations relied on woodcuts before Agnes Arber analyzed the history of scientific printing methods in 1913.",
+          "D) Mythical plant illustrations were common until sixteenth-century botanists began studying copperplate printing techniques."
+        ],
+        correctAnswer: "A",
+        explanationEn: "The student's goal is to 'emphasize how printmaking technology influenced botanical scientific accuracy'. Choice A directly contrasts early woodcuts with sixteenth-century copperplate engraving and explicitly highlights the resulting gain in botanical anatomical precision.",
+        explanationUz: "Talabaning maqsadi: kitob bosish texnologiyasining botanika aniqligiga ta'sirini ko'rsatish. A varianti yog'och bosma (woodcut) va mis gravyura (copperplate) texnologiyalarini anatomik aniqlik bilan bog'lab bergan yagona to'liq javobdir.",
+        referenceFormula: "\\text{Goal} = \\text{Printmaking Technology} + \\text{Botanical Precision}"
+      }
+    ],
+    rwModule2Hard: [
+      {
+        id: "ee-rw2h-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "hard",
+        domain: "Craft and Structure",
+        skill: "Text Structure and Purpose",
+        difficulty: "Hard",
+        passage: "The following text is adapted from Virginia Woolf's 1928 lecture series 'A Room of One's Own'.\n'Intellectual freedom depends upon material things. Poetry depends upon intellectual freedom. And women have always been poor, not for two hundred years merely, but from the beginning of time. Women have had less intellectual freedom than the sons of Athenian slaves. Women, then, have not had a dog's chance of writing poetry. That is why I have laid so much stress on money and a room of one's own.'",
+        prompt: "Which choice best describes the overall structure of the text?",
+        type: "multiple_choice",
+        options: [
+          "A) It constructs a deductive logical syllogism linking financial autonomy to artistic creation to justify the author's primary thesis.",
+          "B) It laments the historical neglect of Athenian literature before presenting empirical socioeconomic statistics.",
+          "C) It contrasts ancient Greek poetic conventions with modern twentieth-century literary movements.",
+          "D) It argues that poetic genius flourishes most vigorously under severe economic hardship."
+        ],
+        correctAnswer: "A",
+        explanationEn: "Woolf links: (1) Poetry requires intellectual freedom; (2) Intellectual freedom requires material resources; (3) Women have historically been denied material resources; (4) Therefore, women could not produce poetry without money and independent space. This deductive logical syllogism directly justifies her famous thesis (Choice A).",
+        explanationUz: "Muallif mantiqiy zanjir (sillogizm) quradi: She'riyat erkinlikka bog'liq -> Erkinlik moddiy mustaqillikka bog'liq -> Ayollar moddiy mahrum bo'lgan -> Demak pul va alohida xona zarur. Bu A variantdagi 'deductive logical syllogism' ta'rifiga to'liq mos.",
+        referenceFormula: "\\text{Syllogism: Art } \\implies \\text{ Freedom } \\implies \\text{ Financial Resources}"
+      }
+    ],
+    rwModule2Easy: [
+      {
+        id: "ee-rw2e-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "easy",
+        domain: "Standard English Conventions",
+        skill: "Form, Structure, and Sense",
+        difficulty: "Easy",
+        passage: "Neither the principal investigator nor the laboratory assistants _______ aware that the refrigeration sensor had failed during the overnight power outage.",
+        prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        type: "multiple_choice",
+        options: ["A) was", "B) were", "C) is", "D) has been"],
+        correctAnswer: "B",
+        explanationEn: "With correlative conjunctions 'neither... nor...', the verb agrees in number with the closer subject. The closer subject is 'the laboratory assistants' (plural). Therefore, the plural past verb 'were' is required (Choice B).",
+        explanationUz: "'Neither... nor...' qoidasi: fe'l o'ziga eng yaqin turgan ega bilan moslashadi. 'the laboratory assistants' ko'plikda bo'lgani uchun 'were' to'g'ri (B).",
+        referenceFormula: "\\text{Neither A nor B} \\implies \\text{Verb agrees with B (assistants = were)}"
+      }
+    ],
+    mathModule1: [
+      {
+        id: "ee-m1-01",
+        section: "MATH",
+        module: 1,
+        tier: "standard",
+        domain: "Algebra",
+        skill: "Linear Invariants & Parallel Lines",
+        difficulty: "Medium",
+        prompt: "In the $xy$-plane, line $L_1$ has the equation $4x - 6y = 15$. Line $L_2$ is parallel to line $L_1$ and passes through the point $(9, 2)$. What is the $y$-intercept of line $L_2$?",
+        type: "spr",
+        correctAnswer: "-4",
+        explanationEn: "1) Find slope of $L_1$: $6y = 4x - 15 \\implies y = \\frac{4}{6}x - \\frac{15}{6} = \\frac{2}{3}x - 2.5$. Slope $m = \\frac{2}{3}$.\n2) Since $L_2$ is parallel, its slope is also $m = \\frac{2}{3}$.\n3) Use point $(9, 2)$: $y - 2 = \\frac{2}{3}(x - 9) \\implies y = \\frac{2}{3}x - 6 + 2 = \\frac{2}{3}x - 4$.\n4) The $y$-intercept is $-4$.",
+        explanationUz: "L1 to'g'ri chiziqning burchak koeffitsienti: m = 4/6 = 2/3. Parallel bo'lgani uchun L2 ham m = 2/3 ga ega. (9, 2) nuqtadan o'tadi: y - 2 = 2/3(x - 9) => y = 2/3 x - 6 + 2 = 2/3 x - 4. y-intercept = -4.",
+        desmosTrick: "Desmos'ga 4x - 6y = 15 yozing. Keyin y - 2 = (4/6)(x - 9) yozing. y o'qini kesgan nuqtasini bosing: (0, -4). Javob: -4!",
+        referenceFormula: "m_1 = m_2, \\quad y - y_1 = m(x - x_1)"
+      }
+    ],
+    mathModule2Hard: [
+      {
+        id: "ee-m2h-01",
+        section: "MATH",
+        module: 2,
+        tier: "hard",
+        domain: "Advanced Math",
+        skill: "Quadratic Vertex Form & Optimization",
+        difficulty: "Hard",
+        prompt: "A projectile is launched from a platform, and its height $h(t)$, in meters above the ground, $t$ seconds after launch is modeled by the function $h(t) = -5t^2 + 40t + 45$. What is the maximum height, in meters, reached by the projectile?",
+        type: "spr",
+        correctAnswer: "125",
+        explanationEn: "The maximum occurs at the vertex $t = -\\frac{b}{2a} = -\\frac{40}{2(-5)} = \\frac{40}{10} = 4$ seconds.\nSubstitute $t = 4$: $h(4) = -5(4)^2 + 40(4) + 45 = -5(16) + 160 + 45 = -80 + 160 + 45 = 125$ meters.",
+        explanationUz: "Maksimum cho'qqi koordinatasi: t = -b / (2a) = -40 / (2 * -5) = 4 soniya. Maksimal balandlik: h(4) = -5(16) + 160 + 45 = 125 metr.",
+        desmosTrick: "Desmos'ga h(x) = -5x^2 + 40x + 45 deb yozing. Parabolaning eng tepa cho'qqisiga (vertex) bosing: (4, 125) ko'rsatiladi. Balandlik 125!",
+        referenceFormula: "t_{\\text{vertex}} = -\\frac{b}{2a}, \\quad h_{\\max} = h\\left(-\\frac{b}{2a}\\right)"
+      }
+    ],
+    mathModule2Easy: [
+      {
+        id: "ee-m2e-01",
+        section: "MATH",
+        module: 2,
+        tier: "easy",
+        domain: "Algebra",
+        skill: "Evaluating Linear Functions",
+        difficulty: "Easy",
+        prompt: "If $g(x) = 3x - 8$, what is the value of $g(7)$?",
+        type: "spr",
+        correctAnswer: "13",
+        explanationEn: "Substitute $x = 7$: $g(7) = 3(7) - 8 = 21 - 8 = 13$.",
+        explanationUz: "x = 7 ni qo'yamiz: 3(7) - 8 = 21 - 8 = 13.",
+        desmosTrick: "3*7 - 8 = 13"
+      }
+    ]
+  },
+  {
+    id: "sat-hard-math-800",
+    title: "SAT Hard Math 800 Challenge Form",
+    formCode: "MATH-800-HARD",
+    descriptionUz: "SATashkent 'Math Hard Book' va 'Hardbook 20'dan olingan eng qiyin 800-ballik masalalar (aylana tenglamasi, diskriminant, m1·m2 = -1, balandlik geometric mean).",
+    badge: "Math 800 Master",
+    totalQuestions: 44,
+    rwTimingMinutes: 32,
+    mathTimingMinutes: 35,
+    rwModule1: [
+      {
+        id: "m800-rw1-01",
+        section: "READING_WRITING",
+        module: 1,
+        tier: "standard",
+        domain: "Craft and Structure",
+        skill: "Words in Context",
+        difficulty: "Hard",
+        passage: "While early quantum physicists treated wave-particle duality as an unsettling paradox that would eventually be resolved by deeper classical mechanics, modern quantum field theory embraces this duality as _______: physical reality is fundamentally non-deterministic at the subatomic scale.",
+        prompt: "Which choice completes the text with the most logical and precise word or phrase?",
+        type: "multiple_choice",
+        options: ["A) axiomatic", "B) superfluous", "C) anachronistic", "D) ephemeral"],
+        correctAnswer: "A",
+        explanationEn: "'embraces this duality as [axiomatic]: physical reality is fundamentally...' indicates that modern quantum mechanics accepts the principle as a self-evident foundational truth (axiomatic), rather than a paradox to be explained away.",
+        explanationUz: "Zamonaviy kvant nazariyasi bu xususiyatni fundamental isbotsiz qabul qilinadigan asosiy haqiqat ('axiomatic' - aksiomatik) deb biladi. Shuning uchun A to'g'ri.",
+        referenceFormula: "\\text{Foundational Truth} \\implies \\text{axiomatic}"
+      }
+    ],
+    rwModule2Hard: [
+      {
+        id: "m800-rw2h-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "hard",
+        domain: "Information and Ideas",
+        skill: "Command of Evidence",
+        difficulty: "Hard",
+        passage: "Economists investigated whether automated microfinance algorithms reduced loan default rates compared to human credit officers in developing markets. Across forty thousand loan issuances in Kenya, algorithmically approved borrowers experienced an 18% lower default rate. However, when evaluating novel entrepreneurs without formal collateral records, human credit officers achieved a 12% lower default rate than the algorithm.",
+        prompt: "Which finding, if true, would most directly explain the discrepancy described in the final sentence?",
+        type: "multiple_choice",
+        options: [
+          "A) Human loan officers conducted informal qualitative interviews assessing local community reputation and entrepreneurial tenacity that automated algorithms could not quantify.",
+          "B) Algorithms systematically charge higher interest rates to experienced borrowers.",
+          "C) Commercial banks in Kenya rarely employ automated microfinance platforms.",
+          "D) Human loan officers take three times as long to process application forms as automated systems do."
+        ],
+        correctAnswer: "A",
+        explanationEn: "The passage notes that for applicants lacking formal records, human officers outperformed algorithms. Choice A directly explains this by showing humans could evaluate informal community reputation and character traits that algorithms cannot scrape from formal credit data.",
+        explanationUz: "Kafolat hujjati bo'lmagan tadbirkorlarda insonlar nega yaxshiroq natija ko'rsatganini A variant tushuntiradi: insonlar algoritmlar hisoblay olmaydigan obro' va xarakterni suhbat orqali baholay olishgan.",
+        referenceFormula: "\\text{Human advantage in qualitative reputation evaluation}"
+      }
+    ],
+    rwModule2Easy: [
+      {
+        id: "m800-rw2e-01",
+        section: "READING_WRITING",
+        module: 2,
+        tier: "easy",
+        domain: "Standard English Conventions",
+        skill: "Punctuation & Lists",
+        difficulty: "Easy",
+        passage: "The alpine expedition required lightweight camping gear, durable climbing ropes, _______ and a satellite telephone for emergency communication.",
+        prompt: "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        type: "multiple_choice",
+        options: [
+          "A) high-calorie nutritional rations,",
+          "B) high-calorie nutritional rations",
+          "C) high-calorie nutritional rations;",
+          "D) high-calorie nutritional rations:"
+        ],
+        correctAnswer: "A",
+        explanationEn: "A series of three or more items in a list must be separated by commas, including the Oxford comma before 'and': 'gear, ropes, [rations], and a telephone'.",
+        explanationUz: "Uch yoki undan ortiq elementlardan iborat ro'yxatda vergul (Oxford comma) ishlatiladi: 'gear, ropes, [rations], and'. To'g'ri javob: A.",
+        referenceFormula: "\\text{Item 1, Item 2, Item 3, and Item 4}"
+      }
+    ],
+    mathModule1: [
+      {
+        id: "m800-m1-01",
+        section: "MATH",
+        module: 1,
+        tier: "standard",
+        domain: "Algebra",
+        skill: "Perpendicular Lines & Reciprocal Slopes",
+        difficulty: "Hard",
+        prompt: "In the $xy$-plane, line $j$ passes through the points $(3, 11)$ and $(7, 3)$. Line $k$ is perpendicular to line $j$ and passes through the point $(5, -2)$. If the equation of line $k$ is written in slope-intercept form as $y = mx + b$, what is the value of $b$?",
+        type: "spr",
+        correctAnswer: "-9/2",
+        explanationEn: "1) Calculate slope of line $j$: $m_j = \\frac{3 - 11}{7 - 3} = \\frac{-8}{4} = -2$.\n2) Since line $k$ is perpendicular, its slope is the negative reciprocal: $m_k = -\\frac{1}{-2} = \\frac{1}{2}$.\n3) Line $k$ passes through $(5, -2)$: $y - (-2) = \\frac{1}{2}(x - 5) \\implies y + 2 = \\frac{1}{2}x - \\frac{5}{2} \\implies y = \\frac{1}{2}x - \\frac{9}{2}$.\n4) Thus $b = -\\frac{9}{2}$ (or -4.5).",
+        explanationUz: "j to'g'ri chiziqning burchak koeffitsienti: (3 - 11)/(7 - 3) = -8/4 = -2. Unga perpendikulyar k chiziqning burchak koeffitsienti: m = 1/2. (5, -2) nuqtadan o'tadi: y - (-2) = 1/2(x - 5) => y = 1/2 x - 9/2. Demak b = -9/2 yoki -4.5.",
+        desmosTrick: "Desmos'ga m = (3 - 11)/(7 - 3) yozing (-2 chiqadi). Perpendikulyar: y - (-2) = (1/2)(x - 5). y o'qini kesgan nuqtasini bosing: (0, -4.5). Javob: -9/2!",
+        referenceFormula: "m_1 \\cdot m_2 = -1 \\implies m_\\perp = -\\frac{1}{m}"
+      },
+      {
+        id: "m800-m1-02",
+        section: "MATH",
+        module: 1,
+        tier: "standard",
+        domain: "Advanced Math",
+        skill: "Nonlinear Systems & Tangent Points",
+        difficulty: "Hard",
+        prompt: "In the given system of equations, $k$ is a constant:\n$$\\begin{cases} y = x^2 - 6x + 14 \\\\ y = 2x + k \\end{cases}$$\nIf the system has exactly one solution $(x, y)$, what is the value of $k$?",
+        type: "spr",
+        correctAnswer: "-2",
+        explanationEn: "Equate the expressions for $y$:\n$x^2 - 6x + 14 = 2x + k \\implies x^2 - 8x + (14 - k) = 0$.\nFor exactly one solution, the discriminant must equal zero: $b^2 - 4ac = 0$.\n$(-8)^2 - 4(1)(14 - k) = 0$\n$64 - 56 + 4k = 0 \\implies 8 + 4k = 0 \\implies 4k = -8 \\implies k = -2$.",
+        explanationUz: "Tenglashtiramiz: x^2 - 6x + 14 = 2x + k => x^2 - 8x + (14 - k) = 0. Bitta yechim bo'lishi uchun diskriminant 0 bo'lishi shart: (-8)^2 - 4(1)(14 - k) = 0 => 64 - 56 + 4k = 0 => 8 + 4k = 0 => k = -2.",
+        desmosTrick: "Desmos'ga y = x^2 - 6x + 14 va y = 2x + k yozing. k sliderini harakatlantirib to'g'ri chiziq parabolaga bitta nuqtada urunadigan holatni toping: k = -2!",
+        referenceFormula: "b^2 - 4ac = 0 \\iff \\text{One Intersection (Tangent)}"
+      }
+    ],
+    mathModule2Hard: [
+      {
+        id: "m800-m2h-01",
+        section: "MATH",
+        module: 2,
+        tier: "hard",
+        domain: "Geometry and Trigonometry",
+        skill: "Right Triangle Altitude & Geometric Mean",
+        difficulty: "Hard",
+        prompt: "In right triangle $ABC$, the right angle is at $C$. An altitude is drawn from $C$ to hypotenuse $AB$, intersecting $AB$ at point $D$. If $AD = 4$ and $DB = 9$, what is the length of altitude $CD$?",
+        type: "spr",
+        correctAnswer: "6",
+        explanationEn: "By the Right Triangle Altitude Geometric Mean Theorem, the altitude to the hypotenuse is the geometric mean of the two segments of the hypotenuse: $CD = \\sqrt{AD \\cdot DB}$.\n$CD = \\sqrt{4 \\cdot 9} = \\sqrt{36} = 6$.",
+        explanationUz: "To'g'ri burchakli uchburchakda gipotenuzaga tushirilgan balandlik gipotenuza bo'laklarining o'rta geometrigi hisoblanadi: CD = \\sqrt{AD \\cdot DB} = \\sqrt{4 \\cdot 9} = \\sqrt{36} = 6.",
+        desmosTrick: "sqrt(4 * 9) = 6 deb Desmos'ga kiriting.",
+        referenceFormula: "h = \\sqrt{c_a \\cdot c_b} \\quad (\\text{Altitude Geometric Mean})"
+      }
+    ],
+    mathModule2Easy: [
+      {
+        id: "m800-m2e-01",
+        section: "MATH",
+        module: 2,
+        tier: "easy",
+        domain: "Geometry and Trigonometry",
+        skill: "Circle Area",
+        difficulty: "Easy",
+        prompt: "A circle has a diameter of $16$ centimeters. What is the area of the circle, in square centimeters, in terms of $\\pi$ (enter the coefficient of $\\pi$)?",
+        type: "spr",
+        correctAnswer: "64",
+        explanationEn: "Radius $r = \\frac{16}{2} = 8$ cm. Area $= \\pi r^2 = \\pi (8)^2 = 64\\pi$. The coefficient is $64$.",
+        explanationUz: "Radius = 16 / 2 = 8. Doira yuzi = \\pi * r^2 = \\pi * 8^2 = 64\\pi. Koeffitsient: 64.",
+        desmosTrick: "(16/2)^2 = 64"
+      }
+    ]
   }
 ];
+

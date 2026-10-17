@@ -35,10 +35,13 @@ import {
   Minimize2,
   HelpCircle,
   Check,
-  FileText
+  FileText,
+  Sun,
+  Moon
 } from "lucide-react";
 import Link from "next/link";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import { useTheme } from "@/components/ThemeContext";
 import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion } from "@/lib/bluebook-tests";
 
 type ExamStage =
@@ -49,9 +52,11 @@ type ExamStage =
   | "completed";
 
 export default function BluebookMockPage() {
+  const { theme, toggleTheme } = useTheme();
   // Active selected test
   const [selectedExam, setSelectedExam] = useState<BluebookExamForm>(BLUEBOOK_EXAMS[0]);
   const [stage, setStage] = useState<ExamStage>("lobby");
+  const [formulaTab, setFormulaTab] = useState<"cb" | "satashkent" | "desmos" | "rw">("cb");
 
   // Section & Module state
   const [currentSection, setCurrentSection] = useState<"READING_WRITING" | "MATH">("READING_WRITING");
@@ -421,18 +426,46 @@ export default function BluebookMockPage() {
   // =========================================================================
   if (stage === "lobby") {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-8">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center justify-center p-4 md:p-8 transition-colors">
         <div className="w-full max-w-5xl space-y-8">
+          {/* Top navigation / theme toggle */}
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              className="text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Bosh Sahifa</span>
+            </Link>
+            <button
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Light Mode ga o'tish" : "Dark Mode ga o'tish"}
+              className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm flex items-center gap-2 text-xs font-medium"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun size={15} className="text-amber-400" />
+                  <span className="hidden sm:inline">Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={15} className="text-indigo-600" />
+                  <span className="hidden sm:inline">Dark Mode</span>
+                </>
+              )}
+            </button>
+          </div>
+
           {/* Header */}
           <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold tracking-wide uppercase">
-              <ShieldCheck className="w-4 h-4 text-blue-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 text-[var(--accent-blue)] text-xs font-semibold tracking-wide uppercase">
+              <ShieldCheck className="w-4 h-4 text-[var(--accent-blue)]" />
               1:1 Official College Board Bluebook Ecosystem
             </div>
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-[var(--text-main)]">
               Digital SAT Bluebook Simulator
             </h1>
-            <p className="text-sm md:text-base text-slate-400 max-w-2xl mx-auto">
+            <p className="text-sm md:text-base text-[var(--text-muted)] max-w-2xl mx-auto">
               Haqiqiy Bluebook interfeysi, rasmiy College Board va SAT Tashkent testlari, 2-bosqichli adaptiv Multistage Testing (MST) marshrutlash tizimi va Desmos integratsiyasi.
             </p>
           </div>
@@ -445,36 +478,36 @@ export default function BluebookMockPage() {
                 onClick={() => setSelectedExam(exam)}
                 className={`relative rounded-2xl p-6 cursor-pointer border transition-all duration-200 flex flex-col justify-between ${
                   selectedExam.id === exam.id
-                    ? "bg-blue-950/40 border-blue-500 shadow-xl shadow-blue-500/10 ring-2 ring-blue-500/20"
-                    : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                    ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-xl shadow-[var(--accent-blue)]/10 ring-2 ring-[var(--accent-blue)]/30"
+                    : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
                 }`}
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                    <span className="px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30">
                       {exam.badge}
                     </span>
-                    <span className="text-xs text-slate-400 font-mono">
+                    <span className="text-xs text-[var(--text-muted)] font-mono">
                       {exam.formCode}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400">
+                    <h3 className="text-lg font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)]">
                       {exam.title}
                     </h3>
-                    <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                    <p className="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
                       {exam.descriptionUz}
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs text-slate-300">
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-main)] text-xs text-[var(--text-secondary)]">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-blue-400" />
+                      <Clock className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
                       <span>{exam.rwTimingMinutes + exam.mathTimingMinutes} daqiqa</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5 text-amber-400" />
+                      <Layers className="w-3.5 h-3.5 text-[var(--accent-amber)]" />
                       <span>4 Adaptiv Modul</span>
                     </div>
                   </div>
@@ -497,16 +530,16 @@ export default function BluebookMockPage() {
           </div>
 
           {/* Guidelines */}
-          <div className="rounded-2xl bg-slate-900/40 border border-slate-800 p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)] shadow-sm">
             <div className="flex items-center gap-3">
-              <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+              <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
               <span>
                 <strong>Bluebook qoidalari:</strong> Har bir modul yakunida tekshiruv (Section Review) ekrani ochiladi. Modul yakunlangach, unga qaytib bo'lmaydi. Reading & Writing va Math o'rtasida 10 daqiqalik tanaffus mavjud.
               </span>
             </div>
             <Link
               href="/"
-              className="text-slate-400 hover:text-white transition whitespace-nowrap underline underline-offset-4"
+              className="text-[var(--text-muted)] hover:text-[var(--text-main)] transition whitespace-nowrap underline underline-offset-4"
             >
               Bosh sahifaga qaytish
             </Link>
@@ -521,37 +554,37 @@ export default function BluebookMockPage() {
   // =========================================================================
   if (stage === "break") {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-full max-w-xl bg-slate-900/90 border border-slate-800 rounded-3xl p-8 md:p-12 space-y-6 shadow-2xl shadow-blue-500/5">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center justify-center p-6 text-center transition-colors">
+        <div className="w-full max-w-xl bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl p-8 md:p-12 space-y-6 shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-500">
             <Coffee className="w-8 h-8" />
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-3xl font-black text-white">
+            <h2 className="text-2xl md:text-3xl font-black text-[var(--text-main)]">
               10 Daqiqalik Rasmiy Tanaffus
             </h2>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[var(--text-muted)]">
               Section 1 (Reading & Writing) yakunlandi. Endi biroz dam oling, suv iching va ko'zingizni dam oldiring.
             </p>
           </div>
 
           <div className="py-4">
-            <div className="text-6xl md:text-7xl font-mono font-bold tracking-tight text-amber-400">
+            <div className="text-6xl md:text-7xl font-mono font-bold tracking-tight text-amber-500">
               {formatTime(breakTimeLeft)}
             </div>
-            <p className="text-xs text-slate-500 mt-2">Qolgan tanaffus vaqti</p>
+            <p className="text-xs text-[var(--text-muted)] mt-2">Qolgan tanaffus vaqti</p>
           </div>
 
-          <div className="space-y-3 pt-4 border-t border-slate-800">
+          <div className="space-y-3 pt-4 border-t border-[var(--border-main)]">
             <button
               onClick={startMathSection}
-              className="w-full py-3.5 px-6 rounded-2xl font-bold text-sm bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 transition flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-6 rounded-2xl font-bold text-sm bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 transition flex items-center justify-center gap-2 active:scale-95"
             >
               <span>Tanaffusni tugatib, Math Bo'limiga o'tish</span>
               <ArrowRight className="w-4 h-4" />
             </button>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[var(--text-muted)]">
               Math bo'limida 2 ta adaptiv modul (har biri 35 daqiqa) va rasmiy Desmos kalkulyatori mavjud.
             </p>
           </div>
@@ -575,21 +608,21 @@ export default function BluebookMockPage() {
     });
 
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col transition-colors">
         {/* Top bar */}
-        <header className="h-16 border-b border-slate-800 bg-slate-900/90 px-6 flex items-center justify-between sticky top-0 z-20">
+        <header className="h-16 border-b border-[var(--border-main)] bg-[var(--bg-card)]/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
           <div>
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-[var(--text-main)]">
               {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"} - Module {currentModuleNum} Review
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Barcha savollaringizni tekshirib chiqing. Har qanday savolga bosib qaytishingiz mumkin.
             </p>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <span className="text-xs text-slate-400 block">Qolgan vaqt</span>
-              <span className="text-sm font-mono font-bold text-blue-400">{formatTime(timeLeft)}</span>
+              <span className="text-xs text-[var(--text-muted)] block">Qolgan vaqt</span>
+              <span className="text-sm font-mono font-bold text-[var(--accent-blue)]">{formatTime(timeLeft)}</span>
             </div>
             <button
               onClick={() => setShowLeaveConfirmation(true)}
@@ -609,34 +642,34 @@ export default function BluebookMockPage() {
               onClick={() => setGridFilter("all")}
               className={`p-4 rounded-2xl border text-left transition ${
                 gridFilter === "all"
-                  ? "bg-blue-950/40 border-blue-500 text-white"
-                  : "bg-slate-900/60 border-slate-800 text-slate-300"
+                  ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] text-[var(--text-main)]"
+                  : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-secondary)]"
               }`}
             >
               <div className="text-2xl font-bold">{activeQuestions.length}</div>
-              <div className="text-xs text-slate-400 mt-1">Barcha Savollar</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Barcha Savollar</div>
             </button>
             <button
               onClick={() => setGridFilter("unanswered")}
               className={`p-4 rounded-2xl border text-left transition ${
                 gridFilter === "unanswered"
-                  ? "bg-rose-950/40 border-rose-500 text-white"
-                  : "bg-slate-900/60 border-slate-800 text-slate-300"
+                  ? "bg-rose-500/10 border-rose-500 text-[var(--text-main)]"
+                  : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-secondary)]"
               }`}
             >
-              <div className="text-2xl font-bold text-rose-400">{unansweredCount}</div>
-              <div className="text-xs text-slate-400 mt-1">Belgilanmagan (Unanswered)</div>
+              <div className="text-2xl font-bold text-rose-500">{unansweredCount}</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Belgilanmagan (Unanswered)</div>
             </button>
             <button
               onClick={() => setGridFilter("flagged")}
               className={`p-4 rounded-2xl border text-left transition ${
                 gridFilter === "flagged"
-                  ? "bg-amber-950/40 border-amber-500 text-white"
-                  : "bg-slate-900/60 border-slate-800 text-slate-300"
+                  ? "bg-amber-500/10 border-amber-500 text-[var(--text-main)]"
+                  : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-secondary)]"
               }`}
             >
-              <div className="text-2xl font-bold text-amber-400">{flaggedCount}</div>
-              <div className="text-xs text-slate-400 mt-1">Belgilangan (For Review)</div>
+              <div className="text-2xl font-bold text-amber-500">{flaggedCount}</div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">Belgilangan (For Review)</div>
             </button>
           </div>
 
@@ -654,21 +687,21 @@ export default function BluebookMockPage() {
                     setCurrentIndex(origIndex);
                     setStage("testing");
                   }}
-                  className={`p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between h-24 hover:scale-[1.02] ${
+                  className={`p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between h-24 hover:scale-[1.02] shadow-sm ${
                     isAnswered
-                      ? "bg-slate-900 border-slate-700 hover:border-blue-400"
-                      : "bg-rose-950/20 border-rose-900/40 hover:border-rose-500"
+                      ? "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]"
+                      : "bg-rose-500/5 border-rose-500/30 hover:border-rose-500"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-white">Q {origIndex + 1}</span>
-                    {isFlagged && <Bookmark className="w-4 h-4 text-amber-400 fill-amber-400" />}
+                    <span className="text-sm font-bold text-[var(--text-main)]">Q {origIndex + 1}</span>
+                    {isFlagged && <Bookmark className="w-4 h-4 text-amber-500 fill-amber-500" />}
                   </div>
                   <div className="text-xs flex items-center justify-between">
-                    <span className="text-slate-400 truncate max-w-[80px]">{q.domain}</span>
+                    <span className="text-[var(--text-muted)] truncate max-w-[80px]">{q.domain}</span>
                     <span
                       className={`font-mono font-bold text-xs ${
-                        isAnswered ? "text-emerald-400" : "text-rose-400"
+                        isAnswered ? "text-emerald-500" : "text-rose-500"
                       }`}
                     >
                       {isAnswered ? userAnswers[q.id] : "—"}
@@ -683,7 +716,7 @@ export default function BluebookMockPage() {
           <div className="pt-4 flex justify-between items-center">
             <button
               onClick={() => setStage("testing")}
-              className="py-2.5 px-6 rounded-xl border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-300 flex items-center gap-2"
+              className="py-2.5 px-6 rounded-xl border border-[var(--border-main)] hover:bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] flex items-center gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Savollarga Qaytish</span>
@@ -700,24 +733,24 @@ export default function BluebookMockPage() {
 
         {/* Confirmation Modal */}
         {showLeaveConfirmation && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-              <div className="flex items-center gap-3 text-amber-400">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+              <div className="flex items-center gap-3 text-amber-500">
                 <AlertCircle className="w-6 h-6" />
-                <h3 className="text-lg font-bold text-white">Haqiqatan ham yakunlamoqchimisiz?</h3>
+                <h3 className="text-lg font-bold text-[var(--text-main)]">Haqiqatan ham yakunlamoqchimisiz?</h3>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                 Ushbu modulni yakunlaganingizdan so'ng, uning savollariga qayta kira olmaysiz.
                 {unansweredCount > 0 && (
-                  <span className="block mt-2 font-bold text-rose-400">
+                  <span className="block mt-2 font-bold text-rose-500">
                     Diqqat: Sizda {unansweredCount} ta belgilanmagan savol qolgan!
                   </span>
                 )}
               </p>
-              <div className="flex items-center justify-end gap-3 pt-3">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-main)]">
                 <button
                   onClick={() => setShowLeaveConfirmation(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition"
                 >
                   Tekshirishda davom etish
                 </button>
@@ -740,18 +773,18 @@ export default function BluebookMockPage() {
   // =========================================================================
   if (stage === "completed" && scoreResult) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-8">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center justify-center p-4 md:p-8 transition-colors">
         <div className="w-full max-w-4xl space-y-8">
           {/* Top Banner */}
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs font-bold uppercase tracking-wider">
               <CheckCircle2 className="w-4 h-4" />
               Imtihon Muvaffaqiyatli Yakunlandi
             </div>
-            <h1 className="text-3xl md:text-5xl font-black text-white">
+            <h1 className="text-3xl md:text-5xl font-black text-[var(--text-main)]">
               Sizning SAT Natijangiz
             </h1>
-            <p className="text-xs md:text-sm text-slate-400">
+            <p className="text-xs md:text-sm text-[var(--text-muted)]">
               {selectedExam.title} ({selectedExam.formCode})
             </p>
           </div>
@@ -759,15 +792,15 @@ export default function BluebookMockPage() {
           {/* Main Score Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Total Scaled Score */}
-            <div className="md:col-span-1 rounded-3xl bg-gradient-to-b from-blue-900/40 to-slate-900 border border-blue-500/40 p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-2xl shadow-blue-500/10">
-              <span className="text-xs uppercase tracking-widest text-blue-300 font-bold mb-2">
+            <div className="md:col-span-1 rounded-3xl bg-gradient-to-b from-[var(--accent-blue)]/15 to-[var(--bg-card)] border border-[var(--accent-blue)]/30 p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-2xl">
+              <span className="text-xs uppercase tracking-widest text-[var(--accent-blue)] font-bold mb-2">
                 Umumiy SAT Balli
               </span>
-              <div className="text-6xl md:text-7xl font-mono font-black text-white tracking-tight">
+              <div className="text-6xl md:text-7xl font-mono font-black text-[var(--text-main)] tracking-tight">
                 {scoreResult.totalScore}
               </div>
-              <span className="text-xs text-slate-400 mt-1">400 — 1600 shkala</span>
-              <div className="mt-4 px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold">
+              <span className="text-xs text-[var(--text-muted)] mt-1">400 — 1600 shkala</span>
+              <div className="mt-4 px-3 py-1.5 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] text-xs font-bold">
                 Top {100 - scoreResult.percentile}% (Percentile: {scoreResult.percentile}th)
               </div>
             </div>
@@ -775,45 +808,45 @@ export default function BluebookMockPage() {
             {/* Section Scores */}
             <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Reading & Writing */}
-              <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 flex flex-col justify-between">
+              <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 flex flex-col justify-between shadow-sm">
                 <div className="space-y-1">
-                  <span className="text-xs uppercase font-bold text-slate-400">Section 1</span>
-                  <h3 className="text-base font-bold text-white">Reading & Writing</h3>
-                  <div className="text-4xl font-mono font-black text-blue-400 mt-2">
+                  <span className="text-xs uppercase font-bold text-[var(--text-muted)]">Section 1</span>
+                  <h3 className="text-base font-bold text-[var(--text-main)]">Reading & Writing</h3>
+                  <div className="text-4xl font-mono font-black text-[var(--accent-blue)] mt-2">
                     {scoreResult.rwScore}
-                    <span className="text-xs text-slate-500 font-sans font-normal ml-1">/ 800</span>
+                    <span className="text-xs text-[var(--text-muted)] font-sans font-normal ml-1">/ 800</span>
                   </div>
                 </div>
-                <div className="pt-4 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
+                <div className="pt-4 border-t border-[var(--border-main)] space-y-1 text-xs text-[var(--text-muted)]">
                   <div className="flex justify-between">
                     <span>To'g'ri javoblar:</span>
-                    <span className="font-bold text-emerald-400">{scoreResult.rwCorrect} ta</span>
+                    <span className="font-bold text-emerald-500">{scoreResult.rwCorrect} ta</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Yo'nalish:</span>
-                    <span className="font-bold text-blue-300">{scoreResult.rwTier}</span>
+                    <span className="font-bold text-[var(--accent-blue)]">{scoreResult.rwTier}</span>
                   </div>
                 </div>
               </div>
 
               {/* Math */}
-              <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 flex flex-col justify-between">
+              <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 flex flex-col justify-between shadow-sm">
                 <div className="space-y-1">
-                  <span className="text-xs uppercase font-bold text-slate-400">Section 2</span>
-                  <h3 className="text-base font-bold text-white">Math (Kalkulyator bilan)</h3>
-                  <div className="text-4xl font-mono font-black text-emerald-400 mt-2">
+                  <span className="text-xs uppercase font-bold text-[var(--text-muted)]">Section 2</span>
+                  <h3 className="text-base font-bold text-[var(--text-main)]">Math (Kalkulyator bilan)</h3>
+                  <div className="text-4xl font-mono font-black text-emerald-500 mt-2">
                     {scoreResult.mathScore}
-                    <span className="text-xs text-slate-500 font-sans font-normal ml-1">/ 800</span>
+                    <span className="text-xs text-[var(--text-muted)] font-sans font-normal ml-1">/ 800</span>
                   </div>
                 </div>
-                <div className="pt-4 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
+                <div className="pt-4 border-t border-[var(--border-main)] space-y-1 text-xs text-[var(--text-muted)]">
                   <div className="flex justify-between">
                     <span>To'g'ri javoblar:</span>
-                    <span className="font-bold text-emerald-400">{scoreResult.mathCorrect} ta</span>
+                    <span className="font-bold text-emerald-500">{scoreResult.mathCorrect} ta</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Yo'nalish:</span>
-                    <span className="font-bold text-emerald-300">{scoreResult.mathTier}</span>
+                    <span className="font-bold text-emerald-500">{scoreResult.mathTier}</span>
                   </div>
                 </div>
               </div>
@@ -824,16 +857,16 @@ export default function BluebookMockPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
               onClick={() => setStage("lobby")}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 active:scale-95"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Boshqa Testni Tanlash</span>
             </button>
             <Link
               href="/curriculum"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-main)] font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm"
             >
-              <BookOpen className="w-4 h-4" />
+              <BookOpen className="w-4 h-4 text-[var(--accent-blue)]" />
               <span>Xatolarni Tahlil Qilish (Curriculum)</span>
             </Link>
           </div>
@@ -846,20 +879,20 @@ export default function BluebookMockPage() {
   // RENDER: LIVE BLUEBOOK TESTING APPLICATION (1:1 College Board Layout)
   // =========================================================================
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col select-none">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col select-none transition-colors">
       {/* ================= TOP BAR (College Board Bluebook Header) ================= */}
-      <header className="h-14 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
+      <header className="h-14 border-b border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
         {/* Left: Section & Module info + Directions toggle */}
         <div className="flex items-center gap-3">
-          <div className="text-xs md:text-sm font-bold text-white tracking-wide">
+          <div className="text-xs md:text-sm font-bold text-[var(--text-main)] tracking-wide">
             {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"}
-            <span className="text-slate-400 font-normal ml-1.5 hidden sm:inline">
+            <span className="text-[var(--text-muted)] font-normal ml-1.5 hidden sm:inline">
               Module {currentModuleNum}
             </span>
           </div>
           <button
             onClick={() => setShowDirections((prev) => !prev)}
-            className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-semibold px-2 py-1 rounded hover:bg-slate-800 transition"
+            className="flex items-center gap-1 text-xs text-[var(--accent-blue)] hover:text-blue-600 font-semibold px-2 py-1 rounded hover:bg-[var(--bg-surface)] transition"
           >
             <span>Directions</span>
             <ChevronDown className="w-3.5 h-3.5" />
@@ -872,21 +905,21 @@ export default function BluebookMockPage() {
             <div
               className={`flex items-center gap-1.5 font-mono text-sm md:text-base font-bold px-3 py-1 rounded-md border ${
                 timeLeft <= 300
-                  ? "bg-rose-950/60 border-rose-500 text-rose-300 animate-pulse"
-                  : "bg-slate-800/80 border-slate-700 text-white"
+                  ? "bg-rose-500/15 border-rose-500 text-rose-500 animate-pulse"
+                  : "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-main)]"
               }`}
             >
-              <Clock className="w-4 h-4 text-slate-400" />
+              <Clock className="w-4 h-4 text-[var(--text-muted)]" />
               <span>{formatTime(timeLeft)}</span>
             </div>
           ) : (
-            <div className="p-1 text-slate-400">
+            <div className="p-1 text-[var(--text-muted)]">
               <Clock className="w-4 h-4" />
             </div>
           )}
           <button
             onClick={() => setShowTimer((prev) => !prev)}
-            className="text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded hover:bg-slate-800 transition font-medium"
+            className="text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] px-2 py-1 rounded hover:bg-[var(--bg-surface)] transition font-medium"
           >
             {showTimer ? "Hide" : "Show"}
           </button>
@@ -902,7 +935,7 @@ export default function BluebookMockPage() {
               className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
                 isOptionEliminatorActive
                   ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
               }`}
             >
               <Strikethrough className="w-4 h-4" />
@@ -913,10 +946,10 @@ export default function BluebookMockPage() {
           {/* Formula Reference Sheet (Math or general) */}
           <button
             onClick={() => setShowFormulaSheet(true)}
-            title="College Board Reference Sheet"
-            className="p-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5"
+            title="Formula & Invariants Reference Sheet"
+            className="p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-4 h-4 text-emerald-500" />
             <span className="hidden md:inline">Reference</span>
           </button>
 
@@ -927,11 +960,20 @@ export default function BluebookMockPage() {
             className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
               isDesmosOpen
                 ? "bg-emerald-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
             }`}
           >
-            <Calculator className="w-4 h-4 text-emerald-400" />
+            <Calculator className="w-4 h-4 text-emerald-500" />
             <span className="hidden md:inline">Desmos</span>
+          </button>
+
+          {/* Invert / Contrast Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            title={theme === "dark" ? "High-Contrast Light Mode" : "Dark Accommodation Mode"}
+            className="p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
         </div>
       </header>
@@ -941,15 +983,15 @@ export default function BluebookMockPage() {
         {currentQ ? (
           currentQ.section === "READING_WRITING" ? (
             /* 2-COLUMN SPLIT FOR READING AND WRITING */
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800 overflow-y-auto">
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border-main)] overflow-y-auto">
               {/* Left Column: Passage / Stimulus */}
-              <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] text-slate-200 leading-relaxed text-sm md:text-base font-serif">
+              <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] text-[var(--text-main)] leading-relaxed text-sm md:text-base font-serif">
                 {currentQ.passage ? (
-                  <div className="space-y-4 whitespace-pre-line selection:bg-yellow-500/30 selection:text-white">
+                  <div className="space-y-4 whitespace-pre-line selection:bg-yellow-400/30">
                     {currentQ.passage}
                   </div>
                 ) : (
-                  <div className="text-slate-500 italic">No passage required for this question.</div>
+                  <div className="text-[var(--text-muted)] italic">No passage required for this question.</div>
                 )}
               </div>
 
@@ -957,27 +999,27 @@ export default function BluebookMockPage() {
               <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] flex flex-col justify-between space-y-6">
                 <div className="space-y-6">
                   {/* Question header + Bookmark */}
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                    <span className="font-mono font-bold text-xs uppercase tracking-wider text-slate-400">
+                  <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                    <span className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--text-muted)]">
                       Question {currentIndex + 1} of {activeQuestions.length}
                     </span>
                     <button
                       onClick={toggleFlag}
                       className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded transition ${
                         flagged[currentQ.id]
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                          ? "bg-amber-500/20 text-amber-500 border border-amber-500/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
                       }`}
                     >
                       <Bookmark
-                        className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-400 text-amber-400" : ""}`}
+                        className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-500 text-amber-500" : ""}`}
                       />
                       <span>Mark for Review</span>
                     </button>
                   </div>
 
                   {/* Question stem */}
-                  <div className="text-sm md:text-base font-medium text-white leading-relaxed">
+                  <div className="text-sm md:text-base font-medium text-[var(--text-main)] leading-relaxed">
                     <KaTeXMath content={currentQ.prompt} />
                   </div>
 
@@ -995,23 +1037,23 @@ export default function BluebookMockPage() {
                           onClick={() => !isStruck && handleSelectOption(letter)}
                           className={`relative group rounded-xl p-3.5 border transition cursor-pointer flex items-start justify-between gap-3 ${
                             isStruck
-                              ? "opacity-35 line-through bg-slate-900/40 border-slate-800/60"
+                              ? "opacity-35 line-through bg-[var(--bg-surface)] border-[var(--border-subtle)]"
                               : isSelected
-                              ? "bg-blue-950/40 border-blue-500 shadow-md ring-1 ring-blue-500"
-                              : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                              ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-md ring-2 ring-[var(--accent-blue)]/20"
+                              : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
                           }`}
                         >
                           <div className="flex items-start gap-3 flex-1">
                             <span
                               className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition ${
                                 isSelected
-                                  ? "bg-blue-500 text-white"
-                                  : "border border-slate-700 text-slate-400 group-hover:border-slate-500"
+                                  ? "bg-blue-600 text-white"
+                                  : "border border-[var(--border-main)] text-[var(--text-muted)] group-hover:border-[var(--text-secondary)]"
                               }`}
                             >
                               {letter}
                             </span>
-                            <span className="text-xs md:text-sm text-slate-200 mt-0.5 leading-snug">
+                            <span className="text-xs md:text-sm text-[var(--text-main)] mt-0.5 leading-snug">
                               <KaTeXMath content={text} />
                             </span>
                           </div>
@@ -1025,8 +1067,8 @@ export default function BluebookMockPage() {
                               }}
                               className={`p-1 rounded text-xs transition ${
                                 isStruck
-                                  ? "text-rose-400 hover:bg-rose-950/40"
-                                  : "text-slate-500 hover:text-rose-400 hover:bg-slate-800"
+                                  ? "text-rose-500 hover:bg-rose-500/10"
+                                  : "text-[var(--text-muted)] hover:text-rose-500 hover:bg-[var(--bg-surface)]"
                               }`}
                               title={isStruck ? "Restore option" : "Cross out option"}
                             >
@@ -1045,34 +1087,34 @@ export default function BluebookMockPage() {
             <div className="flex-1 flex overflow-y-auto justify-center p-6 md:p-12">
               <div className="w-full max-w-2xl space-y-8">
                 {/* Question header + Bookmark */}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <span className="font-mono font-bold text-xs uppercase tracking-wider text-slate-400">
+                <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                  <span className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--text-muted)]">
                     Question {currentIndex + 1} of {activeQuestions.length} (Math)
                   </span>
                   <button
                     onClick={toggleFlag}
                     className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded transition ${
                       flagged[currentQ.id]
-                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                        : "text-slate-400 hover:text-white hover:bg-slate-800"
+                        ? "bg-amber-500/20 text-amber-500 border border-amber-500/40"
+                        : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
                     }`}
                   >
                     <Bookmark
-                      className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-400 text-amber-400" : ""}`}
+                      className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-500 text-amber-500" : ""}`}
                     />
                     <span>Mark for Review</span>
                   </button>
                 </div>
 
                 {/* Math Prompt with LaTeX */}
-                <div className="text-base md:text-lg text-white font-medium leading-relaxed">
+                <div className="text-base md:text-lg text-[var(--text-main)] font-medium leading-relaxed">
                   <KaTeXMath content={currentQ.prompt} />
                 </div>
 
                 {/* Multiple Choice OR Student Produced Response (SPR) */}
                 {currentQ.type === "spr" ? (
-                  <div className="space-y-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <div className="space-y-4 bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-2xl p-6">
+                    <label className="block text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                       Student-Produced Response (Javobni kiriting):
                     </label>
                     <div className="flex items-center gap-3">
@@ -1081,18 +1123,18 @@ export default function BluebookMockPage() {
                         value={userAnswers[currentQ.id] || ""}
                         onChange={(e) => handleSPRInput(e.target.value)}
                         placeholder="Masalan: 14 yoki 7/2"
-                        className="px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono text-lg font-bold w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-main)] font-mono text-lg font-bold w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       {userAnswers[currentQ.id] && (
                         <button
                           onClick={() => handleSPRInput("")}
-                          className="text-xs text-slate-500 hover:text-slate-300"
+                          className="text-xs text-[var(--text-muted)] hover:text-[var(--text-main)]"
                         >
                           Tozalash
                         </button>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-[var(--text-muted)]">
                       Raqam, o'nli kasr (masalan: 3.5) yoki oddiy kasr (masalan: 7/2) shaklida kiriting.
                     </p>
                   </div>
@@ -1110,23 +1152,23 @@ export default function BluebookMockPage() {
                           onClick={() => !isStruck && handleSelectOption(letter)}
                           className={`relative group rounded-xl p-4 border transition cursor-pointer flex items-start justify-between gap-3 ${
                             isStruck
-                              ? "opacity-35 line-through bg-slate-900/40 border-slate-800/60"
+                              ? "opacity-35 line-through bg-[var(--bg-surface)] border-[var(--border-subtle)]"
                               : isSelected
-                              ? "bg-blue-950/40 border-blue-500 shadow-md ring-1 ring-blue-500"
-                              : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                              ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-md ring-2 ring-[var(--accent-blue)]/20"
+                              : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
                           }`}
                         >
                           <div className="flex items-start gap-3 flex-1">
                             <span
                               className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition ${
                                 isSelected
-                                  ? "bg-blue-500 text-white"
-                                  : "border border-slate-700 text-slate-400 group-hover:border-slate-500"
+                                  ? "bg-blue-600 text-white"
+                                  : "border border-[var(--border-main)] text-[var(--text-muted)] group-hover:border-[var(--text-secondary)]"
                               }`}
                             >
                               {letter}
                             </span>
-                            <span className="text-sm text-slate-200 mt-0.5 leading-snug">
+                            <span className="text-sm text-[var(--text-main)] mt-0.5 leading-snug">
                               <KaTeXMath content={text} />
                             </span>
                           </div>
@@ -1137,7 +1179,7 @@ export default function BluebookMockPage() {
                                 e.stopPropagation();
                                 toggleStrike(letter);
                               }}
-                              className="text-slate-500 hover:text-rose-400 p-1"
+                              className="text-[var(--text-muted)] hover:text-rose-500 p-1"
                             >
                               <Strikethrough className="w-4 h-4" />
                             </button>
@@ -1154,15 +1196,15 @@ export default function BluebookMockPage() {
       </main>
 
       {/* ================= BOTTOM BAR (Navigation + Question Grid Drawer) ================= */}
-      <footer className="h-16 border-t border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky bottom-0 z-30">
+      <footer className="h-16 border-t border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky bottom-0 z-30">
         {/* Left: Back */}
         <button
           onClick={() => currentIndex > 0 && setCurrentIndex((prev) => prev - 1)}
           disabled={currentIndex === 0}
           className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ${
             currentIndex === 0
-              ? "opacity-30 cursor-not-allowed text-slate-500"
-              : "text-slate-300 hover:text-white hover:bg-slate-800"
+              ? "opacity-30 cursor-not-allowed text-[var(--text-muted)]"
+              : "text-[var(--text-secondary)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
           }`}
         >
           <ChevronLeft className="w-4 h-4" />
@@ -1172,7 +1214,7 @@ export default function BluebookMockPage() {
         {/* Center: Question Grid Button */}
         <button
           onClick={() => setShowQuestionGrid((prev) => !prev)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-xs font-bold text-white transition shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-[var(--text-main)] transition shadow-sm"
         >
           <span>Question {currentIndex + 1} of {activeQuestions.length}</span>
           <ChevronDown
@@ -1204,15 +1246,15 @@ export default function BluebookMockPage() {
 
       {/* ================= QUESTION GRID DRAWER (Bottom Pop-up) ================= */}
       {showQuestionGrid && (
-        <div className="fixed inset-x-0 bottom-16 z-40 bg-slate-900/98 border-t border-slate-700 p-6 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-6 duration-200">
+        <div className="fixed inset-x-0 bottom-16 z-40 bg-[var(--bg-card)]/98 border-t border-[var(--border-main)] p-6 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-6 duration-200">
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
                 Savollar ro'yxati (Question Grid)
               </span>
               <button
                 onClick={() => setShowQuestionGrid(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-[var(--text-muted)] hover:text-[var(--text-main)] p-1"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1233,33 +1275,33 @@ export default function BluebookMockPage() {
                     }}
                     className={`relative w-10 h-10 rounded-lg text-xs font-bold transition flex items-center justify-center border ${
                       isCurrent
-                        ? "ring-2 ring-blue-400 bg-blue-600 text-white border-blue-400"
+                        ? "ring-2 ring-[var(--accent-blue)] bg-blue-600 text-white border-blue-500 shadow-md"
                         : isAnswered
-                        ? "bg-slate-800 text-slate-100 border-slate-600 hover:border-slate-400"
-                        : "border-dashed border-slate-700 text-slate-400 hover:border-slate-500 bg-slate-950/50"
+                        ? "bg-[var(--bg-surface)] text-[var(--text-main)] border-[var(--border-main)] hover:border-[var(--accent-blue)]"
+                        : "border-dashed border-[var(--border-main)] text-[var(--text-muted)] hover:border-[var(--text-secondary)] bg-[var(--bg-card)]"
                     }`}
                   >
                     <span>{idx + 1}</span>
                     {isFlagged && (
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full ring-2 ring-slate-900" />
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full ring-2 ring-[var(--bg-card)]" />
                     )}
                   </button>
                 );
               })}
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400">
+            <div className="flex items-center justify-between pt-2 border-t border-[var(--border-main)] text-xs text-[var(--text-muted)]">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded bg-blue-600" />
                   <span>Joriy savol</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded bg-slate-800 border border-slate-600" />
+                  <div className="w-3 h-3 rounded bg-[var(--bg-surface)] border border-[var(--border-main)]" />
                   <span>Belgilangan</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                   <span>For Review</span>
                 </div>
               </div>
@@ -1268,7 +1310,7 @@ export default function BluebookMockPage() {
                   setShowQuestionGrid(false);
                   setStage("section_review");
                 }}
-                className="text-blue-400 hover:text-blue-300 font-bold underline underline-offset-4"
+                className="text-[var(--accent-blue)] hover:underline font-bold"
               >
                 Section Review Ekranini Ochish
               </button>
@@ -1279,18 +1321,18 @@ export default function BluebookMockPage() {
 
       {/* ================= MODAL: DIRECTIONS ================= */}
       {showDirections && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 md:p-8 max-w-lg w-full space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 md:p-8 max-w-lg w-full space-y-4 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Info className="w-5 h-5 text-blue-400" />
+              <h3 className="text-base font-bold text-[var(--text-main)] flex items-center gap-2">
+                <Info className="w-5 h-5 text-[var(--accent-blue)]" />
                 Rasmiy College Board Yo'riqnomasi
               </h3>
-              <button onClick={() => setShowDirections(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowDirections(false)} className="text-[var(--text-muted)] hover:text-[var(--text-main)]">
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="text-xs text-slate-300 leading-relaxed space-y-3">
+            <div className="text-xs text-[var(--text-secondary)] leading-relaxed space-y-3">
               {currentSection === "READING_WRITING" ? (
                 <>
                   <p>
@@ -1331,13 +1373,13 @@ export default function BluebookMockPage() {
 
       {/* ================= MODAL: 5 MINUTES LEFT ALERT ================= */}
       {showFiveMinAlert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-[var(--bg-card)] border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center">
+            <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto">
               <Clock className="w-6 h-6 animate-pulse" />
             </div>
-            <h3 className="text-base font-bold text-white">5 Daqiqa Qoldi!</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-base font-bold text-[var(--text-main)]">5 Daqiqa Qoldi!</h3>
+            <p className="text-xs text-[var(--text-muted)]">
               Ushbu modulni yakunlash uchun 5 daqiqa vaqtingiz qoldi. Belgilanmagan savollarni tekshirishni unutmang.
             </p>
             <button
@@ -1350,58 +1392,220 @@ export default function BluebookMockPage() {
         </div>
       )}
 
-      {/* ================= MODAL: FORMULA REFERENCE SHEET ================= */}
+      {/* ================= MODAL: FORMULA & INVARIANTS REFERENCE SHEET ================= */}
       {showFormulaSheet && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh] overscroll-contain">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-emerald-400" />
-                College Board Official Math Reference Sheet
-              </h3>
-              <button onClick={() => setShowFormulaSheet(false)} className="text-slate-400 hover:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh] overscroll-contain">
+            <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-emerald-500" />
+                <h3 className="text-sm font-bold text-[var(--text-main)]">
+                  Digital SAT Reference Sheet & Formula Vault
+                </h3>
+              </div>
+              <button onClick={() => setShowFormulaSheet(false)} className="text-[var(--text-muted)] hover:text-[var(--text-main)]">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-300">
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <div className="font-bold text-white">Aylana / Circle</div>
-                <div>Area: $A = \pi r^2$</div>
-                <div>Circumference: $C = 2\pi r$</div>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <div className="font-bold text-white">To'g'ri to'rtburchak / Rectangle</div>
-                <div>Area: $A = lw$</div>
-                <div>Perimeter: $P = 2l + 2w$</div>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <div className="font-bold text-white">Uchburchak / Triangle</div>
-                <div>Area: $A = \frac{1}{2}bh$</div>
-                <div>Pythagorean Theorem: $a^2 + b^2 = c^2$</div>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <div className="font-bold text-white">Maxsus to'g'ri burchakli uchburchaklar</div>
-                <div>$45^\circ - 45^\circ - 90^\circ$: $x, x, x\sqrt{2}$</div>
-                <div>$30^\circ - 60^\circ - 90^\circ$: $x, x\sqrt{3}, 2x$</div>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <div className="font-bold text-white">Hajm formulalari / Volume</div>
-                <div>Cylinder: $V = \pi r^2 h$</div>
-                <div>Sphere: $V = \frac{4}{3}\pi r^3$</div>
-                <div>Cone: $V = \frac{1}{3}\pi r^2 h$</div>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                <div className="font-bold text-white">Burchaklar / Angles</div>
-                <div>Uchburchak ichki burchaklari yig'indisi: $180^\circ$</div>
-                <div>Aylana to'liq burchagi: $360^\circ$ yoki $2\pi$ rad</div>
-              </div>
+            {/* Tabs Navigation */}
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] overflow-x-auto text-xs">
+              <button
+                onClick={() => setFormulaTab("cb")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                  formulaTab === "cb"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+              >
+                Official Reference (Math)
+              </button>
+              <button
+                onClick={() => setFormulaTab("satashkent")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                  formulaTab === "satashkent"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+              >
+                SATashkent Invariants
+              </button>
+              <button
+                onClick={() => setFormulaTab("desmos")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                  formulaTab === "desmos"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+              >
+                Desmos Bypass Hacks
+              </button>
+              <button
+                onClick={() => setFormulaTab("rw")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                  formulaTab === "rw"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+              >
+                Reading & Writing Bible
+              </button>
             </div>
 
-            <div className="pt-2 flex justify-end">
+            {/* Tab 1: College Board Official Reference */}
+            {formulaTab === "cb" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--text-secondary)]">
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--text-main)]">Aylana / Circle</div>
+                  <div><KaTeXMath content="Area: A = \pi r^2" /></div>
+                  <div><KaTeXMath content="Circumference: C = 2\pi r" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">360° = 2π radian</div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--text-main)]">To'g'ri to'rtburchak / Rectangle</div>
+                  <div><KaTeXMath content="Area: A = l \cdot w" /></div>
+                  <div><KaTeXMath content="Perimeter: P = 2l + 2w" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--text-main)]">Uchburchak / Triangle</div>
+                  <div><KaTeXMath content="Area: A = \frac{1}{2}bh" /></div>
+                  <div><KaTeXMath content="Pythagorean: a^2 + b^2 = c^2" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">Ichki burchaklar yig'indisi: 180°</div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--text-main)]">Maxsus to'g'ri burchakli uchburchaklar</div>
+                  <div><KaTeXMath content="45^\circ - 45^\circ - 90^\circ: x, x, x\sqrt{2}" /></div>
+                  <div><KaTeXMath content="30^\circ - 60^\circ - 90^\circ: x, x\sqrt{3}, 2x" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--text-main)]">Hajm formulalari / Volumes</div>
+                  <div><KaTeXMath content="Cylinder: V = \pi r^2 h" /></div>
+                  <div><KaTeXMath content="Sphere: V = \frac{4}{3}\pi r^3" /></div>
+                  <div><KaTeXMath content="Cone: V = \frac{1}{3}\pi r^2 h" /></div>
+                  <div><KaTeXMath content="Pyramid: V = \frac{1}{3}lwh" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--text-main)]">Trigonometriya / Trig Ratios</div>
+                  <div><KaTeXMath content="\sin(\theta) = \frac{\text{Opposite}}{\text{Hypotenuse}}" /></div>
+                  <div><KaTeXMath content="\cos(\theta) = \frac{\text{Adjacent}}{\text{Hypotenuse}}" /></div>
+                  <div><KaTeXMath content="\tan(\theta) = \frac{\text{Opposite}}{\text{Adjacent}}" /></div>
+                  <div><KaTeXMath content="\sin(x) = \cos(90^\circ - x)" /></div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 2: SATashkent High-Yield Math Invariants */}
+            {formulaTab === "satashkent" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--text-secondary)]">
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--accent-blue)]">3 Essential Quadratic Forms</div>
+                  <div><KaTeXMath content="\text{Standard: } y = ax^2 + bx + c \implies (0, c)" /></div>
+                  <div><KaTeXMath content="\text{Vertex: } y = a(x - h)^2 + k \implies (h, k)" /></div>
+                  <div><KaTeXMath content="\text{Factored: } y = a(x - x_1)(x - x_2) \implies \text{Roots}" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">Axis of symmetry: <KaTeXMath content="x = -\frac{b}{2a}" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--accent-blue)]">Discriminant & Solutions</div>
+                  <div><KaTeXMath content="D = b^2 - 4ac" /></div>
+                  <div><KaTeXMath content="D > 0 \implies \text{2 Real Solutions (Kesishadi)}" /></div>
+                  <div><KaTeXMath content="D = 0 \implies \text{1 Real Solution (Urinadi / Tangent)}" /></div>
+                  <div><KaTeXMath content="D < 0 \implies \text{0 Real Solutions (Tegmaydi)}" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--accent-blue)]">2x2 Chiziqli Sistemalar</div>
+                  <div><KaTeXMath content="\frac{a_1}{a_2} \ne \frac{b_1}{b_2} \implies \text{1 Solution}" /></div>
+                  <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} \ne \frac{c_1}{c_2} \implies \text{No Solution (Parallel)}" /></div>
+                  <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} = \frac{c_1}{c_2} \implies \text{Infinitely Many (Ustma-ust)}" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--accent-blue)]">Perpendicular Invariant & Altitude</div>
+                  <div><KaTeXMath content="m_1 \cdot m_2 = -1 \implies m_\perp = -\frac{1}{m}" /></div>
+                  <div><KaTeXMath content="\text{Altitude to Hypotenuse: } h = \sqrt{c_a \cdot c_b}" /></div>
+                  <div><KaTeXMath content="\text{Altitude Formula: } h = \frac{a \cdot b}{c}" /></div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--accent-blue)]">Circle Equation in xy-plane</div>
+                  <div><KaTeXMath content="(x - h)^2 + (y - k)^2 = r^2" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">Markaz: (h, k), Radius: r. To'la kvadratga ajratish: <KaTeXMath content="(\frac{b}{2})^2" /> qo'shiladi.</div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                  <div className="font-bold text-[var(--accent-blue)]">Margin of Error & Box Plots</div>
+                  <div><KaTeXMath content="\text{MoE} \propto \frac{1}{\sqrt{n}} \quad (\uparrow n \implies \downarrow \text{MoE})" /></div>
+                  <div><KaTeXMath content="\text{IQR} = Q_3 - Q_1, \quad \text{Range} = \text{Max} - \text{Min}" /></div>
+                  <div className="text-[var(--text-muted)] text-[11px]">O'rta 50% ma'lumot quti (box) ichida joylashgan!</div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 3: Desmos Speedhack Commands */}
+            {formulaTab === "desmos" && (
+              <div className="space-y-3 text-xs text-[var(--text-secondary)]">
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-emerald-500 font-mono">1. Tenglamani to'g'ridan-to'g'ri yozish (Root Finding)</div>
+                  <p>
+                    Masalan: <code className="px-1.5 py-0.5 rounded bg-[var(--bg-card)] border border-[var(--border-main)] font-mono">4x + 12 = 36</code> deb yozsangiz, Desmos avtomatik ravishda <code className="font-mono font-bold">x = 6</code> da vertikal to'g'ri chiziq chizadi!
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-emerald-500 font-mono">2. Regression orqali formulani topish (Table + ~)</div>
+                  <p>
+                    Jadval qo'shing va qiymatlarni kiriting. Keyingi qatorga:
+                  </p>
+                  <ul className="list-disc list-inside space-y-1 pl-2 font-mono">
+                    <li>Chiziqli model: <span className="text-blue-500">y1 ~ mx1 + b</span></li>
+                    <li>Parabola: <span className="text-blue-500">y1 ~ ax1^2 + bx1 + c</span></li>
+                    <li>Ko'rsatkichli: <span className="text-blue-500">y1 ~ ab^(x1)</span></li>
+                  </ul>
+                  <p className="text-[var(--text-muted)] text-[11px]">Parametrlar soniyalarda aniq hisoblab beriladi!</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-emerald-500 font-mono">3. Tenglamalar tizimi kesishuv nuqtasi (Intersection)</div>
+                  <p>
+                    Ikkala tenglamani ham Desmos'ga kiriting. Grafiklarning kesishgan nuqtasiga bosing — koordinatalar <code className="font-mono">(x, y)</code> darhol ekranda namoyon bo'ladi!
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 4: Reading & Writing Bible */}
+            {formulaTab === "rw" && (
+              <div className="space-y-3 text-xs text-[var(--text-secondary)]">
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-indigo-500">1. 3x1 Elimination Tactic (SATashkent Gramilliy)</div>
+                  <p>
+                    Agar 3 ta variant bir xil grammatik toifaga mansub bo'lsa (masalan: 3 tasi o'tgan zamon, 1 tasi hozirgi zamon yoki 3 tasi vergul bilan mustaqil gap ulagan comma splice), o'sha 1 ta farq qiluvchi outlier variant 95% ehtimol bilan to'g'ri bo'ladi!
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-indigo-500">2. Punctuation Invariants (Semicolon vs Colon)</div>
+                  <ul className="list-disc list-inside space-y-1 pl-2">
+                    <li><strong>Semicolon (;):</strong> <KaTeXMath content="\text{Independent Clause ; Independent Clause}" /></li>
+                    <li><strong>Colon (:):</strong> Chap tomoni MUSTAQIL to'liq gap bo'lishi SHART! O'ng tomoni esa tushuntirish, ro'yxat yoki bitta so'z bo'lishi mumkin.</li>
+                    <li><strong>Comma Splice xatosi:</strong> <KaTeXMath content="\text{IC , IC} \quad \text{(NOTO'G'RI! FANBOYS yoki nuqtali vergul kerak)}" /></li>
+                  </ul>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-indigo-500">3. Modifier Placement (Dangling Modifier Trap)</div>
+                  <p>
+                    Kirish iborasi <KaTeXMath content="\text{[Having studied...]}, \text{[Subject]}" /> bo'lsa, verguldan keyin darhol harakatni bajargan shaxs/predmet kelishi SHART!
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                  <div className="font-bold text-indigo-500">4. Transitions (O'tish so'zlari matritsasi)</div>
+                  <p>
+                    <strong>Qo'shimcha:</strong> Furthermore, In addition, Moreover. <br />
+                    <strong>Qarama-qarshilik:</strong> However, Nevertheless, In contrast. <br />
+                    <strong>Sabab-Oqibat:</strong> Consequently, Therefore, As a result. <br />
+                    <strong>Aniqlashtirish:</strong> Specifically, For instance, In particular.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="pt-2 flex justify-end border-t border-[var(--border-main)]">
               <button
                 onClick={() => setShowFormulaSheet(false)}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-[var(--text-main)] transition"
               >
                 Yopish
               </button>
@@ -1412,13 +1616,13 @@ export default function BluebookMockPage() {
 
       {/* ================= DESMOS FLOATING PANEL ================= */}
       {isDesmosOpen && (
-        <div className="fixed right-4 bottom-20 z-50 w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-4 overflow-hidden">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+        <div className="fixed right-4 bottom-20 z-50 w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl shadow-2xl p-4 overflow-hidden">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)]">
+            <span className="text-xs font-bold text-emerald-500 flex items-center gap-1.5">
               <Calculator className="w-4 h-4" />
               Desmos Graphing Calculator
             </span>
-            <button onClick={() => setIsDesmosOpen(false)} className="text-slate-400 hover:text-white">
+            <button onClick={() => setIsDesmosOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-main)]">
               <X className="w-4 h-4" />
             </button>
           </div>
