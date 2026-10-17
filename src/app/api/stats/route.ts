@@ -93,6 +93,16 @@ export async function GET() {
     const topicsRes = await pool.query(`SELECT COUNT(*)::int as count FROM topics;`);
     const totalTopics = topicsRes.rows[0]?.count || 28;
 
+    // 7. Mock exams history & telemetry
+    const mockRes = await pool.query(`
+      SELECT 
+        COUNT(*)::int as total_exams,
+        COALESCE(MAX(score), 0)::int as highest_score,
+        COALESCE((SELECT score FROM mock_exams ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
+      FROM mock_exams;
+    `);
+    const mockStats = mockRes.rows[0] || { total_exams: 0, highest_score: 0, latest_score: 0 };
+
     // -------------------------------------------------------------
     // Official College Board SAT 1:1 Section Scoring (200 - 800)
     // -------------------------------------------------------------
@@ -117,6 +127,8 @@ export async function GET() {
       totalTopics,
       totalDiagrams: 16,
       totalMaterials: 39,
+      totalMockExams: 7, // 7 Full Bluebook practice exams available
+      userMockStats: mockStats,
       dueReviewsCount: dueRes.rows[0]?.due_count || 0,
       realStreak: currentStreak,
       compositeScore,
@@ -142,6 +154,46 @@ export async function GET() {
     });
   } catch (error: any) {
     console.error("Error fetching stats:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    await initDb();
+    const body = await req.json();
+    const {
+      title,
+      section,
+      score,
+      mathScore,
+      readingScore,
+      totalQuestions,
+      correctCount,
+      timeSpent,
+    } = body;
+
+    const id = "mock_" + Date.now();
+    await pool.query(
+      `INSERT INTO mock_exams (
+        id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [
+        id,
+        title || "Bluebook Practice Exam",
+        section || "FULL",
+        score || 400,
+        mathScore || 200,
+        readingScore || 200,
+        totalQuestions || 0,
+        correctCount || 0,
+        timeSpent || 0,
+      ]
+    );
+
+    return NextResponse.json({ success: true, id });
+  } catch (error: any) {
+    console.error("Error saving mock exam result:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

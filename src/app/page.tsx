@@ -201,12 +201,12 @@ export default function DashboardPage() {
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black text-[var(--text-main)]">
-              {stats?.totalQuestions || 169}
+              {stats?.totalQuestions || 212}
             </span>
             <span className="text-xs font-semibold text-[var(--accent-blue)] font-mono">Problems</span>
           </div>
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
-            {stats?.math ? `${stats.math.total || 93} Math • ${stats.verbal?.total || 76} Verbal` : "93 Math • 76 Verbal"}
+            {stats?.math ? `${stats.math.total || 118} Math • ${stats.verbal?.total || 94} Verbal` : "118 Math • 94 Verbal"}
           </span>
         </div>
 
@@ -228,8 +228,8 @@ export default function DashboardPage() {
             Curriculum Taxonomy
           </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-[var(--text-main)]">28</span>
-            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-mono">Domains</span>
+            <span className="text-2xl font-black text-[var(--text-main)]">{stats?.totalTopics || 29}</span>
+            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-mono">Topics</span>
           </div>
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
             100% Complete Coverage
@@ -323,7 +323,7 @@ export default function DashboardPage() {
               href="/math"
               className="flex items-center justify-between text-xs font-semibold text-[var(--accent-blue)] hover:translate-x-1 transition-transform pt-1"
             >
-              <span>Practice Math (70 Questions)</span>
+              <span>Practice Math ({stats?.math?.total || 118}+ Questions)</span>
               <ArrowRight size={14} />
             </Link>
           </div>
@@ -369,7 +369,7 @@ export default function DashboardPage() {
               href="/verbal"
               className="flex items-center justify-between text-xs font-semibold text-purple-600 dark:text-purple-400 hover:translate-x-1 transition-transform pt-1"
             >
-              <span>Practice Verbal (35 Questions)</span>
+              <span>Practice Verbal ({stats?.verbal?.total || 94}+ Questions)</span>
               <ArrowRight size={14} />
             </Link>
           </div>
@@ -617,7 +617,7 @@ export default function DashboardPage() {
                 </span>
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                All 169 practice problems, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, October SAT, and all 39 primary SAT Tashkent textbooks.
+                All {stats?.totalQuestions || 212}+ practice problems, 7 official Bluebook mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, October SAT, and all 39 primary SAT Tashkent textbooks.
               </p>
             </div>
           </div>

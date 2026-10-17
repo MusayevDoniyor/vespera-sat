@@ -66,7 +66,11 @@ export default function BluebookMockPage() {
 
   // Active question sets
   const [activeQuestions, setActiveQuestions] = useState<BluebookQuestion[]>([]);
-  const [isHardModule2, setIsHardModule2] = useState<boolean | null>(null);
+  const [servedQuestions, setServedQuestions] = useState<BluebookQuestion[]>([]);
+  const [isHardModule2RW, setIsHardModule2RW] = useState<boolean | null>(null);
+  const [isHardModule2Math, setIsHardModule2Math] = useState<boolean | null>(null);
+  const [reviewFilter, setReviewFilter] = useState<"all" | "incorrect" | "correct" | "flagged" | "rw" | "math">("all");
+  const [expandedReviewQs, setExpandedReviewQs] = useState<Record<string, boolean>>({});
 
   // User state
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
@@ -205,6 +209,7 @@ export default function BluebookMockPage() {
     setCurrentSection("READING_WRITING");
     setCurrentModuleNum(1);
     setActiveQuestions(exam.rwModule1);
+    setServedQuestions(exam.rwModule1);
     setCurrentIndex(0);
     setTimeLeft(exam.rwTimingMinutes * 60);
     setShowTimer(true);
@@ -212,7 +217,10 @@ export default function BluebookMockPage() {
     setUserAnswers({});
     setFlagged({});
     setStruckOut({});
-    setIsHardModule2(null);
+    setIsHardModule2RW(null);
+    setIsHardModule2Math(null);
+    setReviewFilter("all");
+    setExpandedReviewQs({});
     setStage("testing");
   };
 
@@ -271,7 +279,7 @@ export default function BluebookMockPage() {
 
       const accuracy = correctCount / (selectedExam.rwModule1.length || 1);
       const isHard = accuracy >= 0.6; // If >= 60% correct, route to Hard module
-      setIsHardModule2(isHard);
+      setIsHardModule2RW(isHard);
 
       const nextQuestions = isHard
         ? selectedExam.rwModule2Hard.length > 0
@@ -283,6 +291,7 @@ export default function BluebookMockPage() {
 
       setCurrentModuleNum(2);
       setActiveQuestions(nextQuestions);
+      setServedQuestions((prev) => [...prev, ...nextQuestions]);
       setCurrentIndex(0);
       setTimeLeft(selectedExam.rwTimingMinutes * 60);
       setHasShownFiveMinAlert(false);
@@ -302,7 +311,7 @@ export default function BluebookMockPage() {
 
       const accuracy = correctCount / (selectedExam.mathModule1.length || 1);
       const isHard = accuracy >= 0.6;
-      setIsHardModule2(isHard);
+      setIsHardModule2Math(isHard);
 
       const nextQuestions = isHard
         ? selectedExam.mathModule2Hard.length > 0
@@ -314,6 +323,7 @@ export default function BluebookMockPage() {
 
       setCurrentModuleNum(2);
       setActiveQuestions(nextQuestions);
+      setServedQuestions((prev) => [...prev, ...nextQuestions]);
       setCurrentIndex(0);
       setTimeLeft(selectedExam.mathTimingMinutes * 60);
       setHasShownFiveMinAlert(false);
@@ -328,10 +338,11 @@ export default function BluebookMockPage() {
     setCurrentSection("MATH");
     setCurrentModuleNum(1);
     setActiveQuestions(selectedExam.mathModule1);
+    setServedQuestions((prev) => [...prev, ...selectedExam.mathModule1]);
     setCurrentIndex(0);
     setTimeLeft(selectedExam.mathTimingMinutes * 60);
     setHasShownFiveMinAlert(false);
-    setIsHardModule2(null);
+    setIsHardModule2Math(null);
     setStage("testing");
   };
 
@@ -341,33 +352,23 @@ export default function BluebookMockPage() {
     let mathCorrect = 0;
     let mathTotal = 0;
 
-    // Check RW questions answered
-    const allRW = [
+    // Check questions served during this attempt
+    const questionsToScore = servedQuestions.length > 0 ? servedQuestions : [
       ...selectedExam.rwModule1,
-      ...selectedExam.rwModule2Hard,
-      ...selectedExam.rwModule2Easy,
-    ];
-    allRW.forEach((q) => {
-      if (userAnswers[q.id]) {
-        rwTotal++;
-        if (userAnswers[q.id]?.trim().toUpperCase() === q.correctAnswer.trim().toUpperCase()) {
-          rwCorrect++;
-        }
-      }
-    });
-
-    // Check Math questions answered
-    const allMath = [
+      ...(isHardModule2RW ? selectedExam.rwModule2Hard : selectedExam.rwModule2Easy),
       ...selectedExam.mathModule1,
-      ...selectedExam.mathModule2Hard,
-      ...selectedExam.mathModule2Easy,
+      ...(isHardModule2Math ? selectedExam.mathModule2Hard : selectedExam.mathModule2Easy),
     ];
-    allMath.forEach((q) => {
-      if (userAnswers[q.id]) {
+
+    questionsToScore.forEach((q) => {
+      const userAns = userAnswers[q.id]?.trim().toUpperCase();
+      const isCorrect = userAns && userAns === q.correctAnswer.trim().toUpperCase();
+      if (q.section === "READING_WRITING") {
+        rwTotal++;
+        if (isCorrect) rwCorrect++;
+      } else {
         mathTotal++;
-        if (userAnswers[q.id]?.trim().toUpperCase() === q.correctAnswer.trim().toUpperCase()) {
-          mathCorrect++;
-        }
+        if (isCorrect) mathCorrect++;
       }
     });
 
@@ -398,8 +399,8 @@ export default function BluebookMockPage() {
       totalCorrect: rwCorrect + mathCorrect,
       totalQuestions: rwTotal + mathTotal || 1,
       percentile,
-      rwTier: isHardModule2 ? "Adaptive Tier 2 (Hard - 700-800 Capable)" : "Adaptive Tier 2 (Standard)",
-      mathTier: isHardModule2 ? "Adaptive Tier 2 (Hard - 750-800 Capable)" : "Adaptive Tier 2 (Standard)",
+      rwTier: isHardModule2RW ? "Adaptive Tier 2 (Hard - 700-800 Capable)" : "Adaptive Tier 2 (Standard)",
+      mathTier: isHardModule2Math ? "Adaptive Tier 2 (Hard - 750-800 Capable)" : "Adaptive Tier 2 (Standard)",
     };
 
     setScoreResult(result);
@@ -870,6 +871,303 @@ export default function BluebookMockPage() {
               <BookOpen className="w-4 h-4 text-[var(--accent-blue)]" />
               <span>Xatolarni Tahlil Qilish (Curriculum)</span>
             </Link>
+          </div>
+
+          {/* ================= DETAILED QUESTION-BY-QUESTION REVIEW PANEL ================= */}
+          <div className="pt-8 border-t border-[var(--border-main)] space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl md:text-2xl font-black text-[var(--text-main)] flex items-center gap-2">
+                  <Award className="w-6 h-6 text-[var(--accent-blue)]" />
+                  <span>Imtihon Savollari Tahlili va Diagnostikasi</span>
+                </h2>
+                <p className="text-xs text-[var(--text-muted)] mt-1">
+                  Har bir savolning to'g'ri javobi, sizning variantingiz va AI Mentor izohi
+                </p>
+              </div>
+
+              {/* Filter Tabs */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+                {[
+                  { id: "all", label: `Barchasi (${servedQuestions.length})` },
+                  {
+                    id: "incorrect",
+                    label: `Xatolar (${
+                      servedQuestions.filter((q) => {
+                        const ans = userAnswers[q.id]?.trim().toUpperCase();
+                        return !ans || ans !== q.correctAnswer.trim().toUpperCase();
+                      }).length
+                    })`,
+                    highlight: "rose",
+                  },
+                  {
+                    id: "correct",
+                    label: `To'g'rilar (${
+                      servedQuestions.filter((q) => {
+                        const ans = userAnswers[q.id]?.trim().toUpperCase();
+                        return ans === q.correctAnswer.trim().toUpperCase();
+                      }).length
+                    })`,
+                    highlight: "emerald",
+                  },
+                  {
+                    id: "flagged",
+                    label: `Belgilangan (${
+                      servedQuestions.filter((q) => flagged[q.id]).length
+                    })`,
+                  },
+                  { id: "rw", label: "Reading & Writing" },
+                  { id: "math", label: "Math" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setReviewFilter(tab.id as any)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                      reviewFilter === tab.id
+                        ? tab.highlight === "rose"
+                          ? "bg-rose-500 text-white shadow-sm"
+                          : tab.highlight === "emerald"
+                          ? "bg-emerald-600 text-white shadow-sm"
+                          : "bg-[var(--accent-blue)] text-white shadow-sm"
+                        : "bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)]"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Questions List */}
+            <div className="space-y-4">
+              {servedQuestions
+                .filter((q) => {
+                  const userAns = userAnswers[q.id]?.trim().toUpperCase();
+                  const isCorrect = userAns && userAns === q.correctAnswer.trim().toUpperCase();
+                  if (reviewFilter === "incorrect") return !isCorrect;
+                  if (reviewFilter === "correct") return isCorrect;
+                  if (reviewFilter === "flagged") return flagged[q.id];
+                  if (reviewFilter === "rw") return q.section === "READING_WRITING";
+                  if (reviewFilter === "math") return q.section === "MATH";
+                  return true;
+                })
+                .map((q, qIndex) => {
+                  const userAns = userAnswers[q.id]?.trim().toUpperCase();
+                  const isCorrect = userAns && userAns === q.correctAnswer.trim().toUpperCase();
+                  const isAnswered = Boolean(userAns);
+                  const isExpanded = expandedReviewQs[q.id] ?? (!isCorrect);
+
+                  return (
+                    <div
+                      key={q.id}
+                      className={`p-5 md:p-6 rounded-2xl bg-[var(--bg-card)] border transition-all shadow-sm ${
+                        !isCorrect
+                          ? "border-rose-500/30 hover:border-rose-500/60"
+                          : "border-[var(--border-main)] hover:border-[var(--accent-blue)]/40"
+                      }`}
+                    >
+                      {/* Question Header */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--border-main)]">
+                        <div className="flex items-center gap-2">
+                          <span className="w-7 h-7 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-main)] font-mono text-xs font-black flex items-center justify-center text-[var(--text-main)]">
+                            {qIndex + 1}
+                          </span>
+                          <span
+                            className={`text-[11px] font-bold px-2 py-0.5 rounded-full font-mono ${
+                              q.section === "READING_WRITING"
+                                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                                : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            }`}
+                          >
+                            {q.section === "READING_WRITING" ? "Reading & Writing" : "Math"}
+                          </span>
+                          <span className="text-[11px] font-medium text-[var(--text-muted)] truncate max-w-[150px] sm:max-w-[250px]">
+                            {q.domain}
+                          </span>
+                        </div>
+
+                        {/* Status Badge */}
+                        <div className="flex items-center gap-2">
+                          {isCorrect ? (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold font-mono">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>To'g'ri ({q.correctAnswer})</span>
+                            </span>
+                          ) : isAnswered ? (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs font-bold font-mono">
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>Sizniki: {userAns} • To'g'ri: {q.correctAnswer}</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-xs font-bold font-mono">
+                              <AlertCircle className="w-3.5 h-3.5" />
+                              <span>Belgilanmagan • To'g'ri: {q.correctAnswer}</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Reading Passage if present */}
+                      {q.passage && (
+                        <div className="mt-4 p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs md:text-sm text-[var(--text-secondary)] font-serif leading-relaxed max-h-56 overflow-y-auto">
+                          {q.passage}
+                        </div>
+                      )}
+
+                      {/* Question Prompt */}
+                      <div className="mt-4 text-xs md:text-sm text-[var(--text-main)] font-medium leading-relaxed">
+                        <KaTeXMath content={q.prompt} />
+                      </div>
+
+                      {/* Geometric SVG Diagram if present */}
+                      <div className="mt-3">
+                        <QuestionDiagram preset={q.diagramPreset} prompt={q.prompt} />
+                      </div>
+
+                      {/* Multiple Choice Options */}
+                      {q.type === "multiple_choice" && q.options && (
+                        <div className="mt-4 grid grid-cols-1 gap-2">
+                          {Object.entries(q.options).map(([letter, text]) => {
+                            const isThisCorrect = letter === q.correctAnswer;
+                            const isThisUserChoice = letter === userAns;
+                            const isUserWrongHere = isThisUserChoice && !isThisCorrect;
+
+                            return (
+                              <div
+                                key={letter}
+                                className={`p-3 rounded-xl border text-xs flex items-center justify-between transition-all ${
+                                  isThisCorrect
+                                    ? "bg-emerald-500/10 border-emerald-500/50 text-emerald-700 dark:text-emerald-300 font-semibold"
+                                    : isUserWrongHere
+                                    ? "bg-rose-500/10 border-rose-500/50 text-rose-700 dark:text-rose-300 font-semibold"
+                                    : "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-secondary)]"
+                                }`}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <span
+                                    className={`w-6 h-6 rounded-lg font-mono font-bold text-xs flex items-center justify-center shrink-0 ${
+                                      isThisCorrect
+                                        ? "bg-emerald-500 text-white"
+                                        : isUserWrongHere
+                                        ? "bg-rose-500 text-white"
+                                        : "bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)]"
+                                    }`}
+                                  >
+                                    {letter}
+                                  </span>
+                                  <span><KaTeXMath content={text} /></span>
+                                </div>
+
+                                {isThisCorrect && (
+                                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono px-2 py-0.5 rounded bg-emerald-500/15">
+                                    To'g'ri Javob
+                                  </span>
+                                )}
+                                {isUserWrongHere && (
+                                  <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 font-mono px-2 py-0.5 rounded bg-rose-500/15">
+                                    Sizning tanlovingiz (Xato)
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* SPR Fill in the blank display */}
+                      {q.type === "spr" && (
+                        <div className="mt-4 p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between text-xs font-mono">
+                          <span className="text-[var(--text-muted)]">
+                            Sizning javobingiz: <strong className={isCorrect ? "text-emerald-500" : "text-rose-500"}>{userAns || "Bo'sh"}</strong>
+                          </span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                            To'g'ri qiymat: {q.correctAnswer}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Footer Actions: AI Mentor Button & Explanation Toggle */}
+                      <div className="mt-4 pt-3 border-t border-[var(--border-main)] flex flex-wrap items-center justify-between gap-3">
+                        <button
+                          onClick={() => {
+                            setExpandedReviewQs((prev) => ({
+                              ...prev,
+                              [q.id]: !prev[q.id],
+                            }));
+                          }}
+                          className="text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          <span>{isExpanded ? "Tushuntirishni Yopish" : "Tushuntirishni Ko'rish"}</span>
+                        </button>
+
+                        {/* AI Mentor Button */}
+                        <button
+                          onClick={() => {
+                            window.dispatchEvent(
+                              new CustomEvent("vespera_open_copilot", {
+                                detail: {
+                                  question: q.prompt,
+                                  domain: q.domain,
+                                  userChoice: userAns || null,
+                                  correctChoice: q.correctAnswer,
+                                  options: q.options,
+                                  explanationUz: q.explanationUz,
+                                  explanationEn: q.explanationEn,
+                                  desmosTrick: q.desmosTrick,
+                                },
+                              })
+                            );
+                          }}
+                          className="px-3.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold flex items-center gap-1.5 transition border border-purple-500/20 active:scale-95 shadow-sm"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                          <span>💡 AI Mentor Tahlili (Nega xato?)</span>
+                        </button>
+                      </div>
+
+                      {/* Expandable Explanation Body */}
+                      {isExpanded && (
+                        <div className="mt-4 pt-4 border-t border-[var(--border-main)] space-y-3 text-xs leading-relaxed animate-in fade-in duration-200">
+                          {q.explanationUz && (
+                            <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+                              <span className="font-bold text-[var(--text-main)] block mb-1">
+                                🇺🇿 Rasmiy Tushuntirish (O'zbekcha):
+                              </span>
+                              <div className="text-[var(--text-secondary)]">
+                                <KaTeXMath content={q.explanationUz} />
+                              </div>
+                            </div>
+                          )}
+
+                          {q.explanationEn && (
+                            <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+                              <span className="font-bold text-[var(--text-main)] block mb-1">
+                                🇺🇸 Official College Board Explanation (English):
+                              </span>
+                              <div className="text-[var(--text-secondary)]">
+                                <KaTeXMath content={q.explanationEn} />
+                              </div>
+                            </div>
+                          )}
+
+                          {q.desmosTrick && (
+                            <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300">
+                              <span className="font-bold block mb-1 flex items-center gap-1.5">
+                                <Calculator className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                                Desmos 10-Second Shortcut / Speedhack:
+                              </span>
+                              <p className="font-mono text-[11px] leading-relaxed">
+                                {q.desmosTrick}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </div>
