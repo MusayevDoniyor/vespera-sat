@@ -5,7 +5,7 @@ export interface TextbookSection {
   summary: string;
   contentMarkdown: string;
   keyTakeaways: string[];
-  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model" | "percent-multiplier" | "two-way-conditional" | "scatterplot-residuals";
+  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model" | "percent-multiplier" | "two-way-conditional" | "scatterplot-residuals" | "parabola-vertex" | "quadratic-discriminant";
   desmosExample?: {
     title: string;
     expression: string;
@@ -1264,6 +1264,442 @@ The residual is **+6 cm** (the actual sunflower grew 6 cm taller than predicted)
     ],
     prevUnitId: "unit-02-foundations-algebra",
     nextUnitId: "unit-04-foundations-adv-math"
+  },
+
+  // =========================================================================
+  // UNIT 4: FOUNDATIONS: ADVANCED MATH
+  // =========================================================================
+  "unit-04-foundations-adv-math": {
+    id: "unit-04-foundations-adv-math",
+    unitNumber: 4,
+    title: "Unit 4: Foundations: Advanced Math",
+    slug: "unit-04-foundations-adv-math",
+    tier: "Foundations",
+    domain: "Advanced Math",
+    topicCode: "ADV-02",
+    estimatedHours: "5.0 hours",
+    description: "Core foundations of quadratic equations, factoring trinomials, vertex form parabolas, exponent laws, radical equations, and polynomial operations.",
+    overviewSummary: "Advanced Math is the heaviest single domain on the Digital SAT Math section, representing approximately 35% of all questions. Mastery of quadratic roots, vertex form conversions, discriminant outcomes (b² - 4ac), fractional exponent rules, and Desmos root-finding tricks guarantees your highest score yield on Module 2.",
+    sections: [
+      {
+        id: "u4-sec-1-factoring",
+        title: "1. Factoring Quadratics & The Zero Product Property",
+        readTime: "8 min read",
+        summary: "A quadratic expression takes the form ax² + bx + c. Master the zero product property, the difference of two squares, and factoring trinomials.",
+        diagramType: "parabola-vertex",
+        desmosExample: {
+          title: "Instant Root Clicker",
+          expression: "y = x^2 - 5x + 6",
+          tip: "Desmos highlights the x-intercepts with clickable grey dots: (2, 0) and (3, 0). Roots in 2 seconds flat!"
+        },
+        keyTakeaways: [
+          "Zero Product Property: If $(x - p)(x - q) = 0$, then $x = p$ or $x = q$.",
+          "Difference of Two Squares: $a^2 - b^2 = (a - b)(a + b)$. Always check if both terms are perfect squares with a minus sign.",
+          "Perfect Square Trinomials: $(a \\pm b)^2 = a^2 \\pm 2ab + b^2$.",
+          "Roots are x-Intercepts: The solutions to $f(x) = 0$ are the points where the parabola intersects the horizontal axis ($y = 0$)."
+        ],
+        contentMarkdown: `### The Foundations of Quadratic Factoring
+
+A quadratic equation is any second-degree polynomial equation that can be written in standard form:
+
+$$ax^2 + bx + c = 0 \\quad (a \\ne 0)$$
+
+#### 1. The Zero Product Property:
+If the product of two algebraic factors is zero, at least one of the factors must equal zero:
+$$(x - r_1)(x - r_2) = 0 \\implies x - r_1 = 0 \\quad \\text{or} \\quad x - r_2 = 0 \\implies x = r_1, \\quad x = r_2$$
+
+#### 2. Key Factoring Patterns on the SAT:
+- **Difference of Two Squares:**
+  $$a^2 - b^2 = (a - b)(a + b)$$
+  *Example:* $9x^2 - 49 = (3x - 7)(3x + 7)$
+- **Perfect Square Trinomials:**
+  $$a^2 + 2ab + b^2 = (a + b)^2$$
+  $$a^2 - 2ab + b^2 = (a - b)^2$$
+  *Example:* $x^2 - 10x + 25 = (x - 5)^2$
+
+#### 3. Factoring Trinomials ($x^2 + bx + c$):
+To factor $x^2 + bx + c$, find two numbers $p$ and $q$ such that:
+$$p \\cdot q = c \\quad \\text{and} \\quad p + q = b$$
+Then write the factored form as $(x + p)(x + q) = 0$.
+
+#### Worked Example:
+> *"What are all solutions to the quadratic equation $x^2 - 8x + 15 = 0$?"*
+
+1. Find two numbers that multiply to $+15$ and add to $-8$:
+   $$(-3) \\times (-5) = +15, \\quad (-3) + (-5) = -8$$
+2. Factor:
+   $$(x - 3)(x - 5) = 0$$
+3. Apply zero product property:
+   $$x - 3 = 0 \\implies x = 3$$
+   $$x - 5 = 0 \\implies x = 5$$
+The solutions are **x = 3** and **x = 5**.`
+      },
+      {
+        id: "u4-sec-2-formula-discriminant",
+        title: "2. The Quadratic Formula, Discriminant (b² - 4ac) & Vieta's Shortcuts",
+        readTime: "8 min read",
+        summary: "When a quadratic cannot be factored easily, use the Quadratic Formula. The discriminant determines the number of real roots; Vieta's formulas give sums and products in 2 seconds.",
+        diagramType: "quadratic-discriminant",
+        desmosExample: {
+          title: "Direct Quadratic Solver",
+          expression: "2x^2 - 7x + 3 = 0",
+          tip: "Desmos graphs two vertical lines at x = 0.5 and x = 3. Direct answers without the quadratic formula!"
+        },
+        keyTakeaways: [
+          "Quadratic Formula: $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$. Works universally for any quadratic equation.",
+          "Discriminant ($\\Delta = b^2 - 4ac$): $\\Delta > 0 \\implies 2\\text{ real roots}$; $\\Delta = 0 \\implies 1\\text{ real root (tangent)}$; $\\Delta < 0 \\implies 0\\text{ real roots (2 complex)}$.",
+          "Vieta's Sum of Roots: $\\text{Sum } (r_1 + r_2) = -\\frac{b}{a}$. Never solve for individual roots when asked for their sum!",
+          "Vieta's Product of Roots: $\\text{Product } (r_1 \\cdot r_2) = \\frac{c}{a}$."
+        ],
+        contentMarkdown: `### The Universal Quadratic Formula & Discriminant
+
+When a quadratic equation $ax^2 + bx + c = 0$ does not factor cleanly with integers, apply the **Quadratic Formula**:
+
+$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$
+
+#### 1. The Discriminant: $\\Delta = b^2 - 4ac$
+The expression under the square root determines the number and nature of solutions:
+
+| Discriminant Value | Solution Outcome | Geometric Meaning in the xy-Plane | SAT Keyphrase |
+| :--- | :--- | :--- | :--- |
+| **$b^2 - 4ac > 0$** | **2 Distinct Real Roots** | Parabola crosses the $x$-axis at two distinct points | *"Has two distinct real solutions"* |
+| **$b^2 - 4ac = 0$** | **1 Real Root (Double Root)** | Parabola is tangent to the $x$-axis (vertex touches at 1 point) | *"Has exactly one real solution"* |
+| **$b^2 - 4ac < 0$** | **0 Real Roots (2 Complex)** | Parabola does not touch or cross the $x$-axis | *"Has no real solutions"* |
+
+#### 2. Vieta's 3-Second Formulas:
+College Board questions frequently ask: *"What is the sum of the solutions to $3x^2 - 14x + 8 = 0$?"*
+Instead of solving for the roots, use **Vieta's Formulas**:
+
+$$\\text{Sum of Roots } (r_1 + r_2) = -\\frac{b}{a}$$
+$$\\text{Product of Roots } (r_1 \\cdot r_2) = \\frac{c}{a}$$
+
+*Instant Calculation:* For $3x^2 - 14x + 8 = 0$, the sum of roots is simply $-\\frac{-14}{3} = \\frac{14}{3}$. Done in 3 seconds!`
+      },
+      {
+        id: "u4-sec-3-vertex-form",
+        title: "3. Vertex Form, Maximums/Minimums & Parabola Symmetry",
+        readTime: "8 min read",
+        summary: "Understand how the vertex (h, k) reveals maximum and minimum values. Master the axis of symmetry formula and vertex form conversions.",
+        diagramType: "parabola-vertex",
+        desmosExample: {
+          title: "Vertex Apex Inspector",
+          expression: "y = -2(x - 3)^2 + 18",
+          tip: "Click the top apex dot on the parabola: Desmos displays (3, 18). The maximum value of y is 18, occurring at x = 3!"
+        },
+        keyTakeaways: [
+          "Vertex Form: $y = a(x - h)^2 + k$. The vertex is located at the coordinates $(h, k)$.",
+          "Maximum vs Minimum: If $a > 0$, parabola opens upward $\\implies$ vertex is a Minimum value $k$. If $a < 0$, parabola opens downward $\\implies$ vertex is a Maximum value $k$.",
+          "Axis of Symmetry: $x = h = -\\frac{b}{2a} = \\frac{r_1 + r_2}{2}$ (the axis passes right through the midpoint of the zeros).",
+          "Constants Reveal Form: Questions asking 'Which form displays the maximum/minimum value as a constant or coefficient?' ALWAYS refer to Vertex Form."
+        ],
+        contentMarkdown: `### The Power of Vertex Form
+
+The graph of every quadratic function is a symmetrical curve called a **parabola**.
+
+#### 1. Vertex Form Equation:
+$$y = a(x - h)^2 + k$$
+
+- **Vertex:** $(h, k)$
+- **Sign of $a$:**
+  - $a > 0$: Opens **upward** ($\\cup$). The function has a **minimum value** equal to $k$ at $x = h$.
+  - $a < 0$: Opens **downward** ($\\cap$). The function has a **maximum value** equal to $k$ at $x = h$.
+
+#### 2. Finding the Vertex from Standard Form ($ax^2 + bx + c$):
+1. **$x$-coordinate of the vertex:**
+   $$h = -\\frac{b}{2a}$$
+2. **$y$-coordinate of the vertex:**
+   $$k = f(h) = f\\left(-\\frac{b}{2a}\\right)$$
+
+#### 3. Parabola Symmetry:
+A parabola is strictly symmetric across the vertical line $x = h$. If the parabola has $x$-intercepts at $r_1$ and $r_2$, the axis of symmetry lies at their exact arithmetic midpoint:
+$$h = \\frac{r_1 + r_2}{2}$$
+
+#### Worked Example:
+> *"The function $P(x) = -5x^2 + 40x + 120$ models the daily profit, in dollars, of a bakery selling $x$ specialty cakes. What is the maximum daily profit the bakery can earn?"*
+
+1. Find the cake quantity $x$ that maximizes profit:
+   $$x = -\\frac{b}{2a} = -\\frac{40}{2(-5)} = \\frac{40}{10} = 4\\text{ cakes}$$
+2. Substitute $x = 4$ into $P(x)$ to evaluate maximum profit:
+   $$P(4) = -5(4)^2 + 40(4) + 120 = -5(16) + 160 + 120 = -80 + 280 = \\$200$$
+The maximum daily profit is **$200**.`
+      },
+      {
+        id: "u4-sec-4-exponent-laws",
+        title: "4. Laws of Exponents & Rational/Fractional Powers",
+        readTime: "7 min read",
+        summary: "Memorize the 6 essential exponent laws. Convert fractional exponents into radical roots using the 'Power over Root' rule.",
+        diagramType: "formula-reference",
+        desmosExample: {
+          title: "Fractional Power Solver",
+          expression: "x^(3/2) = 27",
+          tip: "Desmos graphs a vertical line at x = 9. You can read the solution directly off the x-axis!"
+        },
+        keyTakeaways: [
+          "Product Rule: $x^a \\cdot x^b = x^{a+b}$ (Add exponents when multiplying equal bases).",
+          "Quotient Rule: $\\frac{x^a}{x^b} = x^{a-b}$ (Subtract exponents when dividing equal bases).",
+          "Power of a Power: $(x^a)^b = x^{a \\cdot b}$ (Multiply exponents when raising a power to a power).",
+          "Negative Exponent: $x^{-n} = \\frac{1}{x^n}$ (Flip the base to the opposite side of the fraction).",
+          "Rational Exponent: $x^{m/n} = \\sqrt[n]{x^m} = (\\sqrt[n]{x})^m$ (Power on top, root in the denominator).",
+          "Equal Base Property: If $b^x = b^y$ (where $b > 0, b \\ne 1$), then $x = y$."
+        ],
+        contentMarkdown: `### The 6 Essential Laws of Exponents
+
+Manipulating exponential expressions is one of the most frequently tested algebra skills on the SAT:
+
+| Exponent Rule | Mathematical Formula | Example |
+| :--- | :--- | :--- |
+| **Product of Powers** | $x^a \\cdot x^b = x^{a+b}$ | $x^3 \\cdot x^5 = x^{3+5} = x^8$ |
+| **Quotient of Powers** | $\\frac{x^a}{x^b} = x^{a-b}$ | $\\frac{x^7}{x^2} = x^{7-2} = x^5$ |
+| **Power to a Power** | $(x^a)^b = x^{ab}$ | $(x^4)^3 = x^{4 \\times 3} = x^{12}$ |
+| **Product to a Power** | $(xy)^a = x^a y^a$ | $(3x)^3 = 3^3 x^3 = 27x^3$ |
+| **Zero Exponent** | $x^0 = 1 \\quad (x \\ne 0)$ | $15^0 = 1, \\quad (-4)^0 = 1$ |
+| **Negative Exponent** | $x^{-n} = \\frac{1}{x^n}$ | $2^{-3} = \\frac{1}{2^3} = \\frac{1}{8}$ |
+
+#### The 'Power over Root' Fractional Exponent Rule:
+The numerator represents the **Power**; the denominator represents the **Index of the Radical Root**:
+
+$$x^{\\frac{m}{n}} = \\sqrt[n]{x^m} = \\left(\\sqrt[n]{x}\\right)^m$$
+
+*Example:* $8^{\\frac{2}{3}} = (\\sqrt[3]{8})^2 = (2)^2 = 4$.
+
+#### The Equal Base Property:
+When solving exponential equations, rewrite both sides with the exact same numerical base:
+$$4^{x+1} = 32 \\implies (2^2)^{x+1} = 2^5 \\implies 2^{2x+2} = 2^5 \\implies 2x + 2 = 5 \\implies x = 1.5$$`
+      },
+      {
+        id: "u4-sec-5-radicals-extraneous",
+        title: "5. Radical Equations & The Extraneous Solution Trap",
+        readTime: "7 min read",
+        summary: "Isolate the radical before squaring. Understand why squaring both sides can generate false 'extraneous' solutions and how to spot them instantly.",
+        diagramType: "formula-reference",
+        desmosExample: {
+          title: "Radical Intersection Check",
+          expression: "y = \\sqrt{2x + 7} \\ny = x - 4",
+          tip: "Graph both sides. Desmos shows only ONE real intersection at (9, 5). The extraneous root x = 1 does not exist on the graph!"
+        },
+        keyTakeaways: [
+          "Isolate First: Always isolate the radical term on one side of the equation before squaring.",
+          "Extraneous Solutions: Squaring both sides of an equation can introduce false roots because $(-a)^2 = (+a)^2$.",
+          "Verification Rule: You MUST plug your algebraic solutions back into the original un-squared equation to verify.",
+          "Principal Square Root: In real mathematics, $\\sqrt{k} \\ge 0$ is strictly non-negative. If $\\sqrt{\\text{expr}} = -3$, there is NO real solution!"
+        ],
+        contentMarkdown: `### Solving Radical Equations & Extraneous Roots
+
+A radical equation contains a variable underneath a square root symbol:
+
+$$\\sqrt{ax + b} = cx + d$$
+
+#### Step-by-Step Solution Algorithm:
+1. **Isolate the radical:** Move all non-radical terms to the opposite side of the equation.
+2. **Square both sides:** Eliminate the square root by raising both sides to the second power.
+3. **Solve the resulting quadratic equation:** Factor or apply the quadratic formula.
+4. **Test all solutions for extraneous roots:** Substitute every candidate value back into the original equation.
+
+#### Why Do Extraneous Solutions Occur?
+Squaring creates artificial symmetry:
+$$x = 3 \\implies x^2 = 9$$
+$$x = -3 \\implies x^2 = 9$$
+Both statements yield $x^2 = 9$, but only $x = 3$ satisfies $\\sqrt{x + 6} = x$.
+
+#### Worked Example:
+> *"Solve the equation $\\sqrt{2x + 7} = x - 4$ for all real values of $x$."*
+
+1. Square both sides:
+   $$2x + 7 = (x - 4)^2$$
+   $$2x + 7 = x^2 - 8x + 16$$
+2. Move all terms to one side:
+   $$x^2 - 10x + 9 = 0$$
+3. Factor:
+   $$(x - 9)(x - 1) = 0 \\implies x = 9 \\quad \\text{or} \\quad x = 1$$
+4. **Test candidate roots:**
+   - Test $x = 9$: $\\sqrt{2(9) + 7} = \\sqrt{25} = 5$. Right side: $9 - 4 = 5$. **VALID ($5 = 5$)**!
+   - Test $x = 1$: $\\sqrt{2(1) + 7} = \\sqrt{9} = 3$. Right side: $1 - 4 = -3$. **EXTRANEOUS ($3 \\ne -3$)**!
+The only valid solution is **x = 9**.`
+      },
+      {
+        id: "u4-sec-6-polynomials",
+        title: "6. Operations on Polynomials: FOIL, Long Division & The Remainder Theorem",
+        readTime: "8 min read",
+        summary: "Master polynomial multiplication, division with remainders, and the Polynomial Remainder Theorem (P(c) = Remainder).",
+        diagramType: "formula-reference",
+        desmosExample: {
+          title: "Remainder Theorem Function Evaluator",
+          expression: "P(x) = 2x^3 - 5x^2 + 3x - 7 \\nP(3)",
+          tip: "Type P(x) on line 1, P(3) on line 2. Desmos instantly evaluates P(3) = 11. That 11 is the exact remainder when divided by (x - 3)!"
+        },
+        keyTakeaways: [
+          "Polynomial Remainder Theorem: When a polynomial $P(x)$ is divided by a linear binomial $(x - c)$, the remainder is simply $P(c)$.",
+          "Factor Theorem: A linear binomial $(x - c)$ is a factor of $P(x)$ if and only if the remainder is zero ($P(c) = 0$).",
+          "Polynomial Division Form: $\\frac{P(x)}{x - c} = Q(x) + \\frac{R}{x - c}$, where $Q(x)$ is the quotient and $R$ is the constant remainder.",
+          "Equivalent Expression Matching: When matching polynomial division choices, plug in a simple test number like $x = 0$ or $x = 2$ into both the question and answer choices."
+        ],
+        contentMarkdown: `### Operations on Polynomials & The Remainder Theorem
+
+Polynomial algebra on the SAT tests structural equivalence and division properties.
+
+#### 1. Polynomial Division Architecture:
+When dividing a polynomial $P(x)$ by a divisor $D(x)$:
+
+$$\\frac{P(x)}{D(x)} = Q(x) + \\frac{R}{D(x)}$$
+
+- $Q(x)$: The **Quotient**
+- $R$: The **Remainder** (a constant when dividing by a linear factor $x - c$)
+
+#### 2. The Polynomial Remainder Theorem:
+> *"If a polynomial $P(x)$ is divided by $(x - c)$, the remainder is strictly equal to $P(c)$."*
+
+You never need to perform long polynomial division if the question only asks for the remainder:
+- Dividing by $(x - 4) \\implies \\text{Remainder} = P(4)$
+- Dividing by $(x + 2) \\implies \\text{Remainder} = P(-2)$
+- Dividing by $(2x - 1) \\implies \\text{Remainder} = P(0.5)$
+
+#### 3. The Factor Theorem:
+A binomial $(x - c)$ is a factor of $P(x)$ if and only if $P(c) = 0$. In other words, $c$ is a zero (root) of the polynomial.
+
+#### Worked Example:
+> *"What is the remainder when $P(x) = x^3 - 4x^2 + 2x + 7$ is divided by $(x - 3)$?"*
+
+By the Remainder Theorem, evaluate $P(3)$:
+$$P(3) = (3)^3 - 4(3)^2 + 2(3) + 7 = 27 - 4(9) + 6 + 7 = 27 - 36 + 13 = 4$$
+The remainder is **4**.`
+      }
+    ],
+    speedHacks: [
+      {
+        title: "Desmos Clickable Parabola Roots & Vertex",
+        trigger: "Any quadratic equation asking for zeros, x-intercepts, or vertex maximum/minimum",
+        shortcut: "Type the quadratic into Desmos as 'y = ax^2 + bx + c'. Click grey dots directly.",
+        example: "Type 'y = x^2 - 6x + 8'. Desmos shows x-intercepts (2, 0) and (4, 0), and vertex at (3, -1)."
+      },
+      {
+        title: "Vieta's Sum of Roots Formula (-b/a)",
+        trigger: "Questions asking 'What is the sum of the solutions to the equation...?'",
+        shortcut: "Calculate -b/a directly. Never solve for the roots using factoring or quadratic formula.",
+        example: "For 5x^2 - 35x + 11 = 0, the sum of solutions is -(-35)/5 = 7 in 2 seconds."
+      },
+      {
+        title: "The Discriminant (b² - 4ac) Solution Counter",
+        trigger: "Questions asking for what value of constant k the equation has 0, 1, or 2 real solutions",
+        shortcut: "Set b² - 4ac = 0 for 1 solution, > 0 for 2 solutions, < 0 for no real solutions.",
+        example: "If x^2 - 8x + k = 0 has 1 solution: (-8)^2 - 4(1)(k) = 0 => 64 - 4k = 0 => k = 16."
+      },
+      {
+        title: "Equal Base Exponential Conversion",
+        trigger: "Equations with powers on both sides (e.g., 8^(x+1) = 16^x)",
+        shortcut: "Rewrite all bases as powers of 2, 3, or 5, then equate the exponents.",
+        example: "Rewrite 8 as 2^3 and 16 as 2^4: 2^(3(x+1)) = 2^(4x) => 3x + 3 = 4x => x = 3."
+      },
+      {
+        title: "Desmos Direct Radical Root Validation",
+        trigger: "Radical equations that may contain extraneous solutions",
+        shortcut: "Graph Left Side as y1 and Right Side as y2. Click the intersection to see the ONLY valid root.",
+        example: "Line 1: y = sqrt(2x + 7). Line 2: y = x - 4. Desmos shows one intersection at (9, 5). Root is 9!"
+      }
+    ],
+    practiceQuestions: [
+      {
+        id: "u4_q01_factoring_roots",
+        questionNumber: 1,
+        prompt: "What are the solutions to the quadratic equation $x^2 - 9x + 20 = 0$?",
+        options: ["A. x = -4 and x = -5", "B. x = 2 and x = 10", "C. x = 4 and x = 5", "D. x = 1 and x = 20"],
+        correctAnswer: "C",
+        explanation: "1. Find two numbers that multiply to $+20$ and add to $-9$.\n2. The numbers are $-4$ and $-5$ since $(-4)(-5) = 20$ and $(-4) + (-5) = -9$.\n3. Factor: $(x - 4)(x - 5) = 0$.\n4. Zero product property: $x = 4$ or $x = 5$.",
+        desmosTrick: "Type 'y = x^2 - 9x + 20' into Desmos. Tap the x-axis to see (4, 0) and (5, 0)."
+      },
+      {
+        id: "u4_q02_difference_squares",
+        questionNumber: 2,
+        prompt: "Which of the following expressions is equivalent to $4x^2 - 49$?",
+        options: [
+          "A. (2x - 7)^2",
+          "B. (2x - 7)(2x + 7)",
+          "C. (4x - 7)(x + 7)",
+          "D. 4(x - 7)(x + 7)"
+        ],
+        correctAnswer: "B",
+        explanation: "1. Recognize the difference of two squares: $a^2 - b^2 = (a - b)(a + b)$.\n2. Here $a^2 = 4x^2 \\implies a = 2x$, and $b^2 = 49 \\implies b = 7$.\n3. Therefore, $4x^2 - 49 = (2x - 7)(2x + 7)$.",
+        referenceFormula: "a^2 - b^2 = (a - b)(a + b)"
+      },
+      {
+        id: "u4_q03_discriminant_condition",
+        questionNumber: 3,
+        prompt: "In the quadratic equation $x^2 - 6x + c = 0$, where $c$ is a constant, the equation has exactly one distinct real solution. What is the value of $c$?",
+        options: ["A. -9", "B. 3", "C. 6", "D. 9"],
+        correctAnswer: "D",
+        explanation: "1. A quadratic equation has exactly one real solution when its discriminant equals zero: $\\Delta = b^2 - 4ac = 0$.\n2. Here $a = 1, b = -6$:\n$$(-6)^2 - 4(1)(c) = 0$$\n$$36 - 4c = 0 \\implies 4c = 36 \\implies c = 9$$.",
+        satTrap: "Setting c = 6 or c = 3 instead of solving b^2 - 4ac = 0."
+      },
+      {
+        id: "u4_q04_vietas_sum",
+        questionNumber: 4,
+        prompt: "What is the sum of the solutions to the equation $3x^2 - 15x - 42 = 0$?",
+        options: ["A. -15", "B. -5", "C. 5", "D. 15"],
+        correctAnswer: "C",
+        explanation: "1. Use Vieta's formula for the sum of roots: $\\text{Sum} = -\\frac{b}{a}$.\n2. Here $a = 3, b = -15$:\n$$\\text{Sum} = -\\frac{-15}{3} = \\frac{15}{3} = 5$$.\n(Alternatively: divide by 3 to get $x^2 - 5x - 14 = 0 \\implies (x - 7)(x + 2) = 0 \\implies 7 + (-2) = 5$).",
+        referenceFormula: "r_1 + r_2 = -\\frac{b}{a}"
+      },
+      {
+        id: "u4_q05_vertex_maximum",
+        questionNumber: 5,
+        prompt: "The function $f(x) = -(x - 4)^2 + 25$ is graphed in the $xy$-plane. What is the maximum value of $f(x)$?",
+        options: ["A. -4", "B. 4", "C. 21", "D. 25"],
+        correctAnswer: "D",
+        explanation: "1. The function is given in vertex form: $f(x) = a(x - h)^2 + k$.\n2. The vertex is at $(h, k) = (4, 25)$.\n3. Since $a = -1 < 0$, the parabola opens downward, meaning the vertex represents the absolute maximum value.\n4. The maximum value of the function (the y-value) is $25$, which occurs when $x = 4$.",
+        satTrap: "Answering 4 (the x-coordinate where the maximum occurs) instead of 25 (the maximum value of the function itself)."
+      },
+      {
+        id: "u4_q06_fractional_exponent",
+        questionNumber: 6,
+        prompt: "For all positive values of $x$, which of the following is equivalent to $(8x^6)^{\\frac{2}{3}}$?",
+        options: ["A. 4x^4", "B. 4x^9", "C. 16x^4", "D. 64x^4"],
+        correctAnswer: "A",
+        explanation: "1. Distribute the fractional exponent to both factors: $(8)^{\\frac{2}{3}} \\cdot (x^6)^{\\frac{2}{3}}$.\n2. Evaluate $8^{\\frac{2}{3}} = (\\sqrt[3]{8})^2 = 2^2 = 4$.\n3. Multiply exponents for $x$: $6 \\times \\frac{2}{3} = \\frac{12}{3} = 4 \\implies x^4$.\n4. Combine: $4x^4$.",
+        referenceFormula: "(ab)^n = a^n b^n, \\quad (a^m)^n = a^{mn}"
+      },
+      {
+        id: "u4_q07_equal_base_exponential",
+        questionNumber: 7,
+        prompt: "If $4^{2x - 1} = 32$, what is the value of $x$?",
+        options: ["A. \\frac{5}{4}", "B. \\frac{7}{4}", "C. 2", "D. \\frac{9}{4}"],
+        correctAnswer: "B",
+        explanation: "1. Express both sides with base 2: $4 = 2^2$ and $32 = 2^5$.\n2. Rewrite equation: $(2^2)^{2x - 1} = 2^5$.\n3. Multiply exponents: $2^{4x - 2} = 2^5$.\n4. Equate exponents: $4x - 2 = 5 \\implies 4x = 7 \\implies x = \\frac{7}{4}$.",
+        desmosTrick: "Type '4^(2x - 1) = 32' in Desmos. Desmos plots a vertical line at x = 1.75 = 7/4!"
+      },
+      {
+        id: "u4_q08_extraneous_radical",
+        questionNumber: 8,
+        prompt: "What is the complete set of all real solutions to the equation $\\sqrt{3x + 1} = x - 3$?",
+        options: ["A. {1}", "B. {8}", "C. {1, 8}", "D. No real solutions"],
+        correctAnswer: "B",
+        explanation: "1. Square both sides: $3x + 1 = (x - 3)^2 = x^2 - 6x + 9$.\n2. Rearrange into standard form: $x^2 - 9x + 8 = 0$.\n3. Factor: $(x - 8)(x - 1) = 0 \\implies x = 8$ or $x = 1$.\n4. Check candidate roots:\n   - Check $x = 8$: $\\sqrt{3(8) + 1} = \\sqrt{25} = 5$. Right side: $8 - 3 = 5$. **VALID ($5 = 5$)**.\n   - Check $x = 1$: $\\sqrt{3(1) + 1} = \\sqrt{4} = 2$. Right side: $1 - 3 = -2$. **EXTRANEOUS ($2 \\ne -2$)**.\n5. Therefore, the only valid solution is $\{8\}$.",
+        satTrap: "Selecting Option C ({1, 8}) without checking for extraneous roots."
+      },
+      {
+        id: "u4_q09_remainder_theorem",
+        questionNumber: 9,
+        prompt: "When the polynomial $P(x) = x^3 - 2x^2 + 4x - 5$ is divided by $(x - 3)$, what is the remainder?",
+        options: ["A. 11", "B. 16", "C. 21", "D. 25"],
+        correctAnswer: "B",
+        explanation: "1. By the Polynomial Remainder Theorem, the remainder when $P(x)$ is divided by $(x - c)$ is simply $P(c)$.\n2. Here $c = 3$, so evaluate $P(3)$:\n$$P(3) = (3)^3 - 2(3)^2 + 4(3) - 5$$\n$$P(3) = 27 - 2(9) + 12 - 5 = 27 - 18 + 12 - 5 = 16$$.\n3. The remainder is $16$.",
+        referenceFormula: "P(c) = \\text{Remainder when } P(x) \\text{ is divided by } (x - c)"
+      },
+      {
+        id: "u4_q10_vertex_form_constant",
+        questionNumber: 10,
+        prompt: "Which of the following equivalent equations displays the coordinates of the vertex of the parabola as constants or coefficients?",
+        options: [
+          "A. y = x^2 - 6x + 5",
+          "B. y = (x - 1)(x - 5)",
+          "C. y = (x - 3)^2 - 4",
+          "D. y + 4 = x(x - 6)"
+        ],
+        correctAnswer: "C",
+        explanation: "Vertex form is $y = a(x - h)^2 + k$, where $(h, k)$ is the vertex. In $y = (x - 3)^2 - 4$, the numbers $3$ and $-4$ directly display the vertex coordinates $(3, -4)$ as constants in the equation.",
+        satTrap: "Confusing factored form (which displays the x-intercepts) with vertex form (which displays the vertex)."
+      }
+    ],
+    prevUnitId: "unit-03-foundations-psda",
+    nextUnitId: "unit-05-foundations-geom-trig"
   }
 };
 

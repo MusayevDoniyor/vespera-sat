@@ -677,5 +677,123 @@ export default function UnitDiagrams({ type }: DiagramProps) {
     );
   }
 
+  if (type === "parabola-vertex") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              The Three Forms of a Quadratic: What Each Form Reveals Instantly
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/30 font-bold">
+            Standard • Factored • Vertex
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-blue-700 dark:text-blue-400 font-mono">1. Standard Form</span>
+            <h5 className="text-sm font-black text-slate-900 dark:text-white font-mono">
+              y = ax² + bx + c
+            </h5>
+            <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+              Reveals the <strong>y-intercept</strong> as constant c: (0, c).
+            </p>
+            <div className="text-[10px] text-blue-700 dark:text-blue-300 font-bold font-mono">
+              Axis: x = -b / (2a)
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">2. Factored Form</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200 font-mono">
+              y = a(x - r₁)(x - r₂)
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Reveals the <strong>x-intercepts (zeros)</strong> as r₁ and r₂.
+            </p>
+            <div className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold font-mono">
+              Midpoint: h = (r₁ + r₂) / 2
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-purple-700 dark:text-purple-400 font-mono">3. Vertex Form</span>
+            <h5 className="text-sm font-black text-purple-900 dark:text-purple-200 font-mono">
+              y = a(x - h)² + k
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Reveals the <strong>maximum or minimum value</strong> (k) at x = h.
+            </p>
+            <div className="text-[10px] text-purple-800 dark:text-purple-300 font-bold font-mono">
+              Vertex = (h, k)
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "quadratic-discriminant") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-600 dark:bg-amber-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              The Quadratic Discriminant (b² - 4ac) & Real Roots
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30 font-bold">
+            Δ = b² - 4ac
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">Δ &gt; 0 (Positive)</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200">
+              2 Distinct Real Roots
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Parabola crosses the x-axis at <strong>two separate points</strong>.
+            </p>
+            <div className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold font-mono">
+              "Has two real solutions"
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-blue-700 dark:text-blue-400 font-mono">Δ = 0 (Zero)</span>
+            <h5 className="text-sm font-black text-blue-900 dark:text-blue-200">
+              1 Real Root (Double)
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Parabola vertex is <strong>tangent to the x-axis</strong> (touches at 1 point).
+            </p>
+            <div className="text-[10px] text-blue-800 dark:text-blue-300 font-bold font-mono">
+              "Has exactly one real solution"
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-rose-700 dark:text-rose-400 font-mono">Δ &lt; 0 (Negative)</span>
+            <h5 className="text-sm font-black text-rose-900 dark:text-rose-200">
+              0 Real Roots (2 Complex)
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Parabola floats completely above or below the x-axis; <strong>never intersects</strong>.
+            </p>
+            <div className="text-[10px] text-rose-800 dark:text-rose-300 font-bold font-mono">
+              "Has no real solutions"
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }
