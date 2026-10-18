@@ -795,16 +795,16 @@ export default function BluebookExamRunnerPage() {
           <div className="w-full h-full flex flex-col md:flex-row overflow-hidden">
             {/* Left: Reading Passage (split 50/50 for RW, or full prompt for Math) */}
             {passageToShow && (
-              <div className="w-full md:w-1/2 h-1/2 md:h-full p-6 md:p-8 border-b md:border-b-0 md:border-r border-[var(--border-main)] overflow-y-auto leading-relaxed text-sm md:text-base font-serif text-[var(--text-secondary)] whitespace-pre-line bg-[var(--bg-surface)]/30">
-                <div className="max-w-xl mx-auto">
+              <div className="w-full md:w-1/2 h-1/2 md:h-full p-6 md:p-8 lg:p-10 border-b md:border-b-0 md:border-r border-[var(--border-main)] overflow-y-auto leading-relaxed text-sm md:text-base font-serif text-[var(--text-secondary)] whitespace-pre-line bg-[var(--bg-surface)]/30">
+                <div className="max-w-xl mx-auto break-words leading-relaxed">
                   {passageToShow}
                 </div>
               </div>
             )}
 
             {/* Right: Question Stem, Options, and Tools */}
-            <div className={`w-full ${passageToShow ? "md:w-1/2 h-1/2 md:h-full" : "max-w-3xl mx-auto h-full"} p-6 md:p-8 overflow-y-auto space-y-6 flex flex-col justify-between`}>
-              <div className="space-y-6">
+            <div className={`w-full ${passageToShow ? "md:w-1/2 h-1/2 md:h-full" : "max-w-3xl mx-auto h-full"} p-6 md:p-8 lg:p-10 overflow-y-auto space-y-6 flex flex-col justify-between`}>
+              <div className="space-y-6 max-w-xl mx-auto w-full">
                 {/* Question Info Bar */}
                 <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)] gap-2">
                   <button
@@ -897,7 +897,7 @@ export default function BluebookExamRunnerPage() {
                               : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-blue-500 hover:bg-[var(--bg-surface)] text-[var(--text-main)]"
                           }`}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 min-w-0 flex-1 mr-2">
                             <span
                               className={`w-7 h-7 rounded-lg font-mono font-bold text-xs flex items-center justify-center shrink-0 ${
                                 isSelected
@@ -907,7 +907,7 @@ export default function BluebookExamRunnerPage() {
                             >
                               {letter}
                             </span>
-                            <div className="leading-relaxed">
+                            <div className="leading-relaxed break-words min-w-0 flex-1">
                               <KaTeXMath content={cleanText} />
                             </div>
                           </div>
@@ -1082,6 +1082,189 @@ export default function BluebookExamRunnerPage() {
                 >
                   Save & Exit to Lobby
                 </Link>
+              </div>
+            </div>
+          </div>
+        </Portal>
+      )}
+
+      {/* Official Bluebook Directions Modal */}
+      {showDirections && (
+        <Portal>
+          <div
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowDirections(false)}
+          >
+            <div
+              className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                <h3 className="font-bold text-sm flex items-center gap-2">
+                  <Info className="w-4 h-4 text-blue-500" />
+                  <span>
+                    Section {currentSection === "READING_WRITING" ? "1: Reading and Writing" : "2: Math"} Directions
+                  </span>
+                </h3>
+                <button
+                  onClick={() => setShowDirections(false)}
+                  className="p-1 rounded-lg hover:bg-[var(--bg-surface)] text-[var(--text-muted)]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="text-xs sm:text-sm text-[var(--text-secondary)] space-y-3 leading-relaxed">
+                {currentSection === "READING_WRITING" ? (
+                  <>
+                    <p>
+                      The questions in this section address a number of important reading and writing skills. Each question includes one or more passages, which may include a table or a graph.
+                    </p>
+                    <p>
+                      Read each passage and question carefully, and then choose the best answer to the question based on the passage(s).
+                    </p>
+                    <p>
+                      All questions in this section are multiple-choice with four answer choices. Each question has a single best answer.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      The questions in this section address a number of important math skills. Use of a calculator is permitted for all questions.
+                    </p>
+                    <p>
+                      Unless a question indicates otherwise, all variables and expressions represent real numbers, and figures provided are drawn to scale.
+                    </p>
+                    <p>
+                      All questions are multiple-choice with four answer choices, or student-produced response (grid-in).
+                    </p>
+                  </>
+                )}
+              </div>
+
+              <div className="pt-2 border-t border-[var(--border-main)] flex justify-end">
+                <button
+                  onClick={() => setShowDirections(false)}
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-sm"
+                >
+                  Close Directions
+                </button>
+              </div>
+            </div>
+          </div>
+        </Portal>
+      )}
+
+      {/* Official Math Formula Sheet Modal */}
+      {showFormulaSheet && (
+        <Portal>
+          <div
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 md:p-6 overflow-hidden"
+            onClick={() => setShowFormulaSheet(false)}
+          >
+            <div
+              className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl md:rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-4 sm:p-6 md:p-8 space-y-6 relative text-[var(--text-main)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-4">
+                <div>
+                  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
+                    <BookOpen className="text-amber-500 w-5 h-5" />
+                    Official Digital SAT Math Reference Sheet
+                  </h2>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                    Provided by College Board for all Digital SAT Math questions.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowFormulaSheet(false)}
+                  className="p-2 rounded-full hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
+                    1. Circle Formulas
+                  </span>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Area:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">A = π r²</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Circumference:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">C = 2 π r</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Arc Length:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">s = r θ</code> (θ in radians)
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Sector Area:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">A = (1/2) r² θ</code>
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
+                    2. Triangle Geometry & Trigonometry
+                  </span>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Area:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">A = (1/2) b h</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Pythagorean Theorem:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">a² + b² = c²</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Special 30°-60°-90°:</strong> Sides <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">x : x√3 : 2x</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Special 45°-45°-90°:</strong> Sides <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">x : x : x√2</code>
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
+                    3. 3D Solid Volumes
+                  </span>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Rectangular Prism:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = l w h</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Right Cylinder:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = π r² h</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Sphere:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = (4/3) π r³</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Cone:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = (1/3) π r² h</code>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • <strong>Pyramid:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = (1/3) l w h</code>
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
+                    4. Degree & Radian Invariants
+                  </span>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • Degrees in a circle = <strong>360°</strong>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • Radians in a circle = <strong>2π</strong>
+                  </p>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    • Angles in a triangle = <strong>180°</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-[var(--border-main)] flex justify-end">
+                <button
+                  onClick={() => setShowFormulaSheet(false)}
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-sm"
+                >
+                  Close Sheet
+                </button>
               </div>
             </div>
           </div>

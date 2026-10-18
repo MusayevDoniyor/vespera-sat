@@ -51,11 +51,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
 
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname === "/register";
+  const isExamPage = pathname?.startsWith("/mock/exam/");
 
-  if (isAuthPage) {
+  if (isAuthPage || isExamPage) {
     return (
       <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] transition-colors">
         {children}
+        <AuthModal />
+        <OnboardingModal />
       </div>
     );
   }
