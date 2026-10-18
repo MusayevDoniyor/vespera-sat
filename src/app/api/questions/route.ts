@@ -17,10 +17,10 @@ export async function GET(request: Request) {
     const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!, 10) : 200;
 
     const params: any[] = [];
-    let progressJoin = `LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id IS NULL`;
+    let progressJoin = `LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id IS NULL`;
     if (userId) {
       params.push(userId);
-      progressJoin = `LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id = $${params.length}`;
+      progressJoin = `LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $${params.length}`;
     }
 
     let query = `
@@ -32,8 +32,8 @@ export async function GET(request: Request) {
         up.status as progress_status,
         up.user_choice,
         up.time_spent
-      FROM questions q
-      JOIN topics t ON t.code = q.topic_code
+      FROM vespera.questions q
+      JOIN vespera.topics t ON t.code = q.topic_code
       ${progressJoin}
       WHERE 1=1
     `;

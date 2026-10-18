@@ -19,8 +19,8 @@ export async function GET() {
             COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted_count,
             COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct_count,
             COUNT(DISTINCT CASE WHEN up.status = 'INCORRECT' THEN q.id END)::int as incorrect_count
-          FROM questions q
-          LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id = $1
+          FROM vespera.questions q
+          LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
           GROUP BY q.section;
         `,
           [userId]
@@ -32,8 +32,8 @@ export async function GET() {
             COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted_count,
             COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct_count,
             COUNT(DISTINCT CASE WHEN up.status = 'INCORRECT' THEN q.id END)::int as incorrect_count
-          FROM questions q
-          LEFT JOIN user_progress up ON up.question_id = q.id
+          FROM vespera.questions q
+          LEFT JOIN vespera.user_progress up ON up.question_id = q.id
           GROUP BY q.section;
         `);
 
@@ -59,7 +59,7 @@ export async function GET() {
       ? await pool.query(
           `
           SELECT DISTINCT DATE(updated_at) as active_date
-          FROM user_progress
+          FROM vespera.user_progress
           WHERE user_id = $1
           ORDER BY active_date DESC
           LIMIT 30;
@@ -68,7 +68,7 @@ export async function GET() {
         )
       : await pool.query(`
           SELECT DISTINCT DATE(updated_at) as active_date
-          FROM user_progress
+          FROM vespera.user_progress
           ORDER BY active_date DESC
           LIMIT 30;
         `);
@@ -89,14 +89,14 @@ export async function GET() {
       ? await pool.query(
           `
           SELECT COUNT(*)::int as due_count
-          FROM error_logs
+          FROM vespera.error_logs
           WHERE user_id = $1 AND next_review_at <= NOW() AND is_resolved = FALSE;
         `,
           [userId]
         )
       : await pool.query(`
           SELECT COUNT(*)::int as due_count
-          FROM error_logs
+          FROM vespera.error_logs
           WHERE next_review_at <= NOW() AND is_resolved = FALSE;
         `);
 
@@ -109,8 +109,8 @@ export async function GET() {
             COUNT(DISTINCT q.id)::int as total,
             COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
             COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM questions q
-          LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id = $1
+          FROM vespera.questions q
+          LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
           WHERE q.section = 'MATH'
           GROUP BY q.domain
           ORDER BY total DESC;
@@ -123,8 +123,8 @@ export async function GET() {
             COUNT(DISTINCT q.id)::int as total,
             COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
             COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM questions q
-          LEFT JOIN user_progress up ON up.question_id = q.id
+          FROM vespera.questions q
+          LEFT JOIN vespera.user_progress up ON up.question_id = q.id
           WHERE q.section = 'MATH'
           GROUP BY q.domain
           ORDER BY total DESC;
@@ -139,8 +139,8 @@ export async function GET() {
             COUNT(DISTINCT q.id)::int as total,
             COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
             COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM questions q
-          LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id = $1
+          FROM vespera.questions q
+          LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
           WHERE q.section = 'READING_WRITING'
           GROUP BY q.domain
           ORDER BY total DESC;
@@ -153,15 +153,15 @@ export async function GET() {
             COUNT(DISTINCT q.id)::int as total,
             COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
             COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM questions q
-          LEFT JOIN user_progress up ON up.question_id = q.id
+          FROM vespera.questions q
+          LEFT JOIN vespera.user_progress up ON up.question_id = q.id
           WHERE q.section = 'READING_WRITING'
           GROUP BY q.domain
           ORDER BY total DESC;
         `);
 
     // 6. Topics count
-    const topicsRes = await pool.query(`SELECT COUNT(*)::int as count FROM topics;`);
+    const topicsRes = await pool.query(`SELECT COUNT(*)::int as count FROM vespera.topics;`);
     const totalTopics = topicsRes.rows[0]?.count || 28;
 
     // 7. Mock exams history & telemetry
@@ -171,8 +171,8 @@ export async function GET() {
           SELECT 
             COUNT(*)::int as total_exams,
             COALESCE(MAX(score), 0)::int as highest_score,
-            COALESCE((SELECT score FROM mock_exams WHERE user_id = $1 ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
-          FROM mock_exams
+            COALESCE((SELECT score FROM vespera.mock_exams WHERE user_id = $1 ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
+          FROM vespera.mock_exams
           WHERE user_id = $1;
         `,
           [userId]
@@ -181,8 +181,8 @@ export async function GET() {
           SELECT 
             COUNT(*)::int as total_exams,
             COALESCE(MAX(score), 0)::int as highest_score,
-            COALESCE((SELECT score FROM mock_exams ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
-          FROM mock_exams;
+            COALESCE((SELECT score FROM vespera.mock_exams ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
+          FROM vespera.mock_exams;
         `);
     const mockStats = mockRes.rows[0] || { total_exams: 0, highest_score: 0, latest_score: 0 };
 

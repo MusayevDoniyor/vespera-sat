@@ -12,9 +12,9 @@ export async function GET(request: Request) {
         t.*,
         COUNT(q.id)::int as question_count,
         COUNT(CASE WHEN up.status = 'CORRECT' THEN 1 END)::int as mastered_count
-      FROM topics t
-      LEFT JOIN questions q ON q.topic_code = t.code
-      LEFT JOIN user_progress up ON up.question_id = q.id
+      FROM vespera.topics t
+      LEFT JOIN vespera.questions q ON q.topic_code = t.code
+      LEFT JOIN vespera.user_progress up ON up.question_id = q.id
     `;
     const params: any[] = [];
 

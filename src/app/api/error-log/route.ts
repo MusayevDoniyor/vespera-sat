@@ -22,9 +22,9 @@ export async function GET(request: Request) {
         q.difficulty,
         t.title_uz as topic_title_uz,
         t.title_en as topic_title_en
-      FROM error_logs e
-      JOIN questions q ON q.id = e.question_id
-      JOIN topics t ON t.code = q.topic_code
+      FROM vespera.error_logs e
+      JOIN vespera.questions q ON q.id = e.question_id
+      JOIN vespera.topics t ON t.code = q.topic_code
     `;
 
     if (filter === "due") {
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
         COUNT(CASE WHEN stage = 'STAGE_3_DAYS' THEN 1 END)::int as stage_3_count,
         COUNT(CASE WHEN stage = 'STAGE_7_DAYS' THEN 1 END)::int as stage_7_count,
         COUNT(CASE WHEN is_resolved = TRUE THEN 1 END)::int as mastered_count
-      FROM error_logs;
+      FROM vespera.error_logs;
     `);
 
     return NextResponse.json({

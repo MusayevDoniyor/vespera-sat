@@ -35,7 +35,7 @@ export async function initDb() {
         await client.query("CREATE SCHEMA IF NOT EXISTS vespera; SET search_path TO vespera, public;");
     // 1. Create tables
     await client.query(`
-      CREATE TABLE IF NOT EXISTS topics (
+      CREATE TABLE IF NOT EXISTS vespera.topics (
         id TEXT PRIMARY KEY,
         section TEXT NOT NULL,
         domain TEXT NOT NULL,
@@ -48,9 +48,9 @@ export async function initDb() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
 
-      CREATE TABLE IF NOT EXISTS questions (
+      CREATE TABLE IF NOT EXISTS vespera.questions (
         id TEXT PRIMARY KEY,
-        topic_code TEXT REFERENCES topics(code) ON DELETE CASCADE,
+        topic_code TEXT REFERENCES vespera.topics(code) ON DELETE CASCADE,
         section TEXT NOT NULL,
         domain TEXT NOT NULL,
         difficulty TEXT NOT NULL,
@@ -65,9 +65,9 @@ export async function initDb() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
 
-      CREATE TABLE IF NOT EXISTS user_progress (
+      CREATE TABLE IF NOT EXISTS vespera.user_progress (
         id TEXT PRIMARY KEY,
-        question_id TEXT REFERENCES questions(id) ON DELETE CASCADE,
+        question_id TEXT REFERENCES vespera.questions(id) ON DELETE CASCADE,
         status TEXT NOT NULL,
         user_choice TEXT,
         time_spent INTEGER DEFAULT 0,
@@ -75,9 +75,9 @@ export async function initDb() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
 
-      CREATE TABLE IF NOT EXISTS error_logs (
+      CREATE TABLE IF NOT EXISTS vespera.error_logs (
         id TEXT PRIMARY KEY,
-        question_id TEXT REFERENCES questions(id) ON DELETE CASCADE,
+        question_id TEXT REFERENCES vespera.questions(id) ON DELETE CASCADE,
         mistake_type TEXT NOT NULL,
         notes TEXT,
         stage TEXT DEFAULT 'STAGE_1_DAY',
@@ -86,7 +86,7 @@ export async function initDb() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
 
-      CREATE TABLE IF NOT EXISTS mock_exams (
+      CREATE TABLE IF NOT EXISTS vespera.mock_exams (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
         section TEXT NOT NULL,
@@ -129,15 +129,15 @@ export async function initDb() {
       ALTER TABLE vespera.mock_exams ADD COLUMN IF NOT EXISTS user_id TEXT;
       CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON vespera.user_progress(user_id);
       CREATE INDEX IF NOT EXISTS idx_error_logs_user_id ON vespera.error_logs(user_id);
-      CREATE INDEX IF NOT EXISTS idx_mock_exams_user_id ON mock_exams(user_id);
-      CREATE INDEX IF NOT EXISTS idx_questions_section ON questions(section);
-      CREATE INDEX IF NOT EXISTS idx_questions_domain ON questions(domain);
-      CREATE INDEX IF NOT EXISTS idx_questions_topic_code ON questions(topic_code);
-      CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON questions(difficulty);
+      CREATE INDEX IF NOT EXISTS idx_mock_exams_user_id ON vespera.mock_exams(user_id);
+      CREATE INDEX IF NOT EXISTS idx_questions_section ON vespera.questions(section);
+      CREATE INDEX IF NOT EXISTS idx_questions_domain ON vespera.questions(domain);
+      CREATE INDEX IF NOT EXISTS idx_questions_topic_code ON vespera.questions(topic_code);
+      CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON vespera.questions(difficulty);
     `);
 
     // Check if topics exist
-    const { rows } = await client.query("SELECT COUNT(*) FROM topics;");
+    const { rows } = await client.query("SELECT COUNT(*) FROM vespera.topics;");
     if (parseInt(rows[0].count, 10) === 0) {
       console.log("Empty DB detected. Seeding full Vespera curriculum and questions...");
       await seedDefaultData(client);

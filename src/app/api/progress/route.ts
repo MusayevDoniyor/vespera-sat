@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Fetch question details
-    const qRes = await pool.query("SELECT correct_answer FROM questions WHERE id = $1;", [questionId]);
+    const qRes = await pool.query("SELECT correct_answer FROM vespera.questions WHERE id = $1;", [questionId]);
     if (qRes.rows.length === 0) {
       return NextResponse.json({ error: "Question not found" }, { status: 404 });
     }
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     // 2. Upsert user progress (partitioned by userId if logged in)
     const progressId = userId ? `up_${userId}_${questionId}` : `up_${questionId}`;
     await pool.query(
-      `INSERT INTO user_progress (id, question_id, user_id, status, user_choice, time_spent, updated_at)
+      `INSERT INTO vespera.user_progress (id, question_id, user_id, status, user_choice, time_spent, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, NOW())
        ON CONFLICT (id) DO UPDATE SET
          status = EXCLUDED.status,
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     // 3. SM-2 Spaced Repetition Algorithm Implementation
     const errLogId = userId ? `err_${userId}_${questionId}` : `err_${questionId}`;
     const existingLogRes = await pool.query(
-      "SELECT ease_factor, repetitions, interval_days, retention_score FROM error_logs WHERE id = $1;",
+      "SELECT ease_factor, repetitions, interval_days, retention_score FROM vespera.error_logs WHERE id = $1;",
       [errLogId]
     );
 
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     // If it's incorrect OR already tracked, update error_logs
     if (!isCorrect || existingLogRes.rows.length > 0) {
       await pool.query(
-        `INSERT INTO error_logs (id, question_id, user_id, mistake_type, stage, next_review_at, is_resolved, ease_factor, repetitions, interval_days, last_quality, created_at)
+        `INSERT INTO vespera.error_logs (id, question_id, user_id, mistake_type, stage, next_review_at, is_resolved, ease_factor, repetitions, interval_days, last_quality, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
          ON CONFLICT (id) DO UPDATE SET
            mistake_type = COALESCE(EXCLUDED.mistake_type, error_logs.mistake_type),
