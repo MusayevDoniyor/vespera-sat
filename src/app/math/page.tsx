@@ -82,15 +82,27 @@ function MathContent() {
   });
   const questionsTopRef = useRef<HTMLDivElement>(null);
 
+  const urlDomain = searchParams.get("domain");
+  const urlAdaptive = searchParams.get("adaptive") === "true";
+  const [isAdaptiveMode, setIsAdaptiveMode] = useState(false);
+
   // Sync from URL parameter
   useEffect(() => {
+    if (urlDomain) {
+      setSelectedDomain(urlDomain);
+      setSelectedTopic("ALL");
+      setPage(1);
+    }
     if (urlTopic && OFFICIAL_TOPICS_DATA[urlTopic]) {
       const topicData = OFFICIAL_TOPICS_DATA[urlTopic];
       setSelectedDomain(topicData.domain);
       setSelectedTopic(urlTopic);
       setPage(1);
     }
-  }, [urlTopic]);
+    if (urlAdaptive) {
+      setIsAdaptiveMode(true);
+    }
+  }, [urlTopic, urlDomain, urlAdaptive]);
 
   const cacheRef = useRef<Record<string, { questions: any[]; pagination: any }>>({});
 
@@ -285,6 +297,31 @@ function MathContent() {
         <KhanAcademyUnitsView />
       ) : (
         <>
+          {/* Adaptive Mode Banner */}
+          {isAdaptiveMode && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm text-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                <span className="font-bold text-[var(--text-main)]">
+                  🎯 Adaptive Weakness Drill Active:
+                </span>
+                <span className="text-[var(--text-muted)]">
+                  Targeting your lowest-scoring domain from Practice Test 1 (<strong className="text-[var(--accent-blue)]">{selectedDomain}</strong>).
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  setIsAdaptiveMode(false);
+                  setSelectedDomain("ALL");
+                  setPage(1);
+                }}
+                className="text-xs font-mono font-bold text-[var(--accent-blue)] hover:underline whitespace-nowrap self-start sm:self-auto"
+              >
+                Reset to All Math
+              </button>
+            </div>
+          )}
+
           {/* User Personalized Track Banner */}
           {user && (
         <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-600/10 via-cyan-500/10 to-transparent border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">

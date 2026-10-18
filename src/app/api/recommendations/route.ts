@@ -14,7 +14,7 @@ export async function GET() {
     const userId = session?.userId || null;
     const profile = userId ? await getFullUserProfile(userId) : null;
 
-    // 1. Get attempted counts & accuracy by section
+    // 1. Get attempted counts & accuracy by section from individual practice
     const sectionStatsRes = userId
       ? await pool.query(
           `
@@ -53,14 +53,22 @@ export async function GET() {
       }
     }
 
-    // 2. Mock exam highest score
+    // 2. Fetch Latest Mock Exam attempt (and domain telemetry)
     const mockRes = userId
       ? await pool.query(
-          `SELECT COALESCE(MAX(score), 0)::int as highest FROM vespera.mock_exams WHERE user_id = $1`,
+          `SELECT id, title, score, math_score, reading_score, total_questions, correct_count, domain_stats, completed_at
+           FROM vespera.mock_exams
+           WHERE user_id = $1 OR user_id IS NULL
+           ORDER BY completed_at DESC LIMIT 1`,
           [userId]
         )
-      : await pool.query(`SELECT COALESCE(MAX(score), 0)::int as highest FROM vespera.mock_exams`);
-    const mockHighest = mockRes.rows[0]?.highest || 0;
+      : await pool.query(
+          `SELECT id, title, score, math_score, reading_score, total_questions, correct_count, domain_stats, completed_at
+           FROM vespera.mock_exams
+           ORDER BY completed_at DESC LIMIT 1`
+        );
+    const latestMock = mockRes.rows[0] || null;
+    const mockHighest = latestMock?.score || 0;
 
     // 3. Spaced Repetition Due Reviews
     const dueRes = userId
@@ -139,12 +147,47 @@ export async function GET() {
       };
     });
 
-    // Detect primary weakness: lowest accuracy among attempted, or highest-yield unattempted
+    // Merge Mock Exam domain telemetry if available
+    const mockDomainStats = latestMock?.domain_stats || null;
+    if (mockDomainStats && typeof mockDomainStats === "object") {
+      for (const d of domainMasteryList) {
+        const mockD = mockDomainStats[d.domain];
+        if (mockD) {
+          d.attempted += (mockD.total || 0);
+          d.correct += (mockD.correct || 0);
+          d.accuracy = d.attempted > 0 ? Math.round((d.correct / d.attempted) * 100) : 0;
+          if (d.attempted >= 10 && d.accuracy >= 85) d.status = "Mastered";
+          else if (d.attempted >= 5 && d.accuracy >= 70) d.status = "Proficient";
+          else if (d.attempted > 0) d.status = "Needs Focus";
+        }
+      }
+
+      for (const [, stat] of Object.entries(mockDomainStats) as [string, any][]) {
+        if (stat.section === "MATH") {
+          mathAttempted += (stat.total || 0);
+          mathCorrect += (stat.correct || 0);
+        } else {
+          verbalAttempted += (stat.total || 0);
+          verbalCorrect += (stat.correct || 0);
+        }
+      }
+    }
+
+    // Detect primary weaknesses: lowest accuracy among attempted
     const attemptedDomains = domainMasteryList.filter((d: any) => d.attempted > 0);
     let weakestDomain = "Algebra";
+    let weakestMathDomain = "Algebra";
+    let weakestVerbalDomain = "Expression of Ideas";
+
     if (attemptedDomains.length > 0) {
       attemptedDomains.sort((a: any, b: any) => a.accuracy - b.accuracy);
       weakestDomain = attemptedDomains[0].domain;
+
+      const mathWeak = attemptedDomains.find((d: any) => d.section === "MATH");
+      if (mathWeak) weakestMathDomain = mathWeak.domain;
+
+      const verbalWeak = attemptedDomains.find((d: any) => d.section === "READING_WRITING");
+      if (verbalWeak) weakestVerbalDomain = verbalWeak.domain;
     }
 
     // 6. Calculate Bayesian Adaptive Score Prediction
@@ -155,13 +198,21 @@ export async function GET() {
       verbalCorrect,
       mathLevel: profile?.mathLevel || "intermediate",
       englishLevel: profile?.englishLevel || "intermediate",
-      currentSatScore: profile?.currentSatScore || null,
+      currentSatScore: profile?.currentSatScore || (latestMock ? latestMock.score : null),
       targetSatScore: profile?.targetSatScore || 1550,
       mockHighestScore: mockHighest
     });
 
+    // If mock exam score exists, lock composite to authentic exam calibration
+    if (latestMock && latestMock.score >= 400) {
+      scorePrediction.composite = latestMock.score;
+      if (latestMock.math_score) scorePrediction.math = latestMock.math_score;
+      if (latestMock.reading_score) scorePrediction.verbal = latestMock.reading_score;
+      scorePrediction.confidence = "high";
+    }
+
     // 7. Generate 3 Personalized Daily Missions
-    const hasTakenDiagnostic = (mathAttempted + verbalAttempted) >= 8 || Boolean(profile?.currentSatScore);
+    const hasTakenDiagnostic = (mathAttempted + verbalAttempted) >= 8 || Boolean(profile?.currentSatScore) || Boolean(latestMock);
     const dailyMissions = buildPersonalizedMissions({
       userTargetScore: profile?.targetSatScore || 1550,
       dueReviewsCount,
@@ -170,8 +221,29 @@ export async function GET() {
       todayQuestionsSolved: todaySolved
     });
 
-    // 8. Fetch Top 8 Recommended Questions tailored to weakness
-    const targetDifficulty = scorePrediction.composite >= 1350 ? "Hard" : "Medium";
+    // Customize mission 1 if based on mock exam
+    if (latestMock && dailyMissions.length > 0 && dailyMissions[0].type === "weakness") {
+      const weakDomainAccuracy = attemptedDomains.find((d: any) => d.domain === weakestDomain)?.accuracy ?? 25;
+      dailyMissions[0].title = `Weakness Drill: ${weakestDomain} (${weakDomainAccuracy}% in ${latestMock.title})`;
+      dailyMissions[0].subtitle = `Target your lowest-scoring domain from your recent ${latestMock.score}-score practice test.`;
+      const isMath = attemptedDomains.find((d: any) => d.domain === weakestDomain)?.section === "MATH";
+      dailyMissions[0].targetUrl = isMath
+        ? `/math?domain=${encodeURIComponent(weakestDomain)}&adaptive=true`
+        : `/verbal?domain=${encodeURIComponent(weakestDomain)}&adaptive=true`;
+    }
+
+    // 8. Calibrate Difficulty & Fetch Top Recommended Questions tailored to weakness
+    const currentScore = latestMock ? latestMock.score : scorePrediction.composite;
+    let targetDifficulties: string[] = ["Medium"];
+    if (currentScore < 1050) {
+      targetDifficulties = ["Easy", "Medium"];
+    } else if (currentScore < 1350) {
+      targetDifficulties = ["Medium", "Hard"];
+    } else {
+      targetDifficulties = ["Hard"];
+    }
+
+    const priorityDomains = Array.from(new Set([weakestDomain, weakestMathDomain, weakestVerbalDomain]));
     const recommendedQuestionsRes = await pool.query(
       `
       SELECT 
@@ -180,25 +252,44 @@ export async function GET() {
         q.domain,
         q.difficulty,
         q.prompt,
+        q.passage,
         q.options,
         q.correct_answer,
+        q.explanation_uz,
         q.explanation_en,
-        t.title_en as topic_title
+        q.desmos_trick,
+        q.reference_formula,
+        t.title_en as topic_title_en,
+        t.title_uz as topic_title_uz
       FROM vespera.questions q
       JOIN vespera.topics t ON t.code = q.topic_code
-      WHERE q.domain = $1 OR q.difficulty = $2
+      WHERE q.domain = ANY($1) AND q.difficulty = ANY($2)
       ORDER BY RANDOM()
       LIMIT 8;
     `,
-      [weakestDomain, targetDifficulty]
+      [priorityDomains, targetDifficulties]
     );
 
     return NextResponse.json({
       scorePrediction,
+      latestMock: latestMock ? {
+        id: latestMock.id,
+        title: latestMock.title,
+        score: latestMock.score,
+        mathScore: latestMock.math_score,
+        readingScore: latestMock.reading_score,
+        correctCount: latestMock.correct_count,
+        totalQuestions: latestMock.total_questions,
+        completedAt: latestMock.completed_at,
+        domainStats: latestMock.domain_stats
+      } : null,
       weakestDomain,
+      weakestMathDomain,
+      weakestVerbalDomain,
       domainMastery: domainMasteryList,
       dailyMissions,
       recommendedQuestions: recommendedQuestionsRes.rows,
+      targetDifficulties,
       dueReviewsCount,
       todaySolved
     });

@@ -188,14 +188,14 @@ export async function GET() {
 
     const mockHistoryRes = userId
       ? await pool.query(
-          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at
+          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at, domain_stats
            FROM vespera.mock_exams
            WHERE user_id = $1 OR user_id IS NULL
            ORDER BY completed_at DESC LIMIT 10;`,
           [userId]
         )
       : await pool.query(
-          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at
+          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at, domain_stats
            FROM vespera.mock_exams
            ORDER BY completed_at DESC LIMIT 10;`
         );
@@ -272,13 +272,14 @@ export async function POST(req: Request) {
       totalQuestions,
       correctCount,
       timeSpent,
+      domainStats,
     } = body;
 
     const id = "mock_" + Date.now();
     await pool.query(
       `INSERT INTO vespera.mock_exams (
-        id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, user_id
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, user_id, domain_stats
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         id,
         title || "Bluebook Practice Exam",
@@ -290,6 +291,7 @@ export async function POST(req: Request) {
         correctCount || 0,
         timeSpent || 0,
         userId,
+        domainStats ? JSON.stringify(domainStats) : null,
       ]
     );
 

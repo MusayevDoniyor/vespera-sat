@@ -532,6 +532,7 @@ export default function BluebookMockPage() {
       correct_count: result.totalCorrect,
       completed_at: new Date().toISOString(),
       time_spent: Math.max(1, Math.round((Date.now() - examStartTimeRef.current) / 1000)),
+      domainStats: result.domainStats,
     };
 
     try {
@@ -555,6 +556,7 @@ export default function BluebookMockPage() {
         totalQuestions: result.totalQuestions,
         correctCount: result.totalCorrect,
         timeSpent: attemptData.time_spent,
+        domainStats: result.domainStats,
       }),
     }).catch(() => {});
   };
@@ -1211,6 +1213,54 @@ export default function BluebookMockPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Targeted Weakness Practice Launcher */}
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-transparent border border-blue-500/20 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
+                    <span className="text-xs font-bold text-[var(--text-main)]">
+                      Adaptive Recommendations Based on This Exam
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-[var(--accent-blue)] font-bold">
+                    1-Click Personalized Drills
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                  Focus your prep on domains with accuracy under 70% to gain the most points on your next attempt:
+                </p>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  {Object.entries(scoreResult.domainStats)
+                    .filter(([, stat]) => stat.accuracy < 70)
+                    .sort(([, a], [, b]) => a.accuracy - b.accuracy)
+                    .slice(0, 3)
+                    .map(([domain, stat]) => {
+                      const isMath = domain.includes("Algebra") || domain.includes("Geometry") || domain.includes("Advanced") || domain.includes("Problem Solving");
+                      const targetUrl = isMath
+                        ? `/math?domain=${encodeURIComponent(domain)}&adaptive=true`
+                        : `/verbal?domain=${encodeURIComponent(domain)}&adaptive=true`;
+
+                      return (
+                        <Link
+                          key={domain}
+                          href={targetUrl}
+                          className="px-3.5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-main)] transition shadow-sm flex items-center gap-1.5"
+                        >
+                          <span>{domain} ({stat.accuracy}%)</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
+                        </Link>
+                      );
+                    })}
+                  <Link
+                    href="/"
+                    className="px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm flex items-center gap-1.5"
+                  >
+                    <span>View Dashboard Adaptive Questions</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           )}

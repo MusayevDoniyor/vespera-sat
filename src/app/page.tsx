@@ -31,11 +31,13 @@ import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
 import { useAuth } from "@/components/AuthContext";
 import DiagnosticPlacementModal from "@/components/DiagnosticPlacementModal";
+import QuestionCard from "@/components/QuestionCard";
 
 export default function DashboardPage() {
   const { user, openAuthModal, openOnboarding } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<any>(null);
+  const [recFilter, setRecFilter] = useState<"ALL" | "MATH" | "READING_WRITING">("ALL");
   const [isDiagnosticOpen, setIsDiagnosticOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [materialsOpen, setMaterialsOpen] = useState(false);
@@ -460,6 +462,105 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* 🎯 ADAPTIVE RECOMMENDED QUESTIONS SECTION */}
+      {recommendations?.recommendedQuestions?.length > 0 && (
+        <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border-main)] pb-5">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 text-xs font-bold font-mono mb-2">
+                <Target size={14} className="text-[var(--accent-blue)]" />
+                <span>AI Adaptive Engine • Personalized Question Feed</span>
+              </div>
+              <h3 className="text-xl md:text-2xl font-black text-[var(--text-main)] tracking-tight">
+                Recommended Practice Questions For You
+              </h3>
+              <p className="text-xs md:text-sm text-[var(--text-muted)] mt-1 max-w-3xl leading-relaxed">
+                {recommendations?.latestMock ? (
+                  <>
+                    Calibrated to your recent <strong>{recommendations.latestMock.title}</strong> (Score: <strong>{recommendations.latestMock.score}</strong>). We prioritized foundational questions targeting your lowest scoring areas: <strong className="text-[var(--accent-blue)]">{recommendations.weakestDomain}</strong> and <strong className="text-indigo-500">{recommendations.weakestVerbalDomain || "Expression of Ideas"}</strong>.
+                  </>
+                ) : (
+                  <>
+                    Personalized questions selected by the Bayesian adaptive engine targeting your lowest mastery domains.
+                  </>
+                )}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 self-start md:self-center">
+              <button
+                onClick={() => setRecFilter("ALL")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition font-mono ${
+                  recFilter === "ALL"
+                    ? "bg-[var(--accent-blue)] text-white shadow-sm"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)]"
+                }`}
+              >
+                All ({recommendations?.recommendedQuestions?.length || 0})
+              </button>
+              <button
+                onClick={() => setRecFilter("MATH")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition font-mono ${
+                  recFilter === "MATH"
+                    ? "bg-[var(--accent-blue)] text-white shadow-sm"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)]"
+                }`}
+              >
+                Math
+              </button>
+              <button
+                onClick={() => setRecFilter("READING_WRITING")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition font-mono ${
+                  recFilter === "READING_WRITING"
+                    ? "bg-[var(--accent-blue)] text-white shadow-sm"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)]"
+                }`}
+              >
+                Reading & Writing
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {recommendations.recommendedQuestions
+              .filter((q: any) => recFilter === "ALL" || q.section === recFilter)
+              .slice(0, 4)
+              .map((q: any) => (
+                <QuestionCard
+                  key={q.id}
+                  question={q}
+                  onAnswerSubmitted={() => {
+                    fetch("/api/stats").then((r) => r.json()).then((d) => setStats(d));
+                  }}
+                />
+              ))}
+          </div>
+
+          {/* Quick links to full practice suites */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[var(--border-main)] text-xs">
+            <span className="text-[var(--text-muted)]">
+              Want more questions? Over 1,180 authentic questions available with Desmos speed tricks:
+            </span>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Link
+                href={`/math?domain=${encodeURIComponent(recommendations?.weakestMathDomain || "Algebra")}&adaptive=true`}
+                className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold transition flex items-center justify-center gap-1.5"
+              >
+                <span>Drill {recommendations?.weakestMathDomain || "Algebra"} in Math Lab</span>
+                <ArrowRight size={13} />
+              </Link>
+              <Link
+                href={`/verbal?domain=${encodeURIComponent(recommendations?.weakestVerbalDomain || "Expression of Ideas")}&adaptive=true`}
+                className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-bold transition flex items-center justify-center gap-1.5"
+              >
+                <span>Drill {recommendations?.weakestVerbalDomain || "Expression of Ideas"} in Verbal Lab</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 🚀 SAT 1550+ MASTER STUDY ROADMAP: WHERE TO BEGIN */}
       <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 dark:from-slate-900 dark:via-slate-900/90 dark:to-blue-950/20 border border-blue-200/90 dark:border-blue-500/30 shadow-md space-y-6">
