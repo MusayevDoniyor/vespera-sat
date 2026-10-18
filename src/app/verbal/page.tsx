@@ -113,6 +113,15 @@ function VerbalContent() {
 
   const activeTopicData = selectedTopic !== "ALL" ? OFFICIAL_TOPICS_DATA[selectedTopic] : null;
 
+  const recommendedDifficulty = useMemo(() => {
+    if (!user) return "Hard";
+    if (user.ieltsScore || user.englishLevel === "advanced" || user.englishLevel === "native_fluent") return "Hard";
+    if (user.englishLevel === "beginner") return "Easy";
+    return "Medium";
+  }, [user]);
+
+  const isRecommendedActive = selectedDifficulty.toLowerCase() === recommendedDifficulty.toLowerCase();
+
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in">
       {/* Top Header */}
@@ -178,19 +187,34 @@ function VerbalContent() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                if (user.ieltsScore || user.englishLevel === "advanced" || user.englishLevel === "native_fluent") {
-                  setSelectedDifficulty("HARD");
-                } else if (user.englishLevel === "beginner") {
-                  setSelectedDifficulty("EASY");
+                if (isRecommendedActive) {
+                  setSelectedDifficulty("ALL");
                 } else {
-                  setSelectedDifficulty("MEDIUM");
+                  setSelectedDifficulty(recommendedDifficulty);
                 }
               }}
-              className="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500 text-purple-600 dark:text-purple-400 transition-all flex items-center gap-1.5 shadow-sm"
+              className={`text-[11px] font-bold px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 shadow-sm ${
+                isRecommendedActive
+                  ? "bg-purple-600 text-white border-purple-600 shadow-md"
+                  : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-purple-500 text-purple-600 dark:text-purple-400"
+              }`}
             >
               <Sparkles size={12} />
-              <span>Recommended For My Level</span>
+              <span>
+                {isRecommendedActive
+                  ? `Active: ${recommendedDifficulty} Track (Click to Show All)`
+                  : `Recommended For My Level (${recommendedDifficulty})`}
+              </span>
             </button>
+            {selectedDifficulty !== "ALL" && (
+              <button
+                onClick={() => setSelectedDifficulty("ALL")}
+                className="text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+                title="Reset difficulty filter"
+              >
+                Reset Filter
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -509,8 +533,26 @@ function VerbalContent() {
             Loading Reading & Writing questions...
           </div>
         ) : questions.length === 0 ? (
-          <div className="p-12 text-center text-[var(--text-muted)] bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
-            No questions found for this topic filter.
+          <div className="p-10 text-center space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto text-xl font-bold">
+              🔍
+            </div>
+            <h3 className="font-bold text-sm text-[var(--text-main)]">
+              No questions found matching this filter
+            </h3>
+            <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto">
+              No questions match the current combination of topic and difficulty. Click below to view all Reading & Writing questions.
+            </p>
+            <button
+              onClick={() => {
+                setSelectedDifficulty("ALL");
+                setSelectedTopic("ALL");
+                setSelectedDomain("ALL");
+              }}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:opacity-95 transition-opacity shadow-sm"
+            >
+              <span>Reset All Filters & View All Questions</span>
+            </button>
           </div>
         ) : (
           questions.map((q) => <QuestionCard key={q.id} question={q} />)

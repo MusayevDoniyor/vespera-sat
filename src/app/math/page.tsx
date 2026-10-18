@@ -114,6 +114,15 @@ function MathContent() {
 
   const activeTopicData = selectedTopic !== "ALL" ? OFFICIAL_TOPICS_DATA[selectedTopic] : null;
 
+  const recommendedDifficulty = useMemo(() => {
+    if (!user) return "Hard";
+    if (user.mathLevel === "target_800" || user.mathLevel === "advanced") return "Hard";
+    if (user.mathLevel === "beginner") return "Easy";
+    return "Medium";
+  }, [user]);
+
+  const isRecommendedActive = selectedDifficulty.toLowerCase() === recommendedDifficulty.toLowerCase();
+
   return (
     <div className="space-y-8 pb-16">
       {/* Top Header */}
@@ -188,19 +197,34 @@ function MathContent() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                if (user.mathLevel === "target_800" || user.mathLevel === "advanced") {
-                  setSelectedDifficulty("HARD");
-                } else if (user.mathLevel === "beginner") {
-                  setSelectedDifficulty("EASY");
+                if (isRecommendedActive) {
+                  setSelectedDifficulty("ALL");
                 } else {
-                  setSelectedDifficulty("MEDIUM");
+                  setSelectedDifficulty(recommendedDifficulty);
                 }
               }}
-              className="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--accent-blue)] transition-all flex items-center gap-1.5 shadow-sm"
+              className={`text-[11px] font-bold px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 shadow-sm ${
+                isRecommendedActive
+                  ? "bg-[var(--accent-blue)] text-white border-[var(--accent-blue)] shadow-md"
+                  : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--accent-blue)]"
+              }`}
             >
               <Sparkles size={12} />
-              <span>Recommended For My Level</span>
+              <span>
+                {isRecommendedActive
+                  ? `Active: ${recommendedDifficulty} Track (Click to Show All)`
+                  : `Recommended For My Level (${recommendedDifficulty})`}
+              </span>
             </button>
+            {selectedDifficulty !== "ALL" && (
+              <button
+                onClick={() => setSelectedDifficulty("ALL")}
+                className="text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+                title="Reset difficulty filter"
+              >
+                Reset Filter
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -287,25 +311,35 @@ function MathContent() {
               All Levels
             </button>
             <button
+              onClick={() => setSelectedDifficulty("Easy")}
+              className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
+                selectedDifficulty.toLowerCase() === "easy"
+                  ? "bg-emerald-600 text-white shadow-sm font-bold"
+                  : "text-emerald-500 hover:text-emerald-400 bg-emerald-950/20 border border-emerald-500/30"
+              }`}
+            >
+              Foundations (Easy)
+            </button>
+            <button
+              onClick={() => setSelectedDifficulty("Medium")}
+              className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
+                selectedDifficulty.toLowerCase() === "medium"
+                  ? "bg-amber-600 text-white shadow-sm font-bold"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-card)] border border-[var(--border-main)]"
+              }`}
+            >
+              Standard (Medium)
+            </button>
+            <button
               onClick={() => setSelectedDifficulty("Hard")}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
-                selectedDifficulty === "Hard"
+                selectedDifficulty.toLowerCase() === "hard"
                   ? "bg-red-600 text-white shadow-sm font-bold"
                   : "text-red-400 hover:text-red-300 bg-red-950/20 border border-red-500/30"
               }`}
             >
               <span>🔥</span>
-              <span>SATashkent Hard Workout (Target 800)</span>
-            </button>
-            <button
-              onClick={() => setSelectedDifficulty("Medium")}
-              className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
-                selectedDifficulty === "Medium"
-                  ? "bg-amber-600 text-white shadow-sm font-bold"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-card)] border border-[var(--border-main)]"
-              }`}
-            >
-              Standard Module 2
+              <span>Hard (Target 800)</span>
             </button>
           </div>
 
@@ -372,8 +406,26 @@ function MathContent() {
               Loading Math problem set...
             </div>
           ) : questions.length === 0 ? (
-            <div className="p-12 text-center text-[var(--text-muted)] bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
-              No questions found for this topic filter.
+            <div className="p-10 text-center space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl font-bold">
+                🔍
+              </div>
+              <h3 className="font-bold text-sm text-[var(--text-main)]">
+                No questions found matching this filter
+              </h3>
+              <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto">
+                No questions match the current combination of topic and difficulty. Click below to view all questions.
+              </p>
+              <button
+                onClick={() => {
+                  setSelectedDifficulty("ALL");
+                  setSelectedTopic("ALL");
+                  setSelectedDomain("ALL");
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-95 transition-opacity shadow-sm"
+              >
+                <span>Reset All Filters & View All Questions</span>
+              </button>
             </div>
           ) : (
             questions.map((q) => (

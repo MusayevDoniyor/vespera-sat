@@ -28,21 +28,21 @@ export async function GET(request: Request) {
     `;
     const params: any[] = [];
 
-    if (section) {
-      params.push(section);
-      query += ` AND q.section = $${params.length}`;
+    if (section && section !== "ALL") {
+      params.push(section.trim().toUpperCase());
+      query += ` AND UPPER(q.section) = $${params.length}`;
     }
-    if (domain) {
-      params.push(domain);
+    if (domain && domain !== "ALL") {
+      params.push(domain.trim());
       query += ` AND q.domain = $${params.length}`;
     }
-    if (topicCode) {
-      params.push(topicCode);
+    if (topicCode && topicCode !== "ALL") {
+      params.push(topicCode.trim());
       query += ` AND q.topic_code = $${params.length}`;
     }
-    if (difficulty) {
-      params.push(difficulty);
-      query += ` AND q.difficulty = $${params.length}`;
+    if (difficulty && difficulty !== "ALL") {
+      params.push(difficulty.trim().toLowerCase());
+      query += ` AND LOWER(q.difficulty) = $${params.length}`;
     }
 
     if (random) {
