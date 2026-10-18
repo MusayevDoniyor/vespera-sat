@@ -1114,23 +1114,23 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* SAT Tashkent Masterclass & 41-Book Archive Showcase Banner */}
+      {/* Digital SAT Masterclass & 54-Book Archive Showcase Banner */}
       <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-purple-500/10 via-[var(--bg-card)] to-[var(--accent-blue)]/10 border border-purple-500/25 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 font-mono uppercase">
-              🇺🇿 Official SAT Tashkent Curriculum Hub
+              🇺🇿 National & Official Curriculum Hub
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              41 Textbooks • 1,819+ Real Questions • 420-Page Vocabook
+              54 Textbooks • 2,500+ Real Questions • 445+ Vocab Pages
             </span>
           </div>
           <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-2.5">
             <GraduationCap className="text-purple-600 dark:text-purple-400" size={28} />
-            <span>SAT Tashkent Masterclass Vault & Primary Archives</span>
+            <span>Digital SAT Masterclass Vault & Authentic Archives</span>
           </h3>
           <p className="text-xs text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            The national standard in SAT prep: Gramilliy grammar bible with 3x1 elimination tactics, 20 modular math textbooks, Vocabook 3.0 with interactive active-recall flashcards, and authentic real test questions.
+            The complete national standard in SAT prep: Official College Board Question Banks, Gramilliy grammar bible with 3x1 elimination, 20 modular math textbooks, Vocabook 3.0, 650 Real Words (@DSATuz), English Elite, and real exam test recalls.
           </p>
         </div>
 
@@ -1139,7 +1139,7 @@ export default function DashboardPage() {
             href="/satashkent"
             className="px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
           >
-            <span>Explore 41 Books & Studio</span>
+            <span>Explore 54 Books & Vault</span>
             <ArrowRight size={15} />
           </Link>
         </div>

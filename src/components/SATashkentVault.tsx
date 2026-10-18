@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useDeferredValue, startTransition } from "react";
 import KaTeXMath from "./KaTeXMath";
 import Pagination from "./Pagination";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
@@ -48,6 +48,7 @@ export default function SATashkentVault() {
     "ALL" | "Math" | "Reading & Writing" | "Full System"
   >("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearch = useDeferredValue(searchQuery);
   const [activeCheatSection, setActiveCheatSection] = useState<number>(0);
   const [selectedBook, setSelectedBook] = useState<SATashkentBook | null>(null);
   useBodyScrollLock(!!selectedBook);
@@ -55,6 +56,7 @@ export default function SATashkentVault() {
   // Vocabook 3.0 Studio State
   const [vocabSubTab, setVocabSubTab] = useState<"flashcards" | "lexicon" | "quiz">("flashcards");
   const [vocabSearch, setVocabSearch] = useState("");
+  const deferredVocabSearch = useDeferredValue(vocabSearch);
   const [vocabPosFilter, setVocabPosFilter] = useState("ALL");
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [cardFlipped, setCardFlipped] = useState(false);
@@ -72,68 +74,125 @@ export default function SATashkentVault() {
   const [vocabPageSize, setVocabPageSize] = useState(12);
   const vocabTopRef = useRef<HTMLDivElement>(null);
 
+  // Dynamic category counts across all 54 materials
+  const categoryCounts = useMemo(() => {
+    const counts = {
+      ALL: SATASHKENT_LIBRARY.length,
+      Math: 0,
+      "Reading & Writing": 0,
+      "Full System": 0,
+    };
+    for (const b of SATASHKENT_LIBRARY) {
+      if (counts[b.category] !== undefined) {
+        counts[b.category]++;
+      }
+    }
+    return counts;
+  }, []);
+
   const filteredBooks = useMemo(() => {
     return SATASHKENT_LIBRARY.filter((b) => {
       if (categoryFilter !== "ALL" && b.category !== categoryFilter) return false;
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase();
+      if (!deferredSearch.trim()) return true;
+      const q = deferredSearch.toLowerCase();
       return (
         b.title.toLowerCase().includes(q) ||
         b.description.toLowerCase().includes(q) ||
         b.keyTopics.some((k) => k.toLowerCase().includes(q))
       );
     });
-  }, [categoryFilter, searchQuery]);
+  }, [categoryFilter, deferredSearch]);
 
   // Reset page when filter changes
   useEffect(() => {
     setBooksPage(1);
-  }, [categoryFilter, searchQuery]);
+  }, [categoryFilter, deferredSearch]);
 
   useEffect(() => {
     setVocabPage(1);
-  }, [vocabSearch, vocabPosFilter]);
+  }, [deferredVocabSearch, vocabPosFilter]);
 
   const totalFilteredBooks = filteredBooks.length;
   const totalBooksPages = Math.max(1, Math.ceil(totalFilteredBooks / booksPageSize));
   const paginatedBooks = filteredBooks.slice((booksPage - 1) * booksPageSize, booksPage * booksPageSize);
 
   const handleBooksPageChange = (newPage: number) => {
-    setBooksPage(newPage);
-    booksTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    startTransition(() => {
+      setBooksPage(newPage);
+    });
+    requestAnimationFrame(() => {
+      if (booksTopRef.current) {
+        const top = booksTopRef.current.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    });
   };
 
   const handleBooksPageSizeChange = (newSize: number) => {
-    setBooksPageSize(newSize);
-    setBooksPage(1);
-    booksTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    startTransition(() => {
+      setBooksPageSize(newSize);
+      setBooksPage(1);
+    });
+    requestAnimationFrame(() => {
+      if (booksTopRef.current) {
+        const top = booksTopRef.current.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    });
+  };
+
+  const handleCategoryFilterChange = (cat: "ALL" | "Math" | "Reading & Writing" | "Full System") => {
+    startTransition(() => {
+      setCategoryFilter(cat);
+      setBooksPage(1);
+    });
+  };
+
+  const handleTabChange = (tab: "books" | "cheatsheet" | "gramilliy3x1" | "vocabook" | "roadmap") => {
+    startTransition(() => {
+      setActiveTab(tab);
+    });
   };
 
   const filteredVocabCards = useMemo(() => {
     return VOCABOOK_CARDS.filter((c) => {
       if (vocabPosFilter !== "ALL" && c.partOfSpeech !== vocabPosFilter) return false;
-      if (!vocabSearch.trim()) return true;
-      const q = vocabSearch.toLowerCase();
+      if (!deferredVocabSearch.trim()) return true;
+      const q = deferredVocabSearch.toLowerCase();
       return (
         c.word.toLowerCase().includes(q) ||
         c.definition.toLowerCase().includes(q) ||
         c.antonyms.toLowerCase().includes(q)
       );
     });
-  }, [vocabSearch, vocabPosFilter]);
+  }, [deferredVocabSearch, vocabPosFilter]);
 
   const totalVocabPages = Math.max(1, Math.ceil(filteredVocabCards.length / vocabPageSize));
   const paginatedVocabCards = filteredVocabCards.slice((vocabPage - 1) * vocabPageSize, vocabPage * vocabPageSize);
 
   const handleVocabPageChange = (newPage: number) => {
-    setVocabPage(newPage);
-    vocabTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    startTransition(() => {
+      setVocabPage(newPage);
+    });
+    requestAnimationFrame(() => {
+      if (vocabTopRef.current) {
+        const top = vocabTopRef.current.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    });
   };
 
   const handleVocabPageSizeChange = (newSize: number) => {
-    setVocabPageSize(newSize);
-    setVocabPage(1);
-    vocabTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    startTransition(() => {
+      setVocabPageSize(newSize);
+      setVocabPage(1);
+    });
+    requestAnimationFrame(() => {
+      if (vocabTopRef.current) {
+        const top = vocabTopRef.current.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    });
   };
 
   return (
@@ -143,21 +202,21 @@ export default function SATashkentVault() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] font-mono border border-[var(--accent-blue)]/30">
-              🇺🇿 SAT TASHKENT ACADEMIC INTEGRATION
+              🇺🇿 NATIONAL & OFFICIAL DIGITAL SAT REPOSITORY
             </span>
             <span className="text-[var(--text-muted)]">•</span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              41 Primary Textbooks & 1,819+ Real Questions
+              54 Authentic Textbooks & 2,500+ Real Questions
             </span>
           </div>
 
           <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[var(--text-main)] flex items-center gap-3">
             <GraduationCap className="text-[var(--accent-blue)]" size={32} />
-            <span>SAT Tashkent Masterclass & Materials Vault</span>
+            <span>Digital SAT Masterclass & Materials Vault</span>
           </h2>
 
           <p className="text-xs text-[var(--text-muted)] mt-2 max-w-2xl leading-relaxed">
-            The complete national curriculum archive: 20 modular math textbooks, Gramilliy grammar bible, Vocabook 3.0 (420 pages), Math Hard Books 1.0 & 2.0, SAToplam archives (1,819 real exam questions), Bluebook tests, Wiley Math Bible, and the signature 6-page Math Cheat Sheet.
+            Exhaustive 54-volume national and official repository: College Board Educator Question Banks (940 & 1,090 pages), SAT Tashkent archives (Gramilliy 3x1, Vocabook 3.0, 20 Modular Math books, Hardbooks 1.0 & 2.0), English Elite, Atlas Agora, Elbek SAT, 650 Real Exam Words (@DSATuz), @satmath_1, and Wiley Math.
           </p>
         </div>
 
@@ -168,11 +227,11 @@ export default function SATashkentVault() {
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Textbooks</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
-            <div className="text-xl font-black text-[var(--accent-green)]">1,819+</div>
+            <div className="text-xl font-black text-[var(--accent-green)]">2,500+</div>
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Real Questions</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
-            <div className="text-xl font-black text-purple-600 dark:text-purple-400">420</div>
+            <div className="text-xl font-black text-purple-600 dark:text-purple-400">445+</div>
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Vocab Pgs</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
@@ -185,7 +244,7 @@ export default function SATashkentVault() {
       {/* Main Tab Navigation */}
       <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-semibold overflow-x-auto scrollbar-none shadow-sm">
         <button
-          onClick={() => setActiveTab("books")}
+          onClick={() => handleTabChange("books")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "books"
               ? "bg-[var(--accent-blue)] text-white shadow-sm font-bold"
@@ -197,7 +256,7 @@ export default function SATashkentVault() {
         </button>
 
         <button
-          onClick={() => setActiveTab("cheatsheet")}
+          onClick={() => handleTabChange("cheatsheet")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "cheatsheet"
               ? "bg-[var(--accent-blue)] text-white shadow-sm font-bold"
@@ -209,7 +268,7 @@ export default function SATashkentVault() {
         </button>
 
         <button
-          onClick={() => setActiveTab("gramilliy3x1")}
+          onClick={() => handleTabChange("gramilliy3x1")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "gramilliy3x1"
               ? "bg-purple-600 text-white shadow-sm font-bold"
@@ -221,7 +280,7 @@ export default function SATashkentVault() {
         </button>
 
         <button
-          onClick={() => setActiveTab("vocabook")}
+          onClick={() => handleTabChange("vocabook")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "vocabook"
               ? "bg-emerald-600 text-white shadow-sm font-bold"
@@ -233,7 +292,7 @@ export default function SATashkentVault() {
         </button>
 
         <button
-          onClick={() => setActiveTab("roadmap")}
+          onClick={() => handleTabChange("roadmap")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "roadmap"
               ? "bg-amber-600 text-white shadow-sm font-bold"
@@ -252,44 +311,44 @@ export default function SATashkentVault() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)]">
             <div className="flex items-center gap-2 text-xs flex-wrap">
               <button
-                onClick={() => setCategoryFilter("ALL")}
+                onClick={() => handleCategoryFilterChange("ALL")}
                 className={`px-3 py-1.5 rounded-lg transition-all ${
                   categoryFilter === "ALL"
                     ? "bg-[var(--accent-blue)] text-white font-bold"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
                 }`}
               >
-                All ({SATASHKENT_LIBRARY.length})
+                All ({categoryCounts.ALL})
               </button>
               <button
-                onClick={() => setCategoryFilter("Math")}
+                onClick={() => handleCategoryFilterChange("Math")}
                 className={`px-3 py-1.5 rounded-lg transition-all ${
                   categoryFilter === "Math"
                     ? "bg-[var(--accent-blue)] text-white font-bold"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
                 }`}
               >
-                Math (27 Books)
+                Math ({categoryCounts.Math} Books)
               </button>
               <button
-                onClick={() => setCategoryFilter("Reading & Writing")}
+                onClick={() => handleCategoryFilterChange("Reading & Writing")}
                 className={`px-3 py-1.5 rounded-lg transition-all ${
                   categoryFilter === "Reading & Writing"
                     ? "bg-purple-600 text-white font-bold"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
                 }`}
               >
-                Reading & Writing (7 Books)
+                Reading & Writing ({categoryCounts["Reading & Writing"]} Books)
               </button>
               <button
-                onClick={() => setCategoryFilter("Full System")}
+                onClick={() => handleCategoryFilterChange("Full System")}
                 className={`px-3 py-1.5 rounded-lg transition-all ${
                   categoryFilter === "Full System"
                     ? "bg-amber-600 text-white font-bold"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
                 }`}
               >
-                Full System & Tests (5 Books)
+                Full System & Tests ({categoryCounts["Full System"]} Books)
               </button>
             </div>
 
@@ -300,7 +359,7 @@ export default function SATashkentVault() {
               />
               <input
                 type="text"
-                placeholder="Search all 41 books & sources..."
+                placeholder="Search all 54 books, bibles & question banks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-blue)]"
