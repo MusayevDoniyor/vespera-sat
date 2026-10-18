@@ -949,6 +949,25 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     ],
     signatureMethod: "Full-scale 1:1 exam rehearsal mimicking actual test center stamina and cognitive load.",
   },
+  {
+    id: "rw-professor-iv",
+    title: "SAT Reading & Writing Professor IV — Built for 800",
+    filename: "Reading Writing Professor IV.pdf",
+    pages: 1474,
+    category: "Reading & Writing",
+    targetScore: "Target 700–800",
+    badge: "1,845 QUESTIONS • 1,474 PAGES",
+    description: "The definitive 1,474-page Digital SAT Reading & Writing encyclopedia by SAT League. Contains 1,845 authentic questions covering all 13 official question types, meticulously organized from Easy → Medium → Hard with complete step-by-step analytical explanations.",
+    keyTopics: [
+      "13 Question Types Organized Easy → Medium → Hard (1,845 Total Questions)",
+      "Reading (1,026 Qs): Words in Context (261), Claims (144), Graphs & Tables (133), Inference (140)",
+      "Writing (819 Qs): Grammar (421), Transitions (194), Rhetorical Notes (204)",
+      "Four Core Meta-Methods: Tone/Gist, Rhetorical Function, Evidence, and Inference",
+      "The Five-Step Routine: 1 overview, 1 right answer reason, 3 wrong choices breakdown, 1 oral explanation",
+      "Official 800 Target Progression: Professor I → Professor IV → Professor II → Professor III",
+    ],
+    signatureMethod: "The Five-Step Routine: overview text in own words, justify the 1 key, deconstruct the 3 distractors, and verbalize rationale. 'Twenty questions studied properly beat two hundred rushed through.'",
+  },
 ];
 
 export interface CheatSheetSection {

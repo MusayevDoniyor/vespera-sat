@@ -278,6 +278,41 @@ export default function BluebookExamRunnerPage() {
     }));
   };
 
+  // Keyboard navigation (ArrowLeft: Back, ArrowRight / Enter: Next, A-D: Select Option)
+  useEffect(() => {
+    if (stage !== "testing") return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setCurrentIndex((prev) => Math.min(activeQuestions.length - 1, prev + 1));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setCurrentIndex((prev) => Math.max(0, prev - 1));
+      } else if (e.key === "Enter" && !e.shiftKey) {
+        if (currentIndex < activeQuestions.length - 1) {
+          e.preventDefault();
+          setCurrentIndex((prev) => prev + 1);
+        }
+      } else if (["a", "b", "c", "d", "A", "B", "C", "D"].includes(e.key)) {
+        const letter = e.key.toUpperCase();
+        if (currentQuestion && currentQuestion.type === "multiple_choice") {
+          handleSelectAnswer(letter);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [stage, activeQuestions.length, currentIndex, currentQuestion]);
+
   const submitCurrentModule = () => {
     setShowQuestionGrid(false);
 
@@ -645,7 +680,7 @@ export default function BluebookExamRunnerPage() {
   const isFlagged = currentQuestion ? Boolean(flagged[currentQuestion.id]) : false;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col justify-between select-none">
+    <div className="fixed inset-0 w-screen h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col justify-between overflow-hidden select-none">
       {/* Session Restored Floating Banner */}
       {sessionRestoredNotice && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-bold shadow-xl flex items-center gap-2 animate-bounce">
@@ -655,7 +690,7 @@ export default function BluebookExamRunnerPage() {
       )}
 
       {/* Bluebook Official Header */}
-      <header className="h-14 px-4 sm:px-6 bg-[var(--bg-card)] border-b border-[var(--border-main)] flex items-center justify-between z-30">
+      <header className="h-14 shrink-0 px-4 sm:px-6 bg-[var(--bg-card)] border-b border-[var(--border-main)] flex items-center justify-between z-30">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowLeaveConfirmation(true)}
@@ -755,12 +790,12 @@ export default function BluebookExamRunnerPage() {
       </header>
 
       {/* Main Testing View */}
-      <main className="flex-1 flex overflow-hidden relative">
+      <main className="flex-1 min-h-0 w-full flex overflow-hidden relative">
         {currentQuestion && (
-          <div className="w-full h-full flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+          <div className="w-full h-full flex flex-col md:flex-row overflow-hidden">
             {/* Left: Reading Passage (split 50/50 for RW, or full prompt for Math) */}
             {passageToShow && (
-              <div className="w-full md:w-1/2 p-6 md:p-8 border-b md:border-b-0 md:border-r border-[var(--border-main)] overflow-y-auto leading-relaxed text-sm md:text-base font-serif text-[var(--text-secondary)] whitespace-pre-line bg-[var(--bg-surface)]/30">
+              <div className="w-full md:w-1/2 h-1/2 md:h-full p-6 md:p-8 border-b md:border-b-0 md:border-r border-[var(--border-main)] overflow-y-auto leading-relaxed text-sm md:text-base font-serif text-[var(--text-secondary)] whitespace-pre-line bg-[var(--bg-surface)]/30">
                 <div className="max-w-xl mx-auto">
                   {passageToShow}
                 </div>
@@ -768,25 +803,58 @@ export default function BluebookExamRunnerPage() {
             )}
 
             {/* Right: Question Stem, Options, and Tools */}
-            <div className={`w-full ${passageToShow ? "md:w-1/2" : "max-w-3xl mx-auto"} p-6 md:p-8 overflow-y-auto space-y-6 flex flex-col justify-between`}>
+            <div className={`w-full ${passageToShow ? "md:w-1/2 h-1/2 md:h-full" : "max-w-3xl mx-auto h-full"} p-6 md:p-8 overflow-y-auto space-y-6 flex flex-col justify-between`}>
               <div className="space-y-6">
                 {/* Question Info Bar */}
-                <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)]">
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--accent-blue)]">
-                    Question {currentIndex + 1} of {activeQuestions.length}
-                  </span>
-
+                <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)] gap-2">
                   <button
-                    onClick={handleFlagToggle}
-                    className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-lg transition ${
-                      isFlagged
-                        ? "bg-amber-500/15 text-amber-500 font-bold"
-                        : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
-                    }`}
+                    onClick={() => setShowQuestionGrid(true)}
+                    className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--accent-blue)] hover:underline flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-[var(--accent-blue)]/10 transition"
+                    title="Open full 27 question navigator grid"
                   >
-                    <Bookmark className={`w-3.5 h-3.5 ${isFlagged ? "fill-current" : ""}`} />
-                    <span>{isFlagged ? "Marked for Review" : "Mark for Review"}</span>
+                    <Grid className="w-3.5 h-3.5" />
+                    <span>Question {currentIndex + 1} of {activeQuestions.length}</span>
+                    <ChevronDown className="w-3 h-3 text-[var(--text-muted)]" />
                   </button>
+
+                  <div className="flex items-center gap-2">
+                    {/* Compact Prev / Next buttons in header for immediate access */}
+                    <div className="flex items-center gap-0.5 bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-lg p-0.5">
+                      <button
+                        disabled={currentIndex === 0}
+                        onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+                        className="px-2 py-1 text-xs font-bold disabled:opacity-30 hover:text-[var(--text-main)] text-[var(--text-muted)] transition"
+                        title="Previous Question (Left Arrow)"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (currentIndex < activeQuestions.length - 1) {
+                            setCurrentIndex((prev) => prev + 1);
+                          } else {
+                            setStage("section_review");
+                          }
+                        }}
+                        className="px-2 py-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline transition"
+                        title="Next Question (Right Arrow / Enter)"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={handleFlagToggle}
+                      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-lg transition ${
+                        isFlagged
+                          ? "bg-amber-500/15 text-amber-500 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                      }`}
+                    >
+                      <Bookmark className={`w-3.5 h-3.5 ${isFlagged ? "fill-current" : ""}`} />
+                      <span className="hidden sm:inline">{isFlagged ? "Marked" : "Mark for Review"}</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Geometric Diagram if present */}
@@ -900,8 +968,8 @@ export default function BluebookExamRunnerPage() {
         </div>
       )}
 
-      {/* Bluebook Footer Navigation */}
-      <footer className="h-16 px-4 sm:px-6 bg-[var(--bg-card)] border-t border-[var(--border-main)] flex items-center justify-between z-30">
+      {/* Bluebook Footer Navigation - Permanently Pinned */}
+      <footer className="h-16 shrink-0 px-4 sm:px-6 bg-[var(--bg-card)] border-t border-[var(--border-main)] flex items-center justify-between z-30 shadow-lg">
         <div>
           <button
             onClick={() => setShowQuestionGrid(true)}

@@ -85,7 +85,7 @@ export default function Sidebar() {
       items: [
         { label: "Bluebook Mock", href: "/mock", icon: FileCheck2 },
         { label: "Error Notebook", href: "/error-log", icon: Repeat },
-        { label: "54 Prep Books", href: "/satashkent", icon: Award },
+        { label: "55 Prep Books", href: "/satashkent", icon: Award },
       ],
     },
   ];

@@ -67,7 +67,7 @@ function VerbalContent() {
   const [selectedTopic, setSelectedTopic] = useState<string>("ALL");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
   const [showVisualGuide, setShowVisualGuide] = useState(false);
-  const [activeTab, setActiveTab] = useState<"questions" | "transitions" | "boundaries">("questions");
+  const [activeTab, setActiveTab] = useState<"questions" | "transitions" | "boundaries" | "professor">("questions");
   const [studyModalTopic, setStudyModalTopic] = useState<string | null>(null);
 
   // Pagination state
@@ -272,6 +272,17 @@ function VerbalContent() {
             <BrainCircuit size={15} />
             <span>650 Vocab Studio (SM-2)</span>
           </Link>
+
+          <a
+            href="/api/materials/Reading%20Writing%20Professor%20IV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] border border-purple-500/30 text-purple-600 dark:text-purple-400 shadow-sm hover:bg-purple-500/10 transition"
+            title="Open 1,474-page SAT Reading & Writing Professor IV (Built for 800)"
+          >
+            <BookOpen size={15} />
+            <span>Professor IV (1,845 Qs)</span>
+          </a>
         </div>
       </div>
 
@@ -396,6 +407,16 @@ function VerbalContent() {
             >
               Grammar Boundaries
             </button>
+            <button
+              onClick={() => setActiveTab("professor")}
+              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+                activeTab === "professor"
+                  ? "bg-purple-600 text-white"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
+              }`}
+            >
+              Professor IV: 800 Guide
+            </button>
           </div>
         </div>
 
@@ -478,6 +499,89 @@ function VerbalContent() {
               <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
                 Only 4 ways to join two sentences: <strong>1)</strong> IC . IC <strong>2)</strong> IC ; IC <strong>3)</strong> IC , FANBOYS IC <strong>4)</strong> IC : Explanation.
               </p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "professor" && (
+          <div className="space-y-4 text-xs pt-1 animate-in fade-in duration-200">
+            {/* Header / Guide banner */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-600/15 via-indigo-600/10 to-transparent border border-purple-500/25 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-600 dark:text-purple-300 font-mono uppercase">
+                    Built for 800 · 1,845 Questions · 1,474 Pages
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)]">Easy → Medium → Hard</span>
+                </div>
+                <h4 className="text-sm font-black text-[var(--text-main)]">
+                  SAT Reading & Writing Professor IV — Methodology & 800 Blueprint
+                </h4>
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed max-w-2xl">
+                  &ldquo;Doing questions is not what improves you. Analysing them afterwards is. Twenty questions studied properly beat two hundred rushed through.&rdquo;
+                </p>
+              </div>
+
+              <a
+                href="/api/materials/Reading%20Writing%20Professor%20IV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-md flex items-center justify-center gap-2 shrink-0 self-start md:self-auto"
+              >
+                <BookOpen size={14} />
+                <span>Open Complete 1,474-Page PDF</span>
+              </a>
+            </div>
+
+            {/* Core 3-Column Pillars */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {/* Pillar 1: Roadmaps */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                <span className="font-bold text-purple-600 dark:text-purple-400 block font-mono text-[11px] uppercase">
+                  1. The Score Roadmaps
+                </span>
+                <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-1 font-mono text-[11px]">
+                  <div className="text-[var(--accent-blue)] font-bold">Aiming for 700+:</div>
+                  <div className="text-[var(--text-muted)]">Professor I → Professor IV</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-1 font-mono text-[11px]">
+                  <div className="text-purple-600 dark:text-purple-400 font-bold">Aiming for 800:</div>
+                  <div className="text-[var(--text-muted)]">Prof I → Prof IV → Prof II → Prof III</div>
+                </div>
+                <p className="text-[10px] text-[var(--text-muted)] italic">
+                  Complete each book before moving to the next.
+                </p>
+              </div>
+
+              {/* Pillar 2: 5-Step Routine */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                <span className="font-bold text-amber-600 dark:text-amber-400 block font-mono text-[11px] uppercase">
+                  2. The 5-Step Analytical Routine
+                </span>
+                <ol className="space-y-1 text-[11px] text-[var(--text-muted)] list-decimal list-inside leading-snug">
+                  <li><strong className="text-[var(--text-main)]">Answer</strong> timed under real conditions.</li>
+                  <li><strong className="text-[var(--text-main)]">Overview:</strong> Write short summary in own words.</li>
+                  <li><strong className="text-[var(--text-main)]">Why Key:</strong> Explain why right choice is right.</li>
+                  <li><strong className="text-[var(--text-main)]">Why Traps:</strong> Explain why other 3 are wrong.</li>
+                  <li><strong className="text-[var(--text-main)]">Say Out Loud:</strong> Verbalize the rule.</li>
+                </ol>
+              </div>
+
+              {/* Pillar 3: 4 Meta-Methods */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 block font-mono text-[11px] uppercase">
+                  3. Four Methods, Not Ten
+                </span>
+                <div className="space-y-1 text-[11px] text-[var(--text-muted)]">
+                  <div><strong>Block 1:</strong> Words in Context · Main Idea · Purpose</div>
+                  <div><strong>Block 2:</strong> Rhetorical Function · Text Structure</div>
+                  <div><strong>Block 3:</strong> Claims · Quantitative Graphs & Tables</div>
+                  <div><strong>Block 4:</strong> Specific Detail · Cross-Text · Inference</div>
+                </div>
+                <p className="text-[10px] text-[var(--text-muted)]">
+                  13 question types organized strictly: Easy → Medium → Hard.
+                </p>
+              </div>
             </div>
           </div>
         )}

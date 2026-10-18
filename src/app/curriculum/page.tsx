@@ -254,7 +254,7 @@ export default function CurriculumPage() {
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 border border-purple-500/20"
         >
           <GraduationCap size={15} />
-          <span>🇺🇿 Digital SAT Masterclass & Materials Vault (54 Books) →</span>
+          <span>🇺🇿 Digital SAT Masterclass & Materials Vault (55 Books) →</span>
         </Link>
       </div>
 

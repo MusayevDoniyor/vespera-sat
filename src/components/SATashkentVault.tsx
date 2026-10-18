@@ -206,7 +206,7 @@ export default function SATashkentVault() {
             </span>
             <span className="text-[var(--text-muted)]">•</span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              54 Authentic Textbooks & 2,500+ Real Questions
+              55 Authentic Textbooks & 4,000+ Real Questions
             </span>
           </div>
 
@@ -216,7 +216,7 @@ export default function SATashkentVault() {
           </h2>
 
           <p className="text-xs text-[var(--text-muted)] mt-2 max-w-2xl leading-relaxed">
-            Exhaustive 54-volume national and official repository: College Board Educator Question Banks (940 & 1,090 pages), SAT Tashkent archives (Gramilliy 3x1, Vocabook 3.0, 20 Modular Math books, Hardbooks 1.0 & 2.0), English Elite, Atlas Agora, Elbek SAT, 650 Real Exam Words (@DSATuz), @satmath_1, and Wiley Math.
+            Exhaustive 55-volume national and official repository: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions by SAT League), College Board Question Banks (940 & 1,090 pages), SAT Tashkent archives (Gramilliy 3x1, Vocabook 3.0, 20 Modular Math books, Hardbooks 1.0 & 2.0), English Elite, Atlas Agora, Elbek SAT, 650 Real Exam Words (@DSATuz), @satmath_1, and Wiley Math.
           </p>
         </div>
 
@@ -227,7 +227,7 @@ export default function SATashkentVault() {
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Textbooks</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
-            <div className="text-xl font-black text-[var(--accent-green)]">2,500+</div>
+            <div className="text-xl font-black text-[var(--accent-green)]">4,000+</div>
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Real Questions</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
@@ -359,7 +359,7 @@ export default function SATashkentVault() {
               />
               <input
                 type="text"
-                placeholder="Search all 54 books, bibles & question banks..."
+                placeholder="Search all 55 books, bibles & question banks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-blue)]"

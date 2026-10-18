@@ -1122,7 +1122,7 @@ export default function DashboardPage() {
               🇺🇿 National & Official Curriculum Hub
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              54 Textbooks • 2,500+ Real Questions • 445+ Vocab Pages
+              55 Textbooks • 4,000+ Real Questions • 445+ Vocab Pages
             </span>
           </div>
           <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-2.5">
@@ -1130,7 +1130,7 @@ export default function DashboardPage() {
             <span>Digital SAT Masterclass Vault & Authentic Archives</span>
           </h3>
           <p className="text-xs text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            The complete national standard in SAT prep: Official College Board Question Banks, Gramilliy grammar bible with 3x1 elimination, 20 modular math textbooks, Vocabook 3.0, 650 Real Words (@DSATuz), English Elite, and real exam test recalls.
+            The complete national standard in SAT prep: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions), Official College Board Question Banks, Gramilliy grammar bible with 3x1 elimination, 20 modular math textbooks, Vocabook 3.0, 650 Real Words (@DSATuz), English Elite, and real exam test recalls.
           </p>
         </div>
 
@@ -1139,7 +1139,7 @@ export default function DashboardPage() {
             href="/satashkent"
             className="px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
           >
-            <span>Explore 54 Books & Vault</span>
+            <span>Explore 55 Books & Vault</span>
             <ArrowRight size={15} />
           </Link>
         </div>

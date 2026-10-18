@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, RotateCcw, AlertCircle, Sparkles } from "lucide-react";
 import MockResultsView from "@/components/mock/MockResultsView";
-import { getAttemptReport, MockAttemptReport } from "@/lib/mock-storage";
+import { getAttemptReport, clearExamSession, MockAttemptReport } from "@/lib/mock-storage";
 
 export default function MockResultsPage() {
   const params = useParams();
@@ -94,7 +94,10 @@ export default function MockResultsPage() {
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)]">
       <MockResultsView
         report={report}
-        onRetake={() => router.push(`/mock/exam/${report.examId}`)}
+        onRetake={() => {
+          clearExamSession(report.examId);
+          router.push(`/mock/exam/${report.examId}`);
+        }}
       />
     </div>
   );
