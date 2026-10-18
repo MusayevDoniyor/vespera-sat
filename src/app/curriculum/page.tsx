@@ -244,7 +244,7 @@ export default function CurriculumPage() {
         >
           <BookOpen size={15} />
           <span>📘 SAT Math Terminology & Operations Dictionary</span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold">
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-mono font-bold">
             82 Terms
           </span>
         </button>

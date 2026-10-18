@@ -89,7 +89,7 @@ export default function KhanAcademyUnitsView() {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-            Foundations (0-dan Boshlash)
+            Foundations (Ground Zero)
           </button>
           <button
             onClick={() => setSelectedTier("Medium")}
@@ -100,7 +100,7 @@ export default function KhanAcademyUnitsView() {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-            Medium (Standard Modul)
+            Medium (Core Modules)
           </button>
           <button
             onClick={() => setSelectedTier("Advanced")}

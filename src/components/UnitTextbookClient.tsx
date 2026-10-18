@@ -186,7 +186,7 @@ export default function UnitTextbookClient({ unit }: Props) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
         {/* Unit Hero Banner with Enhanced Contrast */}
-        <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] mb-6 shadow-sm">
+        <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 mb-6 shadow-sm">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="space-y-3 max-w-3xl">
               <div className="flex items-center gap-2 flex-wrap">
@@ -203,31 +203,31 @@ export default function UnitTextbookClient({ unit }: Props) {
               <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {unit.title}
               </h2>
-              <p className="text-xs md:text-sm text-slate-600 dark:text-[var(--text-muted)] leading-relaxed font-medium">
+              <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
                 {unit.description}
               </p>
             </div>
 
-            <div className="shrink-0 flex items-center gap-2 bg-slate-50 dark:bg-[var(--bg-surface)] p-3 rounded-2xl border border-slate-200 dark:border-[var(--border-main)]">
-              <div className="text-center px-4 border-r border-slate-200 dark:border-[var(--border-main)]">
-                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">Sections</div>
+            <div className="shrink-0 flex items-center gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <div className="text-center px-4 border-r border-slate-200 dark:border-slate-700">
+                <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider font-mono">Sections</div>
                 <div className="text-xl font-black text-slate-900 dark:text-white">{unit.sections.length}</div>
               </div>
               <div className="text-center px-4">
-                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">Questions</div>
-                <div className="text-xl font-black text-emerald-600 dark:text-emerald-400">{unit.practiceQuestions.length}</div>
+                <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider font-mono">Questions</div>
+                <div className="text-xl font-black text-emerald-700 dark:text-emerald-400">{unit.practiceQuestions.length}</div>
               </div>
             </div>
           </div>
 
           {/* Primary View Switcher Tabs */}
-          <div className="flex items-center gap-2 mt-6 pt-6 border-t border-slate-200 dark:border-[var(--border-main)]/60 overflow-x-auto">
+          <div className="flex items-center gap-2 mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 overflow-x-auto">
             <button
               onClick={() => setActiveTab("textbook")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "textbook"
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
+                  ? "bg-blue-600 text-white shadow-sm ring-1 ring-blue-600"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
               }`}
             >
               <BookOpen size={14} />
@@ -238,8 +238,8 @@ export default function UnitTextbookClient({ unit }: Props) {
               onClick={() => setActiveTab("quiz")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "quiz"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
+                  ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-600"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
               }`}
             >
               <CheckCircle2 size={14} />
@@ -250,8 +250,8 @@ export default function UnitTextbookClient({ unit }: Props) {
               onClick={() => setActiveTab("speedhacks")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "speedhacks"
-                  ? "bg-amber-600 text-white shadow-sm"
-                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
+                  ? "bg-amber-600 text-white shadow-sm ring-1 ring-amber-600"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
               }`}
             >
               <Zap size={14} />
@@ -262,8 +262,8 @@ export default function UnitTextbookClient({ unit }: Props) {
               onClick={() => setActiveTab("ai")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "ai"
-                  ? "bg-purple-600 text-white shadow-sm"
-                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
+                  ? "bg-purple-600 text-white shadow-sm ring-1 ring-purple-600"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
               }`}
             >
               <Sparkles size={14} />
@@ -274,11 +274,11 @@ export default function UnitTextbookClient({ unit }: Props) {
 
         {/* Desmos Split View (If Toggled) */}
         {showDesmosSplit && (
-          <div className="mb-6 p-4 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border-2 border-cyan-500/50 shadow-lg">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-[var(--border-main)]">
+          <div className="mb-6 p-4 rounded-3xl bg-slate-50 dark:bg-slate-900 border-2 border-cyan-500/50 shadow-lg">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Calculator size={16} className="text-cyan-600 dark:text-cyan-400" />
-                <span className="text-xs font-bold text-slate-900 dark:text-[var(--text-main)]">
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
                   Official Bluebook Desmos Graphing Calculator Sandbox
                 </span>
               </div>
@@ -289,7 +289,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 Close
               </button>
             </div>
-            <div className="w-full h-[380px] rounded-2xl overflow-hidden border border-slate-300 dark:border-[var(--border-main)] shadow-inner">
+            <div className="w-full h-[380px] rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700 shadow-inner">
               <iframe
                 src="https://www.desmos.com/testing/cb-digital-sat/graphing"
                 className="w-full h-full border-none"
@@ -304,9 +304,9 @@ export default function UnitTextbookClient({ unit }: Props) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Sidebar Table of Contents */}
             <div className="lg:col-span-4 space-y-2 lg:sticky lg:top-24">
-              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[var(--text-muted)] px-2 mb-2 flex items-center justify-between">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 px-2 mb-2 flex items-center justify-between font-mono">
                 <span>Chapter Index</span>
-                <span className="font-mono text-[11px]">{unit.sections.length} Chapters</span>
+                <span className="text-[11px]">{unit.sections.length} Chapters</span>
               </div>
 
               {unit.sections.map((section, idx) => {
@@ -321,20 +321,20 @@ export default function UnitTextbookClient({ unit }: Props) {
                     className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
                       isActive
                         ? "bg-blue-600 text-white border-blue-500 shadow-md ring-2 ring-blue-500/20"
-                        : "bg-white dark:bg-[var(--bg-card)] border-slate-200 dark:border-[var(--border-main)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:border-blue-400 dark:hover:border-blue-500/40"
+                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 shadow-xs"
                     }`}
                   >
                     <span
                       className={`w-6 h-6 rounded-lg text-xs font-mono font-bold flex items-center justify-center shrink-0 mt-0.5 ${
                         isActive
                           ? "bg-white text-blue-700 shadow-sm"
-                          : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-600 dark:text-slate-400"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
                       }`}
                     >
                       {idx + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className={`text-xs leading-snug line-clamp-2 ${isActive ? "font-bold text-white" : "font-semibold"}`}>
+                      <div className={`text-xs leading-snug line-clamp-2 ${isActive ? "font-bold text-white" : "font-semibold text-slate-900 dark:text-slate-100"}`}>
                         {section.title}
                       </div>
                       <div className={`text-[11px] flex items-center gap-1 mt-1 font-mono ${isActive ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}>
@@ -351,7 +351,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                   <CheckCircle2 size={14} className="text-emerald-600 dark:text-emerald-400" />
                   <span>Test Your Comprehension</span>
                 </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
                   Done reading the theory? Solidify your mastery with the 10-question target practice set.
                 </p>
                 <button
@@ -366,9 +366,9 @@ export default function UnitTextbookClient({ unit }: Props) {
             {/* Main Section Content Area */}
             <div id="active-section-reader" className="lg:col-span-8 space-y-6">
               {activeSection && (
-                <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm space-y-6">
+                <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
                   {/* Section Title & Header */}
-                  <div className="border-b border-slate-200 dark:border-[var(--border-main)] pb-5">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-5">
                     <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-400 font-mono font-bold mb-1 uppercase tracking-wider">
                       <span>Chapter {unit.sections.findIndex((s) => s.id === activeSection.id) + 1} of {unit.sections.length}</span>
                       <span>•</span>
@@ -377,7 +377,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                     <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white">
                       {activeSection.title}
                     </h3>
-                    <p className="text-xs md:text-sm text-slate-600 dark:text-[var(--text-muted)] mt-2 leading-relaxed font-medium">
+                    <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed font-medium">
                       {activeSection.summary}
                     </p>
                   </div>
@@ -388,20 +388,20 @@ export default function UnitTextbookClient({ unit }: Props) {
                   )}
 
                   {/* Section Body Text & KaTeX Content */}
-                  <div className="prose prose-slate dark:prose-invert max-w-none text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200 space-y-4">
+                  <div className="text-xs md:text-sm leading-relaxed text-slate-900 dark:text-slate-100 space-y-4">
                     <KaTeXMath mathText={activeSection.contentMarkdown} />
                   </div>
 
                   {/* Key Takeaways Card with Accessible Light/Dark Colors */}
                   {activeSection.keyTakeaways && activeSection.keyTakeaways.length > 0 && (
-                    <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] space-y-3">
+                    <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-3">
                       <div className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-2 font-mono">
                         <CheckCircle2 size={15} />
                         <span>Key Principles & Core Takeaways</span>
                       </div>
                       <div className="space-y-2">
                         {activeSection.keyTakeaways.map((takeaway, tIdx) => (
-                          <div key={tIdx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                          <div key={tIdx} className="flex items-start gap-2.5 text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 mt-1.5 shrink-0" />
                             <div className="flex-1">
                               <KaTeXMath mathText={takeaway} />
@@ -416,13 +416,13 @@ export default function UnitTextbookClient({ unit }: Props) {
                   {activeSection.desmosExample && (
                     <div className="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-500/40 space-y-2.5">
                       <div className="flex items-center justify-between flex-wrap gap-2">
-                        <div className="text-xs font-bold text-cyan-900 dark:text-cyan-300 flex items-center gap-2">
-                          <Calculator size={15} className="text-cyan-600 dark:text-cyan-400" />
+                        <div className="text-xs font-bold text-cyan-950 dark:text-cyan-200 flex items-center gap-2">
+                          <Calculator size={15} className="text-cyan-700 dark:text-cyan-400" />
                           <span>Desmos SpeedHack: {activeSection.desmosExample.title}</span>
                         </div>
                         <button
                           onClick={() => setShowDesmosSplit(true)}
-                          className="px-3 py-1 rounded-xl bg-cyan-600 dark:bg-cyan-500 text-white text-[11px] font-bold hover:opacity-90 shadow-sm transition-all"
+                          className="px-3 py-1 rounded-xl bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 text-white text-[11px] font-bold shadow-sm transition-all"
                         >
                           Open in Desmos
                         </button>
@@ -430,14 +430,14 @@ export default function UnitTextbookClient({ unit }: Props) {
                       <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-amber-300 shadow-inner">
                         {activeSection.desmosExample.expression}
                       </div>
-                      <p className="text-xs text-cyan-950 dark:text-cyan-200 leading-relaxed font-medium">
+                      <p className="text-xs text-cyan-950 dark:text-cyan-100 leading-relaxed font-medium">
                         {activeSection.desmosExample.tip}
                       </p>
                     </div>
                   )}
 
                   {/* Bottom Section Navigator */}
-                  <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-[var(--border-main)]">
+                  <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
                     {(() => {
                       const curIdx = unit.sections.findIndex((s) => s.id === activeSection.id);
                       const prevSec = unit.sections[curIdx - 1];
@@ -494,7 +494,7 @@ export default function UnitTextbookClient({ unit }: Props) {
         {activeTab === "quiz" && (
           <div className="space-y-6">
             {/* Quiz Banner & Score Card */}
-            <div className="p-6 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
               <div>
                 <div className="text-xs font-extrabold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 font-mono">
                   <CheckCircle2 size={15} />
@@ -503,21 +503,21 @@ export default function UnitTextbookClient({ unit }: Props) {
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                   10 Target Diagnostic Questions
                 </h3>
-                <p className="text-xs text-slate-600 dark:text-[var(--text-muted)] mt-1 font-medium">
+                <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 font-medium">
                   Select an option for each question to unlock immediate step-by-step mathematical derivation and trap analysis.
                 </p>
               </div>
 
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-xs text-slate-500 dark:text-[var(--text-muted)] font-mono font-bold">Accuracy Score:</div>
-                  <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                  <div className="text-xs text-slate-600 dark:text-slate-400 font-mono font-bold">Accuracy Score:</div>
+                  <div className="text-2xl font-black text-emerald-700 dark:text-emerald-400">
                     {correctCount} / {unit.practiceQuestions.length}
                   </div>
                 </div>
                 <button
                   onClick={handleResetQuiz}
-                  className="p-2.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-slate-600 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:border-blue-500 transition-colors"
+                  className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-blue-500 transition-colors"
                   title="Reset Quiz"
                 >
                   <RotateCcw size={16} />
@@ -538,14 +538,14 @@ export default function UnitTextbookClient({ unit }: Props) {
                     className={`p-6 md:p-8 rounded-3xl border transition-all ${
                       isSubmitted
                         ? isCorrect
-                          ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-500/40"
-                          : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-500/40"
-                        : "bg-white dark:bg-[var(--bg-card)] border-slate-200 dark:border-[var(--border-main)] shadow-sm"
+                          ? "bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-500/40"
+                          : "bg-rose-50/70 dark:bg-rose-950/20 border-rose-300 dark:border-rose-500/40"
+                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm"
                     }`}
                   >
                     {/* Question Header */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] border border-slate-200 dark:border-[var(--border-main)]">
+                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
                         Question #{idx + 1}
                       </span>
                       {isSubmitted && (
@@ -588,15 +588,15 @@ export default function UnitTextbookClient({ unit }: Props) {
 
                         if (!isSubmitted) {
                           optClasses += isThisSelected
-                            ? "bg-blue-50 dark:bg-blue-900/25 border-blue-500 dark:border-blue-400 text-blue-950 dark:text-blue-100 shadow-sm"
-                            : "bg-slate-50 dark:bg-[var(--bg-surface)] border-slate-200 dark:border-[var(--border-main)] text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white";
+                            ? "bg-blue-50 dark:bg-blue-900/30 border-blue-500 dark:border-blue-400 text-blue-950 dark:text-blue-100 shadow-sm ring-1 ring-blue-500"
+                            : "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white";
                         } else {
                           if (isThisCorrect) {
-                            optClasses += "bg-emerald-100 dark:bg-emerald-900/30 border-emerald-500 text-emerald-950 dark:text-emerald-200 font-bold";
+                            optClasses += "bg-emerald-100 dark:bg-emerald-900/40 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-bold";
                           } else if (isThisSelected && !isCorrect) {
-                            optClasses += "bg-rose-100 dark:bg-rose-900/30 border-rose-500 text-rose-950 dark:text-rose-200 font-bold";
+                            optClasses += "bg-rose-100 dark:bg-rose-900/40 border-rose-500 text-rose-950 dark:text-rose-100 font-bold";
                           } else {
-                            optClasses += "bg-slate-50/50 dark:bg-[var(--bg-surface)]/50 border-slate-200/50 dark:border-[var(--border-main)]/50 opacity-40 text-slate-500 dark:text-slate-400";
+                            optClasses += "bg-slate-50/60 dark:bg-slate-800/30 border-slate-200/60 dark:border-slate-700/40 opacity-40 text-slate-600 dark:text-slate-400";
                           }
                         }
 
@@ -615,12 +615,12 @@ export default function UnitTextbookClient({ unit }: Props) {
                                       ? "bg-emerald-600 text-white"
                                       : "bg-rose-600 text-white"
                                     : "bg-blue-600 text-white"
-                                  : "bg-white dark:bg-[var(--bg-main)] text-slate-700 dark:text-[var(--text-muted)] border border-slate-200 dark:border-transparent"
+                                  : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 shadow-xs"
                               }`}
                             >
                               {letter}
                             </span>
-                            <div className="flex-1 min-w-0 pt-0.5">
+                            <div className="flex-1 min-w-0 pt-0.5 text-slate-900 dark:text-slate-100 font-medium">
                               <KaTeXMath mathText={opt} />
                             </div>
                           </button>
@@ -636,7 +636,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                         className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                           selected
                             ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm cursor-pointer"
-                            : "bg-slate-200 dark:bg-[var(--bg-surface)] text-slate-400 dark:text-[var(--text-muted)] opacity-50 cursor-not-allowed"
+                            : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-500 opacity-60 cursor-not-allowed"
                         }`}
                       >
                         <span>Check Answer</span>
@@ -644,7 +644,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                       </button>
                     ) : (
                       /* Post-Submission Detailed Explanation Drawer */
-                      <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] space-y-4">
+                      <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-4">
                         <div className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-2 font-mono">
                           <BookOpen size={14} />
                           <span>Step-by-Step Derivation & Explanation</span>
@@ -655,19 +655,19 @@ export default function UnitTextbookClient({ unit }: Props) {
                         </div>
 
                         {q.satTrap && (
-                          <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200 font-medium">
+                          <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 flex items-start gap-2.5 text-xs text-amber-950 dark:text-amber-200 font-medium">
                             <AlertTriangle size={15} className="shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
                             <div>
-                              <strong>SAT Trap Alert:</strong> {q.satTrap}
+                              <strong className="text-amber-900 dark:text-amber-100">SAT Trap Alert:</strong> {q.satTrap}
                             </div>
                           </div>
                         )}
 
                         {q.desmosTrick && (
-                          <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-900 dark:text-cyan-200 font-medium">
+                          <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-950 dark:text-cyan-200 font-medium">
                             <Zap size={15} className="shrink-0 text-cyan-600 dark:text-cyan-400 mt-0.5" />
                             <div>
-                              <strong>Desmos SpeedHack:</strong> {q.desmosTrick}
+                              <strong className="text-cyan-900 dark:text-cyan-100">Desmos SpeedHack:</strong> {q.desmosTrick}
                             </div>
                           </div>
                         )}
@@ -683,7 +683,7 @@ export default function UnitTextbookClient({ unit }: Props) {
         {/* TAB 3: SAT SPEEDHACKS */}
         {activeTab === "speedhacks" && (
           <div className="space-y-6">
-            <div className="p-6 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
               <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider mb-1 font-mono">
                 <Zap size={15} />
                 <span>800-Scorer SpeedHacks & Execution Tactics</span>
@@ -691,7 +691,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                 {unit.title}: SpeedHacks
               </h3>
-              <p className="text-xs text-slate-600 dark:text-[var(--text-muted)] mt-1 font-medium">
+              <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 font-medium">
                 Solve questions 3–5x faster than conventional textbook manipulation using College Board test quirks.
               </p>
             </div>
@@ -700,7 +700,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               {unit.speedHacks.map((hack, hIdx) => (
                 <div
                   key={hIdx}
-                  className="p-6 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] hover:border-amber-400 dark:hover:border-amber-500/40 transition-all space-y-3 shadow-sm"
+                  className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-400 dark:hover:border-amber-500/40 transition-all space-y-3 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30">
@@ -711,9 +711,9 @@ export default function UnitTextbookClient({ unit }: Props) {
                   <h4 className="text-base font-bold text-slate-900 dark:text-white">
                     {hack.title}
                   </h4>
-                  <div className="space-y-2 text-xs font-medium">
+                  <div className="space-y-2 text-xs font-medium text-slate-800 dark:text-slate-200">
                     <div>
-                      <span className="text-slate-500 dark:text-[var(--text-muted)] font-bold">Trigger Pattern: </span>
+                      <span className="text-slate-600 dark:text-slate-400 font-bold">Trigger Pattern: </span>
                       <KaTeXMath mathText={hack.trigger} />
                     </div>
                     <div>
@@ -732,8 +732,8 @@ export default function UnitTextbookClient({ unit }: Props) {
 
         {/* TAB 4: AI COPILOT TUTOR */}
         {activeTab === "ai" && (
-          <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-[var(--border-main)] pb-4">
+          <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-600/20 border border-purple-300 dark:border-purple-500/30 flex items-center justify-center text-purple-700 dark:text-purple-400">
                   <Sparkles size={20} />
@@ -742,7 +742,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">
                     Vespera SAT AI Study Copilot
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-[var(--text-muted)]">
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
                     Personalized tutor specialized in {unit.title} concepts, traps, and Desmos techniques.
                   </p>
                 </div>
@@ -755,7 +755,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onClick={() =>
                   handleSendAiMessage("Summarize the 3 most essential rules from this unit with clear examples.")
                 }
-                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-xs text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
               >
                 💡 3 Essential Rules with Examples
               </button>
@@ -763,7 +763,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onClick={() =>
                   handleSendAiMessage("How do I use Desmos to solve this unit's problems in under 30 seconds?")
                 }
-                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-xs text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
               >
                 ⚡ Desmos 30-Second SpeedHacks
               </button>
@@ -771,14 +771,14 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onClick={() =>
                   handleSendAiMessage("What are the most common traps test writers set on Hard Module 2 for this topic?")
                 }
-                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-xs text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
               >
                 ⚠️ Hard Module 2 Traps
               </button>
             </div>
 
             {/* Chat Message Stream */}
-            <div className="space-y-4 max-h-[450px] overflow-y-auto p-4 rounded-2xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)]">
+            <div className="space-y-4 max-h-[450px] overflow-y-auto p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
               {aiMessages.map((msg, mIdx) => (
                 <div
                   key={mIdx}
@@ -793,7 +793,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                     className={`max-w-[85%] p-4 rounded-2xl text-xs md:text-sm leading-relaxed ${
                       msg.sender === "user"
                         ? "bg-blue-600 text-white rounded-tr-none font-medium shadow-sm"
-                        : "bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] text-slate-800 dark:text-slate-200 rounded-tl-none space-y-2 shadow-sm"
+                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-tl-none space-y-2 shadow-sm"
                     }`}
                   >
                     <KaTeXMath mathText={msg.text} />
@@ -802,7 +802,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               ))}
 
               {aiLoading && (
-                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-[var(--text-muted)] p-2">
+                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 p-2">
                   <Loader2 size={16} className="animate-spin text-purple-600 dark:text-purple-400" />
                   <span>AI Mentor is analyzing mathematical principles...</span>
                 </div>
@@ -817,7 +817,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onChange={(e) => setAiInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSendAiMessage()}
                 placeholder="Ask any question about this unit (e.g., How do I solve systems with Desmos?)..."
-                className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-[var(--bg-surface)] border border-slate-300 dark:border-[var(--border-main)] text-xs md:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors shadow-sm"
+                className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs md:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors shadow-sm"
               />
               <button
                 disabled={!aiInput.trim() || aiLoading}

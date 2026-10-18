@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     /* --- Refined Light Palette (Warm Neutral) --- */
@@ -134,6 +136,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 .katex {
   font-size: 1.05em;
   text-rendering: auto;
+  color: inherit;
 }
 
 /* --- Text Selection (Distinct per theme) --- */

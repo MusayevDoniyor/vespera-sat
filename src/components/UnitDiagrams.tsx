@@ -58,7 +58,7 @@ export default function UnitDiagrams({ type }: DiagramProps) {
             {/* Top Branch (Hard) */}
             <path d="M 250 120 C 330 120, 340 55, 430 55" fill="none" stroke="#10b981" strokeWidth="2.5" markerEnd="url(#arrowGreen)" strokeDasharray="5,2" />
             <rect x="295" y="42" width="105" height="26" rx="6" fill="#064e3b" stroke="#10b981" strokeWidth="1" />
-            <text x="347" y="59" textAnchor="middle" fill="#a7f3d0" fontSize="11" fontWeight="bold">Score $\ge$ 15</text>
+            <text x="347" y="59" textAnchor="middle" fill="#a7f3d0" fontSize="11" fontWeight="bold">Score ≥ 15</text>
 
             {/* Bottom Branch (Easy) */}
             <path d="M 250 160 C 330 160, 340 225, 430 225" fill="none" stroke="#f59e0b" strokeWidth="2.5" markerEnd="url(#arrowOrange)" strokeDasharray="5,2" />
@@ -292,8 +292,8 @@ export default function UnitDiagrams({ type }: DiagramProps) {
 
             {/* Slope Triangle */}
             <path d="M 200 110 L 280 110 L 280 20" fill="none" stroke="#d97706" strokeWidth="2" strokeDasharray="4,3" />
-            <text x="240" y="128" fill="#d97706" fontSize="11" textAnchor="middle" fontWeight="bold">Run: $\Delta x = 2$</text>
-            <text x="295" y="70" fill="#d97706" fontSize="11" fontWeight="bold">Rise: $\Delta y = 3$</text>
+            <text x="240" y="128" fill="#d97706" fontSize="11" textAnchor="middle" fontWeight="bold">Run: Δx = 2</text>
+            <text x="295" y="70" fill="#d97706" fontSize="11" fontWeight="bold">Rise: Δy = 3</text>
 
             {/* Intercept Point (0, 1) */}
             <circle cx="200" cy="110" r="5" fill="#059669" />
@@ -316,7 +316,7 @@ export default function UnitDiagrams({ type }: DiagramProps) {
             System of Equations: Unique Intersection Point
           </h4>
           <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30 font-bold">
-            Intersection $(x_0, y_0)$
+            Intersection Point (x₀, y₀)
           </span>
         </div>
 
@@ -328,11 +328,11 @@ export default function UnitDiagrams({ type }: DiagramProps) {
 
             {/* Line 1 */}
             <line x1="100" y1="240" x2="300" y2="40" stroke="#0284c7" strokeWidth="2.5" />
-            <text x="305" y="45" fill="#0284c7" fontSize="11" fontWeight="bold">Line 1: $y = 2x - 2$</text>
+            <text x="305" y="45" fill="#0284c7" fontSize="11" fontWeight="bold">Line 1: y = 2x - 2</text>
 
             {/* Line 2 */}
             <line x1="90" y1="50" x2="320" y2="220" stroke="#e11d48" strokeWidth="2.5" />
-            <text x="315" y="235" fill="#e11d48" fontSize="11" fontWeight="bold">Line 2: $y = -x + 4$</text>
+            <text x="315" y="235" fill="#e11d48" fontSize="11" fontWeight="bold">Line 2: y = -x + 4</text>
 
             {/* Intersection at (2, 2) */}
             <circle cx="233" cy="107" r="7" fill="#f59e0b" stroke="#78350f" strokeWidth="2" className="animate-pulse" />
