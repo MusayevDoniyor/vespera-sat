@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -11,21 +11,16 @@ import {
   XCircle,
   AlertTriangle,
   Sparkles,
-  Layers,
-  ChevronRight,
   Clock,
-  Compass,
-  MessageSquare,
   Calculator,
   RotateCcw,
   Send,
   Loader2,
-  HelpCircle,
-  FileText
+  Layers
 } from "lucide-react";
 import KaTeXMath from "./KaTeXMath";
 import UnitDiagrams from "./UnitDiagrams";
-import { KhanFullUnit, TextbookSection, TextbookPracticeQuestion } from "@/lib/khan-textbook-units";
+import { KhanFullUnit } from "@/lib/khan-textbook-units";
 
 interface Props {
   unit: KhanFullUnit;
@@ -34,6 +29,13 @@ interface Props {
 export default function UnitTextbookClient({ unit }: Props) {
   const [activeTab, setActiveTab] = useState<"textbook" | "quiz" | "speedhacks" | "ai">("textbook");
   const [selectedSectionId, setSelectedSectionId] = useState<string>(unit.sections[0]?.id || "");
+
+  // Reset section state whenever unit changes
+  useEffect(() => {
+    if (unit.sections && unit.sections.length > 0) {
+      setSelectedSectionId(unit.sections[0].id);
+    }
+  }, [unit.id]);
 
   // Quiz State
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
@@ -46,14 +48,14 @@ export default function UnitTextbookClient({ unit }: Props) {
   const [aiMessages, setAiMessages] = useState<Array<{ sender: "user" | "ai"; text: string }>>([
     {
       sender: "ai",
-      text: `Salom! Men sizning **${unit.title}** bo'yicha shaxsiy AI repetitoringizman. Ushbu unitdagi har qanday formula, strategiya yoki savol bo'yicha tushuntirish so'rashingiz mumkin!`
+      text: `Hello! I am your personal **${unit.title}** AI Study Mentor. Ask me any conceptual question, trap clarification, or Desmos strategy for this unit!`
     }
   ]);
 
   const activeSection = unit.sections.find((s) => s.id === selectedSectionId) || unit.sections[0];
 
   const handleSelectOption = (questionId: string, choiceLetter: string) => {
-    if (submittedQuestions[questionId]) return; // locked after submit
+    if (submittedQuestions[questionId]) return;
     setUserAnswers((prev) => ({ ...prev, [questionId]: choiceLetter }));
   };
 
@@ -67,7 +69,6 @@ export default function UnitTextbookClient({ unit }: Props) {
     setSubmittedQuestions({});
   };
 
-  // Score calculation
   const totalAnswered = Object.keys(submittedQuestions).length;
   const correctCount = unit.practiceQuestions.filter(
     (q) => submittedQuestions[q.id] && userAnswers[q.id] === q.correctAnswer
@@ -87,27 +88,33 @@ export default function UnitTextbookClient({ unit }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           topicDomain: unit.domain,
-          questionPrompt: `Unit Context: ${unit.title} (${unit.description_en})`,
+          questionPrompt: `Unit Context: ${unit.title} (${unit.description})`,
           userQuestion: textToSend,
-          explanationUz: unit.description_uz,
-          explanationEn: unit.description_en
+          explanationEn: unit.description
         })
       });
 
-      if (!res.ok) throw new Error("AI javob bera olmadi");
+      if (!res.ok) throw new Error("AI failed to respond");
       const data = await res.json();
-      const reply = data.reply || data.copilotReply || data.text || "Kechirasiz, qayta urinib ko'ring.";
+      const reply = data.reply || data.copilotReply || data.text || "Sorry, please try again.";
       setAiMessages((prev) => [...prev, { sender: "ai", text: reply }]);
     } catch (e: any) {
       setAiMessages((prev) => [
         ...prev,
         {
           sender: "ai",
-          text: `Xatolik yuz berdi: ${e.message || "Iltimos qaytadan urinib ko'ring"}`
+          text: `Error connecting to AI tutor: ${e.message || "Please try again."}`
         }
       ]);
     } finally {
       setAiLoading(false);
+    }
+  };
+
+  const scrollToReader = () => {
+    const el = document.getElementById("active-section-reader");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -120,12 +127,13 @@ export default function UnitTextbookClient({ unit }: Props) {
             <Link
               href="/curriculum"
               className="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)]"
+              title="Back to Curriculum"
             >
               <ArrowLeft size={16} />
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] font-mono">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-500/30 font-mono">
                   Unit {unit.unitNumber}
                 </span>
                 <span className="text-xs text-[var(--text-muted)] hidden sm:inline">
@@ -144,8 +152,8 @@ export default function UnitTextbookClient({ unit }: Props) {
               onClick={() => setShowDesmosSplit(!showDesmosSplit)}
               className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
                 showDesmosSplit
-                  ? "bg-cyan-500 text-white border-cyan-400 shadow-sm"
-                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-[var(--border-main)] hover:text-[var(--text-main)]"
+                  ? "bg-cyan-600 text-white border-cyan-500 shadow-sm"
+                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-[var(--border-main)] hover:text-[var(--text-main)] hover:border-[var(--accent-blue)]"
               }`}
             >
               <Calculator size={14} />
@@ -156,7 +164,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               <Link
                 href={`/curriculum/units/${unit.prevUnitId}`}
                 className="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
-                title="Oldingi Unit"
+                title="Previous Unit"
               >
                 <ArrowLeft size={16} />
               </Link>
@@ -166,9 +174,9 @@ export default function UnitTextbookClient({ unit }: Props) {
               <Link
                 href={`/curriculum/units/${unit.nextUnitId}`}
                 className="px-3 py-1.5 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1.5 shadow-sm"
-                title="Keyingi Unit"
+                title="Next Unit"
               >
-                <span>Keyingi Unit</span>
+                <span>Next Unit</span>
                 <ArrowRight size={14} />
               </Link>
             )}
@@ -177,53 +185,53 @@ export default function UnitTextbookClient({ unit }: Props) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
-        {/* Unit Hero Banner */}
-        <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-blue-950/30 via-[var(--bg-card)] to-purple-950/20 border border-[var(--border-main)] mb-6 shadow-sm">
+        {/* Unit Hero Banner with Enhanced Contrast */}
+        <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] mb-6 shadow-sm">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-2 max-w-3xl">
+            <div className="space-y-3 max-w-3xl">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/30 font-mono">
+                <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-blue-100 text-blue-900 border border-blue-300 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30 font-mono">
                   {unit.tier} Track
                 </span>
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-400 border border-purple-500/30">
+                <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/30 font-mono">
                   {unit.estimatedHours} Study Time
                 </span>
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 font-mono">
                   10 Practice Q&A Included
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-[var(--text-main)] tracking-tight">
+              <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {unit.title}
               </h2>
-              <p className="text-xs md:text-sm text-[var(--text-muted)] leading-relaxed">
-                {unit.description_uz}
+              <p className="text-xs md:text-sm text-slate-600 dark:text-[var(--text-muted)] leading-relaxed font-medium">
+                {unit.description}
               </p>
             </div>
 
-            <div className="shrink-0 flex items-center gap-2 bg-[var(--bg-surface)] p-3 rounded-2xl border border-[var(--border-main)]">
-              <div className="text-center px-3 border-r border-[var(--border-main)]">
-                <div className="text-xs text-[var(--text-muted)] font-mono">Bo'limlar</div>
-                <div className="text-lg font-black text-[var(--text-main)]">{unit.sections.length}</div>
+            <div className="shrink-0 flex items-center gap-2 bg-slate-50 dark:bg-[var(--bg-surface)] p-3 rounded-2xl border border-slate-200 dark:border-[var(--border-main)]">
+              <div className="text-center px-4 border-r border-slate-200 dark:border-[var(--border-main)]">
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">Sections</div>
+                <div className="text-xl font-black text-slate-900 dark:text-white">{unit.sections.length}</div>
               </div>
-              <div className="text-center px-3">
-                <div className="text-xs text-[var(--text-muted)] font-mono">Savollar</div>
-                <div className="text-lg font-black text-emerald-400">{unit.practiceQuestions.length}</div>
+              <div className="text-center px-4">
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">Questions</div>
+                <div className="text-xl font-black text-emerald-600 dark:text-emerald-400">{unit.practiceQuestions.length}</div>
               </div>
             </div>
           </div>
 
           {/* Primary View Switcher Tabs */}
-          <div className="flex items-center gap-2 mt-6 pt-6 border-t border-[var(--border-main)]/60 overflow-x-auto">
+          <div className="flex items-center gap-2 mt-6 pt-6 border-t border-slate-200 dark:border-[var(--border-main)]/60 overflow-x-auto">
             <button
               onClick={() => setActiveTab("textbook")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "textbook"
-                  ? "bg-[var(--accent-blue)] text-white shadow-sm"
-                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
               }`}
             >
               <BookOpen size={14} />
-              <span>Darslik & Nazariya ({unit.sections.length})</span>
+              <span>Textbook & Theory ({unit.sections.length})</span>
             </button>
 
             <button
@@ -231,11 +239,11 @@ export default function UnitTextbookClient({ unit }: Props) {
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "quiz"
                   ? "bg-emerald-600 text-white shadow-sm"
-                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
               }`}
             >
               <CheckCircle2 size={14} />
-              <span>10 talik Target Quiz ({totalAnswered}/10)</span>
+              <span>10-Question Target Practice ({totalAnswered}/10)</span>
             </button>
 
             <button
@@ -243,7 +251,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "speedhacks"
                   ? "bg-amber-600 text-white shadow-sm"
-                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
               }`}
             >
               <Zap size={14} />
@@ -255,33 +263,33 @@ export default function UnitTextbookClient({ unit }: Props) {
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "ai"
                   ? "bg-purple-600 text-white shadow-sm"
-                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:bg-slate-200 dark:hover:bg-slate-800"
               }`}
             >
               <Sparkles size={14} />
-              <span>AI Repetitor (Copilot)</span>
+              <span>AI Study Copilot</span>
             </button>
           </div>
         </div>
 
         {/* Desmos Split View (If Toggled) */}
         {showDesmosSplit && (
-          <div className="mb-6 p-4 rounded-3xl bg-[var(--bg-surface)] border-2 border-cyan-500/40 shadow-lg">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border-main)]">
+          <div className="mb-6 p-4 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border-2 border-cyan-500/50 shadow-lg">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-[var(--border-main)]">
               <div className="flex items-center gap-2">
-                <Calculator size={16} className="text-cyan-400" />
-                <span className="text-xs font-bold text-[var(--text-main)]">
-                  Bluebook Rasmiy Desmos Kalkulyatori Sandbox
+                <Calculator size={16} className="text-cyan-600 dark:text-cyan-400" />
+                <span className="text-xs font-bold text-slate-900 dark:text-[var(--text-main)]">
+                  Official Bluebook Desmos Graphing Calculator Sandbox
                 </span>
               </div>
               <button
                 onClick={() => setShowDesmosSplit(false)}
-                className="text-xs text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                className="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 font-bold hover:text-slate-900 dark:hover:text-white"
               >
-                Yopish
+                Close
               </button>
             </div>
-            <div className="w-full h-[380px] rounded-2xl overflow-hidden border border-[var(--border-main)]">
+            <div className="w-full h-[380px] rounded-2xl overflow-hidden border border-slate-300 dark:border-[var(--border-main)] shadow-inner">
               <iframe
                 src="https://www.desmos.com/testing/cb-digital-sat/graphing"
                 className="w-full h-full border-none"
@@ -296,99 +304,105 @@ export default function UnitTextbookClient({ unit }: Props) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Sidebar Table of Contents */}
             <div className="lg:col-span-4 space-y-2 lg:sticky lg:top-24">
-              <div className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] px-2 mb-2 flex items-center justify-between">
-                <span>Darslik Mundarijasi</span>
-                <span className="font-mono text-[11px]">{unit.sections.length} Bob</span>
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[var(--text-muted)] px-2 mb-2 flex items-center justify-between">
+                <span>Chapter Index</span>
+                <span className="font-mono text-[11px]">{unit.sections.length} Chapters</span>
               </div>
 
-              {unit.sections.map((section, idx) => (
-                <button
-                  key={section.id}
-                  onClick={() => setSelectedSectionId(section.id)}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 ${
-                    selectedSectionId === section.id
-                      ? "bg-[var(--bg-surface)] border-[var(--accent-blue)] text-[var(--text-main)] shadow-sm"
-                      : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--text-muted)]/40"
-                  }`}
-                >
-                  <span
-                    className={`w-6 h-6 rounded-lg text-xs font-mono font-bold flex items-center justify-center shrink-0 mt-0.5 ${
-                      selectedSectionId === section.id
-                        ? "bg-[var(--accent-blue)] text-white"
-                        : "bg-[var(--bg-surface)] text-[var(--text-muted)]"
+              {unit.sections.map((section, idx) => {
+                const isActive = selectedSectionId === section.id;
+                return (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      setSelectedSectionId(section.id);
+                      scrollToReader();
+                    }}
+                    className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
+                      isActive
+                        ? "bg-blue-600 text-white border-blue-500 shadow-md ring-2 ring-blue-500/20"
+                        : "bg-white dark:bg-[var(--bg-card)] border-slate-200 dark:border-[var(--border-main)] text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:border-blue-400 dark:hover:border-blue-500/40"
                     }`}
                   >
-                    {idx + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold leading-snug line-clamp-2">
-                      {section.title}
+                    <span
+                      className={`w-6 h-6 rounded-lg text-xs font-mono font-bold flex items-center justify-center shrink-0 mt-0.5 ${
+                        isActive
+                          ? "bg-white text-blue-700 shadow-sm"
+                          : "bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-600 dark:text-slate-400"
+                      }`}
+                    >
+                      {idx + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className={`text-xs leading-snug line-clamp-2 ${isActive ? "font-bold text-white" : "font-semibold"}`}>
+                        {section.title}
+                      </div>
+                      <div className={`text-[11px] flex items-center gap-1 mt-1 font-mono ${isActive ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}>
+                        <Clock size={11} />
+                        <span>{section.readTime}</span>
+                      </div>
                     </div>
-                    <div className="text-[11px] text-[var(--text-muted)] flex items-center gap-1 mt-1 font-mono">
-                      <Clock size={11} />
-                      <span>{section.readTime}</span>
-                    </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
 
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-950/20 to-[var(--bg-card)] border border-emerald-500/20 mt-4 space-y-2">
-                <div className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                  <CheckCircle2 size={14} />
-                  <span>Bilimingizni sinab ko'ring</span>
+              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/25 mt-4 space-y-2">
+                <div className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+                  <CheckCircle2 size={14} className="text-emerald-600 dark:text-emerald-400" />
+                  <span>Test Your Comprehension</span>
                 </div>
-                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
-                  Nazariyani o'qib bo'lgach, 10 talik amaliy testni yechib, tushunchangizni mustahkamlang.
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                  Done reading the theory? Solidify your mastery with the 10-question target practice set.
                 </p>
                 <button
                   onClick={() => setActiveTab("quiz")}
-                  className="w-full py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition-colors"
+                  className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-sm"
                 >
-                  Target Quizni boshlash
+                  Start Practice Set
                 </button>
               </div>
             </div>
 
             {/* Main Section Content Area */}
-            <div className="lg:col-span-8 space-y-6">
+            <div id="active-section-reader" className="lg:col-span-8 space-y-6">
               {activeSection && (
-                <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-6">
+                <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm space-y-6">
                   {/* Section Title & Header */}
-                  <div className="border-b border-[var(--border-main)] pb-5">
-                    <div className="flex items-center gap-2 text-xs text-[var(--text-muted)] font-mono mb-1">
-                      <span>BOB {unit.sections.findIndex((s) => s.id === activeSection.id) + 1}</span>
+                  <div className="border-b border-slate-200 dark:border-[var(--border-main)] pb-5">
+                    <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-400 font-mono font-bold mb-1 uppercase tracking-wider">
+                      <span>Chapter {unit.sections.findIndex((s) => s.id === activeSection.id) + 1} of {unit.sections.length}</span>
                       <span>•</span>
                       <span>{activeSection.readTime}</span>
                     </div>
-                    <h3 className="text-xl md:text-2xl font-black text-[var(--text-main)]">
+                    <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white">
                       {activeSection.title}
                     </h3>
-                    <p className="text-xs md:text-sm text-[var(--text-muted)] mt-2 leading-relaxed">
-                      {activeSection.summary_uz}
+                    <p className="text-xs md:text-sm text-slate-600 dark:text-[var(--text-muted)] mt-2 leading-relaxed font-medium">
+                      {activeSection.summary}
                     </p>
                   </div>
 
-                  {/* Visual Diagram (If section has one) */}
+                  {/* Visual Diagram */}
                   {activeSection.diagramType && (
                     <UnitDiagrams type={activeSection.diagramType} />
                   )}
 
                   {/* Section Body Text & KaTeX Content */}
-                  <div className="prose prose-invert max-w-none text-xs md:text-sm leading-relaxed text-[var(--text-main)] space-y-4">
+                  <div className="prose prose-slate dark:prose-invert max-w-none text-xs md:text-sm leading-relaxed text-slate-800 dark:text-slate-200 space-y-4">
                     <KaTeXMath mathText={activeSection.contentMarkdown} />
                   </div>
 
-                  {/* Key Takeaways Card */}
+                  {/* Key Takeaways Card with Accessible Light/Dark Colors */}
                   {activeSection.keyTakeaways && activeSection.keyTakeaways.length > 0 && (
-                    <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
-                      <div className="text-xs font-bold uppercase tracking-wider text-[var(--accent-blue)] flex items-center gap-2">
+                    <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] space-y-3">
+                      <div className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-2 font-mono">
                         <CheckCircle2 size={15} />
-                        <span>Asosiy Qoidalar & Xulosalar (Takeaways)</span>
+                        <span>Key Principles & Core Takeaways</span>
                       </div>
                       <div className="space-y-2">
                         {activeSection.keyTakeaways.map((takeaway, tIdx) => (
-                          <div key={tIdx} className="flex items-start gap-2.5 text-xs text-[var(--text-muted)]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-blue)] mt-1.5 shrink-0" />
+                          <div key={tIdx} className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 mt-1.5 shrink-0" />
                             <div className="flex-1">
                               <KaTeXMath mathText={takeaway} />
                             </div>
@@ -398,32 +412,32 @@ export default function UnitTextbookClient({ unit }: Props) {
                     </div>
                   )}
 
-                  {/* Desmos Interactive Callout */}
+                  {/* Desmos Interactive Callout with High Contrast */}
                   {activeSection.desmosExample && (
-                    <div className="p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
-                          <Calculator size={14} />
-                          <span>Desmos Tezkor Usuli: {activeSection.desmosExample.title}</span>
+                    <div className="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-500/40 space-y-2.5">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="text-xs font-bold text-cyan-900 dark:text-cyan-300 flex items-center gap-2">
+                          <Calculator size={15} className="text-cyan-600 dark:text-cyan-400" />
+                          <span>Desmos SpeedHack: {activeSection.desmosExample.title}</span>
                         </div>
                         <button
                           onClick={() => setShowDesmosSplit(true)}
-                          className="text-[11px] font-bold text-cyan-300 underline hover:text-white"
+                          className="px-3 py-1 rounded-xl bg-cyan-600 dark:bg-cyan-500 text-white text-[11px] font-bold hover:opacity-90 shadow-sm transition-all"
                         >
-                          Desmos'da sinab ko'rish
+                          Open in Desmos
                         </button>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-xs text-yellow-300">
+                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-amber-300 shadow-inner">
                         {activeSection.desmosExample.expression}
                       </div>
-                      <p className="text-xs text-cyan-200/80">
+                      <p className="text-xs text-cyan-950 dark:text-cyan-200 leading-relaxed font-medium">
                         {activeSection.desmosExample.tip}
                       </p>
                     </div>
                   )}
 
                   {/* Bottom Section Navigator */}
-                  <div className="flex items-center justify-between pt-6 border-t border-[var(--border-main)]">
+                  <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-[var(--border-main)]">
                     {(() => {
                       const curIdx = unit.sections.findIndex((s) => s.id === activeSection.id);
                       const prevSec = unit.sections[curIdx - 1];
@@ -433,8 +447,11 @@ export default function UnitTextbookClient({ unit }: Props) {
                         <>
                           {prevSec ? (
                             <button
-                              onClick={() => setSelectedSectionId(prevSec.id)}
-                              className="px-4 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] hover:border-[var(--accent-blue)] flex items-center gap-2"
+                              onClick={() => {
+                                setSelectedSectionId(prevSec.id);
+                                scrollToReader();
+                              }}
+                              className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-300 dark:border-[var(--border-main)] text-xs font-bold text-slate-800 dark:text-slate-200 hover:border-blue-500 flex items-center gap-2"
                             >
                               <ArrowLeft size={14} />
                               <span className="line-clamp-1 max-w-[150px]">{prevSec.title}</span>
@@ -445,8 +462,11 @@ export default function UnitTextbookClient({ unit }: Props) {
 
                           {nextSec ? (
                             <button
-                              onClick={() => setSelectedSectionId(nextSec.id)}
-                              className="px-4 py-2 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 flex items-center gap-2 shadow-sm"
+                              onClick={() => {
+                                setSelectedSectionId(nextSec.id);
+                                scrollToReader();
+                              }}
+                              className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 flex items-center gap-2 shadow-sm"
                             >
                               <span className="line-clamp-1 max-w-[150px]">{nextSec.title}</span>
                               <ArrowRight size={14} />
@@ -454,9 +474,9 @@ export default function UnitTextbookClient({ unit }: Props) {
                           ) : (
                             <button
                               onClick={() => setActiveTab("quiz")}
-                              className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 flex items-center gap-2 shadow-sm"
+                              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm"
                             >
-                              <span>10 talik Quizga o'tish</span>
+                              <span>Go to 10-Question Quiz</span>
                               <CheckCircle2 size={14} />
                             </button>
                           )}
@@ -474,31 +494,31 @@ export default function UnitTextbookClient({ unit }: Props) {
         {activeTab === "quiz" && (
           <div className="space-y-6">
             {/* Quiz Banner & Score Card */}
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="p-6 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
               <div>
-                <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <div className="text-xs font-extrabold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 font-mono">
                   <CheckCircle2 size={15} />
-                  <span>Unit {unit.unitNumber} Rasmiy Amaliyot Seti</span>
+                  <span>Unit {unit.unitNumber} Target Practice Set</span>
                 </div>
-                <h3 className="text-xl font-bold text-[var(--text-main)]">
-                  10 ta Target Diagnostic Savollar
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  10 Target Diagnostic Questions
                 </h3>
-                <p className="text-xs text-[var(--text-muted)] mt-1">
-                  Har bir savolga javob bering va darhol qadamma-qadam yechimini ko'ring.
+                <p className="text-xs text-slate-600 dark:text-[var(--text-muted)] mt-1 font-medium">
+                  Select an option for each question to unlock immediate step-by-step mathematical derivation and trap analysis.
                 </p>
               </div>
 
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-xs text-[var(--text-muted)] font-mono">Natija:</div>
-                  <div className="text-2xl font-black text-emerald-400">
+                  <div className="text-xs text-slate-500 dark:text-[var(--text-muted)] font-mono font-bold">Accuracy Score:</div>
+                  <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
                     {correctCount} / {unit.practiceQuestions.length}
                   </div>
                 </div>
                 <button
                   onClick={handleResetQuiz}
-                  className="p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--accent-blue)] transition-colors"
-                  title="Qaytadan yechish"
+                  className="p-2.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-slate-600 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-[var(--text-main)] hover:border-blue-500 transition-colors"
+                  title="Reset Quiz"
                 >
                   <RotateCcw size={16} />
                 </button>
@@ -518,33 +538,33 @@ export default function UnitTextbookClient({ unit }: Props) {
                     className={`p-6 md:p-8 rounded-3xl border transition-all ${
                       isSubmitted
                         ? isCorrect
-                          ? "bg-emerald-950/15 border-emerald-500/40"
-                          : "bg-rose-950/15 border-rose-500/40"
-                        : "bg-[var(--bg-card)] border-[var(--border-main)]"
+                          ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-500/40"
+                          : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-500/40"
+                        : "bg-white dark:bg-[var(--bg-card)] border-slate-200 dark:border-[var(--border-main)] shadow-sm"
                     }`}
                   >
                     {/* Question Header */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--border-main)]">
-                        Savol #{idx + 1}
+                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[var(--bg-surface)] text-slate-700 dark:text-[var(--text-muted)] border border-slate-200 dark:border-[var(--border-main)]">
+                        Question #{idx + 1}
                       </span>
                       {isSubmitted && (
                         <span
                           className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 ${
                             isCorrect
-                              ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                              : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+                              ? "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30"
+                              : "bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-500/30"
                           }`}
                         >
                           {isCorrect ? (
                             <>
                               <CheckCircle2 size={14} />
-                              <span>To'g'ri! (+1)</span>
+                              <span>Correct (+1 Point)</span>
                             </>
                           ) : (
                             <>
                               <XCircle size={14} />
-                              <span>Xato! (To'g'ri: {q.correctAnswer})</span>
+                              <span>Incorrect (Correct: {q.correctAnswer})</span>
                             </>
                           )}
                         </span>
@@ -552,14 +572,14 @@ export default function UnitTextbookClient({ unit }: Props) {
                     </div>
 
                     {/* Question Prompt */}
-                    <div className="text-sm md:text-base font-medium text-[var(--text-main)] leading-relaxed mb-6">
+                    <div className="text-sm md:text-base font-semibold text-slate-900 dark:text-white leading-relaxed mb-6">
                       <KaTeXMath mathText={q.prompt} />
                     </div>
 
                     {/* Options (A, B, C, D) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                       {q.options.map((opt, optIdx) => {
-                        const letter = String.fromCharCode(65 + optIdx); // A, B, C, D
+                        const letter = String.fromCharCode(65 + optIdx);
                         const isThisSelected = selected === letter;
                         const isThisCorrect = q.correctAnswer === letter;
 
@@ -568,15 +588,15 @@ export default function UnitTextbookClient({ unit }: Props) {
 
                         if (!isSubmitted) {
                           optClasses += isThisSelected
-                            ? "bg-[var(--accent-blue)]/15 border-[var(--accent-blue)] text-[var(--text-main)] shadow-sm"
-                            : "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-muted)] hover:border-[var(--text-muted)]/50 hover:text-[var(--text-main)]";
+                            ? "bg-blue-50 dark:bg-blue-900/25 border-blue-500 dark:border-blue-400 text-blue-950 dark:text-blue-100 shadow-sm"
+                            : "bg-slate-50 dark:bg-[var(--bg-surface)] border-slate-200 dark:border-[var(--border-main)] text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white";
                         } else {
                           if (isThisCorrect) {
-                            optClasses += "bg-emerald-500/20 border-emerald-500 text-emerald-200 font-bold";
+                            optClasses += "bg-emerald-100 dark:bg-emerald-900/30 border-emerald-500 text-emerald-950 dark:text-emerald-200 font-bold";
                           } else if (isThisSelected && !isCorrect) {
-                            optClasses += "bg-rose-500/20 border-rose-500 text-rose-200 font-bold";
+                            optClasses += "bg-rose-100 dark:bg-rose-900/30 border-rose-500 text-rose-950 dark:text-rose-200 font-bold";
                           } else {
-                            optClasses += "bg-[var(--bg-surface)]/50 border-[var(--border-main)]/50 opacity-40 text-[var(--text-muted)]";
+                            optClasses += "bg-slate-50/50 dark:bg-[var(--bg-surface)]/50 border-slate-200/50 dark:border-[var(--border-main)]/50 opacity-40 text-slate-500 dark:text-slate-400";
                           }
                         }
 
@@ -592,10 +612,10 @@ export default function UnitTextbookClient({ unit }: Props) {
                                 isThisSelected
                                   ? isSubmitted
                                     ? isCorrect
-                                      ? "bg-emerald-500 text-white"
-                                      : "bg-rose-500 text-white"
-                                    : "bg-[var(--accent-blue)] text-white"
-                                  : "bg-[var(--bg-main)] text-[var(--text-muted)]"
+                                      ? "bg-emerald-600 text-white"
+                                      : "bg-rose-600 text-white"
+                                    : "bg-blue-600 text-white"
+                                  : "bg-white dark:bg-[var(--bg-main)] text-slate-700 dark:text-[var(--text-muted)] border border-slate-200 dark:border-transparent"
                               }`}
                             >
                               {letter}
@@ -615,37 +635,37 @@ export default function UnitTextbookClient({ unit }: Props) {
                         onClick={() => handleSubmitQuestion(q.id)}
                         className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                           selected
-                            ? "bg-[var(--accent-blue)] text-white hover:opacity-90 shadow-sm cursor-pointer"
-                            : "bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--border-main)] opacity-50 cursor-not-allowed"
+                            ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm cursor-pointer"
+                            : "bg-slate-200 dark:bg-[var(--bg-surface)] text-slate-400 dark:text-[var(--text-muted)] opacity-50 cursor-not-allowed"
                         }`}
                       >
-                        <span>Javobni Tekshirish</span>
+                        <span>Check Answer</span>
                         <ArrowRight size={14} />
                       </button>
                     ) : (
                       /* Post-Submission Detailed Explanation Drawer */
-                      <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-4">
-                        <div className="text-xs font-bold uppercase tracking-wider text-[var(--accent-blue)] flex items-center gap-2">
+                      <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] space-y-4">
+                        <div className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-2 font-mono">
                           <BookOpen size={14} />
-                          <span>Qadamma-Qadam Yechim & Tahlil</span>
+                          <span>Step-by-Step Derivation & Explanation</span>
                         </div>
 
-                        <div className="text-xs md:text-sm text-[var(--text-main)] leading-relaxed space-y-2">
-                          <KaTeXMath mathText={q.explanation_uz} />
+                        <div className="text-xs md:text-sm text-slate-800 dark:text-slate-200 leading-relaxed space-y-2">
+                          <KaTeXMath mathText={q.explanation} />
                         </div>
 
                         {q.satTrap && (
-                          <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/30 flex items-start gap-2.5 text-xs text-amber-200">
-                            <AlertTriangle size={15} className="shrink-0 text-amber-400 mt-0.5" />
+                          <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200 font-medium">
+                            <AlertTriangle size={15} className="shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
                             <div>
-                              <strong>SAT Tuzog'i (Trap):</strong> {q.satTrap}
+                              <strong>SAT Trap Alert:</strong> {q.satTrap}
                             </div>
                           </div>
                         )}
 
                         {q.desmosTrick && (
-                          <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-200">
-                            <Zap size={15} className="shrink-0 text-cyan-400 mt-0.5" />
+                          <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-900 dark:text-cyan-200 font-medium">
+                            <Zap size={15} className="shrink-0 text-cyan-600 dark:text-cyan-400 mt-0.5" />
                             <div>
                               <strong>Desmos SpeedHack:</strong> {q.desmosTrick}
                             </div>
@@ -663,16 +683,16 @@ export default function UnitTextbookClient({ unit }: Props) {
         {/* TAB 3: SAT SPEEDHACKS */}
         {activeTab === "speedhacks" && (
           <div className="space-y-6">
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)]">
-              <div className="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">
+            <div className="p-6 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider mb-1 font-mono">
                 <Zap size={15} />
-                <span>800 Ball Oluvchilarning Tezkor Usullari</span>
+                <span>800-Scorer SpeedHacks & Execution Tactics</span>
               </div>
-              <h3 className="text-xl font-bold text-[var(--text-main)]">
-                {unit.title}: SpeedHacks & Shortcutlar
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                {unit.title}: SpeedHacks
               </h3>
-              <p className="text-xs text-[var(--text-muted)] mt-1">
-                Ushbu usullar yordamida savollarni standart usuldan 3-5 barobar tezroq yechishingiz mumkin.
+              <p className="text-xs text-slate-600 dark:text-[var(--text-muted)] mt-1 font-medium">
+                Solve questions 3–5x faster than conventional textbook manipulation using College Board test quirks.
               </p>
             </div>
 
@@ -680,28 +700,28 @@ export default function UnitTextbookClient({ unit }: Props) {
               {unit.speedHacks.map((hack, hIdx) => (
                 <div
                   key={hIdx}
-                  className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-amber-500/40 transition-all space-y-3 shadow-sm"
+                  className="p-6 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] hover:border-amber-400 dark:hover:border-amber-500/40 transition-all space-y-3 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30">
                       Hack #{hIdx + 1}
                     </span>
-                    <Zap size={16} className="text-amber-400" />
+                    <Zap size={16} className="text-amber-600 dark:text-amber-400" />
                   </div>
-                  <h4 className="text-base font-bold text-[var(--text-main)]">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">
                     {hack.title}
                   </h4>
-                  <div className="space-y-2 text-xs">
+                  <div className="space-y-2 text-xs font-medium">
                     <div>
-                      <span className="text-[var(--text-muted)] font-bold">Qachon ishlatiladi (Trigger): </span>
+                      <span className="text-slate-500 dark:text-[var(--text-muted)] font-bold">Trigger Pattern: </span>
                       <KaTeXMath mathText={hack.trigger} />
                     </div>
                     <div>
-                      <span className="text-emerald-400 font-bold">Tezkor usul (Shortcut): </span>
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold">SpeedHack Shortcut: </span>
                       <KaTeXMath mathText={hack.shortcut} />
                     </div>
-                    <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-[11px] font-mono text-cyan-300">
-                      Masalan: {hack.example}
+                    <div className="p-3 rounded-xl bg-slate-900 text-cyan-300 font-mono text-[11px] shadow-inner">
+                      Example: {hack.example}
                     </div>
                   </div>
                 </div>
@@ -712,18 +732,18 @@ export default function UnitTextbookClient({ unit }: Props) {
 
         {/* TAB 4: AI COPILOT TUTOR */}
         {activeTab === "ai" && (
-          <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-4">
+          <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-[var(--border-main)] pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-600/20 border border-purple-300 dark:border-purple-500/30 flex items-center justify-center text-purple-700 dark:text-purple-400">
                   <Sparkles size={20} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[var(--text-main)]">
-                    Vespera SAT AI Repetitor
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    Vespera SAT AI Study Copilot
                   </h3>
-                  <p className="text-xs text-[var(--text-muted)]">
-                    Faqat {unit.title} mavzusi bo'yicha maxsus tayyorlangan sun'iy intellekt
+                  <p className="text-xs text-slate-500 dark:text-[var(--text-muted)]">
+                    Personalized tutor specialized in {unit.title} concepts, traps, and Desmos techniques.
                   </p>
                 </div>
               </div>
@@ -733,47 +753,47 @@ export default function UnitTextbookClient({ unit }: Props) {
             <div className="flex items-center gap-2 overflow-x-auto pb-2">
               <button
                 onClick={() =>
-                  handleSendAiMessage("Ushbu unitning eng muhim 3 ta qoidasini amaliy misol bilan tushuntirib ber")
+                  handleSendAiMessage("Summarize the 3 most essential rules from this unit with clear examples.")
                 }
-                className="px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-purple-500/40 shrink-0 transition-colors"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-xs text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
               >
-                💡 Eng muhim 3 ta qoida
+                💡 3 Essential Rules with Examples
               </button>
               <button
                 onClick={() =>
-                  handleSendAiMessage("Desmos yordamida qanday qilib ushbu mavzuni 30 soniyada yechsa bo'ladi?")
+                  handleSendAiMessage("How do I use Desmos to solve this unit's problems in under 30 seconds?")
                 }
-                className="px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-purple-500/40 shrink-0 transition-colors"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-xs text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
               >
-                ⚡ Desmos Speedhack sirlari
+                ⚡ Desmos 30-Second SpeedHacks
               </button>
               <button
                 onClick={() =>
-                  handleSendAiMessage("Hard Module 2 da eng ko'p qanday chalg'ituvchi tuzoqlar (traps) tushadi?")
+                  handleSendAiMessage("What are the most common traps test writers set on Hard Module 2 for this topic?")
                 }
-                className="px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-purple-500/40 shrink-0 transition-colors"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] text-xs text-slate-700 dark:text-[var(--text-muted)] hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
               >
-                ⚠️ Hard Module 2 tuzoqlari
+                ⚠️ Hard Module 2 Traps
               </button>
             </div>
 
             {/* Chat Message Stream */}
-            <div className="space-y-4 max-h-[450px] overflow-y-auto p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+            <div className="space-y-4 max-h-[450px] overflow-y-auto p-4 rounded-2xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)]">
               {aiMessages.map((msg, mIdx) => (
                 <div
                   key={mIdx}
                   className={`flex gap-3 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {msg.sender === "ai" && (
-                    <div className="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 flex items-center justify-center shrink-0 mt-0.5 border border-purple-300 dark:border-purple-500/30">
                       <Sparkles size={14} />
                     </div>
                   )}
                   <div
                     className={`max-w-[85%] p-4 rounded-2xl text-xs md:text-sm leading-relaxed ${
                       msg.sender === "user"
-                        ? "bg-[var(--accent-blue)] text-white rounded-tr-none font-medium"
-                        : "bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-main)] rounded-tl-none space-y-2"
+                        ? "bg-blue-600 text-white rounded-tr-none font-medium shadow-sm"
+                        : "bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-[var(--border-main)] text-slate-800 dark:text-slate-200 rounded-tl-none space-y-2 shadow-sm"
                     }`}
                   >
                     <KaTeXMath mathText={msg.text} />
@@ -782,9 +802,9 @@ export default function UnitTextbookClient({ unit }: Props) {
               ))}
 
               {aiLoading && (
-                <div className="flex items-center gap-2 text-xs text-[var(--text-muted)] p-2">
-                  <Loader2 size={16} className="animate-spin text-purple-400" />
-                  <span>AI Repetitor chuqur tahlil qilmoqda...</span>
+                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-[var(--text-muted)] p-2">
+                  <Loader2 size={16} className="animate-spin text-purple-600 dark:text-purple-400" />
+                  <span>AI Mentor is analyzing mathematical principles...</span>
                 </div>
               )}
             </div>
@@ -796,15 +816,15 @@ export default function UnitTextbookClient({ unit }: Props) {
                 value={aiInput}
                 onChange={(e) => setAiInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSendAiMessage()}
-                placeholder="Savolingizni yozing (masalan: Viyet formulasini Desmos'da qanday tekshiraman?)..."
-                className="flex-1 px-4 py-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs md:text-sm text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-purple-500 transition-colors"
+                placeholder="Ask any question about this unit (e.g., How do I solve systems with Desmos?)..."
+                className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-[var(--bg-surface)] border border-slate-300 dark:border-[var(--border-main)] text-xs md:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors shadow-sm"
               />
               <button
                 disabled={!aiInput.trim() || aiLoading}
                 onClick={() => handleSendAiMessage()}
-                className="px-5 py-3 rounded-2xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-500 transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+                className="px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
               >
-                <span>Yuborish</span>
+                <span>Send</span>
                 <Send size={14} />
               </button>
             </div>

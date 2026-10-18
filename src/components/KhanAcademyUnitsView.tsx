@@ -156,7 +156,7 @@ export default function KhanAcademyUnitsView() {
                     {unit.title}
                   </h3>
                   <p className="text-xs text-[var(--text-muted)] max-w-2xl line-clamp-2">
-                    {unit.description_uz}
+                    {unit.description_en}
                   </p>
                 </div>
 
@@ -164,11 +164,11 @@ export default function KhanAcademyUnitsView() {
                   <Link
                     href={`/curriculum/units/${unit.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="px-3.5 py-1.5 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1.5 shadow-sm"
+                    className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
                   >
                     <BookOpen size={13} />
-                    <span className="hidden sm:inline">Darslikni ochish</span>
-                    <span className="sm:hidden">Darslik</span>
+                    <span className="hidden sm:inline">Open Chapter</span>
+                    <span className="sm:hidden">Chapter</span>
                     <ArrowRight size={13} />
                   </Link>
 
@@ -181,18 +181,18 @@ export default function KhanAcademyUnitsView() {
               {/* Expanded Skills Accordion */}
               {isExpanded && (
                 <div className="border-t border-[var(--border-main)] bg-[var(--bg-surface)]/40 p-4 md:p-6 space-y-3">
-                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-900/30 to-purple-900/20 border border-[var(--accent-blue)]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-900/20 to-purple-900/15 border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                     <div className="flex items-center gap-2">
                       <Sparkles size={16} className="text-cyan-400 shrink-0" />
                       <span className="text-xs font-bold text-[var(--text-main)]">
-                        Ushbu Unit bo'yicha to'liq darslik, SVG chizmalar va 10 talik Target Quiz tayyor!
+                        Full interactive textbook chapter, SVG diagrams, and 10-Question Target Practice Quiz available!
                       </span>
                     </div>
                     <Link
                       href={`/curriculum/units/${unit.id}`}
-                      className="px-3 py-1 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1 shadow-sm shrink-0"
+                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm shrink-0"
                     >
-                      <span>Bobni o'qish</span>
+                      <span>Read Chapter</span>
                       <ArrowRight size={12} />
                     </Link>
                   </div>
@@ -289,22 +289,13 @@ export default function KhanAcademyUnitsView() {
 
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto space-y-6 flex-1 text-sm leading-relaxed">
-              {/* Uzbek & English Overview */}
+              {/* English Overview */}
               <div className="space-y-3">
                 <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 space-y-1.5">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-blue-500 flex items-center gap-1">
-                    <GraduationCap size={14} /> 0 dan Tushuntirish (Nazariya & Mohiyat)
+                    <GraduationCap size={14} /> Theory & Core Mathematical Concepts
                   </span>
                   <p className="text-xs md:text-sm text-[var(--text-main)] leading-relaxed">
-                    {activeLessonModal.lessonContent.overview_uz}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1">
-                    🇺🇸 English Mathematical Definition
-                  </span>
-                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                     {activeLessonModal.lessonContent.overview_en}
                   </p>
                 </div>

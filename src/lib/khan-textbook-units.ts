@@ -2,8 +2,7 @@ export interface TextbookSection {
   id: string;
   title: string;
   readTime: string;
-  summary_uz: string;
-  summary_en: string;
+  summary: string;
   contentMarkdown: string;
   keyTakeaways: string[];
   diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane";
@@ -20,8 +19,7 @@ export interface TextbookPracticeQuestion {
   prompt: string;
   options: string[];
   correctAnswer: string;
-  explanation_uz: string;
-  explanation_en: string;
+  explanation: string;
   desmosTrick?: string;
   satTrap?: string;
   referenceFormula?: string;
@@ -36,8 +34,7 @@ export interface KhanFullUnit {
   domain: string;
   topicCode: string;
   estimatedHours: string;
-  description_uz: string;
-  description_en: string;
+  description: string;
   overviewSummary: string;
   sections: TextbookSection[];
   speedHacks: { title: string; trigger: string; shortcut: string; example: string }[];
@@ -59,34 +56,32 @@ export const KHAN_FULL_UNITS: Record<string, KhanFullUnit> = {
     domain: "Orientation & Test Strategy",
     topicCode: "ALG-01",
     estimatedHours: "2.5 hours",
-    description_uz: "Digital SAT imtihoni tuzilishi, 2 bosqichli adaptiv mexanizm, Bluebook ilovasi sirlari, Desmos kalkulyatoridan to'liq foydalanish va 800 ballik strategiya.",
-    description_en: "Digital SAT test architecture, multistage adaptive routing engine, Bluebook secrets, official Desmos superpowers, formula sheets, and 800-target pacing.",
+    description: "Digital SAT test architecture, multistage adaptive routing engine, Bluebook secrets, official Desmos superpowers, formula sheets, and 800-target pacing.",
     overviewSummary: "Digital SAT Math is not a test of high-school math memorization — it is a standardized test of mathematical speed, pattern recognition, and tactical calculator execution. In this comprehensive textbook unit, you will master the exact test mechanics that separate 600-scorers from 800-scorers.",
     sections: [
       {
         id: "u1-sec-1-architecture",
         title: "1. Digital SAT Math Structure & Adaptive Engine",
         readTime: "6 min read",
-        summary_uz: "Imtihon 2 ta modullardan iborat bo'lib, jami 44 ta savol uchun 70 daqiqa vaqt beriladi. 1-modul sizni oson yoki qiyin 2-modulga yo'naltiradi.",
-        summary_en: "The Math section consists of two 35-minute modules (22 questions each). Module 1 determines whether you are routed to the Easier or Harder Module 2.",
+        summary: "The Math section consists of two 35-minute modules (22 questions each, 70 minutes total). Module 1 performance strictly determines whether you route into the Easier or Harder Module 2.",
         diagramType: "adaptive-routing",
         keyTakeaways: [
           "Module 1 contains a balanced mix of Easy, Medium, and Hard questions.",
-          "Scoring 15+ correct out of 22 in Module 1 routes you into Hard Module 2.",
-          "Routing to Hard Module 2 unlocks the 800 ceiling. Routing to Easy Module 2 caps your score at around 600-640 even if you get 100% in Module 2!",
+          "Scoring approximately 15 or more correct out of 22 in Module 1 routes you into the Harder Module 2.",
+          "Routing to the Harder Module 2 unlocks the 800 score ceiling. Routing to the Easier Module 2 caps your score at roughly 600–640 even if you score 100% in Module 2!",
           "Approximately 75% of questions are 4-option Multiple Choice; 25% are Student-Produced Response (Grid-in)."
         ],
         contentMarkdown: `### The Multistage Adaptive Architecture
 
-The Digital SAT Math test is **multistage adaptive**. Unlike the old paper SAT, where every student took the same test, the digital test adapts to your ability level halfway through the exam.
+The Digital SAT Math test is **multistage adaptive**. Unlike the legacy paper SAT where every student answered the same static question booklet, the digital exam adapts to your ability level halfway through the test.
 
 #### The 2-Module Sequence:
 1. **Module 1 (Routing Module - 35 minutes, 22 questions):**
-   - Everyone takes the exact same difficulty distribution.
+   - Every student takes the exact same difficulty distribution.
    - Questions range from straightforward arithmetic to medium algebra and geometry.
    - **Your score in Module 1 directly dictates your Module 2 routing.**
 2. **Module 2 (Scored Adaptive Module - 35 minutes, 22 questions):**
-   - **Harder Module 2:** If you answer roughly **15 or more** questions correctly in Module 1, you enter the Hard Module. Here, the score ceiling is **800**. Even if you miss 4-5 hard questions, you can still easily achieve **720-760**!
+   - **Harder Module 2:** If you answer roughly **15 or more** questions correctly in Module 1, you unlock the Hard Module. Here, the score ceiling is **800**. Even if you miss 4-5 hard questions, you can still easily achieve **720–760**!
    - **Easier Module 2:** If you get fewer than ~14 correct, you enter the Easy Module. The questions are simpler, but your final score is **capped at approximately 600–640**, regardless of getting every question right in Module 2.
 
 > **Key Rule for 750+ Scorers:** Module 1 is the most critical 35 minutes of your test day. Double-check questions 1 through 15 in Module 1 to guarantee you unlock the Hard Module 2!`
@@ -95,12 +90,11 @@ The Digital SAT Math test is **multistage adaptive**. Unlike the old paper SAT, 
         id: "u1-sec-2-pacing",
         title: "2. The 95-Second Pacing Rule & Time Allocation",
         readTime: "5 min read",
-        summary_uz: "O'rtacha har bir savolga 95 soniya to'g'ri keladi. Dastlabki 1-12 savollarni 30-45 soniyada yechib, oxirgi qiyin savollarga 2.5 daqiqadan vaqt zaxiralash shart.",
-        summary_en: "Total time: 70 minutes for 44 questions = 95 seconds per question. Bank time on easy early questions to afford 2.5 minutes on complex late questions.",
+        summary: "Total time: 70 minutes for 44 questions = 95 seconds per question on average. Bank time on early easy questions (30-45s) to afford 2.5 minutes on complex late questions.",
         diagramType: "pacing-clock",
         keyTakeaways: [
           "Questions roughly progress from easiest to hardest within each module (1-8 Easy, 9-16 Medium, 17-22 Hard).",
-          "At Question 11, you should have approximately 18:00 to 20:00 remaining on your timer.",
+          "At Question 11, you should have approximately 18:00 to 20:00 remaining on your clock.",
           "Never spend more than 2 minutes stuck on a single question — mark it for review and move on.",
           "There is ZERO penalty for guessing: never leave any bubble or grid-in box blank!"
         ],
@@ -111,7 +105,7 @@ $$\\frac{35 \\times 60 \\text{ seconds}}{22 \\text{ questions}} = 95.45 \\text{ 
 
 However, you should **never** spend 95 seconds on every question. The optimal time allocation follows the **Tiered Velocity Framework**:
 
-| Question Number | Difficulty Tier | Target Time / Question | Accumulated Time Remaining |
+| Question Range | Difficulty Tier | Target Time / Question | Accumulated Time Remaining |
 | :--- | :--- | :--- | :--- |
 | **Q1 – Q6** | Easy Foundations | **30 – 45 seconds** | ~31:00 remaining |
 | **Q7 – Q14** | Medium Transitions | **60 – 75 seconds** | ~19:00 remaining |
@@ -125,14 +119,13 @@ Click "Hide Timer" if the countdown stresses you, but check it at two fixed mile
       },
       {
         id: "u1-sec-3-desmos",
-        title: "3. Built-in Desmos Graphing Calculator Rules & SpeedHacks",
+        title: "3. Built-in Desmos Graphing Calculator Superpowers",
         readTime: "8 min read",
-        summary_uz: "Digital SAT da Desmos 100% savollar uchun ochiq. Tenglamalar, sistemalar, regression, modullar va maksimum/minimumlarni Desmos bir necha soniyada topadi.",
-        summary_en: "Desmos is available throughout the ENTIRE Math section. Using sliders, regression (~), intercepts, and direct equation typing eliminates over 60% of manual algebra.",
+        summary: "Desmos is available throughout the entire Math section. Using sliders, regression (~), intercepts, and direct equation typing eliminates over 60% of manual algebra.",
         diagramType: "desmos-keyboard",
         desmosExample: {
           title: "System of Linear Equations SpeedHack",
-          expression: "2x + 3y = 12 \\n 4x - y = 10",
+          expression: "2x + 3y = 12 \n4x - y = 10",
           tip: "Click the grey intersection point: Desmos displays (3, 2). x = 3, y = 2 in 4 seconds flat!"
         },
         keyTakeaways: [
@@ -159,10 +152,9 @@ In the paper SAT, the calculator was restricted on Section 3. On the Digital SAT
       },
       {
         id: "u1-sec-4-reference",
-        title: "4. Official Formula Sheet: What Is Provided vs What You MUST Memorize",
+        title: "4. Official Formula Sheet: Provided vs MUST Memorize",
         readTime: "6 min read",
-        summary_uz: "Bluebook da beriladigan Reference Sheet faqat asosiy geometriya formulalarini o'z ichiga oladi. Kvadrat tenglama, Viyet, qiyalik va aylana tenglamasini yoddan bilish shart!",
-        summary_en: "The on-screen Reference Sheet only provides basic geometric areas and volumes. Crucial formulas like the Quadratic Formula, Vertex formula, Vieta's relations, and Circle equations must be memorized.",
+        summary: "The on-screen Reference Sheet only provides basic geometric areas and volumes. Crucial formulas like the Quadratic Formula, Vertex formula, Vieta's relations, and Circle equations must be memorized.",
         diagramType: "formula-reference",
         keyTakeaways: [
           "Provided on Screen: Area of circle, rectangle, triangle; Circumference; Volume of rectangular prism, cylinder, sphere, cone, pyramid; Special right triangles (30-60-90, 45-45-90); Pythagorean theorem.",
@@ -198,8 +190,7 @@ In the Bluebook app, clicking the **Reference** icon in the upper-right corner o
         id: "u1-sec-5-gridin",
         title: "5. Student-Produced Response (Grid-in) Rules & Formatting",
         readTime: "4 min read",
-        summary_uz: "Savollarning 25% qismi variantlarsiz (grid-in) bo'ladi. Manfiy sonlar kiritish mumkin, ammo aralash kasrlar (masalan 3 1/2) man etiladi — ularni 7/2 yoki 3.5 deb yozing!",
-        summary_en: "25% of questions are fill-in-the-blank. Negative numbers are permitted on Digital SAT. Never enter mixed numbers like 3 1/2 — enter 7/2 or 3.5.",
+        summary: "25% of questions are fill-in-the-blank. Negative numbers are permitted on Digital SAT. Never enter mixed numbers like 3 1/2 — enter 7/2 or 3.5.",
         keyTakeaways: [
           "Enter up to 5 characters for positive numbers, up to 6 characters including a negative sign.",
           "Mixed numbers: '3 1/2' will be read as 31/2 (15.5) and marked wrong! Convert to 3.5 or 7/2.",
@@ -254,8 +245,7 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. Exactly 22 questions"
         ],
         correctAnswer: "C",
-        explanation_uz: "Digital SAT ning 2 bosqichli adaptiv tizimida Hard Module 2 ga yo'nalish olish uchun Modul 1 dagi 22 ta savoldan kamida 15 ta yoki undan ortiq to'g'ri javob talab etiladi. 14 tadan kam to'g'ri javob esa ball shifokorini 600-640 ga cheklab qo'yadi.",
-        explanation_en: "In the multistage adaptive testing engine, correctly answering approximately 15 or more out of 22 questions in Module 1 is required to route into the Harder Module 2, unlocking the 800 ceiling.",
+        explanation: "In the multistage adaptive testing engine, correctly answering approximately 15 or more out of 22 questions in Module 1 is required to route into the Harder Module 2, unlocking the 800 ceiling. Scoring below ~14 caps the score ceiling around 600-640.",
         satTrap: "Thinking you need 100% (22/22) to enter Hard Module 2. 15-16 correct is generally sufficient."
       },
       {
@@ -269,9 +259,8 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. Click 'Mark for Review' on both and wait for the time to expire."
         ],
         correctAnswer: "B",
-        explanation_uz: "Digital SAT da noto'g'ri javoblar uchun zarracha jarima balli (penalty) yo'q! Bo'sh qoldirish 0% imkoniyat bersa, taxmin qilib belgilash kamida 25% ehtimollik bilan qo'shimcha ball olib keladi.",
-        explanation_en: "The Digital SAT has NO guessing penalty. Leaving a question blank has a 0% probability of earning points, whereas guessing yields at least a 25% expected probability.",
-        satTrap: "Assuming the old SAT penalty (-0.25 points) still exists. Digital SAT has zero guessing penalty."
+        explanation: "The Digital SAT has NO guessing penalty. Leaving a question blank has a 0% probability of earning points, whereas guessing yields at least a 25% expected probability.",
+        satTrap: "Assuming the legacy SAT penalty (-0.25 points) still exists. Digital SAT has zero guessing penalty."
       },
       {
         id: "u1_q03_calc_rules",
@@ -284,9 +273,8 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. Only on multiple-choice questions, not grid-ins"
         ],
         correctAnswer: "C",
-        explanation_uz: "Digital SAT da eski qog'ozli imtihondagi 'No Calculator Section' bekor qilingan! Desmos har ikkala modulda (Modul 1 va Modul 2) barcha 44 ta savol davomida 100% ochiq bo'ladi.",
-        explanation_en: "Unlike the legacy SAT, the Digital SAT features the Desmos calculator on all 44 questions across both Module 1 and Module 2.",
-        satTrap: "Confusing the old Paper SAT (which had a No-Calculator Section 3) with the Digital SAT."
+        explanation: "Unlike the legacy paper SAT (which had a No-Calculator section), the Digital SAT features the Desmos calculator on all 44 questions across both Module 1 and Module 2.",
+        satTrap: "Confusing the legacy Paper SAT (Section 3 No-Calculator) with the Digital SAT."
       },
       {
         id: "u1_q04_formulas",
@@ -299,8 +287,7 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. Special right triangle ratio for $30^\\circ-60^\\circ-90^\\circ$"
         ],
         correctAnswer: "B",
-        explanation_uz: "Kvadrat tenglama formulasi ($x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$), Viyet formulasi va parabola uchi koordinatalari Reference Sheet da BERILMAYDI! Ularni o'quvchi yoddan bilishi yoki Desmos orqali yechishi shart.",
-        explanation_en: "The Quadratic Formula is completely absent from the official SAT Reference sheet. Only geometric area and volume formulas are provided.",
+        explanation: "The Quadratic Formula is completely absent from the official SAT Reference sheet. Only geometric area and volume formulas are provided. You must memorize algebraic formulas or use Desmos.",
         referenceFormula: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}"
       },
       {
@@ -308,14 +295,13 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
         questionNumber: 5,
         prompt: "If a student solves a student-produced response (grid-in) question and obtains the exact value $4\\frac{1}{2}$, how must this answer be typed into the answer box to avoid being marked incorrect?",
         options: [
-          "A. \`4 1/2\` with a space",
-          "B. \`4.5\` or \`9/2\`",
-          "C. \`4-1/2\` with a hyphen",
-          "D. \`4_1/2\` with an underscore"
+          "A. `4 1/2` with a space",
+          "B. `4.5` or `9/2`",
+          "C. `4-1/2` with a hyphen",
+          "D. `4_1/2` with an underscore"
         ],
         correctAnswer: "B",
-        explanation_uz: "Agar o'quvchi '4 1/2' deb yozsa, tizim uni 41/2 (20.5) deb qabul qiladi va xato hisoblaydi! Aralash kasrlarni doimo noto'g'ri kasrga (9/2) yoki o'nli kasrga (4.5) aylantirib yozish shart.",
-        explanation_en: "Mixed numbers are not recognized by Bluebook scoring. Entering '4 1/2' parses as 41/2 = 20.5 and is marked wrong. You must enter 9/2 or 4.5.",
+        explanation: "Mixed numbers are not recognized by Bluebook scoring. Entering '4 1/2' parses as 41/2 = 20.5 and is marked wrong. You must enter improper fraction 9/2 or decimal 4.5.",
         satTrap: "Typing spaces between whole numbers and fractions: '4 1/2' turns into 41/2."
       },
       {
@@ -329,8 +315,7 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. Exactly 30 minutes"
         ],
         correctAnswer: "C",
-        explanation_uz: "Modul 1 da 35 daqiqa beriladi. 11-savolga kelganda (yarmida) taymerda kamida 18-20 daqiqa qolgan bo'lishi kerak. Bu oxirgi 17-22 dagi murakkab savollarga yetarlicha vaqt zaxiralash imkonini beradi.",
-        explanation_en: "With 35 total minutes, reaching the halfway mark (Question 11) with 18 to 20 minutes remaining ensures a surplus for the challenging final questions (18-22).",
+        explanation: "With 35 total minutes, reaching the halfway mark (Question 11) with 18 to 20 minutes remaining ensures a sufficient time surplus for the challenging final questions (18-22).",
         satTrap: "Spending equal time (1.5 min) on early easy questions, leaving too little time for hard questions."
       },
       {
@@ -344,8 +329,7 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. 750"
         ],
         correctAnswer: "C",
-        explanation_uz: "Oson Modul 2 ga tushgan o'quvchi Modul 2 dagi barcha 22 ta savolga 100% to'g'ri javob bergan taqdirda ham, uning maksimal balli 600-640 atrofida cheklanadi. 700+ olish uchun Hard Modul 2 ga tushish majburiydir.",
-        explanation_en: "The Easy Module 2 has a ceiling cap around 600–640. To achieve a 700+ score, a student must route to the Hard Module 2.",
+        explanation: "The Easier Module 2 has a ceiling cap around 600–640. To achieve a 700+ score, a student must route to the Harder Module 2.",
         satTrap: "Believing that scoring 100% on the Easy Module 2 can still yield a 700+."
       },
       {
@@ -353,14 +337,13 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
         questionNumber: 8,
         prompt: "When using the built-in Desmos graphing calculator to find the line of best fit for a table with columns $x_1$ and $y_1$, which operator must be used instead of the standard equals sign ($=$)?",
         options: [
-          "A. \`:=\`",
-          "B. \`~ \` (tilde)",
-          "C. \`==\`",
-          "D. \`->\`"
+          "A. `:=`",
+          "B. `~` (tilde)",
+          "C. `==`",
+          "D. `->`"
         ],
         correctAnswer: "B",
-        explanation_uz: "Desmos da regression (chiziqli yoki kvadratik moslashtirish) uchun tenglik ($=$) belgisi o'rniga tilda (\`~\`) belgisi ishlatiladi: masalan \`y1 ~ m*x1 + b\`.",
-        explanation_en: "Desmos requires the tilde operator (\`~\`) for regression analysis (e.g. \`y1 ~ m*x1 + b\`) to estimate optimal parameters.",
+        explanation: "Desmos requires the tilde operator (`~`) for regression analysis (e.g. `y1 ~ m*x1 + b`) to estimate optimal parameters.",
         desmosTrick: "Type 'y1 ~ m x1 + b' in Desmos to calculate slope m and intercept b instantly from any table."
       },
       {
@@ -374,8 +357,7 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. 75%"
         ],
         correctAnswer: "B",
-        explanation_uz: "Digital SAT Math dagi savollarning taxminan 25% qismi (44 tadan 11 tasi, har bir modulda 5-6 tadan) Student-Produced Response (grid-in) shaklida bo'lib, variantlarsiz taqdim etiladi.",
-        explanation_en: "Approximately 25% of math questions (about 11 out of 44, or 5-6 per module) are Student-Produced Responses (grid-ins).",
+        explanation: "Approximately 25% of math questions (about 11 out of 44, or 5-6 per module) are Student-Produced Responses (grid-ins).",
         satTrap: "Assuming all SAT questions are multiple-choice with A, B, C, D choices."
       },
       {
@@ -389,8 +371,7 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
           "D. You must restart the entire test from Question 1 of Module 1."
         ],
         correctAnswer: "C",
-        explanation_uz: "Bluebook ilovasi oflayn ishlash xususiyatiga ega: internet uzilsa yoki noutbuk o'chib qolsa ham, barcha javoblaringiz va taymeringiz qurilma xotirasida saqlanadi. Proktor yordamida yoqilgach, to'xtagan joyingizdan davom etasiz.",
-        explanation_en: "Bluebook runs locally on your machine and caches progress. If internet drops or device reboots, your timer and completed answers are safely preserved.",
+        explanation: "Bluebook runs locally on your machine and caches progress. If internet drops or device reboots, your timer and completed answers are safely preserved.",
         satTrap: "Panicking during an internet blip — the timer halts and saves all progress safely."
       }
     ],
@@ -409,16 +390,14 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
     domain: "Algebra",
     topicCode: "ALG-01",
     estimatedHours: "4.0 hours",
-    description_uz: "Bir o'zgaruvchili chiziqli tenglamalar va tengsizliklar, $y = mx + b$ grafigi, qiyalik, tenglamalar sistemasi va Desmos yordamida tezkor yechish sirlari.",
-    description_en: "Foundations of linear equations & inequalities, graphing lines with slope-intercept, solving systems of linear equations, and Desmos speed tactics.",
+    description: "Foundations of linear equations & inequalities, graphing lines with slope-intercept, solving systems of linear equations, and Desmos speed tactics.",
     overviewSummary: "Algebra accounts for approximately 35% of all questions on the Digital SAT Math section. If you achieve 100% accuracy on foundational algebra, you virtually guarantee your passage into the Hard Module 2. Master isolating variables, linear modeling, and Desmos intersection tricks.",
     sections: [
       {
         id: "u2-sec-1-linear-eq",
         title: "1. Solving Linear Equations in One Variable: Ground Zero",
         readTime: "7 min read",
-        summary_uz: "Chiziqli tenglama $ax + b = c$ ko'rinishida bo'ladi. Asosiy tamoyil: teskari amallar yordamida $x$ ni bir tomonga, barcha sonlarni ikkinchi tomonga o'tkazish.",
-        summary_en: "A linear equation takes the standard form ax + b = c. The core principle is using inverse operations to isolate x on one side of the equal sign.",
+        summary: "A linear equation takes the standard form ax + b = c. The core principle is using inverse operations to isolate x on one side of the equal sign.",
         diagramType: "linear-graph",
         desmosExample: {
           title: "Desmos Single-Variable Solver",
@@ -451,8 +430,7 @@ A linear equation is any equation where the variable is raised only to the first
         id: "u2-sec-2-inequalities",
         title: "2. Linear Inequalities & The Negative Flip Rule",
         readTime: "6 min read",
-        summary_uz: "Tengsizlikda har ikki tomonni manfiy songa ko'paytirsak yoki bo'lsak, tengsizlik belgisi darhol teskarisiga o'zgaradi ($<$ belgisi $>$ ga aylanadi).",
-        summary_en: "Whenever multiplying or dividing both sides of an inequality by a negative number, you MUST reverse (flip) the inequality symbol.",
+        summary: "Whenever multiplying or dividing both sides of an inequality by a negative number, you MUST reverse (flip) the inequality symbol.",
         diagramType: "inequality-plane",
         keyTakeaways: [
           "Flip Rule: $-2x < 10 \\implies x > \\frac{10}{-2} \\implies x > -5$.",
@@ -473,8 +451,7 @@ $$\\text{If } -3x \\ge 18 \\implies x \\le \\frac{18}{-3} \\implies x \\le -6$$
         id: "u2-sec-3-word-problems",
         title: "3. Word Problems: Rate-Intercept Modeling ($y = mx + b$)",
         readTime: "8 min read",
-        summary_uz: "SAT dagi eng ko'p uchraydigan matnli masala: 'Har bir soat uchun' yoki 'har bir birlik uchun' so'zlari qiyalikni ($m$) bildiradi; 'Boshlang'ich to'lov' esa $y$-intercept ($b$) dir.",
-        summary_en: "Master translating textual rates into y = mx + b. 'Per', 'each', and 'every' signal the slope m; 'flat fee', 'initial deposit', or 'starting amount' signals the y-intercept b.",
+        summary: "Master translating textual rates into y = mx + b. 'Per', 'each', and 'every' signal the slope m; 'flat fee', 'initial deposit', or 'starting amount' signals the y-intercept b.",
         keyTakeaways: [
           "Rate of Change = Slope ($m$): Look for keywords: 'per', 'each', 'every', 'hourly'.",
           "Initial Value = y-intercept ($b$): Look for keywords: 'deposit', 'fee', 'start', 'at time t = 0'.",
@@ -503,12 +480,11 @@ He can rent the kayak for a maximum of **5 full hours**.`
         id: "u2-sec-4-systems",
         title: "4. Systems of Linear Equations: Substitution, Elimination & Desmos",
         readTime: "8 min read",
-        summary_uz: "Ikki to'g'ri chiziqning kesishish nuqtasi $(x, y)$ sistemaning yechimidir. Desmos'da ikkala tenglamani yozib, kulrang nuqtaga bosing — yechim darhol ko'rinadi!",
-        summary_en: "A system of linear equations represents two lines in the xy-plane. Their intersection point is the unique solution. Desmos finds the solution in 3 seconds flat.",
+        summary: "A system of linear equations represents two lines in the xy-plane. Their intersection point is the unique solution. Desmos finds the solution in 3 seconds flat.",
         diagramType: "system-intersection",
         desmosExample: {
           title: "System Intersection Trick",
-          expression: "3x - 2y = 8 \\n x + 4y = 12",
+          expression: "3x - 2y = 8 \nx + 4y = 12",
           tip: "Click the grey dot where lines cross: Desmos displays (4, 2). x = 4, y = 2!"
         },
         keyTakeaways: [
@@ -559,8 +535,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "If $5(2x - 3) + 4 = 39$, what is the value of $x$?",
         options: ["A. 3", "B. 4", "C. 5", "D. 6"],
         correctAnswer: "C",
-        explanation_uz: "1. Qavslarni ochamiz: 10x - 15 + 4 = 39.\n2. O'xshash hadlarni qo'shamiz: 10x - 11 = 39.\n3. Har ikki tomonga 11 qo'shamiz: 10x = 50.\n4. 10 ga bo'lamiz: x = 5.",
-        explanation_en: "1. Distribute: $10x - 15 + 4 = 39$.\n2. Combine like terms: $10x - 11 = 39$.\n3. Add 11: $10x = 50$.\n4. Divide by 10: $x = 5$.",
+        explanation: "1. Distribute: $10x - 15 + 4 = 39$.\n2. Combine like terms: $10x - 11 = 39$.\n3. Add 11 to both sides: $10x = 50$.\n4. Divide by 10: $x = 5$.",
         desmosTrick: "Type '5(2x - 3) + 4 = 39' into Desmos. A vertical line appears at x = 5. Done in 3 seconds!"
       },
       {
@@ -569,8 +544,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "In the equation $kx - 14 = 8x + 22$, where $k$ is a constant, the equation has no solution for $x$. What is the value of $k$?",
         options: ["A. -14", "B. 0", "C. 8", "D. 22"],
         correctAnswer: "C",
-        explanation_uz: "Tenglama yechimga ega bo'lmasligi (no solution) uchun x ning oldidagi koeffitsiyentlar bir xil bo'lishi shart ($k = 8$), chunki o'zgarmas sonlar har xil ($-14 \\ne 22$). Natijada $0 = 36$ ziddiyat kelib chiqadi.",
-        explanation_en: "For a linear equation in one variable to have no solution, the coefficients of x must be identical ($k = 8$) while the constants differ ($-14 \\ne 22$), creating a false statement $0 = 36$.",
+        explanation: "For a linear equation in one variable to have no solution, the coefficients of x must be identical ($k = 8$) while the constants differ ($-14 \\ne 22$), creating a false statement $0 = 36$.",
         satTrap: "Setting k equal to the constants (-14 or 22) instead of matching the x-coefficients."
       },
       {
@@ -579,8 +553,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "The equation $6(2x - b) = ax - 18$ has infinitely many solutions, where $a$ and $b$ are constants. What is the value of $a + b$?",
         options: ["A. 9", "B. 12", "C. 15", "D. 18"],
         correctAnswer: "C",
-        explanation_uz: "1. Chap tomonni ochamiz: 12x - 6b = ax - 18.\n2. Cheksiz ko'p yechim (infinitely many) bo'lishi uchun x koeffitsiyentlari teng: a = 12.\n3. Ozod hadlar teng: -6b = -18 => b = 3.\n4. Yig'indi: a + b = 12 + 3 = 15.",
-        explanation_en: "1. Distribute left side: $12x - 6b = ax - 18$.\n2. For infinitely many solutions, matching coefficients: $a = 12$.\n3. Matching constants: $-6b = -18 \\implies b = 3$.\n4. Therefore, $a + b = 12 + 3 = 15$.",
+        explanation: "1. Distribute left side: $12x - 6b = ax - 18$.\n2. For infinitely many solutions, coefficients of x must match: $a = 12$.\n3. Constants must match: $-6b = -18 \\implies b = 3$.\n4. Therefore, $a + b = 12 + 3 = 15$.",
         referenceFormula: "a_1 = a_2 \\quad \\text{and} \\quad c_1 = c_2"
       },
       {
@@ -589,8 +562,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "Which inequality represents all possible values of $x$ such that $-4x + 7 < 31$?",
         options: ["A. x < -6", "B. x > -6", "C. x < 6", "D. x > 6"],
         correctAnswer: "B",
-        explanation_uz: "1. 7 ni ayiramiz: -4x < 24.\n2. Manfiy (-4) ga bo'lamiz — tengsizlik belgisi teskarisiga o'zgaradi: x > 24 / (-4) => x > -6. To'g'ri javob B.",
-        explanation_en: "1. Subtract 7 from both sides: $-4x < 24$.\n2. Divide by -4 and FLIP the inequality sign: $x > \\frac{24}{-4} \\implies x > -6$.",
+        explanation: "1. Subtract 7 from both sides: $-4x < 24$.\n2. Divide by -4 and FLIP the inequality sign: $x > \\frac{24}{-4} \\implies x > -6$.",
         satTrap: "Forgetting to reverse the '<' sign to '>' when dividing by negative 4."
       },
       {
@@ -599,8 +571,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "If $(x, y)$ satisfies the system of equations $2x + 3y = 18$ and $4x - y = 8$, what is the value of $x + y$?",
         options: ["A. 4", "B. 5", "C. 7", "D. 9"],
         correctAnswer: "C",
-        explanation_uz: "1. Ikkinchi tenglamadan: y = 4x - 8.\n2. Birinchi tenglamaga qo'yamiz: 2x + 3(4x - 8) = 18 => 2x + 12x - 24 = 18 => 14x = 42 => x = 3.\n3. y = 4(3) - 8 = 4.\n4. x + y = 3 + 4 = 7.",
-        explanation_en: "1. From equation 2: $y = 4x - 8$.\n2. Substitute into equation 1: $2x + 3(4x - 8) = 18 \\implies 14x - 24 = 18 \\implies 14x = 42 \\implies x = 3$.\n3. Then $y = 4(3) - 8 = 4$.\n4. Sum $x + y = 3 + 4 = 7$.",
+        explanation: "1. From equation 2: $y = 4x - 8$.\n2. Substitute into equation 1: $2x + 3(4x - 8) = 18 \\implies 14x - 24 = 18 \\implies 14x = 42 \\implies x = 3$.\n3. Then $y = 4(3) - 8 = 4$.\n4. Sum $x + y = 3 + 4 = 7$.",
         desmosTrick: "Type both lines into Desmos. Click the intersection: (3, 4). Calculate 3 + 4 = 7."
       },
       {
@@ -609,8 +580,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "A moving truck rental service charges $\\$80$ for the first day plus $\\$0.45$ per mile driven. If a customer has a budget of $\\$170$ for a one-day rental, what is the maximum distance, in miles, the customer can drive?",
         options: ["A. 150", "B. 180", "C. 200", "D. 220"],
         correctAnswer: "C",
-        explanation_uz: "1. Model: 0.45m + 80 <= 170.\n2. 80 ni ayiramiz: 0.45m <= 90.\n3. Bo'lamiz: m <= 90 / 0.45 = 200 mil.",
-        explanation_en: "1. Set up inequality: $0.45m + 80 \\le 170$.\n2. Subtract 80: $0.45m \\le 90$.\n3. Divide by 0.45: $m \\le \\frac{90}{0.45} = 200\\text{ miles}$.",
+        explanation: "1. Set up inequality: $0.45m + 80 \\le 170$.\n2. Subtract 80: $0.45m \\le 90$.\n3. Divide by 0.45: $m \\le \\frac{90}{0.45} = 200\\text{ miles}$.",
         desmosTrick: "Type '(170 - 80) / 0.45' into Desmos to get 200 immediately."
       },
       {
@@ -619,8 +589,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "Line $L$ in the $xy$-plane passes through the points $(2, 7)$ and $(6, 19)$. What is the $y$-intercept of line $L$?",
         options: ["A. -1", "B. 1", "C. 3", "D. 5"],
         correctAnswer: "B",
-        explanation_uz: "1. Qiyalik m: (19 - 7) / (6 - 2) = 12 / 4 = 3.\n2. y = mx + b tenglamasiga (2, 7) ni qo'yamiz: 7 = 3(2) + b => 7 = 6 + b => b = 1.",
-        explanation_en: "1. Slope $m = \\frac{19 - 7}{6 - 2} = \\frac{12}{4} = 3$.\n2. Use point-slope with $(2, 7)$: $y - 7 = 3(x - 2) \\implies y = 3x - 6 + 7 = 3x + 1$.\n3. The y-intercept is $b = 1$.",
+        explanation: "1. Slope $m = \\frac{19 - 7}{6 - 2} = \\frac{12}{4} = 3$.\n2. Use point-slope with $(2, 7)$: $y - 7 = 3(x - 2) \\implies y = 3x - 6 + 7 = 3x + 1$.\n3. The y-intercept is $b = 1$.",
         referenceFormula: "m = \\frac{y_2 - y_1}{x_2 - x_1}, \\quad y = mx + b"
       },
       {
@@ -629,8 +598,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "Line $p$ has the equation $y = -\\frac{2}{5}x + 4$. Line $q$ is perpendicular to line $p$ in the $xy$-plane and passes through the point $(4, 11)$. What is the slope of line $q$?",
         options: ["A. -\\frac{5}{2}", "B. -\\frac{2}{5}", "C. \\frac{2}{5}", "D. \\frac{5}{2}"],
         correctAnswer: "D",
-        explanation_uz: "Perpendikulyar to'g'ri chiziqlar qiyaliklari ko'paytmasi -1 ga teng ($m_1 \\cdot m_2 = -1$). Shuning uchun qiyalik teskari va qarama-qarshi ishorali (negative reciprocal) bo'ladi: -2/5 ning teskarisi +5/2.",
-        explanation_en: "Perpendicular lines have negative reciprocal slopes ($m_1 \\cdot m_2 = -1$). The negative reciprocal of $-\\frac{2}{5}$ is $+\\frac{5}{2}$.",
+        explanation: "Perpendicular lines have negative reciprocal slopes ($m_1 \\cdot m_2 = -1$). The negative reciprocal of $-\\frac{2}{5}$ is $+\\frac{5}{2}$.",
         referenceFormula: "m_{\\perp} = -\\frac{1}{m}"
       },
       {
@@ -639,8 +607,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "If $2x + 5y = 11$, what is the value of $8x + 20y - 15$?",
         options: ["A. 29", "B. 33", "C. 44", "D. 59"],
         correctAnswer: "A",
-        explanation_uz: "1. E'tibor bering: 8x + 20y = 4 * (2x + 5y).\n2. (2x + 5y) o'rniga 11 ni qo'yamiz: 4 * (11) = 44.\n3. 44 - 15 = 29. x va y ni alohida topish shart emas!",
-        explanation_en: "1. Notice the multiple structure: $8x + 20y = 4(2x + 5y)$.\n2. Substitute $(2x + 5y) = 11$: $4(11) = 44$.\n3. Subtract 15: $44 - 15 = 29$.",
+        explanation: "1. Notice the multiple structure: $8x + 20y = 4(2x + 5y)$.\n2. Substitute $(2x + 5y) = 11$: $4(11) = 44$.\n3. Subtract 15: $44 - 15 = 29$.",
         satTrap: "Trying to solve for individual values of x and y with only one equation."
       },
       {
@@ -649,8 +616,7 @@ $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
         prompt: "Consider the system of equations: $3x + ay = 12$ and $6x + 8y = 20$. For what value of the constant $a$ will the system have no solution?",
         options: ["A. 2", "B. 4", "C. 6", "D. 8"],
         correctAnswer: "B",
-        explanation_uz: "Sistemada yechim bo'lmasligi (no solution / parallel chiziqlar) uchun x va y koeffitsiyentlar nisbati teng bo'lishi shart:\n3 / 6 = a / 8 => 1/2 = a / 8 => a = 4. Ozod hadlar nisbati esa teng emas (12/20 = 3/5 != 1/2).",
-        explanation_en: "For no solution (parallel lines), the ratio of coefficients must be equal: $\\frac{3}{6} = \\frac{a}{8} \\implies \\frac{1}{2} = \\frac{a}{8} \\implies a = 4$. Constants differ: $\\frac{12}{20} = \\frac{3}{5} \\ne \\frac{1}{2}$.",
+        explanation: "For no solution (parallel lines), the ratio of coefficients must be equal: $\\frac{3}{6} = \\frac{a}{8} \\implies \\frac{1}{2} = \\frac{a}{8} \\implies a = 4$. Constants differ: $\\frac{12}{20} = \\frac{3}{5} \\ne \\frac{1}{2}$.",
         referenceFormula: "\\frac{a_1}{a_2} = \\frac{b_1}{b_2} \\ne \\frac{c_1}{c_2}"
       }
     ],
@@ -670,7 +636,7 @@ export function getKhanFullUnit(unitId: string): KhanFullUnit | null {
     return KHAN_FULL_UNITS[unitId];
   }
 
-  // Fallback / scaffold for other units from KHAN_SAT_MATH_UNITS
+  // Fallback / scaffold for other units from KHAN_SAT_MATH_UNITS (100% in English)
   const baseUnit = KHAN_SAT_MATH_UNITS.find((u) => u.id === unitId);
   if (!baseUnit) return null;
 
@@ -682,9 +648,8 @@ export function getKhanFullUnit(unitId: string): KhanFullUnit | null {
     id: skill.id,
     title: `${sIdx + 1}. ${skill.title}`,
     readTime: "7 min read",
-    summary_uz: skill.lessonContent.overview_uz,
-    summary_en: skill.lessonContent.overview_en,
-    contentMarkdown: `### ${skill.title}\n\n${skill.lessonContent.overview_uz}\n\n**English Definition:**\n${skill.lessonContent.overview_en}\n\n#### First Principles & Qoidalar:\n${skill.lessonContent.firstPrinciples.map((fp) => `- ${fp}`).join("\n")}\n\n#### Asosiy Formulalar:\n${skill.lessonContent.rules.map((r) => `- **${r.name}:** $${r.formula}$ — ${r.explanation}`).join("\n")}`,
+    summary: skill.lessonContent.overview_en,
+    contentMarkdown: `### ${skill.title}\n\n${skill.lessonContent.overview_en}\n\n#### First Principles & Rules:\n${skill.lessonContent.firstPrinciples.map((fp) => `- ${fp}`).join("\n")}\n\n#### Key Formulas & Identities:\n${skill.lessonContent.rules.map((r) => `- **${r.name}:** $${r.formula}$ — ${r.explanation}`).join("\n")}`,
     keyTakeaways: skill.lessonContent.firstPrinciples,
     desmosExample: {
       title: skill.lessonContent.desmosBypass.title,
@@ -702,8 +667,7 @@ export function getKhanFullUnit(unitId: string): KhanFullUnit | null {
         prompt: skill.basicExample.question,
         options: skill.basicExample.choices || ["A", "B", "C", "D"],
         correctAnswer: skill.basicExample.correctAnswer,
-        explanation_uz: skill.basicExample.stepByStep.join("\n"),
-        explanation_en: skill.basicExample.takeaway,
+        explanation: skill.basicExample.stepByStep.join("\n"),
         satTrap: skill.basicExample.takeaway
       });
     }
@@ -714,8 +678,7 @@ export function getKhanFullUnit(unitId: string): KhanFullUnit | null {
         prompt: skill.harderExample.question,
         options: skill.harderExample.choices || ["A", "B", "C", "D"],
         correctAnswer: skill.harderExample.correctAnswer,
-        explanation_uz: skill.harderExample.solution,
-        explanation_en: skill.harderExample.trapAnalysis,
+        explanation: skill.harderExample.solution,
         satTrap: skill.harderExample.trapAnalysis,
         desmosTrick: skill.harderExample.speedHack
       });
@@ -732,9 +695,8 @@ export function getKhanFullUnit(unitId: string): KhanFullUnit | null {
     domain: baseUnit.domain,
     topicCode: baseUnit.skills[0]?.topicCode || "ALG-01",
     estimatedHours: "3.5 hours",
-    description_uz: baseUnit.description_uz,
-    description_en: baseUnit.description_en,
-    overviewSummary: baseUnit.description_uz,
+    description: baseUnit.description_en,
+    overviewSummary: baseUnit.description_en,
     sections,
     speedHacks: baseUnit.skills.map((s) => ({
       title: s.lessonContent.desmosBypass.title,
@@ -747,4 +709,3 @@ export function getKhanFullUnit(unitId: string): KhanFullUnit | null {
     nextUnitId: nextUnit?.id
   };
 }
-

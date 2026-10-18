@@ -21,7 +21,7 @@ export async function generateMetadata({
   }
   return {
     title: `${unit.title} | Vespera SAT Curriculum`,
-    description: unit.description_uz,
+    description: unit.description,
   };
 }
 
@@ -37,5 +37,6 @@ export default async function UnitPage({
     notFound();
   }
 
-  return <UnitTextbookClient unit={unit} />;
+  return <UnitTextbookClient key={unit.id} unit={unit} />;
 }
+
