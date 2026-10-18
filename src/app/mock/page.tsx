@@ -44,7 +44,7 @@ import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import Portal from "@/components/Portal";
 import { useTheme } from "@/components/ThemeContext";
 import QuestionDiagram from "@/components/QuestionDiagram";
-import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion } from "@/lib/bluebook-tests";
+import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion, getRwDisplayContent } from "@/lib/bluebook-tests";
 
 type ExamStage =
   | "lobby"
@@ -1240,22 +1240,39 @@ export default function BluebookMockPage() {
                         </div>
                       </div>
 
-                      {/* Reading Passage if present */}
-                      {q.passage && (
-                        <div className="mt-4 p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs md:text-sm text-[var(--text-secondary)] font-serif leading-relaxed max-h-56 overflow-y-auto">
-                          {q.passage}
-                        </div>
-                      )}
+                      {/* Reading Passage and Diagram (1:1 Bluebook review layout) */}
+                      {(() => {
+                        const rwDisplay = q.section === "READING_WRITING" ? getRwDisplayContent(q) : null;
+                        const passageToShow = q.passage || rwDisplay?.passage;
+                        const promptToShow = rwDisplay ? rwDisplay.prompt : q.prompt;
 
-                      {/* Question Prompt */}
-                      <div className="mt-4 text-xs md:text-sm text-[var(--text-main)] font-medium leading-relaxed">
-                        <KaTeXMath content={q.prompt} />
-                      </div>
+                        return (
+                          <>
+                            {passageToShow && (
+                              <div className="mt-4 p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs md:text-sm text-[var(--text-secondary)] font-serif leading-relaxed max-h-56 overflow-y-auto whitespace-pre-line">
+                                {passageToShow}
+                              </div>
+                            )}
 
-                      {/* Geometric SVG Diagram if present */}
-                      <div className="mt-3">
-                        <QuestionDiagram preset={q.diagramPreset} prompt={q.prompt} />
-                      </div>
+                            {/* Geometric SVG Diagram if present */}
+                            {(q.diagramPreset || q.diagramSvg) && (
+                              <div className="mt-3">
+                                <QuestionDiagram
+                                  preset={q.diagramPreset}
+                                  customSvg={q.diagramSvg}
+                                  prompt={passageToShow || promptToShow}
+                                  domain={q.domain}
+                                />
+                              </div>
+                            )}
+
+                            {/* Question Prompt */}
+                            <div className="mt-4 text-xs md:text-sm text-[var(--text-main)] font-medium leading-relaxed">
+                              <KaTeXMath content={promptToShow} />
+                            </div>
+                          </>
+                        );
+                      })()}
 
                       {/* Multiple Choice Options */}
                       {q.type === "multiple_choice" && q.options && (
@@ -1541,116 +1558,119 @@ export default function BluebookMockPage() {
       <main className="flex-1 flex overflow-hidden">
         {currentQ ? (
           currentQ.section === "READING_WRITING" ? (
-            /* 2-COLUMN SPLIT FOR READING AND WRITING */
-            <div className="flex-1 flex flex-col md:grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border-main)] overflow-y-auto">
-              {/* Left Column: Passage / Stimulus */}
-              <div className="p-4 sm:p-6 md:p-10 overflow-y-auto text-[var(--text-main)] leading-relaxed text-sm md:text-base font-serif max-h-[38vh] md:max-h-[calc(100vh-7.5rem)] shrink-0 md:shrink">
-                {currentQ.passage ? (
-                  <div className="space-y-4 whitespace-pre-line selection:bg-yellow-400/30">
-                    {currentQ.passage}
-                  </div>
-                ) : (
-                  <div className="text-[var(--text-muted)] italic">No passage required for this question.</div>
-                )}
-              </div>
+            /* 2-COLUMN SPLIT FOR READING AND WRITING (1:1 College Board Bluebook Layout) */
+            (() => {
+              const rwContent = getRwDisplayContent(currentQ);
+              return (
+                <div className="flex-1 flex flex-col md:grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border-main)] overflow-y-auto">
+                  {/* Left Column: Passage / Stimulus + Visual Reference (Graph/Table) */}
+                  <div className="p-4 sm:p-6 md:p-10 overflow-y-auto text-[var(--text-main)] leading-relaxed text-sm md:text-base font-serif max-h-[42vh] md:max-h-[calc(100vh-7.5rem)] shrink-0 md:shrink space-y-6">
+                    {/* Visual Reference Figure / Chart / Table (always on left with stimulus in SAT R&W) */}
+                    {(currentQ.diagramPreset || currentQ.diagramSvg) && (
+                      <div className="font-sans mb-4">
+                        <QuestionDiagram
+                          preset={currentQ.diagramPreset}
+                          customSvg={currentQ.diagramSvg}
+                          prompt={rwContent.passage}
+                          domain={currentQ.domain}
+                        />
+                      </div>
+                    )}
 
-              {/* Right Column: Stem & Multiple Choice Options */}
-              <div className="p-4 sm:p-6 md:p-10 overflow-y-auto flex-1 flex flex-col justify-between space-y-6 md:max-h-[calc(100vh-7.5rem)]">
-                <div className="space-y-6">
-                  {/* Question header + Bookmark */}
-                  <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
-                    <span className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--text-muted)]">
-                      Question {currentIndex + 1} of {activeQuestions.length}
-                    </span>
-                    <button
-                      onClick={toggleFlag}
-                      className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded transition ${
-                        flagged[currentQ.id]
-                          ? "bg-amber-500/20 text-amber-500 border border-amber-500/40"
-                          : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
-                      }`}
-                    >
-                      <Bookmark
-                        className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-500 text-amber-500" : ""}`}
-                      />
-                      <span>Mark for Review</span>
-                    </button>
+                    <div className="space-y-4 whitespace-pre-line selection:bg-yellow-400/30">
+                      {rwContent.passage}
+                    </div>
                   </div>
 
-                  {/* Visual Reference Figure if available */}
-                  {(currentQ.diagramPreset || currentQ.diagramSvg) && (
-                    <QuestionDiagram
-                      preset={currentQ.diagramPreset}
-                      customSvg={currentQ.diagramSvg}
-                      prompt={currentQ.prompt}
-                      domain={currentQ.domain}
-                    />
-                  )}
-
-                  {/* Question stem */}
-                  <div className="text-sm md:text-base font-medium text-[var(--text-main)] leading-relaxed">
-                    <KaTeXMath content={currentQ.prompt} />
-                  </div>
-
-                  {/* Options */}
-                  <div className="space-y-3 pt-2">
-                    {currentQ.options?.map((opt) => {
-                      const letter = opt.substring(0, 1);
-                      const text = opt.substring(3);
-                      const isSelected = userAnswers[currentQ.id] === letter;
-                      const isStruck = !!struckOut[`${currentQ.id}_${letter}`];
-
-                      return (
-                        <div
-                          key={opt}
-                          onClick={() => !isStruck && handleSelectOption(letter)}
-                          className={`relative group rounded-xl p-3.5 border transition cursor-pointer flex items-start justify-between gap-3 ${
-                            isStruck
-                              ? "opacity-35 line-through bg-[var(--bg-surface)] border-[var(--border-subtle)]"
-                              : isSelected
-                              ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-md ring-2 ring-[var(--accent-blue)]/20"
-                              : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
+                  {/* Right Column: Stem & Multiple Choice Options */}
+                  <div className="p-4 sm:p-6 md:p-10 overflow-y-auto flex-1 flex flex-col justify-between space-y-6 md:max-h-[calc(100vh-7.5rem)]">
+                    <div className="space-y-6">
+                      {/* Question header + Bookmark */}
+                      <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                        <span className="font-mono font-bold text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                          Question {currentIndex + 1} of {activeQuestions.length}
+                        </span>
+                        <button
+                          onClick={toggleFlag}
+                          className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded transition ${
+                            flagged[currentQ.id]
+                              ? "bg-amber-500/20 text-amber-500 border border-amber-500/40"
+                              : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
                           }`}
                         >
-                          <div className="flex items-start gap-3 flex-1">
-                            <span
-                              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition ${
-                                isSelected
-                                  ? "bg-blue-600 text-white"
-                                  : "border border-[var(--border-main)] text-[var(--text-muted)] group-hover:border-[var(--text-secondary)]"
-                              }`}
-                            >
-                              {letter}
-                            </span>
-                            <span className="text-xs md:text-sm text-[var(--text-main)] mt-0.5 leading-snug">
-                              <KaTeXMath content={text} />
-                            </span>
-                          </div>
+                          <Bookmark
+                            className={`w-3.5 h-3.5 ${flagged[currentQ.id] ? "fill-amber-500 text-amber-500" : ""}`}
+                          />
+                          <span>Mark for Review</span>
+                        </button>
+                      </div>
 
-                          {/* Strikethrough button */}
-                          {isOptionEliminatorActive && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleStrike(letter);
-                              }}
-                              className={`p-1 rounded text-xs transition ${
+                      {/* Question stem */}
+                      <div className="text-sm md:text-base font-medium text-[var(--text-main)] leading-relaxed">
+                        <KaTeXMath content={rwContent.prompt} />
+                      </div>
+
+                      {/* Options */}
+                      <div className="space-y-3 pt-2">
+                        {currentQ.options?.map((opt) => {
+                          const letter = opt.substring(0, 1);
+                          const text = opt.substring(3);
+                          const isSelected = userAnswers[currentQ.id] === letter;
+                          const isStruck = !!struckOut[`${currentQ.id}_${letter}`];
+
+                          return (
+                            <div
+                              key={opt}
+                              onClick={() => !isStruck && handleSelectOption(letter)}
+                              className={`relative group rounded-xl p-3.5 border transition cursor-pointer flex items-start justify-between gap-3 ${
                                 isStruck
-                                  ? "text-rose-500 hover:bg-rose-500/10"
-                                  : "text-[var(--text-muted)] hover:text-rose-500 hover:bg-[var(--bg-surface)]"
+                                  ? "opacity-35 line-through bg-[var(--bg-surface)] border-[var(--border-subtle)]"
+                                  : isSelected
+                                  ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-md ring-2 ring-[var(--accent-blue)]/20"
+                                  : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
                               }`}
-                              title={isStruck ? "Restore option" : "Cross out option"}
                             >
-                              <Strikethrough className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })}
+                              <div className="flex items-start gap-3 flex-1">
+                                <span
+                                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition ${
+                                    isSelected
+                                      ? "bg-blue-600 text-white"
+                                      : "border border-[var(--border-main)] text-[var(--text-muted)] group-hover:border-[var(--text-secondary)]"
+                                  }`}
+                                >
+                                  {letter}
+                                </span>
+                                <span className="text-xs md:text-sm text-[var(--text-main)] mt-0.5 leading-snug">
+                                  <KaTeXMath content={text} />
+                                </span>
+                              </div>
+
+                              {/* Strikethrough button */}
+                              {isOptionEliminatorActive && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleStrike(letter);
+                                  }}
+                                  className={`p-1 rounded text-xs transition ${
+                                    isStruck
+                                      ? "text-rose-500 hover:bg-rose-500/10"
+                                      : "text-[var(--text-muted)] hover:text-rose-500 hover:bg-[var(--bg-surface)]"
+                                  }`}
+                                  title={isStruck ? "Restore option" : "Cross out option"}
+                                >
+                                  <Strikethrough className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              );
+            })()
           ) : (
             /* CENTERED LAYOUT FOR MATH WITH SPR GRID-IN & DESMOS */
             <div className="flex-1 flex overflow-y-auto justify-center p-6 md:p-12">

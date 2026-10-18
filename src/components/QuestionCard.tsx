@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import KaTeXMath from "./KaTeXMath";
 import QuestionDiagram from "./QuestionDiagram";
+import { getRwDisplayContent } from "@/lib/bluebook-tests";
 import {
   CheckCircle2,
   XCircle,
@@ -295,28 +296,39 @@ export default function QuestionCard({
       </div>
 
       <div className="p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-7">
-        {/* Reading Passage if available */}
-        {question.passage && (
-          <div className="p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-sm text-[var(--text-main)] leading-relaxed font-serif shadow-inner">
-            <span className="text-[11px] font-bold text-[var(--accent-blue)] uppercase tracking-wider block mb-2.5 font-sans">
-              📄 SAT Passage / Research Context:
-            </span>
-            <div className="whitespace-pre-line">{question.passage}</div>
-          </div>
-        )}
+        {/* Reading Passage, Diagram and Prompt */}
+        {(() => {
+          const rwDisplay = question.section === "READING_WRITING" ? getRwDisplayContent(question as any) : null;
+          const passageToShow = question.passage || rwDisplay?.passage;
+          const promptToShow = rwDisplay ? rwDisplay.prompt : question.prompt;
 
-        {/* Visual Reference Figure if available or auto-detected */}
-        <QuestionDiagram
-          preset={question.diagramPreset}
-          customSvg={question.diagramSvg}
-          prompt={question.prompt}
-          domain={question.domain}
-        />
+          return (
+            <>
+              {/* Reading Passage if available */}
+              {passageToShow && (
+                <div className="p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-sm text-[var(--text-main)] leading-relaxed font-serif shadow-inner">
+                  <span className="text-[11px] font-bold text-[var(--accent-blue)] uppercase tracking-wider block mb-2.5 font-sans">
+                    📄 SAT Passage / Research Context:
+                  </span>
+                  <div className="whitespace-pre-line">{passageToShow}</div>
+                </div>
+              )}
 
-        {/* Question Prompt */}
-        <div className="text-base text-[var(--text-main)] font-medium leading-relaxed">
-          <KaTeXMath content={question.prompt} />
-        </div>
+              {/* Visual Reference Figure if available or auto-detected */}
+              <QuestionDiagram
+                preset={question.diagramPreset}
+                customSvg={question.diagramSvg}
+                prompt={passageToShow || promptToShow}
+                domain={question.domain}
+              />
+
+              {/* Question Prompt */}
+              <div className="text-base text-[var(--text-main)] font-medium leading-relaxed">
+                <KaTeXMath content={promptToShow} />
+              </div>
+            </>
+          );
+        })()}
 
         {/* Options */}
         <div className="space-y-3.5">
