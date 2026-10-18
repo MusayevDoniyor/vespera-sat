@@ -123,6 +123,32 @@ export default function BluebookMockPage() {
 
   const currentQ = activeQuestions[currentIndex];
 
+  // Past attempts history
+  const [pastAttempts, setPastAttempts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // 1. Instant local storage load
+    try {
+      const raw = localStorage.getItem("vespera_mock_history");
+      if (raw) {
+        setPastAttempts(JSON.parse(raw));
+      }
+    } catch (e) {}
+
+    // 2. Sync from database
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.mockHistory && Array.isArray(data.mockHistory) && data.mockHistory.length > 0) {
+          setPastAttempts(data.mockHistory);
+          try {
+            localStorage.setItem("vespera_mock_history", JSON.stringify(data.mockHistory));
+          } catch (e) {}
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Helper to format MM:SS
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -494,6 +520,28 @@ export default function BluebookMockPage() {
     setScoreResult(result);
     setStage("completed");
 
+    const attemptData = {
+      id: "mock_" + Date.now(),
+      title: selectedExam.title,
+      formCode: selectedExam.formCode,
+      section: "FULL",
+      score: totalScore,
+      math_score: mathScore,
+      reading_score: rwScore,
+      total_questions: result.totalQuestions,
+      correct_count: result.totalCorrect,
+      completed_at: new Date().toISOString(),
+      time_spent: Math.max(1, Math.round((Date.now() - examStartTimeRef.current) / 1000)),
+    };
+
+    try {
+      const raw = localStorage.getItem("vespera_mock_history");
+      const list = raw ? JSON.parse(raw) : [];
+      const updated = [attemptData, ...list.filter((x: any) => x.id !== attemptData.id).slice(0, 19)];
+      localStorage.setItem("vespera_mock_history", JSON.stringify(updated));
+      setPastAttempts(updated);
+    } catch (e) {}
+
     // Persist attempt to database
     fetch("/api/stats", {
       method: "POST",
@@ -506,10 +554,7 @@ export default function BluebookMockPage() {
         readingScore: rwScore,
         totalQuestions: result.totalQuestions,
         correctCount: result.totalCorrect,
-        timeSpent: Math.max(
-          1,
-          Math.round((Date.now() - examStartTimeRef.current) / 1000)
-        ),
+        timeSpent: attemptData.time_spent,
       }),
     }).catch(() => {});
   };
@@ -563,51 +608,132 @@ export default function BluebookMockPage() {
             </p>
           </div>
 
-          {/* Test Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {BLUEBOOK_EXAMS.map((exam) => (
-              <div
-                key={exam.id}
-                onClick={() => setSelectedExam(exam)}
-                className={`relative rounded-2xl p-6 cursor-pointer border transition-all duration-200 flex flex-col justify-between ${
-                  selectedExam.id === exam.id
-                    ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-xl shadow-[var(--accent-blue)]/10 ring-2 ring-[var(--accent-blue)]/30"
-                    : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
-                }`}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30">
-                      {exam.badge}
-                    </span>
-                    <span className="text-xs text-[var(--text-muted)] font-mono">
-                      {exam.formCode}
-                    </span>
+          {/* Past Attempts History if available */}
+          {pastAttempts.length > 0 && (
+            <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--border-main)] pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold">
+                    <Award className="w-4 h-4" />
                   </div>
-
                   <div>
-                    <h3 className="text-lg font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)]">
-                      {exam.title}
-                    </h3>
-                    <p className="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
-                      {exam.descriptionUz}
+                    <h2 className="text-base font-bold text-[var(--text-main)]">
+                      Your Completed Practice Test History
+                    </h2>
+                    <p className="text-xs text-[var(--text-muted)]">
+                      Saved mock attempts, scaled scores, and Multistage Testing (MST) telemetry
                     </p>
                   </div>
+                </div>
+                <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] self-start sm:self-auto">
+                  {pastAttempts.length} attempt{pastAttempts.length > 1 ? "s" : ""} on record
+                </span>
+              </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-main)] text-xs text-[var(--text-secondary)]">
+              <div className="divide-y divide-[var(--border-main)]">
+                {pastAttempts.slice(0, 5).map((attempt, idx) => {
+                  const score = attempt.score || 400;
+                  const scoreColor =
+                    score >= 1400
+                      ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
+                      : score >= 1200
+                      ? "text-blue-500 bg-blue-500/10 border-blue-500/20"
+                      : "text-amber-500 bg-amber-500/10 border-amber-500/20";
+
+                  return (
                     <div
-                      className="flex items-center gap-1.5"
-                      title="Digital SAT timing: 2 RW modules (64 min) + 2 Math modules (70 min) = 134 minutes (+10 min break)"
+                      key={attempt.id || idx}
+                      className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-[var(--bg-surface)]/50 px-2 rounded-xl transition"
                     >
-                      <Clock className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
-                      <span>134 min (2h 14m)</span>
+                      <div className="space-y-1">
+                        <div className="font-bold text-[var(--text-main)] text-sm flex items-center gap-2.5 flex-wrap">
+                          <span>{attempt.title}</span>
+                          <span className={`px-2.5 py-0.5 rounded-full font-mono text-xs font-black border ${scoreColor}`}>
+                            {score} / 1600
+                          </span>
+                        </div>
+                        <div className="text-[var(--text-muted)] font-mono text-[11px] flex items-center gap-3 flex-wrap">
+                          <span>Reading & Writing: <strong className="text-[var(--text-main)]">{attempt.reading_score || attempt.readingScore || 300}</strong></span>
+                          <span>•</span>
+                          <span>Math: <strong className="text-[var(--text-main)]">{attempt.math_score || attempt.mathScore || 300}</strong></span>
+                          <span>•</span>
+                          <span>Correct: <strong className="text-[var(--text-main)]">{attempt.correct_count || attempt.correctCount || 0}</strong>/{attempt.total_questions || attempt.totalQuestions || 98}</span>
+                        </div>
+                      </div>
+
+                      <div className="text-[var(--text-muted)] font-mono text-[11px] shrink-0 sm:text-right">
+                        {new Date(attempt.completed_at || attempt.completedAt || Date.now()).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5 text-[var(--accent-amber)]" />
-                      <span>4 Adaptive Modules</span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Test Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {BLUEBOOK_EXAMS.map((exam) => {
+              const latestAttempt = pastAttempts.find(
+                (a) => a.title === exam.title || a.formCode === exam.formCode
+              );
+
+              return (
+                <div
+                  key={exam.id}
+                  onClick={() => setSelectedExam(exam)}
+                  className={`relative rounded-2xl p-6 cursor-pointer border transition-all duration-200 flex flex-col justify-between ${
+                    selectedExam.id === exam.id
+                      ? "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] shadow-xl shadow-[var(--accent-blue)]/10 ring-2 ring-[var(--accent-blue)]/30"
+                      : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)]/40 hover:bg-[var(--bg-surface)] shadow-sm"
+                  }`}
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30">
+                        {exam.badge}
+                      </span>
+                      <span className="text-xs text-[var(--text-muted)] font-mono">
+                        {exam.formCode}
+                      </span>
+                    </div>
+
+                    {latestAttempt && (
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold w-fit">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Completed • Score: {latestAttempt.score}</span>
+                      </div>
+                    )}
+
+                    <div>
+                      <h3 className="text-lg font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)]">
+                        {exam.title}
+                      </h3>
+                      <p className="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
+                        {exam.descriptionEn || exam.description || exam.descriptionUz}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-main)] text-xs text-[var(--text-secondary)]">
+                      <div
+                        className="flex items-center gap-1.5"
+                        title="Digital SAT timing: 2 RW modules (64 min) + 2 Math modules (70 min) = 134 minutes (+10 min break)"
+                      >
+                        <Clock className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
+                        <span>134 min (2h 14m)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Layers className="w-3.5 h-3.5 text-[var(--accent-amber)]" />
+                        <span>4 Adaptive Modules</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
                 <div className="pt-6">
                   <button
@@ -622,7 +748,8 @@ export default function BluebookMockPage() {
                   </button>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
 
           {/* Guidelines */}

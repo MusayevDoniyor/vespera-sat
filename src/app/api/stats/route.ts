@@ -186,6 +186,20 @@ export async function GET() {
         `);
     const mockStats = mockRes.rows[0] || { total_exams: 0, highest_score: 0, latest_score: 0 };
 
+    const mockHistoryRes = userId
+      ? await pool.query(
+          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at
+           FROM vespera.mock_exams
+           WHERE user_id = $1 OR user_id IS NULL
+           ORDER BY completed_at DESC LIMIT 10;`,
+          [userId]
+        )
+      : await pool.query(
+          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at
+           FROM vespera.mock_exams
+           ORDER BY completed_at DESC LIMIT 10;`
+        );
+
     // -------------------------------------------------------------
     // Official College Board SAT 1:1 Section Scoring (200 - 800)
     // -------------------------------------------------------------
@@ -212,6 +226,7 @@ export async function GET() {
       totalMaterials: 41,
       totalMockExams: 7, // 7 Full Bluebook practice exams available
       userMockStats: mockStats,
+      mockHistory: mockHistoryRes.rows || [],
       dueReviewsCount: dueRes.rows[0]?.due_count || 0,
       realStreak: currentStreak,
       compositeScore,
@@ -244,6 +259,9 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await initDb();
+    const session = await getSessionUser();
+    const userId = session?.userId || null;
+
     const body = await req.json();
     const {
       title,
@@ -258,9 +276,9 @@ export async function POST(req: Request) {
 
     const id = "mock_" + Date.now();
     await pool.query(
-      `INSERT INTO mock_exams (
-        id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      `INSERT INTO vespera.mock_exams (
+        id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, user_id
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         id,
         title || "Bluebook Practice Exam",
@@ -271,6 +289,7 @@ export async function POST(req: Request) {
         totalQuestions || 0,
         correctCount || 0,
         timeSpent || 0,
+        userId,
       ]
     );
 
