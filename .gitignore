@@ -40,6 +40,7 @@ yarn-error.log*
 
 # extracted artifacts
 scripts/extracted/
+scripts/exported_all_questions.json
 
 # typescript
 *.tsbuildinfo

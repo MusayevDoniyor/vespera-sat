@@ -256,12 +256,12 @@ Pure substance amount is conserved!`,
     {
       id: "u10_q10",
       questionNumber: 10,
-      prompt: "The equations $ax + by = 10$ and $4x + 6y = c$ represent the same line in the $xy$-plane, where $a, b,$ and $c$ are constants. If $a = 6$, what is the value of $c$?",
-      options: ["A. 10", "B. 15", "C. 20", "D. 30"],
+      prompt: "The equations $ax + by = 20$ and $2x + 3y = c$ represent the same line in the $xy$-plane, where $a, b,$ and $c$ are constants. If $a = 4$, what is the value of $c$?",
+      options: ["A. 5", "B. 10", "C. 15", "D. 20"],
       correctAnswer: "B",
-      explanation: "If both equations represent the same line, their coefficients must be proportional:\n$$\\frac{a}{4} = \\frac{b}{6} = \\frac{10}{c}$$\nGiven $a = 6$:\n$$\\frac{6}{4} = \\frac{10}{c} \\implies \\frac{3}{2} = \\frac{10}{c} \\implies 3c = 20 \\implies c = \\frac{20}{3} \\approx 6.67$$ wait:\nWait, let's re-read: $\\frac{4}{a} = \\frac{c}{10} \\implies \\frac{4}{6} = \\frac{c}{10} \\implies \\frac{2}{3} = \\frac{c}{10} \\implies c = 20/3$.\nWait, let's check: $\\frac{a}{4} = \\frac{6}{4} = 1.5$. Then $\\frac{10}{c} = 1.5 \\implies c = 10 / 1.5 = 20/3$.\nWhat if $a = 2$? Then $2/4 = 1/2 \\implies 10/c = 1/2 \\implies c = 20$!\nLet's adjust $a = 2$ or $b$: If $a = 6$, $b = 9$, then if $2x + 3y = 5$, multiplied by 3 gives $6x + 9y = 15$!\nLet's make equation: $ax + by = 15$ and $4x + 6y = 10$:\nIf $a = 6$, $6/4 = 1.5$. Then $15 / c = 1.5 \\implies c = 10$ or $c = 15$!\nLet's verify: $6x + 9y = 15$ divided by 1.5 is $4x + 6y = 10$. So $c = 10$ if the constant was 15, or if $c = 15$ when $4x+6y = c$ and $a=6, constant=10$: $c = 20/3$. Let's ensure integer clean numbers:\nLet the first equation be $ax + by = 15$ and second be $4x + 6y = c$. With $a = 6$, $\\frac{6}{4} = 1.5$, so $c = \\frac{15}{1.5} = 10$, or let second equation be $2x + 3y = c$: then with $a=6$, $c = 15 / 3 = 5$.\nLet's write prompt with clean numbers: $ax + by = 20$ and $2x + 3y = c$, with $a = 4$: $c = 10$.",
-      satTrap: "Cross-multiplying carefully to preserve proportional ratios.",
-      desmosTrick: "In Desmos, verify that both equations graph the identical line."
+      explanation: "If both equations represent the same line, their corresponding coefficients and constants must be strictly proportional:\n$$\\frac{a}{2} = \\frac{b}{3} = \\frac{20}{c}$$\nGiven $a = 4$:\n$$\\frac{4}{2} = 2 \\implies \\frac{20}{c} = 2 \\implies 2c = 20 \\implies c = 10$$.\n(Also, $b = 2 \\cdot 3 = 6$, confirming $4x + 6y = 20$ is simply twice $2x + 3y = 10$).",
+      satTrap: "Inverting the ratio $\\frac{2}{4}$ instead of $\\frac{4}{2}$, leading to $c = 40$ or $c = 5$. Set the ratios from the same equation on top consistently.",
+      desmosTrick: "In Desmos: type '4x + 6y = 20' and '2x + 3y = c' with slider c. Setting c = 10 makes the two lines perfectly coincide."
     }
   ],
   prevUnitId: "unit-09-medium-geom-trig",
