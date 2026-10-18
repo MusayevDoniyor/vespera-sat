@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import QuestionCard from "@/components/QuestionCard";
+import Pagination from "@/components/Pagination";
 import { Repeat, CheckCircle2, ArrowLeft, Clock, ShieldCheck, Flame } from "lucide-react";
 import Link from "next/link";
 
@@ -10,6 +11,11 @@ export default function ErrorLogPage() {
   const [summary, setSummary] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"due" | "all">("due");
+
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const errorsTopRef = useRef<HTMLDivElement>(null);
 
   const fetchErrors = () => {
     setLoading(true);
@@ -27,8 +33,24 @@ export default function ErrorLogPage() {
   };
 
   useEffect(() => {
+    setPage(1);
     fetchErrors();
   }, [filter]);
+
+  const totalErrors = errors.length;
+  const totalPages = Math.max(1, Math.ceil(totalErrors / pageSize));
+  const paginatedErrors = errors.slice((page - 1) * pageSize, page * pageSize);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    errorsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+    errorsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in">
@@ -125,7 +147,19 @@ export default function ErrorLogPage() {
       </div>
 
       {/* Questions Queue */}
-      <div className="space-y-6">
+      <div ref={errorsTopRef} className="space-y-6">
+        {totalErrors > pageSize && (
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            totalItems={totalErrors}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            itemName="error items"
+          />
+        )}
+
         {loading ? (
           <div className="p-12 text-center text-[var(--text-muted)] text-sm bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
             <div className="w-8 h-8 border-2 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
@@ -144,38 +178,54 @@ export default function ErrorLogPage() {
             </p>
           </div>
         ) : (
-          errors.map((err) => (
-            <div key={err.id} className="relative">
-              <div className="absolute top-3.5 right-4 z-10">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 font-mono">
-                  {err.stage === "STAGE_1_DAY"
-                    ? "24h Recall"
-                    : err.stage === "STAGE_3_DAYS"
-                    ? "72h Recall"
-                    : "7-Day Recall"}
-                </span>
-              </div>
-              <QuestionCard
-                question={{
-                  id: err.question_id,
-                  section: err.section,
-                  domain: err.domain,
-                  difficulty: err.difficulty,
-                  prompt: err.prompt,
-                  passage: err.passage,
-                  options: err.options,
-                  correct_answer: err.correct_answer,
-                  explanation_uz: err.explanation_uz,
-                  explanation_en: err.explanation_en,
-                  desmos_trick: err.desmos_trick,
-                  topic_title_uz: err.topic_title_uz,
-                }}
-                onAnswerSubmitted={() => {
-                  fetchErrors();
-                }}
-              />
+          <>
+            <div className="space-y-6">
+              {paginatedErrors.map((err) => (
+                <div key={err.id} className="relative">
+                  <div className="absolute top-3.5 right-4 z-10">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 font-mono">
+                      {err.stage === "STAGE_1_DAY"
+                        ? "24h Recall"
+                        : err.stage === "STAGE_3_DAYS"
+                        ? "72h Recall"
+                        : "7-Day Recall"}
+                    </span>
+                  </div>
+                  <QuestionCard
+                    question={{
+                      id: err.question_id,
+                      section: err.section,
+                      domain: err.domain,
+                      difficulty: err.difficulty,
+                      prompt: err.prompt,
+                      passage: err.passage,
+                      options: err.options,
+                      correct_answer: err.correct_answer,
+                      explanation_uz: err.explanation_uz,
+                      explanation_en: err.explanation_en,
+                      desmos_trick: err.desmos_trick,
+                      topic_title_uz: err.topic_title_uz,
+                    }}
+                    onAnswerSubmitted={() => {
+                      fetchErrors();
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-          ))
+
+            {totalErrors > pageSize && (
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                totalItems={totalErrors}
+                pageSize={pageSize}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                itemName="error items"
+              />
+            )}
+          </>
         )}
       </div>
     </div>

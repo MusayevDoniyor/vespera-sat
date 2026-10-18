@@ -6,6 +6,7 @@ import DesmosCalculator from "@/components/DesmosCalculator";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import TopicStudyModal from "@/components/TopicStudyModal";
 import KhanAcademyUnitsView from "@/components/KhanAcademyUnitsView";
+import Pagination from "@/components/Pagination";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 import {
   Calculator,
@@ -70,20 +71,60 @@ function MathContent() {
   const [studyModalTopic, setStudyModalTopic] = useState<string | null>(null);
   const [mathMode, setMathMode] = useState<"questions" | "units">("questions");
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [paginationInfo, setPaginationInfo] = useState({
+    total: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
+  const questionsTopRef = useRef<HTMLDivElement>(null);
+
   // Sync from URL parameter
   useEffect(() => {
     if (urlTopic && OFFICIAL_TOPICS_DATA[urlTopic]) {
       const topicData = OFFICIAL_TOPICS_DATA[urlTopic];
       setSelectedDomain(topicData.domain);
       setSelectedTopic(urlTopic);
+      setPage(1);
     }
   }, [urlTopic]);
 
-  const cacheRef = useRef<Record<string, any[]>>({});
+  const cacheRef = useRef<Record<string, { questions: any[]; pagination: any }>>({});
+
+  // Reset page when filters change
+  const handleDomainSelect = (domain: string) => {
+    setSelectedDomain(domain);
+    setSelectedTopic("ALL");
+    setPage(1);
+  };
+
+  const handleTopicSelect = (topic: string) => {
+    setSelectedTopic(topic);
+    setPage(1);
+  };
+
+  const handleDifficultySelect = (diff: string) => {
+    setSelectedDifficulty(diff);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    questionsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+    questionsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   // Fetch questions
   useEffect(() => {
-    let url = "/api/questions?section=MATH&limit=200";
+    let url = `/api/questions?section=MATH&page=${page}&limit=${pageSize}`;
     if (selectedTopic !== "ALL") {
       url += `&topicCode=${encodeURIComponent(selectedTopic)}`;
     } else if (selectedDomain !== "ALL") {
@@ -94,7 +135,10 @@ function MathContent() {
     }
 
     if (cacheRef.current[url]) {
-      setQuestions(cacheRef.current[url]);
+      setQuestions(cacheRef.current[url].questions);
+      if (cacheRef.current[url].pagination) {
+        setPaginationInfo(cacheRef.current[url].pagination);
+      }
       setLoading(false);
       return;
     }
@@ -106,8 +150,17 @@ function MathContent() {
       .then((res) => res.json())
       .then((data) => {
         const list = data.questions || [];
-        cacheRef.current[url] = list;
+        const pag = data.pagination || {
+          total: list.length,
+          page,
+          limit: pageSize,
+          totalPages: Math.max(1, Math.ceil(list.length / pageSize)),
+          hasNextPage: false,
+          hasPrevPage: false,
+        };
+        cacheRef.current[url] = { questions: list, pagination: pag };
         setQuestions(list);
+        setPaginationInfo(pag);
         setLoading(false);
       })
       .catch((err) => {
@@ -120,7 +173,7 @@ function MathContent() {
     return () => {
       controller.abort();
     };
-  }, [selectedDomain, selectedTopic, selectedDifficulty]);
+  }, [selectedDomain, selectedTopic, selectedDifficulty, page, pageSize]);
 
   // Active domain's topics
   const currentDomainTopics = useMemo(() => {
@@ -295,10 +348,7 @@ function MathContent() {
           {MATH_DOMAINS.map((d) => (
             <button
               key={d.key}
-              onClick={() => {
-                setSelectedDomain(d.key);
-                setSelectedTopic("ALL");
-              }}
+              onClick={() => handleDomainSelect(d.key)}
               className={`px-4 py-2 rounded-xl font-semibold whitespace-nowrap transition-all border ${
                 selectedDomain === d.key
                   ? "bg-[var(--accent-blue)] text-white border-[var(--accent-blue)] shadow-sm"
@@ -317,7 +367,7 @@ function MathContent() {
           </span>
 
           <button
-            onClick={() => setSelectedTopic("ALL")}
+            onClick={() => handleTopicSelect("ALL")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
               selectedTopic === "ALL"
                 ? "bg-[var(--accent-blue)] text-white shadow-sm"
@@ -334,7 +384,7 @@ function MathContent() {
             return (
               <button
                 key={code}
-                onClick={() => setSelectedTopic(code)}
+                onClick={() => handleTopicSelect(code)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                   isSelected
                     ? "bg-[var(--accent-blue)] text-white shadow-sm"
@@ -356,7 +406,7 @@ function MathContent() {
               Workout Mode:
             </span>
             <button
-              onClick={() => setSelectedDifficulty("ALL")}
+              onClick={() => handleDifficultySelect("ALL")}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
                 selectedDifficulty === "ALL"
                   ? "bg-[var(--accent-blue)] text-white shadow-sm font-bold"
@@ -366,7 +416,7 @@ function MathContent() {
               All Levels
             </button>
             <button
-              onClick={() => setSelectedDifficulty("Easy")}
+              onClick={() => handleDifficultySelect("Easy")}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
                 selectedDifficulty.toLowerCase() === "easy"
                   ? "bg-emerald-600 text-white shadow-sm font-bold"
@@ -376,7 +426,7 @@ function MathContent() {
               Foundations (Easy)
             </button>
             <button
-              onClick={() => setSelectedDifficulty("Medium")}
+              onClick={() => handleDifficultySelect("Medium")}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
                 selectedDifficulty.toLowerCase() === "medium"
                   ? "bg-amber-600 text-white shadow-sm font-bold"
@@ -386,7 +436,7 @@ function MathContent() {
               Standard (Medium)
             </button>
             <button
-              onClick={() => setSelectedDifficulty("Hard")}
+              onClick={() => handleDifficultySelect("Hard")}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
                 selectedDifficulty.toLowerCase() === "hard"
                   ? "bg-red-600 text-white shadow-sm font-bold"
@@ -399,7 +449,7 @@ function MathContent() {
           </div>
 
           <div className="text-xs font-mono text-[var(--text-muted)]">
-            <strong className="text-[var(--text-main)]">{questions.length}</strong> authentic math questions loaded
+            <strong className="text-[var(--text-main)]">{paginationInfo.total > 0 ? paginationInfo.total.toLocaleString() : questions.length}</strong> authentic math questions available
           </div>
         </div>
       </div>
@@ -440,14 +490,27 @@ function MathContent() {
       {/* Questions + Desmos Layout */}
       <div className={`grid gap-8 ${isSplitDesmos ? "grid-cols-1 lg:grid-cols-12 items-start" : "grid-cols-1 w-full max-w-5xl mx-auto"}`}>
         {/* Questions Column */}
-        <div className={`${isSplitDesmos ? "lg:col-span-7" : "w-full"} space-y-8`}>
+        <div ref={questionsTopRef} className={`${isSplitDesmos ? "lg:col-span-7" : "w-full"} space-y-6`}>
+          {/* Top Pagination Control */}
+          {paginationInfo.total > 0 && (
+            <Pagination
+              currentPage={page}
+              totalPages={paginationInfo.totalPages}
+              totalItems={paginationInfo.total}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+              itemName="math questions"
+            />
+          )}
+
           <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span className="font-mono">
-              Showing {questions.length} questions {selectedTopic !== "ALL" ? `for ${selectedTopic}` : `in ${selectedDomain}`}
+              Page {page} of {paginationInfo.totalPages} • Showing {questions.length} questions {selectedTopic !== "ALL" ? `for ${selectedTopic}` : `in ${selectedDomain}`}
             </span>
             {selectedTopic !== "ALL" && (
               <button
-                onClick={() => setSelectedTopic("ALL")}
+                onClick={() => handleTopicSelect("ALL")}
                 className="text-[var(--accent-blue)] hover:underline"
               >
                 Clear topic filter
@@ -458,7 +521,7 @@ function MathContent() {
           {loading ? (
             <div className="p-12 text-center text-[var(--text-muted)] text-sm bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
               <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-              Loading Math problem set...
+              Loading Math problem set (Page {page})...
             </div>
           ) : questions.length === 0 ? (
             <div className="p-10 text-center space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-sm">
@@ -473,9 +536,9 @@ function MathContent() {
               </p>
               <button
                 onClick={() => {
-                  setSelectedDifficulty("ALL");
-                  setSelectedTopic("ALL");
-                  setSelectedDomain("ALL");
+                  handleDifficultySelect("ALL");
+                  handleTopicSelect("ALL");
+                  handleDomainSelect("ALL");
                 }}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-95 transition-opacity shadow-sm"
               >
@@ -483,13 +546,28 @@ function MathContent() {
               </button>
             </div>
           ) : (
-            questions.map((q) => (
-              <QuestionCard
-                key={q.id}
-                question={q}
-                onOpenDesmosWithEquation={(eq) => setActiveEquation(eq)}
+            <>
+              <div className="space-y-6">
+                {questions.map((q) => (
+                  <QuestionCard
+                    key={q.id}
+                    question={q}
+                    onOpenDesmosWithEquation={(eq) => setActiveEquation(eq)}
+                  />
+                ))}
+              </div>
+
+              {/* Bottom Pagination Control */}
+              <Pagination
+                currentPage={page}
+                totalPages={paginationInfo.totalPages}
+                totalItems={paginationInfo.total}
+                pageSize={pageSize}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                itemName="math questions"
               />
-            ))
+            </>
           )}
         </div>
 

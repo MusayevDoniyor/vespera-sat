@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import QuestionCard from "@/components/QuestionCard";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import TopicStudyModal from "@/components/TopicStudyModal";
+import Pagination from "@/components/Pagination";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 import {
   BookOpen,
@@ -66,20 +67,60 @@ function VerbalContent() {
   const [activeTab, setActiveTab] = useState<"questions" | "transitions" | "boundaries">("questions");
   const [studyModalTopic, setStudyModalTopic] = useState<string | null>(null);
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [paginationInfo, setPaginationInfo] = useState({
+    total: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
+  const questionsTopRef = useRef<HTMLDivElement>(null);
+
   // Sync from URL parameter
   useEffect(() => {
     if (urlTopic && OFFICIAL_TOPICS_DATA[urlTopic]) {
       const topicData = OFFICIAL_TOPICS_DATA[urlTopic];
       setSelectedDomain(topicData.domain);
       setSelectedTopic(urlTopic);
+      setPage(1);
     }
   }, [urlTopic]);
 
-  const cacheRef = useRef<Record<string, any[]>>({});
+  const cacheRef = useRef<Record<string, { questions: any[]; pagination: any }>>({});
+
+  // Reset page when filters change
+  const handleDomainSelect = (domain: string) => {
+    setSelectedDomain(domain);
+    setSelectedTopic("ALL");
+    setPage(1);
+  };
+
+  const handleTopicSelect = (topic: string) => {
+    setSelectedTopic(topic);
+    setPage(1);
+  };
+
+  const handleDifficultySelect = (diff: string) => {
+    setSelectedDifficulty(diff);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    questionsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+    questionsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   // Fetch questions
   useEffect(() => {
-    let url = "/api/questions?section=READING_WRITING&limit=200";
+    let url = `/api/questions?section=READING_WRITING&page=${page}&limit=${pageSize}`;
     if (selectedTopic !== "ALL") {
       url += `&topicCode=${encodeURIComponent(selectedTopic)}`;
     } else if (selectedDomain !== "ALL") {
@@ -90,7 +131,10 @@ function VerbalContent() {
     }
 
     if (cacheRef.current[url]) {
-      setQuestions(cacheRef.current[url]);
+      setQuestions(cacheRef.current[url].questions);
+      if (cacheRef.current[url].pagination) {
+        setPaginationInfo(cacheRef.current[url].pagination);
+      }
       setLoading(false);
       return;
     }
@@ -102,8 +146,17 @@ function VerbalContent() {
       .then((res) => res.json())
       .then((data) => {
         const list = data.questions || [];
-        cacheRef.current[url] = list;
+        const pag = data.pagination || {
+          total: list.length,
+          page,
+          limit: pageSize,
+          totalPages: Math.max(1, Math.ceil(list.length / pageSize)),
+          hasNextPage: false,
+          hasPrevPage: false,
+        };
+        cacheRef.current[url] = { questions: list, pagination: pag };
         setQuestions(list);
+        setPaginationInfo(pag);
         setLoading(false);
       })
       .catch((err) => {
@@ -116,7 +169,7 @@ function VerbalContent() {
     return () => {
       controller.abort();
     };
-  }, [selectedDomain, selectedTopic, selectedDifficulty]);
+  }, [selectedDomain, selectedTopic, selectedDifficulty, page, pageSize]);
 
   // Active domain's topics
   const currentDomainTopics = useMemo(() => {
@@ -375,10 +428,7 @@ function VerbalContent() {
           {VERBAL_DOMAINS.map((d) => (
             <button
               key={d.key}
-              onClick={() => {
-                setSelectedDomain(d.key);
-                setSelectedTopic("ALL");
-              }}
+              onClick={() => handleDomainSelect(d.key)}
               className={`px-4 py-2 rounded-xl font-semibold whitespace-nowrap transition-all border ${
                 selectedDomain === d.key
                   ? "bg-purple-600 text-white font-bold border-purple-600 shadow-sm"
@@ -397,7 +447,7 @@ function VerbalContent() {
           </span>
 
           <button
-            onClick={() => setSelectedTopic("ALL")}
+            onClick={() => handleTopicSelect("ALL")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
               selectedTopic === "ALL"
                 ? "bg-purple-600 text-white shadow-sm"
@@ -414,7 +464,7 @@ function VerbalContent() {
             return (
               <button
                 key={code}
-                onClick={() => setSelectedTopic(code)}
+                onClick={() => handleTopicSelect(code)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                   isSelected
                     ? "bg-purple-600 text-white shadow-sm"
@@ -440,6 +490,7 @@ function VerbalContent() {
                 setSelectedTopic("ALL");
                 setSelectedDomain("ALL");
                 setSelectedDifficulty("ALL");
+                setPage(1);
               }}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
                 selectedTopic === "ALL" && selectedDifficulty === "ALL"
@@ -453,6 +504,7 @@ function VerbalContent() {
               onClick={() => {
                 setSelectedTopic("ENG-WIC");
                 setSelectedDomain("Craft and Structure");
+                setPage(1);
               }}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
                 selectedTopic === "ENG-WIC"
@@ -467,6 +519,7 @@ function VerbalContent() {
               onClick={() => {
                 setSelectedTopic("ENG-AGR");
                 setSelectedDomain("Standard English Conventions");
+                setPage(1);
               }}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
                 selectedTopic === "ENG-AGR"
@@ -478,7 +531,7 @@ function VerbalContent() {
               <span>Gramilliy 3x1 Agreement</span>
             </button>
             <button
-              onClick={() => setSelectedDifficulty(selectedDifficulty === "Hard" ? "ALL" : "Hard")}
+              onClick={() => handleDifficultySelect(selectedDifficulty === "Hard" ? "ALL" : "Hard")}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
                 selectedDifficulty === "Hard"
                   ? "bg-rose-600 text-white shadow-sm font-bold"
@@ -491,7 +544,7 @@ function VerbalContent() {
           </div>
 
           <div className="text-xs font-mono text-[var(--text-muted)]">
-            <strong className="text-[var(--text-main)]">{questions.length}</strong> authentic RW questions loaded
+            <strong className="text-[var(--text-main)]">{paginationInfo.total > 0 ? paginationInfo.total.toLocaleString() : questions.length}</strong> authentic RW questions available
           </div>
         </div>
       </div>
@@ -530,14 +583,27 @@ function VerbalContent() {
       )}
 
       {/* Questions List */}
-      <div className="space-y-8">
+      <div ref={questionsTopRef} className="space-y-6 pt-2">
+        {/* Top Pagination Control */}
+        {paginationInfo.total > 0 && (
+          <Pagination
+            currentPage={page}
+            totalPages={paginationInfo.totalPages}
+            totalItems={paginationInfo.total}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            itemName="verbal questions"
+          />
+        )}
+
         <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
           <span className="font-mono">
-            Showing {questions.length} questions {selectedTopic !== "ALL" ? `for ${selectedTopic}` : `in ${selectedDomain}`}
+            Page {page} of {paginationInfo.totalPages} • Showing {questions.length} questions {selectedTopic !== "ALL" ? `for ${selectedTopic}` : `in ${selectedDomain}`}
           </span>
           {selectedTopic !== "ALL" && (
             <button
-              onClick={() => setSelectedTopic("ALL")}
+              onClick={() => handleTopicSelect("ALL")}
               className="text-purple-600 dark:text-purple-400 hover:underline"
             >
               Clear topic filter
@@ -548,7 +614,7 @@ function VerbalContent() {
         {loading ? (
           <div className="p-12 text-center text-[var(--text-muted)] text-sm bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
             <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-            Loading Reading & Writing questions...
+            Loading Reading & Writing questions (Page {page})...
           </div>
         ) : questions.length === 0 ? (
           <div className="p-10 text-center space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-sm">
@@ -563,9 +629,9 @@ function VerbalContent() {
             </p>
             <button
               onClick={() => {
-                setSelectedDifficulty("ALL");
-                setSelectedTopic("ALL");
-                setSelectedDomain("ALL");
+                handleDifficultySelect("ALL");
+                handleTopicSelect("ALL");
+                handleDomainSelect("ALL");
               }}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:opacity-95 transition-opacity shadow-sm"
             >
@@ -573,7 +639,24 @@ function VerbalContent() {
             </button>
           </div>
         ) : (
-          questions.map((q) => <QuestionCard key={q.id} question={q} />)
+          <>
+            <div className="space-y-6">
+              {questions.map((q) => (
+                <QuestionCard key={q.id} question={q} />
+              ))}
+            </div>
+
+            {/* Bottom Pagination Control */}
+            <Pagination
+              currentPage={page}
+              totalPages={paginationInfo.totalPages}
+              totalItems={paginationInfo.total}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+              itemName="verbal questions"
+            />
+          </>
         )}
       </div>
 

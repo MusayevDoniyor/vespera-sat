@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import KaTeXMath from "./KaTeXMath";
+import Pagination from "./Pagination";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import {
   SATASHKENT_LIBRARY,
@@ -60,16 +61,79 @@ export default function SATashkentVault() {
   const [activeQuizIndex, setActiveQuizIndex] = useState(0);
   const [showQuizScore, setShowQuizScore] = useState(false);
 
-  const filteredBooks = SATASHKENT_LIBRARY.filter((b) => {
-    if (categoryFilter !== "ALL" && b.category !== categoryFilter) return false;
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      b.title.toLowerCase().includes(q) ||
-      b.description.toLowerCase().includes(q) ||
-      b.keyTopics.some((k) => k.toLowerCase().includes(q))
-    );
-  });
+  // Books Pagination state
+  const [booksPage, setBooksPage] = useState(1);
+  const [booksPageSize, setBooksPageSize] = useState(12);
+  const booksTopRef = useRef<HTMLDivElement>(null);
+
+  // Vocab Pagination state
+  const [vocabPage, setVocabPage] = useState(1);
+  const [vocabPageSize, setVocabPageSize] = useState(12);
+  const vocabTopRef = useRef<HTMLDivElement>(null);
+
+  const filteredBooks = useMemo(() => {
+    return SATASHKENT_LIBRARY.filter((b) => {
+      if (categoryFilter !== "ALL" && b.category !== categoryFilter) return false;
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        b.title.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q) ||
+        b.keyTopics.some((k) => k.toLowerCase().includes(q))
+      );
+    });
+  }, [categoryFilter, searchQuery]);
+
+  // Reset page when filter changes
+  useEffect(() => {
+    setBooksPage(1);
+  }, [categoryFilter, searchQuery]);
+
+  useEffect(() => {
+    setVocabPage(1);
+  }, [vocabSearch, vocabPosFilter]);
+
+  const totalFilteredBooks = filteredBooks.length;
+  const totalBooksPages = Math.max(1, Math.ceil(totalFilteredBooks / booksPageSize));
+  const paginatedBooks = filteredBooks.slice((booksPage - 1) * booksPageSize, booksPage * booksPageSize);
+
+  const handleBooksPageChange = (newPage: number) => {
+    setBooksPage(newPage);
+    booksTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleBooksPageSizeChange = (newSize: number) => {
+    setBooksPageSize(newSize);
+    setBooksPage(1);
+    booksTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const filteredVocabCards = useMemo(() => {
+    return VOCABOOK_CARDS.filter((c) => {
+      if (vocabPosFilter !== "ALL" && c.partOfSpeech !== vocabPosFilter) return false;
+      if (!vocabSearch.trim()) return true;
+      const q = vocabSearch.toLowerCase();
+      return (
+        c.word.toLowerCase().includes(q) ||
+        c.definition.toLowerCase().includes(q) ||
+        c.antonyms.toLowerCase().includes(q)
+      );
+    });
+  }, [vocabSearch, vocabPosFilter]);
+
+  const totalVocabPages = Math.max(1, Math.ceil(filteredVocabCards.length / vocabPageSize));
+  const paginatedVocabCards = filteredVocabCards.slice((vocabPage - 1) * vocabPageSize, vocabPage * vocabPageSize);
+
+  const handleVocabPageChange = (newPage: number) => {
+    setVocabPage(newPage);
+    vocabTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleVocabPageSizeChange = (newSize: number) => {
+    setVocabPageSize(newSize);
+    setVocabPage(1);
+    vocabTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="w-full space-y-8 pb-16 text-[var(--text-main)]">
@@ -243,9 +307,25 @@ export default function SATashkentVault() {
             </div>
           </div>
 
+          {/* Top Pagination Control */}
+          {totalFilteredBooks > booksPageSize && (
+            <div ref={booksTopRef}>
+              <Pagination
+                currentPage={booksPage}
+                totalPages={totalBooksPages}
+                totalItems={totalFilteredBooks}
+                pageSize={booksPageSize}
+                onPageChange={handleBooksPageChange}
+                onPageSizeChange={handleBooksPageSizeChange}
+                pageSizeOptions={[8, 12, 24]}
+                itemName="textbooks & sources"
+              />
+            </div>
+          )}
+
           {/* Books Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 items-start">
-            {filteredBooks.map((book) => {
+            {paginatedBooks.map((book) => {
               const isMath = book.category === "Math";
               const isRW = book.category === "Reading & Writing";
 
@@ -336,6 +416,20 @@ export default function SATashkentVault() {
               );
             })}
           </div>
+
+          {/* Bottom Pagination Control */}
+          {totalFilteredBooks > booksPageSize && (
+            <Pagination
+              currentPage={booksPage}
+              totalPages={totalBooksPages}
+              totalItems={totalFilteredBooks}
+              pageSize={booksPageSize}
+              onPageChange={handleBooksPageChange}
+              onPageSizeChange={handleBooksPageSizeChange}
+              pageSizeOptions={[8, 12, 24]}
+              itemName="textbooks & sources"
+            />
+          )}
         </div>
       )}
 
@@ -839,18 +933,25 @@ export default function SATashkentVault() {
                 </div>
               </div>
 
+              {/* Top Pagination Control */}
+              {filteredVocabCards.length > vocabPageSize && (
+                <div ref={vocabTopRef}>
+                  <Pagination
+                    currentPage={vocabPage}
+                    totalPages={totalVocabPages}
+                    totalItems={filteredVocabCards.length}
+                    pageSize={vocabPageSize}
+                    onPageChange={handleVocabPageChange}
+                    onPageSizeChange={handleVocabPageSizeChange}
+                    pageSizeOptions={[12, 24, 36]}
+                    itemName="vocabulary words"
+                  />
+                </div>
+              )}
+
               {/* Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {VOCABOOK_CARDS.filter((c) => {
-                  if (vocabPosFilter !== "ALL" && c.partOfSpeech !== vocabPosFilter) return false;
-                  if (!vocabSearch.trim()) return true;
-                  const q = vocabSearch.toLowerCase();
-                  return (
-                    c.word.toLowerCase().includes(q) ||
-                    c.definition.toLowerCase().includes(q) ||
-                    c.antonyms.toLowerCase().includes(q)
-                  );
-                }).map((card, idx) => (
+                {paginatedVocabCards.map((card, idx) => (
                   <div
                     key={idx}
                     className="p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-emerald-500/40 transition-all space-y-3 flex flex-col justify-between"
@@ -890,6 +991,20 @@ export default function SATashkentVault() {
                   </div>
                 ))}
               </div>
+
+              {/* Bottom Pagination Control */}
+              {filteredVocabCards.length > vocabPageSize && (
+                <Pagination
+                  currentPage={vocabPage}
+                  totalPages={totalVocabPages}
+                  totalItems={filteredVocabCards.length}
+                  pageSize={vocabPageSize}
+                  onPageChange={handleVocabPageChange}
+                  onPageSizeChange={handleVocabPageSizeChange}
+                  pageSizeOptions={[12, 24, 36]}
+                  itemName="vocabulary words"
+                />
+              )}
             </div>
           )}
 
