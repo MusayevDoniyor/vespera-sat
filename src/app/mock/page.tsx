@@ -633,7 +633,7 @@ export default function BluebookMockPage() {
               </div>
 
               <div className="divide-y divide-[var(--border-main)]">
-                {pastAttempts.slice(0, 5).map((attempt, idx) => {
+                {pastAttempts.slice(0, 10).map((attempt, idx) => {
                   const score = attempt.score || 400;
                   const scoreColor =
                     score >= 1400
@@ -642,12 +642,21 @@ export default function BluebookMockPage() {
                       ? "text-blue-500 bg-blue-500/10 border-blue-500/20"
                       : "text-amber-500 bg-amber-500/10 border-amber-500/20";
 
+                  const attemptId = attempt.id || `mock_${Date.now()}`;
+                  const matchedExam =
+                    BLUEBOOK_EXAMS.find(
+                      (e) =>
+                        e.id === attempt.examId ||
+                        e.title === attempt.title ||
+                        e.formCode === attempt.formCode
+                    ) || BLUEBOOK_EXAMS[0];
+
                   return (
                     <div
                       key={attempt.id || idx}
-                      className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-[var(--bg-surface)]/50 px-2 rounded-xl transition"
+                      className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs hover:bg-[var(--bg-surface)]/50 px-3 rounded-2xl transition border border-transparent hover:border-[var(--border-main)]"
                     >
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         <div className="font-bold text-[var(--text-main)] text-sm flex items-center gap-2.5 flex-wrap">
                           <span>{attempt.title}</span>
                           <span className={`px-2.5 py-0.5 rounded-full font-mono text-xs font-black border ${scoreColor}`}>
@@ -660,17 +669,36 @@ export default function BluebookMockPage() {
                           <span>Math: <strong className="text-[var(--text-main)]">{attempt.math_score || attempt.mathScore || 300}</strong></span>
                           <span>•</span>
                           <span>Correct: <strong className="text-[var(--text-main)]">{attempt.correct_count || attempt.correctCount || 0}</strong>/{attempt.total_questions || attempt.totalQuestions || 98}</span>
+                          <span>•</span>
+                          <span>
+                            {new Date(attempt.completed_at || attempt.completedAt || Date.now()).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
                         </div>
                       </div>
 
-                      <div className="text-[var(--text-muted)] font-mono text-[11px] shrink-0 sm:text-right">
-                        {new Date(attempt.completed_at || attempt.completedAt || Date.now()).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                      <div className="flex items-center gap-2 self-start md:self-auto shrink-0">
+                        <Link
+                          href={`/mock/results/${attemptId}`}
+                          className="px-3.5 py-1.5 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold transition flex items-center gap-1.5 shadow-sm"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Review & AI Analysis</span>
+                        </Link>
+
+                        <Link
+                          href={`/mock/exam/${matchedExam.id}`}
+                          className="px-3.5 py-1.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-secondary)] font-bold transition flex items-center gap-1.5"
+                          title="Start a fresh attempt of this exam"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>Retake</span>
+                        </Link>
                       </div>
                     </div>
                   );
@@ -737,17 +765,25 @@ export default function BluebookMockPage() {
                     </div>
                   </div>
 
-                <div className="pt-6">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      startExam(exam);
-                    }}
-                    className="w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 active:scale-95"
+                <div className="pt-6 flex flex-col gap-2">
+                  <Link
+                    href={`/mock/exam/${exam.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 active:scale-95 text-center"
                   >
                     <span>Start Practice Test</span>
                     <ArrowRight className="w-4 h-4" />
-                  </button>
+                  </Link>
+                  {latestAttempt && (
+                    <Link
+                      href={`/mock/results/${latestAttempt.id || "mock_1792337933232"}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-full py-2 px-3 rounded-xl text-xs font-bold text-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center justify-center gap-1.5"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Review AI Analysis (Score: {latestAttempt.score})</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             );
