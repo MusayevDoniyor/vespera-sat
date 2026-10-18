@@ -79,9 +79,15 @@ Tone & Style:
 - Use markdown formatting with clear bold headings (###, ####), bullet points, and GitHub-style callouts (> [!TIP], > [!WARNING], > [!IMPORTANT]).
 - Keep all explanations strictly in English.`;
 
-    // 1. TRY LIVE GEMINI API (GEMINI 2.5 FLASH) IF KEY AVAILABLE
+    // 1. TRY LIVE GEMINI API (GEMINI 3.8 / 3.6 / 3.5 FLASH) IF KEY AVAILABLE
     if (geminiKey && geminiKey.trim() !== "") {
-      const candidateModels = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-pro"];
+      const candidateModels = [
+        "gemini-3.8-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash",
+        "gemini-3.7-flash",
+        "gemini-2.5-flash",
+      ];
       
       const promptText = `
 Context Information:
