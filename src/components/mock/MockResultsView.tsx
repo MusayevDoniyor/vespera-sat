@@ -23,6 +23,7 @@ import KaTeXMath from "@/components/KaTeXMath";
 import QuestionDiagram from "@/components/QuestionDiagram";
 import { MockAttemptReport } from "@/lib/mock-storage";
 import { getRwDisplayContent } from "@/lib/bluebook-tests";
+import { isMathDomain } from "@/lib/curriculum-data";
 
 interface MockResultsViewProps {
   report: MockAttemptReport;
@@ -300,11 +301,7 @@ export default function MockResultsView({ report, onRetake }: MockResultsViewPro
                   .sort(([, a], [, b]) => a.accuracy - b.accuracy)
                   .slice(0, 3)
                   .map(([domain, stat]) => {
-                    const isMath =
-                      domain.includes("Algebra") ||
-                      domain.includes("Geometry") ||
-                      domain.includes("Advanced") ||
-                      domain.includes("Problem Solving");
+                    const isMath = isMathDomain(domain);
                     const targetUrl = isMath
                       ? `/math?domain=${encodeURIComponent(domain)}&adaptive=true`
                       : `/verbal?domain=${encodeURIComponent(domain)}&adaptive=true`;

@@ -22,8 +22,9 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
+import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
 
 const VERBAL_DOMAINS = [
   {
@@ -54,6 +55,7 @@ const VERBAL_DOMAINS = [
 ];
 
 function VerbalContent() {
+  const router = useRouter();
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const urlTopic = searchParams.get("topic");
@@ -82,15 +84,28 @@ function VerbalContent() {
   const urlAdaptive = searchParams.get("adaptive") === "true";
   const [isAdaptiveMode, setIsAdaptiveMode] = useState(false);
 
-  // Sync from URL parameter
+  // Sync from URL parameter with strict section validation
   useEffect(() => {
     if (urlDomain) {
-      setSelectedDomain(urlDomain);
+      if (isMathDomain(urlDomain)) {
+        // Domain belongs to Math! Forward to Math Lab immediately
+        router.replace(`/math?domain=${encodeURIComponent(urlDomain)}${urlAdaptive ? "&adaptive=true" : ""}`);
+        return;
+      }
+      if (isVerbalDomain(urlDomain)) {
+        setSelectedDomain(urlDomain);
+      } else {
+        setSelectedDomain("ALL");
+      }
       setSelectedTopic("ALL");
       setPage(1);
     }
     if (urlTopic && OFFICIAL_TOPICS_DATA[urlTopic]) {
       const topicData = OFFICIAL_TOPICS_DATA[urlTopic];
+      if (topicData.section === "MATH") {
+        router.replace(`/math?topic=${encodeURIComponent(urlTopic)}${urlAdaptive ? "&adaptive=true" : ""}`);
+        return;
+      }
       setSelectedDomain(topicData.domain);
       setSelectedTopic(urlTopic);
       setPage(1);
@@ -98,7 +113,7 @@ function VerbalContent() {
     if (urlAdaptive) {
       setIsAdaptiveMode(true);
     }
-  }, [urlTopic, urlDomain, urlAdaptive]);
+  }, [urlTopic, urlDomain, urlAdaptive, router]);
 
   const cacheRef = useRef<Record<string, { questions: any[]; pagination: any }>>({});
 
@@ -260,7 +275,7 @@ function VerbalContent() {
               🎯 Adaptive Weakness Drill Active:
             </span>
             <span className="text-[var(--text-muted)]">
-              Targeting your lowest-scoring Verbal domain from Practice Test 1 (<strong className="text-[var(--accent-blue)]">{selectedDomain}</strong>).
+              Targeting your lowest-scoring Verbal domain from Practice Test 1 (<strong className="text-[var(--accent-blue)]">{isVerbalDomain(selectedDomain) ? selectedDomain : "Reading & Writing"}</strong>).
             </span>
           </div>
           <button

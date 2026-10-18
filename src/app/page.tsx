@@ -32,6 +32,7 @@ import VesperaLogo from "@/components/VesperaLogo";
 import { useAuth } from "@/components/AuthContext";
 import DiagnosticPlacementModal from "@/components/DiagnosticPlacementModal";
 import QuestionCard from "@/components/QuestionCard";
+import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
 
 export default function DashboardPage() {
   const { user, openAuthModal, openOnboarding } = useAuth();
@@ -544,17 +545,17 @@ export default function DashboardPage() {
             </span>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Link
-                href={`/math?domain=${encodeURIComponent(recommendations?.weakestMathDomain || "Algebra")}&adaptive=true`}
+                href={`/math?domain=${encodeURIComponent((recommendations?.weakestMathDomain && isMathDomain(recommendations.weakestMathDomain)) ? recommendations.weakestMathDomain : "Algebra")}&adaptive=true`}
                 className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold transition flex items-center justify-center gap-1.5"
               >
-                <span>Drill {recommendations?.weakestMathDomain || "Algebra"} in Math Lab</span>
+                <span>Drill {(recommendations?.weakestMathDomain && isMathDomain(recommendations.weakestMathDomain)) ? recommendations.weakestMathDomain : "Algebra"} in Math Lab</span>
                 <ArrowRight size={13} />
               </Link>
               <Link
-                href={`/verbal?domain=${encodeURIComponent(recommendations?.weakestVerbalDomain || "Expression of Ideas")}&adaptive=true`}
+                href={`/verbal?domain=${encodeURIComponent((recommendations?.weakestVerbalDomain && isVerbalDomain(recommendations.weakestVerbalDomain)) ? recommendations.weakestVerbalDomain : "Expression of Ideas")}&adaptive=true`}
                 className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-bold transition flex items-center justify-center gap-1.5"
               >
-                <span>Drill {recommendations?.weakestVerbalDomain || "Expression of Ideas"} in Verbal Lab</span>
+                <span>Drill {(recommendations?.weakestVerbalDomain && isVerbalDomain(recommendations.weakestVerbalDomain)) ? recommendations.weakestVerbalDomain : "Expression of Ideas"} in Verbal Lab</span>
                 <ArrowRight size={13} />
               </Link>
             </div>

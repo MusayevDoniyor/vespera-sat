@@ -6,6 +6,7 @@ import {
   buildPersonalizedMissions,
   DOMAIN_TO_UNIT_MAP
 } from "@/lib/adaptive-engine";
+import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
 
 export async function GET() {
   try {
@@ -183,11 +184,19 @@ export async function GET() {
       attemptedDomains.sort((a: any, b: any) => a.accuracy - b.accuracy);
       weakestDomain = attemptedDomains[0].domain;
 
-      const mathWeak = attemptedDomains.find((d: any) => d.section === "MATH");
+      const mathWeak = attemptedDomains.find((d: any) => isMathDomain(d.domain) || d.section === "MATH");
       if (mathWeak) weakestMathDomain = mathWeak.domain;
 
-      const verbalWeak = attemptedDomains.find((d: any) => d.section === "READING_WRITING");
+      const verbalWeak = attemptedDomains.find((d: any) => isVerbalDomain(d.domain) || d.section === "READING_WRITING");
       if (verbalWeak) weakestVerbalDomain = verbalWeak.domain;
+    }
+
+    // Strict validation safety fallbacks
+    if (!isMathDomain(weakestMathDomain)) {
+      weakestMathDomain = "Algebra";
+    }
+    if (!isVerbalDomain(weakestVerbalDomain)) {
+      weakestVerbalDomain = "Expression of Ideas";
     }
 
     // 6. Calculate Bayesian Adaptive Score Prediction
@@ -226,7 +235,7 @@ export async function GET() {
       const weakDomainAccuracy = attemptedDomains.find((d: any) => d.domain === weakestDomain)?.accuracy ?? 25;
       dailyMissions[0].title = `Weakness Drill: ${weakestDomain} (${weakDomainAccuracy}% in ${latestMock.title})`;
       dailyMissions[0].subtitle = `Target your lowest-scoring domain from your recent ${latestMock.score}-score practice test.`;
-      const isMath = attemptedDomains.find((d: any) => d.domain === weakestDomain)?.section === "MATH";
+      const isMath = isMathDomain(weakestDomain);
       dailyMissions[0].targetUrl = isMath
         ? `/math?domain=${encodeURIComponent(weakestDomain)}&adaptive=true`
         : `/verbal?domain=${encodeURIComponent(weakestDomain)}&adaptive=true`;

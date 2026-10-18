@@ -1,3 +1,43 @@
+export const VALID_MATH_DOMAINS = [
+  "Algebra",
+  "Advanced Math",
+  "Problem Solving & Data Analysis",
+  "Geometry & Trigonometry",
+] as const;
+
+export const VALID_VERBAL_DOMAINS = [
+  "Craft and Structure",
+  "Information and Ideas",
+  "Standard English Conventions",
+  "Expression of Ideas",
+] as const;
+
+export function isMathDomain(domain?: string | null): boolean {
+  if (!domain) return false;
+  const d = domain.trim().toLowerCase();
+  return (
+    d.includes("algebra") ||
+    d.includes("advanced") ||
+    d.includes("geometry") ||
+    d.includes("trig") ||
+    d.includes("problem solving") ||
+    d.includes("data analysis")
+  );
+}
+
+export function isVerbalDomain(domain?: string | null): boolean {
+  if (!domain) return false;
+  const d = domain.trim().toLowerCase();
+  return (
+    d.includes("expression") ||
+    d.includes("craft") ||
+    d.includes("structure") ||
+    d.includes("convention") ||
+    d.includes("standard english") ||
+    (d.includes("information") && d.includes("ideas"))
+  );
+}
+
 export interface TopicDeepDive {
   code: string;
   section: "MATH" | "READING_WRITING";

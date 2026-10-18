@@ -45,6 +45,7 @@ import Portal from "@/components/Portal";
 import { useTheme } from "@/components/ThemeContext";
 import QuestionDiagram from "@/components/QuestionDiagram";
 import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion, getRwDisplayContent } from "@/lib/bluebook-tests";
+import { isMathDomain } from "@/lib/curriculum-data";
 
 type ExamStage =
   | "lobby"
@@ -1273,7 +1274,7 @@ export default function BluebookMockPage() {
                     .sort(([, a], [, b]) => a.accuracy - b.accuracy)
                     .slice(0, 3)
                     .map(([domain, stat]) => {
-                      const isMath = domain.includes("Algebra") || domain.includes("Geometry") || domain.includes("Advanced") || domain.includes("Problem Solving");
+                      const isMath = isMathDomain(domain);
                       const targetUrl = isMath
                         ? `/math?domain=${encodeURIComponent(domain)}&adaptive=true`
                         : `/verbal?domain=${encodeURIComponent(domain)}&adaptive=true`;
