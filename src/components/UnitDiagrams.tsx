@@ -523,5 +523,159 @@ export default function UnitDiagrams({ type }: DiagramProps) {
     );
   }
 
+  if (type === "percent-multiplier") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              The SAT Percent Multiplier Engine: Increase vs. Decrease
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-500/30 font-bold">
+            1 ± r
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">Percentage Increase (+p%)</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200">
+              Multiplier = (1 + r) &gt; 1.00
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Add percentage in decimal to 1.
+            </p>
+            <div className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold font-mono">
+              +25% increase → × 1.25<br />
+              +8% tax → × 1.08
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-rose-700 dark:text-rose-400 font-mono">Percentage Decrease (-p%)</span>
+            <h5 className="text-sm font-black text-rose-900 dark:text-rose-200">
+              Multiplier = (1 - r) &lt; 1.00
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Subtract percentage in decimal from 1.
+            </p>
+            <div className="text-[10px] text-rose-800 dark:text-rose-300 font-bold font-mono">
+              -30% discount → × 0.70<br />
+              -15% depreciation → × 0.85
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-400 font-mono">Successive Changes Trap</span>
+            <h5 className="text-sm font-black text-amber-900 dark:text-amber-200">
+              Multiply Sequential Multipliers
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              +20% then -20% is NOT 0% net!
+            </p>
+            <div className="text-[10px] text-amber-800 dark:text-amber-300 font-bold font-mono">
+              (1.20)(0.80) = 0.96<br />
+              Net = 4% LOSS from baseline
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "two-way-conditional") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-600 dark:bg-purple-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Two-Way Table Conditional Probability: Denominator Isolation
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-500/15 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30 font-bold">
+            P(A | B) = Favorable / Subtotal
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
+            <div className="text-[10px] font-mono font-bold text-blue-700 dark:text-blue-400 uppercase">Case 1: Unconditional (Grand Total)</div>
+            <h5 className="text-xs font-bold text-slate-900 dark:text-white">
+              "If a person is selected at random from the entire survey..."
+            </h5>
+            <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-center text-xs font-bold text-blue-700 dark:text-blue-300">
+              Denominator = Grand Total of All Survey Respondents
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+              No restriction is stated, so divide by the bottom-right grand total.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 space-y-2 shadow-sm">
+            <div className="text-[10px] font-mono font-bold text-purple-700 dark:text-purple-400 uppercase">Case 2: Conditional (Row/Column Subtotal)</div>
+            <h5 className="text-xs font-bold text-purple-950 dark:text-purple-200">
+              "Given that the student is a senior..." or "Of those who voted yes..."
+            </h5>
+            <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-900/50 font-mono text-center text-xs font-bold text-purple-800 dark:text-purple-200">
+              Denominator = Subtotal of that Specific Group Only!
+            </div>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              The target population has shrunk. Ignore all other rows and columns entirely.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "scatterplot-residuals") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Scatterplot Residuals: Actual vs. Predicted
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30 font-bold">
+            Residual = y_actual - y_predicted
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">Positive Residual (&gt; 0)</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200">
+              Point Sits ABOVE the Line
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Actual observed value was GREATER than what the linear model predicted.
+            </p>
+            <div className="text-[10px] font-mono text-emerald-800 dark:text-emerald-300 font-bold">
+              Residual = +4.5 (Model underestimated reality)
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-rose-700 dark:text-rose-400 font-mono">Negative Residual (&lt; 0)</span>
+            <h5 className="text-sm font-black text-rose-900 dark:text-rose-200">
+              Point Sits BELOW the Line
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Actual observed value was LESS than what the linear model predicted.
+            </p>
+            <div className="text-[10px] font-mono text-rose-800 dark:text-rose-300 font-bold">
+              Residual = -3.2 (Model overestimated reality)
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }

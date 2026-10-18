@@ -5,7 +5,7 @@ export interface TextbookSection {
   summary: string;
   contentMarkdown: string;
   keyTakeaways: string[];
-  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model";
+  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model" | "percent-multiplier" | "two-way-conditional" | "scatterplot-residuals";
   desmosExample?: {
     title: string;
     expression: string;
@@ -845,6 +845,425 @@ To verify whether point $(x_0, y_0)$ is a solution to a system of inequalities, 
     ],
     prevUnitId: "unit-01-about-sat",
     nextUnitId: "unit-03-foundations-psda"
+  },
+
+  // =========================================================================
+  // UNIT 3: FOUNDATIONS: PROBLEM SOLVING & DATA ANALYSIS
+  // =========================================================================
+  "unit-03-foundations-psda": {
+    id: "unit-03-foundations-psda",
+    unitNumber: 3,
+    title: "Unit 3: Foundations: Problem Solving & Data Analysis",
+    slug: "unit-03-foundations-psda",
+    tier: "Foundations",
+    domain: "Problem Solving and Data Analysis",
+    topicCode: "DAT-01",
+    estimatedHours: "4.5 hours",
+    description: "Core foundations of ratios, proportional rates, percentage change, dimensional unit conversions, statistics (mean/median/spread), two-way tables, and scatterplot regression.",
+    overviewSummary: "Problem Solving and Data Analysis accounts for approximately 15% to 20% of the Digital SAT Math section. Questions emphasize real-world contextual reasoning: translating multi-step word problems into mathematical ratios, calculating compound percentage multipliers, converting complex units, and extracting accurate conditional probabilities from frequency tables.",
+    sections: [
+      {
+        id: "u3-sec-1-ratios-rates",
+        title: "1. Ratios, Rates & Proportions: Setting Up Cross-Multiplication Models",
+        readTime: "8 min read",
+        summary: "A ratio is a quantitative comparison of two values (a : b). Master cross-multiplication, unit rate conversions, and scale factor modeling.",
+        diagramType: "word-problem-model",
+        desmosExample: {
+          title: "Direct Ratio Solver",
+          expression: "x / 14 = 9 / 6",
+          tip: "Desmos graphs a vertical line at x = 21. No manual cross-multiplication required!"
+        },
+        keyTakeaways: [
+          "Cross-Multiplication Rule: $\\frac{a}{b} = \\frac{c}{d} \\iff a \\cdot d = b \\cdot c$.",
+          "Part-to-Part vs Part-to-Whole: If the ratio of boys to girls is $3:5$, the ratio of boys to total students is $3:(3+5) = 3:8$.",
+          "Unit Rate: $\\frac{\\text{Total Quantity}}{\\text{Number of Units}}$ (e.g., miles per gallon, dollars per pound).",
+          "Scaling Factor ($k$): If a recipe ratio is $2:5:7$, the actual component quantities are $2k, 5k, 7k$."
+        ],
+        contentMarkdown: `### The Foundations of Ratios and Proportions
+
+A ratio compares two quantities by division. A proportion is a mathematical statement that two ratios are strictly equal:
+
+$$\\frac{a}{b} = \\frac{c}{d} \\implies a \\cdot d = b \\cdot c$$
+
+#### 1. Part-to-Part vs. Part-to-Whole:
+The College Board frequently sets traps by giving a part-to-part ratio and asking for a part-to-whole probability or percentage:
+- If red marbles to blue marbles is in the ratio $4:7$:
+  - **Part-to-Part:** $\\frac{\\text{Red}}{\\text{Blue}} = \\frac{4}{7}$
+  - **Part-to-Whole (Red):** $\\frac{\\text{Red}}{\\text{Total}} = \\frac{4}{4 + 7} = \\frac{4}{11}$
+  - **Part-to-Whole (Blue):** $\\frac{\\text{Blue}}{\\text{Total}} = \\frac{7}{4 + 7} = \\frac{7}{11}$
+
+#### 2. The Multiplier Constant ($k$) Technique:
+When a problem provides a multi-part ratio like $3:4:5$ and a total sum, introduce an unknown scaling multiplier $k$:
+$$3k + 4k + 5k = \\text{Total} \\implies 12k = \\text{Total} \\implies k = \\frac{\\text{Total}}{12}$$
+
+#### Worked Example:
+> *"A contractor mixes sand, gravel, and cement in the ratio $3 : 5 : 2$ by weight to make concrete. If the contractor needs to produce $1,800\\text{ kg}$ of concrete, how many kilograms of gravel are required?"*
+
+1. Set up the scaling equation:
+$$3k + 5k + 2k = 1800 \\implies 10k = 1800 \\implies k = 180$$
+2. Gravel corresponds to the middle term ($5k$):
+$$\\text{Gravel} = 5 \\times 180 = 900\\text{ kg}$$
+The contractor needs **900 kg of gravel**.`
+      },
+      {
+        id: "u3-sec-2-percentages",
+        title: "2. Percentages, Percent Change & The Multiplier Method (1 ± r)",
+        readTime: "8 min read",
+        summary: "Never use slow grade-school methods for percentages. Convert every percentage increase or decrease into a single decimal multiplier (1 +/- r).",
+        diagramType: "percent-multiplier",
+        desmosExample: {
+          title: "Successive Multiplier Evaluator",
+          expression: "450 * (1 + 0.15) * (1 - 0.20)",
+          tip: "Desmos computes compound percentage changes in one step. 450 * 1.15 * 0.8 = 414."
+        },
+        keyTakeaways: [
+          "Multiplier Rule: Increase of $p\\% \\implies \\times (1 + \\frac{p}{100})$; Decrease of $p\\% \\implies \\times (1 - \\frac{p}{100})$.",
+          "Percent Change: $\\frac{\\text{New} - \\text{Old}}{\\text{Old}} \\times 100\\%$. Always divide by the starting baseline!",
+          "Successive Percentage Trap: $+20\\%$ followed by $-20\\%$ is $(1.20)(0.80) = 0.96$ ($4\\%$ net loss, NOT zero!).",
+          "Original Value Recovery: $\\text{Original} = \\frac{\\text{Final}}{1 \\pm r}$."
+        ],
+        contentMarkdown: `### The High-Speed Decimal Multiplier Method
+
+On the Digital SAT, calculating percentages step-by-step with scratch arithmetic wastes valuable time. Use the **Decimal Multiplier Principle**:
+
+| Scenario | Percent Language | Decimal Multiplier | Algebraic Formula |
+| :--- | :--- | :--- | :--- |
+| **Increase** | *"increases by 18%"* | $1 + 0.18 = 1.18$ | $\\text{New} = \\text{Original} \\times 1.18$ |
+| **Decrease** | *"discounted by 25%"* | $1 - 0.25 = 0.75$ | $\\text{New} = \\text{Original} \\times 0.75$ |
+| **Sales Tax** | *"price plus 7.5% tax"* | $1 + 0.075 = 1.075$ | $\\text{Total} = \\text{Price} \\times 1.075$ |
+| **Depreciation** | *"loses 12% value/yr"* | $1 - 0.12 = 0.88$ | $V(t) = V_0 \\times (0.88)^t$ |
+
+#### 1. The Percent Change Formula:
+$$\\% \\text{ Change} = \\frac{\\text{New Value} - \\text{Original Value}}{\\text{Original Value}} \\times 100\\%$$
+
+> [!WARNING]
+> **The Baseline Trap:** Always divide by the **Original** (initial) value, never the New value!
+
+#### 2. Successive Changes (Compounding Multipliers):
+If an item undergoes multiple percentage changes sequentially, multiply their individual decimal factors together:
+$$\\text{Final} = \\text{Original} \\times (1 + r_1) \\times (1 + r_2) \\times \\dots$$
+
+#### Worked Example:
+> *"A retail store increases the original price of a gaming monitor by $30\\%$. During a weekend clearance sale, the new price is discounted by $20\\%$. If the original price was $\\$400$, what was the final clearance price?"*
+
+$$\\text{Final Price} = 400 \\times (1 + 0.30) \\times (1 - 0.20)$$
+$$\\text{Final Price} = 400 \\times 1.30 \\times 0.80 = 400 \\times 1.04 = \\$416$$
+Notice the net effect is a $4\\%$ overall increase ($1.30 \\times 0.80 = 1.04$).`
+      },
+      {
+        id: "u3-sec-3-unit-conversion",
+        title: "3. Dimensional Analysis & Multi-Step Unit Conversions: Avoiding the Area/Volume Trap",
+        readTime: "7 min read",
+        summary: "Chain conversion factors so units cancel out diagonally. Avoid the lethal area and volume power trap.",
+        diagramType: "formula-reference",
+        desmosExample: {
+          title: "Multi-Step Unit Converter",
+          expression: "60 * (5280 / 3600)",
+          tip: "60 mph = 88 feet per second. Desmos evaluates conversion fraction chains instantly."
+        },
+        keyTakeaways: [
+          "Fraction Alignment: Place unwanted units diagonally opposite so they cancel out mathematically.",
+          "Rate Conversion: To convert miles/hour to feet/second, multiply by $\\frac{5280\\text{ ft}}{1\\text{ mile}}$ and $\\frac{1\\text{ hour}}{3600\\text{ sec}}$.",
+          "Area Square Trap: $1\\text{ yd} = 3\\text{ ft} \\implies 1\\text{ yd}^2 = 3^2\\text{ ft}^2 = 9\\text{ ft}^2$, NOT $3\\text{ ft}^2$!",
+          "Volume Cube Trap: $1\\text{ m} = 100\\text{ cm} \\implies 1\\text{ m}^3 = 100^3\\text{ cm}^3 = 1,000,000\\text{ cm}^3$."
+        ],
+        contentMarkdown: `### Dimensional Analysis: Canceling Units Like Variables
+
+In dimensional analysis, physical units ($cm, s, kg, miles$) follow the exact same rules as algebraic variables:
+
+$$\\frac{\\text{Unit } A}{1} \\times \\frac{\\text{Unit } B}{\\text{Unit } A} = \\text{Unit } B$$
+
+#### Standard SAT Conversion Equivalencies:
+- **Time:** $1\\text{ hr} = 60\\text{ min} = 3,600\\text{ sec}$
+- **Length:** $1\\text{ mile} = 5,280\\text{ feet}$, $1\\text{ yard} = 3\\text{ feet}$, $1\\text{ foot} = 12\\text{ inches}$
+- **Metric:** $1\\text{ km} = 1,000\\text{ m}$, $1\\text{ m} = 100\\text{ cm}$, $1\\text{ kg} = 1,000\\text{ g}$
+
+#### The High-Scorer Area and Volume Trap:
+When converting units of **Area** (squared) or **Volume** (cubed), you must raise the entire conversion factor to the power:
+
+| Linear Dimension | Area Dimension (Squared) | Volume Dimension (Cubed) |
+| :--- | :--- | :--- |
+| $1\\text{ yd} = 3\\text{ ft}$ | $1\\text{ yd}^2 = 3^2 = 9\\text{ ft}^2$ | $1\\text{ yd}^3 = 3^3 = 27\\text{ ft}^3$ |
+| $1\\text{ ft} = 12\\text{ in}$ | $1\\text{ ft}^2 = 12^2 = 144\\text{ in}^2$ | $1\\text{ ft}^3 = 12^3 = 1,728\\text{ in}^3$ |
+| $1\\text{ m} = 100\\text{ cm}$ | $1\\text{ m}^2 = 100^2 = 10,000\\text{ cm}^2$ | $1\\text{ m}^3 = 100^3 = 1,000,000\\text{ cm}^3$ |
+
+#### Worked Example:
+> *"A car is traveling along a highway at a constant speed of $45\\text{ miles per hour}$. What is the car's speed in feet per second? ($1\\text{ mile} = 5,280\\text{ feet}$)"*
+
+$$\\frac{45\\text{ miles}}{1\\text{ hour}} \\times \\frac{5,280\\text{ feet}}{1\\text{ mile}} \\times \\frac{1\\text{ hour}}{3,600\\text{ seconds}}$$
+$$\\text{Speed} = \\frac{45 \\times 5280}{3600} = \\frac{237,600}{3,600} = 66\\text{ feet per second}$$`
+      },
+      {
+        id: "u3-sec-4-statistics",
+        title: "4. Descriptive Statistics: Mean, Median, Mode, Range & Outlier Skewness",
+        readTime: "8 min read",
+        summary: "Master center (mean, median) and spread (range, standard deviation). Understand how extreme outliers warp the mean while leaving the median untouched.",
+        diagramType: "formula-reference",
+        desmosExample: {
+          title: "Desmos List Statistics Engine",
+          expression: "L = [72, 85, 91, 78, 94] \\nmean(L) \\nmedian(L) \\nstdev(L)",
+          tip: "Type L = [numbers]. Desmos computes mean, median, and sample standard deviation instantly!"
+        },
+        keyTakeaways: [
+          "Sum Equation: $\\sum x = n \\cdot \\bar{x}$. If you know the mean and count, you know the total sum!",
+          "Missing Score: $\\text{Required Score} = (\\text{Total Count} \\times \\text{Desired Mean}) - \\text{Current Sum}$.",
+          "Median Position: In an ordered set of $n$ numbers, the median is at index $\\frac{n+1}{2}$. For even $n$, average the two middle values.",
+          "Outlier Sensitivity: High outliers pull the mean up ($\\text{Mean} > \\text{Median}$); low outliers pull the mean down ($\\text{Mean} < \\text{Median}$). The median is resistant.",
+          "Standard Deviation: Measures dispersion from the mean. A wider or more spread-out dataset has a higher standard deviation."
+        ],
+        contentMarkdown: `### Measures of Center and Dispersion
+
+Statistical reasoning on the SAT tests your understanding of data distributions and the mathematical distinction between mean and median.
+
+#### 1. The Arithmetic Mean:
+$$\\bar{x} = \\frac{\\sum x}{n} \\iff \\sum x = n \\cdot \\bar{x}$$
+
+#### 2. The Missing Score Algorithm:
+If a student takes $n$ tests and wants an average of $A$, the required total sum is $n \\times A$. Subtract the known scores to isolate the unknown test score:
+$$\\text{Score}_{\\text{new}} = (n \\times A) - \\sum \\text{known scores}$$
+
+#### 3. Comparing Mean vs. Median under Skewness:
+- **Symmetric Distribution:** $\\text{Mean} \\approx \\text{Median}$
+- **Right-Skewed (Extreme High Outlier):** $\\text{Mean} > \\text{Median}$ (The outlier pulls the mean to the right).
+- **Left-Skewed (Extreme Low Outlier):** $\\text{Mean} < \\text{Median}$ (The outlier pulls the mean to the left).
+
+> [!NOTE]
+> **Median Resistance:** The median depends only on the rank order of numbers. Changing a single high value from $100$ to $1,000,000$ leaves the median completely unchanged, but drastically inflates the mean!
+
+#### 4. Range and Standard Deviation:
+- **Range:** $\\text{Maximum} - \\text{Minimum}$.
+- **Standard Deviation:** A measure of how concentrated numbers are around the mean.
+  - If all data points are identical ($[5, 5, 5, 5]$), $\\text{standard deviation} = 0$.
+  - Datasets with values clustered near the center have **smaller** standard deviation than datasets with values pushed to the extremes.`
+      },
+      {
+        id: "u3-sec-5-two-way-tables",
+        title: "5. Two-Way Frequency Tables: Joint, Marginal & Conditional Probability",
+        readTime: "7 min read",
+        summary: "Categorical data organized by rows and columns. Learn the golden rule of conditional probability: identify the restricted denominator first!",
+        diagramType: "two-way-conditional",
+        desmosExample: {
+          title: "Restricted Denominator Fraction",
+          expression: "18 / (18 + 42)",
+          tip: "Click Desmos's fraction toggle (convert to decimal or exact fraction 3/10) to match SAT choices."
+        },
+        keyTakeaways: [
+          "Overall Probability: $\\frac{\\text{Cell Count}}{\\text{Grand Total}}$.",
+          "Conditional Trigger Words: 'Given that', 'Of those who', 'Among the students'. These words shrink the denominator to that specific row or column subtotal!",
+          "Joint Frequency: The count at the intersection of a specific row and column.",
+          "Marginal Frequency: The subtotal at the edge of a row or column."
+        ],
+        contentMarkdown: `### Two-Way Tables and Conditional Probability
+
+A two-way frequency table categorizes observational data across two distinct variables (e.g., Grade Level vs. Preferred Activity):
+
+| Class Level | Plays a Sport | Does Not Play | Row Total |
+| :--- | :--- | :--- | :--- |
+| **Sophomores** | 45 | 55 | **100** |
+| **Juniors** | 60 | 40 | **100** |
+| **Seniors** | 75 | 25 | **100** |
+| **Column Total** | **180** | **120** | **Grand Total: 300** |
+
+#### The Golden Rule of Probability Questions:
+Always read the **Subject of the Question** to determine the denominator:
+
+1. **Unconditional Question:**
+   > *"If a student is chosen at random from all 300 students, what is the probability they are a Senior who plays a sport?"*
+   $$\\text{Probability} = \\frac{\\text{Seniors who play}}{\\text{Grand Total}} = \\frac{75}{300} = \\frac{1}{4} = 0.25$$
+
+2. **Conditional Question (Restricted Row):**
+   > *"If a student is chosen at random from the **Seniors**, what is the probability they play a sport?"*
+   - Denominator is restricted to **Seniors Total (100)**:
+   $$\\text{Probability} = \\frac{75}{100} = \\frac{3}{4} = 0.75$$
+
+3. **Conditional Question (Restricted Column):**
+   > *"Among the students who **play a sport**, what is the probability that the student is a Junior?"*
+   - Denominator is restricted to **Plays a Sport Total (180)**:
+   $$\\text{Probability} = \\frac{60}{180} = \\frac{1}{3} \\approx 0.333$$`
+      },
+      {
+        id: "u3-sec-6-scatterplots",
+        title: "6. Scatterplots, Lines of Best Fit & Residual Analysis",
+        readTime: "8 min read",
+        summary: "Interpret trends in bivariate data. Master the residual formula (Actual - Predicted) and use Desmos table regression for lines of best fit.",
+        diagramType: "scatterplot-residuals",
+        desmosExample: {
+          title: "Table Linear Regression (~)",
+          expression: "y_1 \\sim m x_1 + b",
+          tip: "Enter (x1, y1) data into a Desmos table (+ -> table). Type y1 ~ m x1 + b. Desmos finds the best fit line immediately!"
+        },
+        keyTakeaways: [
+          "Line of Best Fit: $y = mx + b$. Slope ($m$) represents the average estimated change in $y$ for each 1-unit increase in $x$.",
+          "Vertical Intercept ($b$): Estimated value of $y$ when $x = 0$.",
+          "Residual Formula: $\\text{Residual} = y_{\\text{actual}} - y_{\\text{predicted}}$.",
+          "Positive Residual: The actual data point sits ABOVE the regression line ($y_{\\text{actual}} > y_{\\text{predicted}}$).",
+          "Negative Residual: The actual data point sits BELOW the regression line ($y_{\\text{actual}} < y_{\\text{predicted}}$)."
+        ],
+        contentMarkdown: `### Scatterplots and Trendlines
+
+A scatterplot displays relationships between two quantitative variables. The line of best fit (trendline) models the overall linear association:
+
+$$\\hat{y} = mx + b$$
+
+#### 1. Interpreting Model Parameters:
+- **Slope ($m$):** *"For each additional 1 unit increase in $x$, the model predicts that $y$ will increase (or decrease) by an average of $m$ units."*
+- **$y$-Intercept ($b$):** *"The predicted value of $y$ when $x = 0$."* Always evaluate whether $x = 0$ makes physical sense in context!
+
+#### 2. The Residual Formula:
+A residual measures vertical prediction error:
+
+$$\\text{Residual} = y_{\\text{actual}} - y_{\\text{predicted}}$$
+
+- If the actual plotted dot is **above** the line: $\\text{Residual} > 0$ (Model under-predicted).
+- If the actual plotted dot is **below** the line: $\\text{Residual} < 0$ (Model over-predicted).
+- If the dot lies **directly on** the line: $\\text{Residual} = 0$.
+
+#### Worked Example:
+> *"A biologist models the height $h$ in centimeters of a sunflower $t$ days after planting with the equation $h = 3.2t + 14$. On day $15$, the biologist measures an actual sunflower height of $68\\text{ cm}$. What is the residual for this sunflower?"*
+
+1. Calculate predicted height:
+$$h_{\\text{predicted}} = 3.2(15) + 14 = 48 + 14 = 62\\text{ cm}$$
+2. Apply the residual formula:
+$$\\text{Residual} = h_{\\text{actual}} - h_{\\text{predicted}} = 68 - 62 = +6\\text{ cm}$$
+The residual is **+6 cm** (the actual sunflower grew 6 cm taller than predicted).`
+      }
+    ],
+    speedHacks: [
+      {
+        title: "Desmos Statistical List Functions",
+        trigger: "Questions asking for mean, median, or standard deviation of a dataset",
+        shortcut: "Define list L = [val1, val2, ...]. Type mean(L), median(L), stdev(L).",
+        example: "Type 'L = [14, 28, 35, 42]'. Then 'mean(L)' immediately yields 29.75."
+      },
+      {
+        title: "Successive Percentage Product Multiplier",
+        trigger: "Multi-step percentage increases and decreases on an initial value",
+        shortcut: "Chain decimal factors: Base * (1 + p1) * (1 - p2). Never calculate intermediate subtotals.",
+        example: "A $200 item increased by 15% then decreased by 30%: type '200 * 1.15 * 0.70' -> 161."
+      },
+      {
+        title: "The Target Average Sum Trick",
+        trigger: "Finding a missing test or quiz score to achieve a target average",
+        shortcut: "Multiply Target Average by Total Count, then subtract the sum of known scores.",
+        example: "To average 85 over 4 tests with known scores 80, 88, 82: type '4*85 - (80+88+82)' -> 90."
+      },
+      {
+        title: "Two-Way Table Denominator Isolation",
+        trigger: "Conditional probability phrases ('Given that...', 'Of those who...')",
+        shortcut: "Circle the row or column named in the condition. That subtotal is your entire denominator.",
+        example: "'Of the juniors, probability of passing' = (Passing Juniors) / (Total Juniors)."
+      },
+      {
+        title: "Desmos Table Linear Regression",
+        trigger: "Scatterplot data given in a table asking for line of best fit equation",
+        shortcut: "Click + -> Table. Input points (x1, y1). Type 'y1 ~ m x1 + b'. Desmos computes m and b.",
+        example: "Enter coordinates; Desmos outputs precise slope m, intercept b, and r² correlation in real time."
+      }
+    ],
+    practiceQuestions: [
+      {
+        id: "u3_q01_ratio_scaling",
+        questionNumber: 1,
+        prompt: "A chemical solution is mixed using acid, water, and alcohol in the ratio $2 : 5 : 3$ by volume. If the final mixture has a total volume of $750\\text{ mL}$, how many milliliters of water are in the mixture?",
+        options: ["A. 150 mL", "B. 225 mL", "C. 375 mL", "D. 450 mL"],
+        correctAnswer: "C",
+        explanation: "1. Introduce multiplier $k$: $2k + 5k + 3k = 750$.\n2. Combine like terms: $10k = 750 \\implies k = 75$.\n3. Water corresponds to the middle term ($5k$): $5 \\times 75 = 375\\text{ mL}$.",
+        desmosTrick: "Type '750 * (5 / (2 + 5 + 3))' into Desmos to get 375 immediately."
+      },
+      {
+        id: "u3_q02_percent_tax_discount",
+        questionNumber: 2,
+        prompt: "A jacket originally priced at $\\$160$ is discounted by $25\\%$. In addition, a sales tax of $8\\%$ is applied to the discounted price. What is the final total cost of the jacket?",
+        options: ["A. $\\$120.00", "B. $\\$128.00", "C. $\\$129.60", "D. $\\$132.80"],
+        correctAnswer: "C",
+        explanation: "1. Discount multiplier: $1 - 0.25 = 0.75$.\n2. Discounted price: $160 \\times 0.75 = 120$.\n3. Sales tax multiplier: $1 + 0.08 = 1.08$.\n4. Final cost: $120 \\times 1.08 = \\$129.60$.\n(Or in one direct line: $160 \\times 0.75 \\times 1.08 = 129.60$).",
+        desmosTrick: "Type '160 * 0.75 * 1.08' directly into Desmos. Instant answer: 129.6."
+      },
+      {
+        id: "u3_q03_successive_discount_trap",
+        questionNumber: 3,
+        prompt: "The stock price of a company increased by $30\\%$ during the first quarter and subsequently decreased by $20\\%$ during the second quarter. What was the net percentage change in the stock price across both quarters?",
+        options: ["A. 10% decrease", "B. 4% increase", "C. 10% increase", "D. 14% increase"],
+        correctAnswer: "B",
+        explanation: "1. Successive multiplier: $(1 + 0.30) \\times (1 - 0.20) = 1.30 \\times 0.80 = 1.04$.\n2. Convert multiplier to percent change: $(1.04 - 1.00) \\times 100\\% = +4\\%$.\n3. The stock gained a net $4\\%$ across both quarters.",
+        satTrap: "Subtracting 30% - 20% = 10% increase! Percentages cannot be added or subtracted directly because the second percentage applies to a different baseline."
+      },
+      {
+        id: "u3_q04_unit_conversion_speed",
+        questionNumber: 4,
+        prompt: "A high-speed train travels at a constant velocity of $180\\text{ kilometers per hour}$. What is the train's speed in meters per second?",
+        options: ["A. 30 m/s", "B. 50 m/s", "C. 60 m/s", "D. 75 m/s"],
+        correctAnswer: "B",
+        explanation: "1. Conversion factors: $1\\text{ km} = 1,000\\text{ m}$ and $1\\text{ hr} = 3,600\\text{ sec}$.\n2. Multiply: $\\frac{180\\text{ km}}{1\\text{ hr}} \\times \\frac{1000\\text{ m}}{1\\text{ km}} \\times \\frac{1\\text{ hr}}{3600\\text{ sec}} = \\frac{180,000}{3600} = 50\\text{ m/s}$.",
+        desmosTrick: "Type '180 * (1000 / 3600)' into Desmos to get 50 in 2 seconds."
+      },
+      {
+        id: "u3_q05_missing_mean_score",
+        questionNumber: 5,
+        prompt: "A student scored $82, 89, 78,$ and $91$ on the first four exams in a mathematics course. What score must the student achieve on the fifth exam to have an overall mean score of exactly $88$ across all five exams?",
+        options: ["A. 96", "B. 98", "C. 100", "D. 102"],
+        correctAnswer: "C",
+        explanation: "1. Total sum needed across 5 exams: $5 \\times 88 = 440$.\n2. Sum of first four exams: $82 + 89 + 78 + 91 = 340$.\n3. Required fifth exam score: $440 - 340 = 100$.",
+        referenceFormula: "\\text{Required Score} = n \\cdot \\bar{x} - \\sum x_{\\text{known}}"
+      },
+      {
+        id: "u3_q06_outlier_impact",
+        questionNumber: 6,
+        prompt: "A dataset consists of the annual salaries of 9 employees at a startup company, ranging from $\\$55,000$ to $\\$75,000$. A new executive is hired with an annual salary of $\\$450,000$. Which of the following statements correctly describes the effect of adding the executive's salary to the dataset?",
+        options: [
+          "A. The mean will increase significantly, but the median will change by at most a small amount.",
+          "B. The median will increase significantly, but the mean will remain unchanged.",
+          "C. Both the mean and median will increase by the exact same amount.",
+          "D. Neither the mean nor the median will change."
+        ],
+        correctAnswer: "A",
+        explanation: "The extreme high salary ($\\$450,000$) is an outlier. Outliers have a massive mathematical impact on the mean (which sums all values), but only shift the median by one position along the ordered list.",
+        satTrap: "Assuming mean and median always move together symmetrically."
+      },
+      {
+        id: "u3_q07_conditional_probability",
+        questionNumber: 7,
+        prompt: "A survey of 120 high school seniors recorded their post-graduation plans:\n\n| Plan | Male | Female | Total |\n| :--- | :--- | :--- | :--- |\n| 4-Year University | 32 | 48 | 80 |\n| Community College | 18 | 12 | 30 |\n| Workforce / Military | 6 | 4 | 10 |\n| **Total** | **56** | **64** | **120** |\n\nIf a female student is selected at random from the survey, what is the probability that her plan is to attend a 4-Year University?",
+        options: ["A. \\frac{32}{80}", "B. \\frac{48}{120}", "C. \\frac{48}{80}", "D. \\frac{48}{64}"],
+        correctAnswer: "D",
+        explanation: "1. The question states: 'If a female student is selected at random...'\n2. The condition restricts the denominator to the Female subtotal: $64$.\n3. Favorable count: Females attending a 4-Year University = $48$.\n4. Probability = $\\frac{48}{64} = \\frac{3}{4} = 0.75$.",
+        satTrap: "Using the grand total 120 as the denominator (Option B), or using the 4-Year University total 80 (Option C)."
+      },
+      {
+        id: "u3_q08_residual_calculation",
+        questionNumber: 8,
+        prompt: "A scatterplot displays the study hours ($x$) and exam scores ($y$) of several students. The line of best fit for the data is given by $\\hat{y} = 4.5x + 52$. For one student who studied for $6\\text{ hours}$, the actual score achieved on the exam was $84$. What is the residual for this data point?",
+        options: ["A. -5", "B. +5", "C. +7", "D. +9"],
+        correctAnswer: "B",
+        explanation: "1. Calculate predicted score: $\\hat{y} = 4.5(6) + 52 = 27 + 52 = 79$.\n2. Actual score: $y = 84$.\n3. Residual formula: $\\text{Residual} = y_{\\text{actual}} - y_{\\text{predicted}} = 84 - 79 = +5$.",
+        referenceFormula: "\\text{Residual} = y_{\\text{actual}} - y_{\\text{predicted}}"
+      },
+      {
+        id: "u3_q09_area_unit_conversion",
+        questionNumber: 9,
+        prompt: "A rectangular garden has an area of $24\\text{ square yards}$. Given that $1\\text{ yard} = 3\\text{ feet}$, what is the area of the garden in square feet?",
+        options: ["A. 72 sq ft", "B. 144 sq ft", "C. 216 sq ft", "D. 288 sq ft"],
+        correctAnswer: "C",
+        explanation: "1. For linear conversion: $1\\text{ yd} = 3\\text{ ft}$.\n2. For area conversion, square the factor: $1\\text{ yd}^2 = (3\\text{ ft})^2 = 9\\text{ ft}^2$.\n3. Multiply: $24\\text{ yd}^2 \\times 9\\text{ ft}^2/\\text{yd}^2 = 216\\text{ sq ft}$.",
+        satTrap: "Multiplying by 3 instead of 9 (getting 72, Option A). Always square linear conversion factors for area!"
+      },
+      {
+        id: "u3_q10_scatterplot_slope_interpretation",
+        questionNumber: 10,
+        prompt: "The scatterplot relationship between the temperature in degrees Celsius ($C$) and the chirping frequency in chirps per minute ($F$) of a certain cricket species is modeled by the linear regression equation $F = 4.2C + 38$. What is the best interpretation of the number $4.2$ in this model?",
+        options: [
+          "A. The cricket chirps 4.2 times per minute when the temperature is 0 degrees Celsius.",
+          "B. The estimated increase in temperature for each additional chirp per minute.",
+          "C. The estimated increase in chirps per minute for each 1 degree Celsius increase in temperature.",
+          "D. The total number of crickets observed in the study."
+        ],
+        correctAnswer: "C",
+        explanation: "In $F = 4.2C + 38$, $4.2$ is the slope ($m$). Slope represents the estimated change in the dependent variable ($F$, chirps per minute) for each 1-unit increase in the independent variable ($C$, degrees Celsius).",
+        satTrap: "Confusing independent and dependent variables (Option B reverses the causality)."
+      }
+    ],
+    prevUnitId: "unit-02-foundations-algebra",
+    nextUnitId: "unit-04-foundations-adv-math"
   }
 };
 
