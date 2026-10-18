@@ -5,6 +5,7 @@ import { Mail, Lock, User, Sparkles, X, AlertCircle, ArrowRight, CheckCircle2 } 
 import { useAuth } from "./AuthContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import VesperaLogo from "./VesperaLogo";
+import Portal from "./Portal";
 
 export default function AuthModal() {
   const { isAuthModalOpen, authModalMode, closeAuthModal, openAuthModal, login, register } = useAuth();
@@ -63,12 +64,16 @@ export default function AuthModal() {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-y-auto animate-fade-in"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) closeAuthModal();
-      }}
-    >
+    <Portal>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Account Authentication"
+        className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-hidden animate-fade-in"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) closeAuthModal();
+        }}
+      >
       <div className="relative w-full max-w-md bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl shadow-2xl p-6 sm:p-8 my-auto transition-all animate-scale-up">
         {/* Close Button */}
         <button
@@ -220,5 +225,6 @@ export default function AuthModal() {
         </form>
       </div>
     </div>
+    </Portal>
   );
 }

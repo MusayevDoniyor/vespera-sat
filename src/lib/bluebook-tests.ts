@@ -25,6 +25,8 @@ export interface BluebookExamForm {
   id: string;
   title: string;
   formCode: string;
+  description?: string;
+  descriptionEn?: string;
   descriptionUz: string;
   badge: string;
   totalQuestions: number;

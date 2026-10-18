@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 
 interface TopicStudyModalProps {
   topicCode: string | null;
@@ -79,12 +80,13 @@ export default function TopicStudyModal({
   const isMath = topic.section === "MATH";
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200 overflow-hidden"
-      onClick={onClose}
-    >
+    <Portal>
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-3 md:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200 overflow-hidden"
+        onClick={onClose}
+      >
       <div
         className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-[var(--text-main)] my-auto"
         onClick={(e) => e.stopPropagation()}
@@ -503,5 +505,6 @@ export default function TopicStudyModal({
         </div>
       </div>
     </div>
-  );
+  </Portal>
+);
 }

@@ -18,6 +18,7 @@ import {
 import { useAuth } from "./AuthContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import VesperaLogo from "./VesperaLogo";
+import Portal from "./Portal";
 
 export default function OnboardingModal() {
   const { user, isOnboardingOpen, closeOnboarding, updateProfile } = useAuth();
@@ -123,8 +124,14 @@ export default function OnboardingModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-y-auto animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl shadow-2xl p-6 sm:p-9 my-auto transition-all animate-scale-up">
+    <Portal>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Diagnostic Onboarding Questionnaire"
+        className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md overflow-hidden animate-fade-in"
+      >
+      <div className="relative w-full max-w-2xl bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl shadow-2xl p-6 sm:p-9 my-auto transition-all animate-scale-up max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={closeOnboarding}
@@ -597,5 +604,6 @@ export default function OnboardingModal() {
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

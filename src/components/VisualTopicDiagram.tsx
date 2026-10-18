@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import KaTeXMath from "./KaTeXMath";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 import {
   Maximize2,
   Minimize2,
@@ -1751,13 +1752,14 @@ export default function VisualTopicDiagram({ topicType = "slope_intercept" }: Vi
 
       {/* Lightbox / High-Resolution Modal */}
       {isLightboxOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="High Resolution Figure Inspector"
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200 overflow-hidden"
-          onClick={handleCloseLightbox}
-        >
+        <Portal>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="High Resolution Figure Inspector"
+            className="fixed inset-0 w-screen h-screen z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200 overflow-hidden"
+            onClick={handleCloseLightbox}
+          >
           {/* Modal Container Card */}
           <div
             className="w-full max-w-3xl bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl shadow-2xl flex flex-col max-h-[85vh] text-[var(--text-main)] overflow-hidden my-auto"
@@ -1847,6 +1849,7 @@ export default function VisualTopicDiagram({ topicType = "slope_intercept" }: Vi
             </div>
           </div>
         </div>
+        </Portal>
       )}
     </div>
   );

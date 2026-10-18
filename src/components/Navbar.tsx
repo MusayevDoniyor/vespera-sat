@@ -7,6 +7,7 @@ import { useTheme } from "./ThemeContext";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "./AuthContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 
 interface NavbarProps {
   onToggleDesmos?: () => void;
@@ -133,12 +134,13 @@ export default function Navbar({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
 
       {/* Official SAT Math Reference Formula Sheet Modal */}
       {showFormulaSheet && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/60 backdrop-blur-sm animate-fade-in"
-          onClick={() => setShowFormulaSheet(false)}
-        >
+        <Portal>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-3 md:p-6 bg-black/60 backdrop-blur-sm animate-fade-in overflow-hidden"
+            onClick={() => setShowFormulaSheet(false)}
+          >
           <div
             className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl md:rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-4 sm:p-6 md:p-8 space-y-6 relative text-[var(--text-main)] animate-scale-in"
             onClick={(e) => e.stopPropagation()}
@@ -250,7 +252,8 @@ export default function Navbar({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
             </div>
           </div>
         </div>
-      )}
+      </Portal>
+    )}
     </>
   );
 }

@@ -20,6 +20,8 @@ import {
 } from "@/lib/adaptive-engine";
 import { useAuth } from "./AuthContext";
 import KaTeXMath from "./KaTeXMath";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 
 interface DiagnosticPlacementModalProps {
   isOpen: boolean;
@@ -38,6 +40,7 @@ export default function DiagnosticPlacementModal({
   const [isFinished, setIsFinished] = useState(false);
   const [report, setReport] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+  useBodyScrollLock(isOpen);
 
   if (!isOpen) return null;
 
@@ -100,8 +103,14 @@ export default function DiagnosticPlacementModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+    <Portal>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Diagnostic Placement Assessment"
+        className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in overflow-hidden"
+      >
+      <div className="relative w-full max-w-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col my-auto">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -289,5 +298,6 @@ export default function DiagnosticPlacementModal({
         )}
       </div>
     </div>
+    </Portal>
   );
 }

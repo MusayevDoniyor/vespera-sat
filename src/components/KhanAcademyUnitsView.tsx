@@ -23,11 +23,14 @@ import {
 import Link from "next/link";
 import KaTeXMath from "./KaTeXMath";
 import { KHAN_SAT_MATH_UNITS, KhanUnit, KhanSkillLesson } from "@/lib/khan-units-data";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 
 export default function KhanAcademyUnitsView() {
   const [selectedTier, setSelectedTier] = useState<"ALL" | "Foundations" | "Medium" | "Advanced">("ALL");
   const [expandedUnitId, setExpandedUnitId] = useState<string>("unit-02-foundations-algebra");
   const [activeLessonModal, setActiveLessonModal] = useState<KhanSkillLesson | null>(null);
+  useBodyScrollLock(!!activeLessonModal);
 
   const filteredUnits = KHAN_SAT_MATH_UNITS.filter((u) => {
     if (selectedTier === "ALL") return true;
@@ -237,12 +240,13 @@ export default function KhanAcademyUnitsView() {
 
       {/* Lesson Modal Drawer */}
       {activeLessonModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200 overflow-hidden"
-          onClick={() => setActiveLessonModal(null)}
-        >
+        <Portal>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-3 md:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200 overflow-hidden"
+            onClick={() => setActiveLessonModal(null)}
+          >
           <div
             className="relative w-full max-w-4xl max-h-[90vh] bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-[var(--text-main)] my-auto"
             onClick={(e) => e.stopPropagation()}
@@ -448,6 +452,7 @@ export default function KhanAcademyUnitsView() {
             </div>
           </div>
         </div>
+        </Portal>
       )}
     </div>
   );

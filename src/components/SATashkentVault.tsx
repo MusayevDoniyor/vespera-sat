@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import KaTeXMath from "./KaTeXMath";
 import Pagination from "./Pagination";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 import {
   SATASHKENT_LIBRARY,
   SATASHKENT_CHEAT_SHEET_DATA,
@@ -1159,86 +1160,88 @@ export default function SATashkentVault() {
 
       {/* Book Detail Modal */}
       {selectedBook && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200 overflow-hidden"
-          onClick={() => setSelectedBook(null)}
-        >
+        <Portal>
           <div
-            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto overscroll-contain bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl p-6 md:p-8 space-y-5 shadow-2xl my-auto"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200 overflow-hidden"
+            onClick={() => setSelectedBook(null)}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono uppercase">
-                  {selectedBook.badge} • {selectedBook.targetScore}
-                </span>
-                <h3 className="text-xl font-black text-[var(--text-main)] mt-1">
-                  {selectedBook.title}
-                </h3>
-                <p className="text-xs text-[var(--text-muted)] font-mono mt-0.5">
-                  File: {selectedBook.filename} ({selectedBook.pages} pages)
-                </p>
+            <div
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto overscroll-contain bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl p-6 md:p-8 space-y-5 shadow-2xl my-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono uppercase">
+                    {selectedBook.badge} • {selectedBook.targetScore}
+                  </span>
+                  <h3 className="text-xl font-black text-[var(--text-main)] mt-1">
+                    {selectedBook.title}
+                  </h3>
+                  <p className="text-xs text-[var(--text-muted)] font-mono mt-0.5">
+                    File: {selectedBook.filename} ({selectedBook.pages} pages)
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedBook(null)}
+                  className="text-[var(--text-muted)] hover:text-[var(--text-main)] text-sm font-bold p-1"
+                >
+                  ✕
+                </button>
               </div>
-              <button
-                onClick={() => setSelectedBook(null)}
-                className="text-[var(--text-muted)] hover:text-[var(--text-main)] text-sm font-bold p-1"
-              >
-                ✕
-              </button>
-            </div>
 
-            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              {selectedBook.description}
-            </p>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {selectedBook.description}
+              </p>
 
-            <div className="space-y-2">
-              <h5 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-wider font-mono">
-                Key Topics & Chapters in this Book:
-              </h5>
-              <div className="space-y-1.5">
-                {selectedBook.keyTopics.map((t, idx) => (
-                  <div
-                    key={idx}
-                    className="p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] flex items-center gap-2"
-                  >
-                    <CheckCircle2
-                      size={14}
-                      className="text-[var(--accent-green)] shrink-0"
-                    />
-                    <span>{t}</span>
-                  </div>
-                ))}
+              <div className="space-y-2">
+                <h5 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-wider font-mono">
+                  Key Topics & Chapters in this Book:
+                </h5>
+                <div className="space-y-1.5">
+                  {selectedBook.keyTopics.map((t, idx) => (
+                    <div
+                      key={idx}
+                      className="p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] flex items-center gap-2"
+                    >
+                      <CheckCircle2
+                        size={14}
+                        className="text-[var(--accent-green)] shrink-0"
+                      />
+                      <span>{t}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-muted)] leading-relaxed">
-              <strong className="text-[var(--text-main)] block mb-1 font-mono uppercase text-[10px]">
-                Recommended Study Approach:
-              </strong>
-              {selectedBook.signatureMethod}
-            </div>
+              <div className="p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-muted)] leading-relaxed">
+                <strong className="text-[var(--text-main)] block mb-1 font-mono uppercase text-[10px]">
+                  Recommended Study Approach:
+                </strong>
+                {selectedBook.signatureMethod}
+              </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <a
-                href={`/api/materials/${encodeURIComponent(selectedBook.filename)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
-              >
-                <BookOpen size={14} />
-                <span>Open Original PDF ({selectedBook.pages} pages)</span>
-              </a>
-              <button
-                onClick={() => setSelectedBook(null)}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-main)] text-xs font-bold transition-all shadow-sm"
-              >
-                Close Details
-              </button>
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <a
+                  href={`/api/materials/${encodeURIComponent(selectedBook.filename)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+                >
+                  <BookOpen size={14} />
+                  <span>Open Original PDF ({selectedBook.pages} pages)</span>
+                </a>
+                <button
+                  onClick={() => setSelectedBook(null)}
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-main)] text-xs font-bold transition-all shadow-sm"
+                >
+                  Close Details
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </Portal>
       )}
     </div>
   );

@@ -24,11 +24,14 @@ import {
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "./AuthContext";
 import VesperaLogo from "./VesperaLogo";
+import Portal from "./Portal";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobileOpen, closeMobileSidebar } = useSidebar();
   const { user, openAuthModal, openOnboarding, logout } = useAuth();
+  useBodyScrollLock(isMobileOpen);
   const [realStreak, setRealStreak] = useState<number>(0);
 
   useEffect(() => {
@@ -342,22 +345,24 @@ export default function Sidebar() {
 
       {/* Mobile Overlay Drawer */}
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex animate-in fade-in duration-200">
-          {/* Backdrop */}
-          <div
-            onClick={closeMobileSidebar}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-          {/* Drawer Content */}
-          <aside
-            role="dialog"
-            aria-modal="true"
-            className="relative w-72 max-w-[85vw] h-full bg-[var(--bg-card)] border-r border-[var(--border-main)] flex flex-col justify-between py-4 px-3 select-none shadow-2xl z-10 animate-in slide-in-from-left duration-200 overflow-y-auto"
-          >
-            {renderContent(true)}
-          </aside>
-        </div>
+        <Portal>
+          <div className="fixed inset-0 w-screen h-screen z-50 md:hidden flex animate-in fade-in duration-200">
+            {/* Backdrop */}
+            <div
+              onClick={closeMobileSidebar}
+              className="fixed inset-0 w-screen h-screen bg-black/60 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+            {/* Drawer Content */}
+            <aside
+              role="dialog"
+              aria-modal="true"
+              className="relative w-72 max-w-[85vw] h-full bg-[var(--bg-card)] border-r border-[var(--border-main)] flex flex-col justify-between py-4 px-3 select-none shadow-2xl z-10 animate-in slide-in-from-left duration-200 overflow-y-auto"
+            >
+              {renderContent(true)}
+            </aside>
+          </div>
+        </Portal>
       )}
     </>
   );

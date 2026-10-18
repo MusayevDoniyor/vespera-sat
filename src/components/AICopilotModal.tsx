@@ -20,6 +20,7 @@ import {
 import KaTeXMath from "./KaTeXMath";
 import VesperaLogo from "./VesperaLogo";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "./Portal";
 import { useAuth } from "./AuthContext";
 
 interface Message {
@@ -242,7 +243,13 @@ export default function AICopilotModal({
   const hasMistakeContext = userChoice && correctChoice && userChoice !== correctChoice;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm overflow-hidden animate-fadeIn">
+    <Portal>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Vespera AI Copilot"
+        className="fixed inset-0 w-screen h-screen z-50 bg-black/60 dark:bg-black/80 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm overflow-hidden animate-fadeIn"
+      >
       <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl w-full max-w-2xl h-[680px] max-h-[92vh] flex flex-col overflow-hidden shadow-2xl transition-all my-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)] shrink-0">
@@ -467,5 +474,6 @@ export default function AICopilotModal({
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

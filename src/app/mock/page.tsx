@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import Portal from "@/components/Portal";
 import { useTheme } from "@/components/ThemeContext";
 import QuestionDiagram from "@/components/QuestionDiagram";
 import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion } from "@/lib/bluebook-tests";
@@ -558,7 +559,7 @@ export default function BluebookMockPage() {
               Digital SAT Bluebook Simulator
             </h1>
             <p className="text-sm md:text-base text-[var(--text-muted)] max-w-2xl mx-auto">
-              Haqiqiy Bluebook interfeysi, rasmiy College Board va SAT Tashkent testlari, 2-bosqichli adaptiv Multistage Testing (MST) marshrutlash tizimi va Desmos integratsiyasi.
+              Authentic Bluebook testing interface, official College Board and SAT Tashkent test forms, 2-stage adaptive Multistage Testing (MST) routing engine, and embedded Desmos calculator.
             </p>
           </div>
 
@@ -596,14 +597,14 @@ export default function BluebookMockPage() {
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-main)] text-xs text-[var(--text-secondary)]">
                     <div
                       className="flex items-center gap-1.5"
-                      title="Digital SAT rasmiy vaqti: 2 modul RW (64 daq) + 2 modul Math (70 daq) = 134 daqiqa (+10 daq tanaffus)"
+                      title="Digital SAT timing: 2 RW modules (64 min) + 2 Math modules (70 min) = 134 minutes (+10 min break)"
                     >
                       <Clock className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
-                      <span>134 daqiqa (2s 14d)</span>
+                      <span>134 min (2h 14m)</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Layers className="w-3.5 h-3.5 text-[var(--accent-amber)]" />
-                      <span>4 Adaptiv Modul</span>
+                      <span>4 Adaptive Modules</span>
                     </div>
                   </div>
                 </div>
@@ -616,7 +617,7 @@ export default function BluebookMockPage() {
                     }}
                     className="w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 active:scale-95"
                   >
-                    <span>Imtihonni Boshlash</span>
+                    <span>Start Practice Test</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -629,11 +630,11 @@ export default function BluebookMockPage() {
             <div className="flex items-start md:items-center gap-3">
               <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5 md:mt-0" />
               <span className="leading-relaxed">
-                <strong>Rasmiy Digital SAT (Bluebook) vaqti va formati:</strong> Jami 98 ta savol, 4 ta adaptiv modul. 
-                Reading & Writing: 2 modul x 32 daqiqa (64 daqiqa, 54 savol). 
-                Bo'limlar o'rtasida 10 daqiqalik rasmiy tanaffus. 
-                Math: 2 modul x 35 daqiqa (70 daqiqa, 44 savol). 
-                Jami sof sinov vaqti: <strong>134 daqiqa (2 soat 14 daqiqa)</strong>. Har bir modul topshirilgach, avvalgi modulga qaytib bo'lmaydi.
+                <strong>Official Digital SAT (Bluebook) Structure & Timing:</strong> 98 total questions across 4 adaptive modules. 
+                Reading & Writing: 2 modules × 32 minutes (64 minutes, 54 questions). 
+                10-minute scheduled break between sections. 
+                Math: 2 modules × 35 minutes (70 minutes, 44 questions). 
+                Total active testing time: <strong>134 minutes (2 hours 14 minutes)</strong>. Once a module is submitted, you cannot return to previous questions.
               </span>
             </div>
             <Link
@@ -832,36 +833,42 @@ export default function BluebookMockPage() {
 
         {/* Confirmation Modal */}
         {showLeaveConfirmation && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-              <div className="flex items-center gap-3 text-amber-500">
-                <AlertCircle className="w-6 h-6" />
-                <h3 className="text-lg font-bold text-[var(--text-main)]">Are you sure you want to end this module?</h3>
-              </div>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Once you submit and end this module, you cannot return to these questions or change your answers.
-                {unansweredCount > 0 && (
-                  <span className="block mt-2 font-bold text-rose-500">
-                    Warning: You still have {unansweredCount} unanswered questions!
-                  </span>
-                )}
-              </p>
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-main)]">
-                <button
-                  onClick={() => setShowLeaveConfirmation(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition"
-                >
-                  Continue Reviewing
-                </button>
-                <button
-                  onClick={submitCurrentModule}
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition"
-                >
-                  Yes, End Module
-                </button>
+          <Portal>
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-hidden"
+            >
+              <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl my-auto">
+                <div className="flex items-center gap-3 text-amber-500">
+                  <AlertCircle className="w-6 h-6" />
+                  <h3 className="text-lg font-bold text-[var(--text-main)]">Are you sure you want to end this module?</h3>
+                </div>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                  Once you submit and end this module, you cannot return to these questions or change your answers.
+                  {unansweredCount > 0 && (
+                    <span className="block mt-2 font-bold text-rose-500">
+                      Warning: You still have {unansweredCount} unanswered questions!
+                    </span>
+                  )}
+                </p>
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-main)]">
+                  <button
+                    onClick={() => setShowLeaveConfirmation(false)}
+                    className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition"
+                  >
+                    Continue Reviewing
+                  </button>
+                  <button
+                    onClick={submitCurrentModule}
+                    className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition"
+                  >
+                    Yes, End Module
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </Portal>
         )}
       </div>
     );
@@ -1357,24 +1364,24 @@ export default function BluebookMockPage() {
                       {/* Expandable Explanation Body */}
                       {isExpanded && (
                         <div className="mt-4 pt-4 border-t border-[var(--border-main)] space-y-3 text-xs leading-relaxed animate-in fade-in duration-200">
-                          {q.explanationUz && (
+                          {q.explanationEn && (
                             <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
                               <span className="font-bold text-[var(--text-main)] block mb-1">
-                                💡 Conceptual Breakdown & Intuition:
+                                Official College Board Explanation:
                               </span>
                               <div className="text-[var(--text-secondary)]">
-                                <KaTeXMath content={q.explanationUz} />
+                                <KaTeXMath content={q.explanationEn} />
                               </div>
                             </div>
                           )}
 
-                          {q.explanationEn && (
+                          {q.explanationUz && !q.explanationEn && (
                             <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
                               <span className="font-bold text-[var(--text-main)] block mb-1">
-                                🇺🇸 Official College Board Explanation:
+                                Conceptual Breakdown & Intuition:
                               </span>
                               <div className="text-[var(--text-secondary)]">
-                                <KaTeXMath content={q.explanationEn} />
+                                <KaTeXMath content={q.explanationUz} />
                               </div>
                             </div>
                           )}
@@ -1892,80 +1899,102 @@ export default function BluebookMockPage() {
 
       {/* ================= MODAL: DIRECTIONS ================= */}
       {showDirections && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 md:p-8 max-w-lg w-full space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-[var(--text-main)] flex items-center gap-2">
-                <Info className="w-5 h-5 text-[var(--accent-blue)]" />
-                Official Section Directions
-              </h3>
-              <button onClick={() => setShowDirections(false)} className="text-[var(--text-muted)] hover:text-[var(--text-main)]">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="text-xs text-[var(--text-secondary)] leading-relaxed space-y-3">
-              {currentSection === "READING_WRITING" ? (
-                <>
-                  <p>
-                    <strong>Reading and Writing Section:</strong> Divided into 2 modules. You have 32 minutes to answer the questions in each module.
-                  </p>
-                  <p>
-                    Each question features one or more short passages, possibly with an accompanying table or chart. Read each passage and prompt carefully, then choose the best answer from the four choices (A, B, C, D). Each question has exactly one correct answer.
-                  </p>
-                  <p>
-                    <strong>Test Strategy:</strong> There is no penalty for guessing. We strongly recommend selecting an answer for every single question before time runs out.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p>
-                    <strong>Math Section:</strong> Divided into 2 adaptive modules. You have 35 minutes to complete each module.
-                  </p>
-                  <p>
-                    An embedded official Desmos graphing calculator is available throughout all math questions. A reference sheet of formulas is accessible at any time from the top toolbar.
-                  </p>
-                  <p>
-                    Approximately 75% of questions are multiple-choice, and 25% are Student-Produced Response (SPR) where you enter the numeric value directly into the grid.
-                  </p>
-                </>
-              )}
-            </div>
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setShowDirections(false)}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white"
-              >
-                Close Directions
-              </button>
+        <Portal>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-hidden"
+            onClick={() => setShowDirections(false)}
+          >
+            <div
+              className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl p-6 md:p-8 max-w-lg w-full space-y-4 shadow-2xl my-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-[var(--text-main)] flex items-center gap-2">
+                  <Info className="w-5 h-5 text-[var(--accent-blue)]" />
+                  Official Section Directions
+                </h3>
+                <button onClick={() => setShowDirections(false)} className="text-[var(--text-muted)] hover:text-[var(--text-main)]">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="text-xs text-[var(--text-secondary)] leading-relaxed space-y-3">
+                {currentSection === "READING_WRITING" ? (
+                  <>
+                    <p>
+                      <strong>Reading and Writing Section:</strong> Divided into 2 modules. You have 32 minutes to answer the questions in each module.
+                    </p>
+                    <p>
+                      Each question features one or more short passages, possibly with an accompanying table or chart. Read each passage and prompt carefully, then choose the best answer from the four choices (A, B, C, D). Each question has exactly one correct answer.
+                    </p>
+                    <p>
+                      <strong>Test Strategy:</strong> There is no penalty for guessing. We strongly recommend selecting an answer for every single question before time runs out.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      <strong>Math Section:</strong> Divided into 2 adaptive modules. You have 35 minutes to complete each module.
+                    </p>
+                    <p>
+                      An embedded official Desmos graphing calculator is available throughout all math questions. A reference sheet of formulas is accessible at any time from the top toolbar.
+                    </p>
+                    <p>
+                      Approximately 75% of questions are multiple-choice, and 25% are Student-Produced Response (SPR) where you enter the numeric value directly into the grid.
+                    </p>
+                  </>
+                )}
+              </div>
+              <div className="pt-2 flex justify-end">
+                <button
+                  onClick={() => setShowDirections(false)}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white"
+                >
+                  Close Directions
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </Portal>
       )}
 
       {/* ================= MODAL: 5 MINUTES LEFT ALERT ================= */}
       {showFiveMinAlert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-[var(--bg-card)] border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center">
-            <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto">
-              <Clock className="w-6 h-6 animate-pulse" />
+        <Portal>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-hidden"
+          >
+            <div className="bg-[var(--bg-card)] border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center my-auto">
+              <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto">
+                <Clock className="w-6 h-6 animate-pulse" />
+              </div>
+              <h3 className="text-base font-bold text-[var(--text-main)]">5 Minutes Remaining!</h3>
+              <p className="text-xs text-[var(--text-muted)]">
+                You have 5 minutes remaining in this module. Review any unanswered or flagged questions before time runs out.
+              </p>
+              <button
+                onClick={() => setShowFiveMinAlert(false)}
+                className="w-full py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950"
+              >
+                Continue Testing
+              </button>
             </div>
-            <h3 className="text-base font-bold text-[var(--text-main)]">5 Minutes Remaining!</h3>
-            <p className="text-xs text-[var(--text-muted)]">
-              You have 5 minutes remaining in this module. Review any unanswered or flagged questions before time runs out.
-            </p>
-            <button
-              onClick={() => setShowFiveMinAlert(false)}
-              className="w-full py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold"
-            >
-              Continue Testing
-            </button>
           </div>
-        </div>
+        </Portal>
       )}
 
       {/* ================= MODAL: FORMULA & INVARIANTS REFERENCE SHEET ================= */}
       {showFormulaSheet && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+        <Portal>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md overflow-hidden"
+            onClick={() => setShowFormulaSheet(false)}
+          >
           <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh] overscroll-contain">
             <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
               <div className="flex items-center gap-2">
@@ -2178,12 +2207,13 @@ export default function BluebookMockPage() {
                 onClick={() => setShowFormulaSheet(false)}
                 className="px-5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-[var(--text-main)] transition"
               >
-                Yopish
+                Close Sheet
               </button>
             </div>
           </div>
         </div>
-      )}
+      </Portal>
+    )}
 
       {/* ================= DESMOS FLOATING PANEL ================= */}
       {isDesmosOpen && (

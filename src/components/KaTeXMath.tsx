@@ -10,10 +10,27 @@ interface KaTeXMathProps {
   className?: string;
 }
 
-export default function KaTeXMath({ content, mathText, className = "" }: KaTeXMathProps) {
+export default React.memo(function KaTeXMath({ content, mathText, className = "" }: KaTeXMathProps) {
   const actualContent = content ?? mathText ?? "";
   const renderedContent = useMemo(() => {
     if (!actualContent) return "";
+
+    // Ultra-fast path for plain single-line text without LaTeX, markdown, or special formatting
+    if (
+      !actualContent.includes("$") &&
+      !actualContent.includes("\\") &&
+      !actualContent.includes("*") &&
+      !actualContent.includes("`") &&
+      !actualContent.includes("|") &&
+      !actualContent.includes("#") &&
+      !actualContent.includes("<") &&
+      !actualContent.includes(">") &&
+      !actualContent.includes("\n") &&
+      !actualContent.includes("^") &&
+      !actualContent.includes("_")
+    ) {
+      return actualContent;
+    }
 
     let text = actualContent;
     const tokens: { id: string; html: string }[] = [];
@@ -197,4 +214,4 @@ export default function KaTeXMath({ content, mathText, className = "" }: KaTeXMa
       dangerouslySetInnerHTML={{ __html: renderedContent }}
     />
   );
-}
+});
