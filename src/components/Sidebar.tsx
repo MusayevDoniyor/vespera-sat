@@ -108,6 +108,7 @@ export default function Sidebar() {
               <button
                 onClick={toggleSidebar}
                 title="Collapse Sidebar (Ctrl+B)"
+                aria-label="Collapse Sidebar"
                 className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
               >
                 <PanelLeftClose size={16} />
@@ -118,6 +119,7 @@ export default function Sidebar() {
               <Link
                 href="/"
                 title="Vespera SAT"
+                aria-label="Vespera SAT Home"
                 className="p-1 rounded-xl hover:bg-[var(--bg-surface)] transition-all flex items-center justify-center"
               >
                 <VesperaLogo size={32} />
@@ -125,6 +127,7 @@ export default function Sidebar() {
               <button
                 onClick={toggleSidebar}
                 title="Expand Sidebar (Ctrl+B)"
+                aria-label="Expand Sidebar"
                 className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors mt-0.5"
               >
                 <PanelLeftOpen size={16} />
@@ -226,6 +229,7 @@ export default function Sidebar() {
                   <button
                     onClick={openOnboarding}
                     title="Customize SAT Goals & Level"
+                    aria-label="Customize SAT Goals & Level"
                     className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition-colors"
                   >
                     <Sliders size={14} />
@@ -233,6 +237,7 @@ export default function Sidebar() {
                   <button
                     onClick={logout}
                     title="Sign Out"
+                    aria-label="Sign Out"
                     className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
                   >
                     <LogOut size={14} />

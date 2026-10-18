@@ -1,15 +1,28 @@
 import { MetadataRoute } from "next";
+import { getAllKhanUnitIds } from "@/lib/khan-textbook-units";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://vespera.academy";
   const now = new Date();
 
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: now,
       changeFrequency: "daily",
       priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/curriculum`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/desmos`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/math`,
@@ -24,19 +37,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/desmos`,
+      url: `${baseUrl}/mock`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.85,
     },
     {
-      url: `${baseUrl}/curriculum`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/mock`,
+      url: `${baseUrl}/satashkent`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8,
@@ -45,7 +52,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/error-log`,
       lastModified: now,
       changeFrequency: "weekly",
-      priority: 0.7,
+      priority: 0.75,
     },
   ];
+
+  const unitRoutes: MetadataRoute.Sitemap = getAllKhanUnitIds().map((unitId) => ({
+    url: `${baseUrl}/curriculum/units/${unitId}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.85,
+  }));
+
+  return [...staticRoutes, ...unitRoutes];
 }

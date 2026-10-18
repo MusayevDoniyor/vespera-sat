@@ -244,12 +244,12 @@ export default function UnitDiagrams({ type }: DiagramProps) {
               <span>NOT PROVIDED (MUST MEMORIZE 100%!)</span>
             </div>
             <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-2 list-disc pl-4 font-medium">
-              <li><KaTeXMath mathText="**Quadratic Formula:** $x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$" /></li>
-              <li><KaTeXMath mathText="**Parabola Vertex:** $x_v = -\frac{b}{2a}$, $y_v = f(x_v)$" /></li>
+              <li><KaTeXMath mathText="**Quadratic Formula:** $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$" /></li>
+              <li><KaTeXMath mathText="**Parabola Vertex:** $x_v = -\\frac{b}{2a}$, $y_v = f(x_v)$" /></li>
               <li><KaTeXMath mathText="**Vieta's Formulas:** $r_1 + r_2 = -b/a$, $r_1 r_2 = c/a$" /></li>
               <li><KaTeXMath mathText="**Discriminant Rules:** $D = b^2 - 4ac$" /></li>
               <li><KaTeXMath mathText="**Circle Standard Form:** $(x-h)^2 + (y-k)^2 = r^2$" /></li>
-              <li><KaTeXMath mathText="**Slope Formula:** $m = \frac{y_2 - y_1}{x_2 - x_1}$" /></li>
+              <li><KaTeXMath mathText="**Slope Formula:** $m = \\frac{y_2 - y_1}{x_2 - x_1}$" /></li>
             </ul>
           </div>
         </div>
@@ -262,10 +262,10 @@ export default function UnitDiagrams({ type }: DiagramProps) {
       <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
-            <KaTeXMath mathText="Linear Graph: Slope ($m = \frac{\Delta y}{\Delta x}$) & Intercept ($b$)" />
+            <KaTeXMath mathText="Linear Graph: Slope ($m = \\frac{\\Delta y}{\\Delta x}$) & Intercept ($b$)" />
           </h4>
           <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-500/30 font-bold">
-            <KaTeXMath mathText="$y = \frac{3}{2}x + 1$" />
+            <KaTeXMath mathText="$y = \\frac{3}{2}x + 1$" />
           </span>
         </div>
 
@@ -452,7 +452,7 @@ export default function UnitDiagrams({ type }: DiagramProps) {
             <strong>Parallel Lines:</strong> Identical slopes (<KaTeXMath mathText="$m_1 = m_2$" />), different intercepts. They never intersect (No Solution).
           </div>
           <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30 text-rose-950 dark:text-rose-200">
-            <strong>Perpendicular Lines:</strong> Negative reciprocal slopes (<KaTeXMath mathText="$m_1 \cdot m_2 = -1$" /> or <KaTeXMath mathText="$m_2 = -\frac{1}{m_1}$" />). Intersect at a right angle (<KaTeXMath mathText="$90^\circ$" />).
+            <strong>Perpendicular Lines:</strong> Negative reciprocal slopes (<KaTeXMath mathText="$m_1 \\cdot m_2 = -1$" /> or <KaTeXMath mathText="$m_2 = -\\frac{1}{m_1}$" />). Intersect at a right angle (<KaTeXMath mathText="$90^\\circ$" />).
           </div>
         </div>
       </div>
@@ -692,6 +692,45 @@ export default function UnitDiagrams({ type }: DiagramProps) {
           </span>
         </div>
 
+        {/* Parabola Visual SVG Curve */}
+        <div className="w-full overflow-x-auto flex justify-center mb-5">
+          <svg viewBox="0 0 460 220" className="w-full max-w-[480px] font-sans">
+            {/* Grid & Axes */}
+            <line x1="30" y1="160" x2="430" y2="160" stroke="#64748b" strokeWidth="1.5" />
+            <line x1="160" y1="20" x2="160" y2="200" stroke="#64748b" strokeWidth="1.5" />
+            <text x="420" y="152" fill="#64748b" fontSize="11" fontWeight="bold">x</text>
+            <text x="168" y="32" fill="#64748b" fontSize="11" fontWeight="bold">y</text>
+
+            {/* Parabola Curve y = -(x-280)^2 + 60 */}
+            <path
+              d="M 170 200 Q 280 -60 390 200"
+              fill="none"
+              stroke="#6366f1"
+              strokeWidth="3"
+            />
+
+            {/* Axis of Symmetry (Dashed Line) */}
+            <line x1="280" y1="30" x2="280" y2="190" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="4,4" />
+            <text x="285" y="195" fill="#f59e0b" fontSize="10" fontWeight="bold">Axis: x = h</text>
+
+            {/* Vertex (h, k) */}
+            <circle cx="280" cy="50" r="6" fill="#f59e0b" stroke="#78350f" strokeWidth="2" />
+            <rect x="230" y="20" width="100" height="22" rx="6" fill="#1e293b" className="dark:fill-slate-800" stroke="#f59e0b" strokeWidth="1" />
+            <text x="280" y="35" fill="#fde68a" fontSize="11" textAnchor="middle" fontWeight="bold">Vertex (h, k)</text>
+
+            {/* Zeros / x-intercepts r1 and r2 */}
+            <circle cx="202" cy="160" r="5" fill="#10b981" />
+            <text x="178" y="152" fill="#10b981" fontSize="11" fontWeight="bold">r₁ (Zero)</text>
+
+            <circle cx="358" cy="160" r="5" fill="#10b981" />
+            <text x="365" y="152" fill="#10b981" fontSize="11" fontWeight="bold">r₂ (Zero)</text>
+
+            {/* y-intercept */}
+            <circle cx="160" cy="180" r="4.5" fill="#3b82f6" />
+            <text x="95" y="184" fill="#3b82f6" fontSize="10" fontWeight="bold">y-int (0, c)</text>
+          </svg>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
           <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
             <span className="text-[10px] uppercase font-bold text-blue-700 dark:text-blue-400 font-mono">1. Standard Form</span>
@@ -810,6 +849,35 @@ export default function UnitDiagrams({ type }: DiagramProps) {
           </span>
         </div>
 
+        {/* Special Triangles SVG Visualizer */}
+        <div className="w-full overflow-x-auto flex justify-center mb-5">
+          <svg viewBox="0 0 520 185" className="w-full max-w-[540px] font-sans">
+            {/* 45-45-90 Triangle */}
+            <g transform="translate(40, 15)">
+              <polygon points="0,130 130,130 0,0" fill="#3b82f6" fillOpacity="0.12" stroke="#3b82f6" strokeWidth="2.5" />
+              <rect x="0" y="115" width="15" height="15" fill="none" stroke="#3b82f6" strokeWidth="1.5" />
+              <text x="-15" y="70" fill="#1d4ed8" className="dark:fill-blue-300" fontSize="12" fontWeight="bold">x</text>
+              <text x="65" y="148" fill="#1d4ed8" className="dark:fill-blue-300" textAnchor="middle" fontSize="12" fontWeight="bold">x</text>
+              <text x="75" y="60" fill="#2563eb" className="dark:fill-blue-400" fontSize="12" fontWeight="bold">x√2</text>
+              <text x="15" y="25" fill="#64748b" fontSize="10" fontWeight="bold">45°</text>
+              <text x="105" y="122" fill="#64748b" fontSize="10" fontWeight="bold">45°</text>
+              <text x="65" y="168" textAnchor="middle" fill="#0f172a" className="dark:fill-white" fontSize="11" fontWeight="bold">45°-45°-90° (x : x : x√2)</text>
+            </g>
+
+            {/* 30-60-90 Triangle */}
+            <g transform="translate(290, 15)">
+              <polygon points="0,130 170,130 0,35" fill="#10b981" fillOpacity="0.12" stroke="#10b981" strokeWidth="2.5" />
+              <rect x="0" y="115" width="15" height="15" fill="none" stroke="#10b981" strokeWidth="1.5" />
+              <text x="-25" y="90" fill="#047857" className="dark:fill-emerald-300" fontSize="12" fontWeight="bold">x (Short)</text>
+              <text x="85" y="148" fill="#047857" className="dark:fill-emerald-300" textAnchor="middle" fontSize="12" fontWeight="bold">x√3 (Long)</text>
+              <text x="95" y="75" fill="#059669" className="dark:fill-emerald-400" fontSize="12" fontWeight="bold">2x (Hyp)</text>
+              <text x="15" y="55" fill="#64748b" fontSize="10" fontWeight="bold">60°</text>
+              <text x="135" y="122" fill="#64748b" fontSize="10" fontWeight="bold">30°</text>
+              <text x="85" y="168" textAnchor="middle" fill="#0f172a" className="dark:fill-white" fontSize="11" fontWeight="bold">30°-60°-90° (x : x√3 : 2x)</text>
+            </g>
+          </svg>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
           <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
             <span className="text-[10px] uppercase font-bold text-blue-700 dark:text-blue-400 font-mono">1. 45°-45°-90° Triangle</span>
@@ -867,6 +935,38 @@ export default function UnitDiagrams({ type }: DiagramProps) {
           <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30 font-bold">
             (x - h)² + (y - k)² = r²
           </span>
+        </div>
+
+        {/* Circle Standard Form Coordinate SVG */}
+        <div className="w-full overflow-x-auto flex justify-center mb-5">
+          <svg viewBox="0 0 460 220" className="w-full max-w-[480px] font-sans">
+            {/* Axes */}
+            <line x1="30" y1="160" x2="430" y2="160" stroke="#64748b" strokeWidth="1.5" />
+            <line x1="140" y1="20" x2="140" y2="200" stroke="#64748b" strokeWidth="1.5" />
+            <text x="420" y="152" fill="#64748b" fontSize="11" fontWeight="bold">x</text>
+            <text x="148" y="32" fill="#64748b" fontSize="11" fontWeight="bold">y</text>
+
+            {/* Circle centered at (270, 90) with radius 65 */}
+            <circle cx="270" cy="90" r="65" fill="#06b6d4" fillOpacity="0.1" stroke="#06b6d4" strokeWidth="2.5" />
+
+            {/* Center (h, k) */}
+            <circle cx="270" cy="90" r="5" fill="#0891b2" stroke="#164e63" strokeWidth="1.5" />
+            <text x="270" y="112" fill="#0e7490" className="dark:fill-cyan-300" fontSize="11" textAnchor="middle" fontWeight="bold">Center (h, k)</text>
+
+            {/* Radius Line to (x, y) */}
+            <line x1="270" y1="90" x2="328" y2="60" stroke="#f59e0b" strokeWidth="2.5" />
+            <text x="295" y="70" fill="#f59e0b" fontSize="11" fontWeight="bold">Radius r</text>
+
+            {/* Point (x, y) on circle */}
+            <circle cx="328" cy="60" r="4.5" fill="#f59e0b" />
+            <text x="336" y="58" fill="#f59e0b" fontSize="10" fontWeight="bold">(x, y)</text>
+
+            {/* Dashed projections to show Pythagorean nature: (x-h)^2 + (y-k)^2 = r^2 */}
+            <line x1="270" y1="90" x2="328" y2="90" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3,3" />
+            <line x1="328" y1="90" x2="328" y2="60" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3,3" />
+            <text x="298" y="102" fill="#64748b" fontSize="9" fontWeight="bold">Δx = x - h</text>
+            <text x="334" y="80" fill="#64748b" fontSize="9" fontWeight="bold">Δy = y - k</text>
+          </svg>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">

@@ -128,6 +128,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               href="/curriculum"
               className="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)]"
               title="Back to Curriculum"
+              aria-label="Back to Curriculum"
             >
               <ArrowLeft size={16} />
             </Link>
@@ -150,6 +151,7 @@ export default function UnitTextbookClient({ unit }: Props) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDesmosSplit(!showDesmosSplit)}
+              aria-label="Toggle Desmos Graphing Calculator"
               className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
                 showDesmosSplit
                   ? "bg-cyan-600 text-white border-cyan-500 shadow-sm"
@@ -165,6 +167,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 href={`/curriculum/units/${unit.prevUnitId}`}
                 className="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
                 title="Previous Unit"
+                aria-label="Previous Unit"
               >
                 <ArrowLeft size={16} />
               </Link>
@@ -175,6 +178,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 href={`/curriculum/units/${unit.nextUnitId}`}
                 className="px-3 py-1.5 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1.5 shadow-sm"
                 title="Next Unit"
+                aria-label="Next Unit"
               >
                 <span>Next Unit</span>
                 <ArrowRight size={14} />
@@ -536,6 +540,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                   onClick={handleResetQuiz}
                   className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-blue-500 transition-colors"
                   title="Reset Quiz"
+                  aria-label="Reset Quiz"
                 >
                   <RotateCcw size={16} />
                 </button>
