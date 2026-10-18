@@ -1,0 +1,382 @@
+
+<<<PAGE_1>>>
+SA T Math Easy Practice Quiz
+Numbers and Operations
+1. Aubrey can run at a pace of 6 miles per hour. Running
+at the same rate, how many miles can she run in 90
+minutes?
+(A) 4
+(B) 6
+(C) 8
+(D) 9
+(E) 12
+2. Which of the following is a factor of 15 + 45 ?
+(A) 18
+(B) 25
+(C) 30
+(D) 35
+(E) 45
+3. Which of the following is NOT a positive multiple of
+9 + 3 ?
+(A) 3
+(B) 12
+(C) 24
+(D) 48
+(E) 60
+x, 2 x, 4 x, . . .
+4. The ﬁrst term in the sequence above is x, and each term
+thereafter is equal to twice the previous term. Which
+of the following is the sum of the ﬁrst ﬁve terms of this
+sequence?
+(A) 10 x
+(B) 15 x
+(C) 30 x
+(D) 31 x
+(E) 32 x
+5. A number is divided by four. The result is divided by
+three, for a ﬁnal result of two. What was the original
+number?
+(A) 6
+(B) 12
+(C) 18
+(D) 24
+(E) 36
+6. A farmer can pick 12 cabbages in 1 hour. Working at the
+same rate, how long in hours would it take two farmers
+to pick 48 cabbages?
+(A) 1
+(B) 2
+(C) 4
+(D) 6
+(E) 8
+abcdeabcdeabc . . .
+7. In the sequence of letters shown above, the ﬁrst letter is
+a, followed by b, c, d, and e, at which point the pattern
+repeats. Which of the following is the 31 st letter in this
+sequence?
+(A) a
+(B) b
+(C) c
+(D) d
+(E) e
+8. The month of July has 31 days. What is the greatest
+possible number of Saturdays that can occur in July?
+www.erikthered.com/tutor pg. 1
+<<<PAGE_2>>>
+SA T Math Easy Practice Quiz
+9. Bill is 27 years older than Ted, who is 38 years younger
+than Amy. In how many years will Bill be the same age
+as Amy is now?
+10. Aubrey can walk 3000 feet in 10 minutes. Walking at the
+same rate, how many feet can she walk in 10 seconds?
+All cabbages are red.
+11. Which of the following statements shows that the state-
+ment above is F ALSE?
+(A) David is eating a red apple.
+(B) Bill is eating a green apple.
+(C) Alice is not eating a red cabbage.
+(D) Ted is eating a red cabbage.
+(E) Keisha is eating a green cabbage.
+12. When a particular number is added to its own reciprocal,
+the resulting sum is −2. The number is which of the
+following?
+(A) −2
+(B) −1
+(C) − 12
+(D) 1
+(E) 2
+13. Two consecutive integers m and n are prime numbers.
+Which of the following is equal to mn ?
+(A) 1
+(B) 2
+(C) 6
+(D) 9
+(E) 15
+www.erikthered.com/tutor pg. 2
+<<<PAGE_3>>>
+SA T Math Easy Practice Quiz
+Algebra and Functions
+1. If x + 1 = 23, what is the value of 3 x + 3 ?
+(A) 22
+(B) 46
+(C) 66
+(D) 69
+(E) 72
+2. If √2x + 4 = √36, what is the value of x ?
+(A) 1
+(B) 6
+(C) 8
+(D) 12
+(E) 16
+3. If 2 a + 3b = 12, and 3 b − 4 = 2, then what is the value
+of a ?
+(A) 2
+(B) 3
+(C) 4
+(D) 6
+(E) 8
+4. For all numbers x, y, and z, let x y z be deﬁned by
+x y z = x − y + z. What is the value of 1 2 3 ?
+(A) 1
+(B) 2
+(C) 3
+(D) 4
+(E) 5
+x 1 2 3 4 5 6
+g(x) 3 11 19 27 a 43
+5. The table above deﬁnes several values of the linear func-
+tion g. What is the value of a ?
+(A) 31
+(B) 33
+(C) 35
+(D) 37
+(E) 41
+6. A pool that is being drained contains 300 − 6t gallons of
+water after t minutes of draining. How many gallons of
+water does the pool contain after 15 minutes of draining?
+7. If x + 1 = 7, what is the value of x2 + 2x + 1 ?
+(A) 36
+(B) 37
+(C) 48
+(D) 49
+(E) 81
+8. Which of the following expressions is equivalent to 12 less
+than the product of x and y ?
+(A) 12 − xy
+(B) xy − 12
+(C) 12 − (x + y)
+(D) ( x + y) − 12
+(E) 12 xy
+www.erikthered.com/tutor pg. 3
+<<<PAGE_4>>>
+SA T Math Easy Practice Quiz
+9. If 3x = 13 and 2 y = 7, what is the value of 3(2 x)−2(3y) ?
+10. If 3 m−3 + 3m−3 = 18, what is the value of m ?
+(A) 3
+(B) 4
+(C) 5
+(D) 6
+(E) 9
+11. If 2 x = 5, 3 y = 4, and 4 z = 3, what is the value of
+24xyz ?
+(A) 12
+(B) 18
+(C) 36
+(D) 48
+(E) 60
+12. If x2 = 4, then which of the following could be the value
+of x3 ?
+(A) −8
+(B) −4
+(C) 2
+(D) 6
+(E) 12
+3m < 13
+2m > 7
+13. If m is an integer that satisﬁes the equations above, what
+is the value of m ?
+(A) 0
+(B) 2
+(C) 3
+(D) 4
+(E) 5
+www.erikthered.com/tutor pg. 4
+<<<PAGE_5>>>
+SA T Math Easy Practice Quiz
+Geometry
+y
+x
+(0, 2)
+l
+O
+1. In the ﬁgure above, line l is perpendicular to the y-axis
+and a distance of two units from the x-axis. Which of
+the following points is on line l ?
+(A) ( −1, 2)
+(B) ( −2, 1)
+(C) (2 , 3)
+(D) (3 , 1)
+(E) (4 , 3)
+lx◦2x◦x◦
+2. In the ﬁgure above, two line segments meet at a point on
+line l. What is the value of x ?
+6A
+B C
+D
+3. In the ﬁgure above, ABCD is a rectangle. If AD = 6,
+which of the following could be the length of AC ?
+(A) 3
+(B) 4
+(C) 5
+(D) 6
+(E) 7
+O
+4. A portion of the circle with center O is shaded as in the
+ﬁgure above. If the area of the shaded region is 12 π, and
+1
+6 of the circle is shaded, what is the area of the circle?
+(A) 2 π
+(B) 10 π
+(C) 24 π
+(D) 48 π
+(E) 72 π
+lP 2x◦x◦
+5. A square is tangent to a line at point P in the ﬁgure
+above. What is the value of x ?
+6. A particular cube has edges of length 2. If half the faces
+are painted green and half the faces are painted red, what
+is the total area of the faces painted green?
+www.erikthered.com/tutor pg. 5
+<<<PAGE_6>>>
+SA T Math Easy Practice Quiz
+7. The area of a particular rectangle is 72. If the length of
+the rectangle is twice the width, what is the width of the
+rectangle?
+(A) 6
+(B) 8
+(C) 10
+(D) 12
+(E) 16
+A
+B C
+D
+8. Rectangle ABCD is subdivided into two identical square
+regions, as in the ﬁgure above. If the area of each square
+is 9, what is the perimeter of ABCD ?
+www.erikthered.com/tutor pg. 6
+<<<PAGE_7>>>
+SA T Math Easy Practice Quiz
+Data, Statistics, and Probability
+x◦
+y◦
+z◦
+1. In the triangle above, what is the average (arithmetic
+mean) of x, y, and z ?
+(A) 30
+(B) 45
+(C) 60
+(D) 75
+(E) 90
+2, 4, 6, 8, 10, 12, 14, 16, 18
+2. If a number is selected at random from the list above,
+what is the probability that the number is divisible by
+3 ?
+(A) 13
+(B) 49
+(C) 59
+(D) 23
+(E) 1
+3. A basket contains turnips that are either red or white. If
+the total number of turnips in the basket is 24, and the
+probability of choosing a red turnip at random is 56 , how
+many red turnips are in the basket?
+4. Let set M = {x, 2 x, 4 x} for any number x. If the average
+(arithmetic mean) of the numbers in set M is 14, what
+is the value of x ?
+(A) 2
+(B) 6
+(C) 7
+(D) 10
+(E) 12
+www.erikthered.com/tutor pg. 7
+<<<PAGE_8>>>
+SA T Math Easy Practice Quiz
+Answers
+Numbers and Operations
+1. D (Estimated Diﬃculty Level: 1)
+2. C (Estimated Diﬃculty Level: 1)
+3. A (Estimated Diﬃculty Level: 1)
+4. D (Estimated Diﬃculty Level: 1)
+5. D (Estimated Diﬃculty Level: 1)
+6. B (Estimated Diﬃculty Level: 1)
+7. A (Estimated Diﬃculty Level: 1)
+8. 5 (Estimated Diﬃculty Level: 2)
+Hint: you need to know that there are seven days in a
+week, which means that after 28 days, there have been
+4 Saturdays.
+9. 11 (Estimated Diﬃculty Level: 2)
+Hint: make up a number for Bill’s age.
+10. 50 (Estimated Diﬃculty Level: 2)
+Hint: you need to know that one minute equals 60 sec-
+onds. How many seconds are in 10 minutes?
+11. E (Estimated Diﬃculty Level: 2)
+Hint: you need a statement that mentions a cabbage
+which isn’t red.
+12. B (Estimated Diﬃculty Level: 2)
+Hint: work with the answers to make this particular
+problem really easy.
+13. C (Estimated Diﬃculty Level: 2)
+Hint: for the SAT you should know the ﬁrst few prime
+numbers (2, 3, 5, 7, 11, . . .) as well the meaning of
+“consecutive integers”.
+www.erikthered.com/tutor pg. 8
+<<<PAGE_9>>>
+SA T Math Easy Practice Quiz
+Algebra and Functions
+1. D (Estimated Diﬃculty Level: 1)
+2. E (Estimated Diﬃculty Level: 1)
+3. B (Estimated Diﬃculty Level: 1)
+4. B (Estimated Diﬃculty Level: 1)
+5. C (Estimated Diﬃculty Level: 1)
+6. 210 (Estimated Diﬃculty Level: 1)
+7. D (Estimated Diﬃculty Level: 2)
+Hint: you can solve for x and then plug it in. Or, you
+could notice that ( x + 1)2 = x2 + 2x + 1.
+8. B (Estimated Diﬃculty Level: 2)
+Hint: “6 less than m” is the same as m − 6 and the
+word “product” means “multiply”.
+9. 5 (Estimated Diﬃculty Level: 2)
+Hint: sometimes on the SAT, it is better not to solve
+for x, especially if the question doesn’t ask you for x.
+Here, 3(2 x) = 2(3 x) = 26 and 2(3 y) = 3(2 y) = 21, so
+that 3(2 x) − 2(3y) = 5. Who cares what x and y are?
+10. C (Estimated Diﬃculty Level: 2)
+Okay, perhaps this problem is a little harder than a
+level 2 question. But, if you work with the answers by
+plugging them in for m until the equation works, then
+this problem is really pretty easy!
+11. E (Estimated Diﬃculty Level: 2)
+Hint: 2 x · 3y · 4z = 24xyz.
+12. A (Estimated Diﬃculty Level: 2)
+Hint: if x2 = 4, then x could be either +2 or −2. Since
+people tend to forget about the negative solution to
+equations like this, the negative answer is often the cor-
+rect one on the SAT.
+13. D (Estimated Diﬃculty Level: 2)
+Hint: work with the answers to make this particular
+problem really easy.
+www.erikthered.com/tutor pg. 9
+<<<PAGE_10>>>
+SA T Math Easy Practice Quiz
+Geometry
+1. A (Estimated Diﬃculty Level: 1)
+2. 45 (Estimated Diﬃculty Level: 1)
+3. E (Estimated Diﬃculty Level: 2)
+4. E (Estimated Diﬃculty Level: 2)
+Hint: the area of the shaded region is 1 /6 times the area
+of the circle.
+5. 30 (Estimated Diﬃculty Level: 2)
+Hint: each angle of a square measures 90 ◦.
+6. 12 (Estimated Diﬃculty Level: 2)
+Hint: a cube has 6 faces, and each face is a square.
+7. A (Estimated Diﬃculty Level: 2)
+Hint: work with the answers to make this particular
+problem really easy.
+8. 18 (Estimated Diﬃculty Level: 2)
+Hint: if the area of a square is A, then the length of
+one side of the square is
+√
+A. You are probably used to
+getting the area by squaring one of the sides; the SAT
+likes to make you do things in reverse.
+www.erikthered.com/tutor pg. 10
+<<<PAGE_11>>>
+SA T Math Easy Practice Quiz
+Data, Statistics, and Probability
+1. C (Estimated Diﬃculty Level: 1)
+2. A (Estimated Diﬃculty Level: 1)
+3. 20 (Estimated Diﬃculty Level: 1)
+4. B (Estimated Diﬃculty Level: 2)
+Hint: work with the answers to make this particular
+problem really easy.
+www.erikthered.com/tutor pg. 11

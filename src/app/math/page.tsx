@@ -5,6 +5,7 @@ import QuestionCard from "@/components/QuestionCard";
 import DesmosCalculator from "@/components/DesmosCalculator";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import TopicStudyModal from "@/components/TopicStudyModal";
+import KhanAcademyUnitsView from "@/components/KhanAcademyUnitsView";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 import {
   Calculator,
@@ -19,6 +20,7 @@ import {
   AlertTriangle,
   ChevronRight,
   Layers,
+  Award,
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -66,6 +68,7 @@ function MathContent() {
   const [showVisualGuide, setShowVisualGuide] = useState(false);
   const [activeEquation, setActiveEquation] = useState<string>("");
   const [studyModalTopic, setStudyModalTopic] = useState<string | null>(null);
+  const [mathMode, setMathMode] = useState<"questions" | "units">("questions");
 
   // Sync from URL parameter
   useEffect(() => {
@@ -195,8 +198,42 @@ function MathContent() {
         </div>
       </div>
 
-      {/* User Personalized Track Banner */}
-      {user && (
+      {/* Studio Primary View Switcher */}
+      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-semibold shadow-sm overflow-x-auto scrollbar-none w-fit">
+        <button
+          onClick={() => setMathMode("questions")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap ${
+            mathMode === "questions"
+              ? "bg-[var(--accent-blue)] text-white shadow-sm font-bold"
+              : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
+          }`}
+        >
+          <Layers size={14} />
+          <span>Interactive Problem Bank & Desmos</span>
+        </button>
+
+        <button
+          onClick={() => setMathMode("units")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap ${
+            mathMode === "units"
+              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm font-bold"
+              : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
+          }`}
+        >
+          <Award size={14} />
+          <span>🎓 Khan Academy 13-Units Curriculum (0-dan)</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 font-mono font-bold">
+            13 Units
+          </span>
+        </button>
+      </div>
+
+      {mathMode === "units" ? (
+        <KhanAcademyUnitsView />
+      ) : (
+        <>
+          {/* User Personalized Track Banner */}
+          {user && (
         <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-600/10 via-cyan-500/10 to-transparent border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-blue)] animate-ping" />
@@ -469,6 +506,8 @@ function MathContent() {
           </div>
         )}
       </div>
+      </>
+      )}
 
       {/* Study Modal */}
       {studyModalTopic && (

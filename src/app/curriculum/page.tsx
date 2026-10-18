@@ -22,6 +22,7 @@ import Link from "next/link";
 import TopicStudyModal from "@/components/TopicStudyModal";
 import SATashkentVault from "@/components/SATashkentVault";
 import MathDictionary from "@/components/MathDictionary";
+import KhanAcademyUnitsView from "@/components/KhanAcademyUnitsView";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 
 // Fallback initial dataset to guarantee 0ms instant render without network delay
@@ -48,7 +49,7 @@ export default function CurriculumPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedFormula, setExpandedFormula] = useState<string | null>(null);
   const [studyModalTopicCode, setStudyModalTopicCode] = useState<string | null>(null);
-  const [mainView, setMainView] = useState<"topics" | "dictionary" | "satashkent">("topics");
+  const [mainView, setMainView] = useState<"khan" | "topics" | "dictionary" | "satashkent">("khan");
 
   // Fetch live stats and counts from database in background
   useEffect(() => {
@@ -207,6 +208,21 @@ export default function CurriculumPage() {
       {/* Primary Vault Switcher */}
       <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-semibold shadow-sm overflow-x-auto scrollbar-none">
         <button
+          onClick={() => setMainView("khan")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
+            mainView === "khan"
+              ? "bg-[var(--accent-blue)] text-white shadow-sm font-bold"
+              : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
+          }`}
+        >
+          <Award size={15} />
+          <span>🎓 Khan Academy 13-Units Curriculum</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 font-mono font-bold">
+            13 Units
+          </span>
+        </button>
+
+        <button
           onClick={() => setMainView("topics")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             mainView === "topics"
@@ -242,7 +258,9 @@ export default function CurriculumPage() {
         </Link>
       </div>
 
-      {mainView === "satashkent" ? (
+      {mainView === "khan" ? (
+        <KhanAcademyUnitsView />
+      ) : mainView === "satashkent" ? (
         <SATashkentVault />
       ) : mainView === "dictionary" ? (
         <MathDictionary />

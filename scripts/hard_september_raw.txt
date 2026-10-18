@@ -1,0 +1,491 @@
+
+<<<PAGE_1>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+12.09.2026 September Questions
+1 Real exam
+The functions f and g are defined by
+f (x) = x2 + px + 42
+and
+g(x) = x2 + 10x + 18,
+where p is a constant. The solutions to f (x) = 0 are r and s, and the solutions to g(x) = 0 are
+r + 2 and s + 2. What is the value of p?
+2 Real exam
+Right circular cylinders A and B are similar. The height of cylinder A is 10 units, and the diameter
+of its base is equal to its height. The ratio of the diameter of the base of cylinder A to the diameter
+of the base of cylinder B is
+3 : 7.
+What is the volume, in cubic units, of cylinder B?
+A) 250π
+B) 1,750π3
+C) 12,250π9
+D) 85,750π27
+September 2026 Real exam questions
+<<<PAGE_2>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+3 Real exam
+The function f is defined by
+f (x) = 3x2 + 48x + 193.
+The function g is defined by
+g(x) = f (x + 7).
+What is the minimum value of g(x)?
+A) −15
+B) −8
+C) 1
+D) 8
+4 Real exam
+The table summarizes the daily high temperatures, in degrees Fahrenheit, recorded in a town during
+the 31 days of December 2024.
+Daily high temperature, t
+(◦F) Frequency (days)
+10 < t≤ 15 1
+15 < t≤ 20 2
+20 < t≤ 25 4
+25 < t≤ 30 5
+30 < t≤ 35 7
+35 < t≤ 40 5
+40 < t≤ 45 3
+45 < t≤ 50 2
+50 < t≤ 55 2
+In January 2025, the daily high temperature in the same town was greater than 35 ◦F on 18 days.
+This number of days is p% greater than the number of days in December 2024 on which the daily
+high temperature was greater than 35 ◦F. What is the value of p?
+September 2026 Real exam questions
+<<<PAGE_3>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+5 Real exam
+h
+ℓ w
+Note: Figure not drawn to scale.
+The figure shown is a right rectangular pyramid, where ℓ = 18 units, w = 9 units, and h = 12 units.
+What is the surface area, in square units, of the pyramid?
+6 Real exam
+A sample of a certain isotope takes 29 years to decay to half its original mass. The function
+s(t) = 128(0.5)
+t
+29 gives the approximate mass of this isotope, in grams, that remains t years after a
+128-gram sample starts to decay. Which statement is the best interpretation of s(58) = 32 in this
+context?
+A) Approximately 32 grams of the sample remains 58 years after the sample starts to decay.
+B) The mass of the sample has decreased by approximately 32 grams 58 years after the sample
+starts to decay.
+C) The mass of the sample has decreased by approximately 58 grams 32 years after the sample
+starts to decay.
+D) Approximately 58 grams of the sample remains 32 years after the sample starts to decay.
+7 Real exam
+The function f is defined by f (x) = |x|a − 14, where a < 0. What is the product of f (15a) and
+f (8a)?
+September 2026 Real exam questions
+<<<PAGE_4>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+8 Real exam
+On a plot of land, 52 .0% of the square footage is farmland and the remaining square footage is
+pasture. There are buildings on exactly 21 .5% of the square footage of the farmland, and there are
+buildings on exactly 14 .0% of the square footage of the pasture. If there are buildings on exactly
+p% of the square footage of the plot of land, what is the value of p?
+9 Real exam
+y <24 − 8x
+y
+8 > 9
+Which inequality represents the x values for all solutions ( x, y) that satisfy the given system of
+inequalities in the xy-plane?
+A) x >3
+B) x <3
+C) x >−6
+D) x <−6
+10 Real exam
+When several resistors are connected in series in a circuit, the total resistance of the circuit is the
+sum of the resistances of these resistors. A certain circuit consists of 8 resistors connected in series,
+where the resistance of each resistor is positive. This circuit has a total resistance of 130 ohms.
+The total resistance of 3 resistors in this circuit is 90 ohms. Which inequality best represents all
+possible values of the resistance x, in ohms, of one of the other 5 resistors in this circuit?
+A) 0 < x <8
+B) 0 < x <40
+C) 40 < x <90
+D) 40 < x <130
+September 2026 Real exam questions
+<<<PAGE_5>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+11 Real exam
+x
+5 + y9 = 4745
+An engineer connects resistors in series, where the resistors in the series have a total resistance of
+47
+45 ohms. In this series, there are x resistors of type A, which each have a resistance of a ohms,and y resistors of type B, which each have a resistance of b ohms. The given equation represents
+this situation. According to this equation, what is the positive difference between the value of a
+and the value of b?
+A) 47
+B) 4
+C) 4745
+D) 445
+12 Real exam
+A space probe uses a square-shaped solar sail to move through space. The side length of the solar
+sail is 8.89w meters, where w is the width, in meters, of the space probe. Which equation gives the
+area A, in square meters, of the solar sail?
+A) A = (w + 8.89)(w + 8.89)
+B) A = (4)(8.89w)
+C) A = (8.89w)(8.89w)
+D) A =
+ 8.89
+w
+ 8.89
+w
+
+13 Real exam
+A moving truck rental company charges its customers $165 for the first hour of renting a truck and
+$95 for each additional hour, plus the cost of gas used. Which equation represents this situation,
+where y is the total cost, in dollars, of renting a truck from this company for x hours, w is the cost,
+in dollars, of gas used, and x ≥ 1?
+A) y = 95(x − 1) + w
+B) y = 165 + 95 +w
+C) y = 165 + 95x + w
+D) y = 165 + 95(x − 1) + w
+September 2026 Real exam questions
+<<<PAGE_6>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+14 Real exam
+The population density of Town A is 120 people per square mile, and the population density of
+Town B is 90 people per square mile. Town A has a population of 20,640 people, and Town B has
+a population of 3,870 people. The area, in square miles, of Town A is k times the area, in square
+miles, of Town B. What is the value of k?
+15 Real exam
+In 2010, a skating team had a total of 51 skaters, each classified as either advanced or intermediate.
+From 2010 to 2020, the number of advanced skaters on the team increased by approximately 59%,
+and the number of intermediate skaters on the team increased by approximately 48%. The total
+number of skaters on the team increased by approximately 53%. Which equation best represents
+this situation, where a represents the number of advanced skaters on the team in 2010 and b
+represents the number of intermediate skaters on the team in 2010?
+A) 1.48a + 1.59b = 51(1.53)
+B) 1.59a + 1.48b = 51(1.53)
+C) 1.53a + 0.59b = 51(1.48)
+D) 1.59a + 1.53b = 51(1.48)
+September 2026 Real exam questions
+<<<PAGE_7>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+16 Real exam
+C
+DB
+A E
+Note: Figure not drawn to scale.
+In the figure shown, triangle CAE is similar to triangle CBD . The measure of angle CBD is 57◦,
+and AE = 25(BD). What is the measure of angle CAE ?
+A) (25 · 57)◦
+B) (25 + 57)◦
+C) 57◦
+D) 25◦
+17 Real exam
+The shaded region shown represents the solutions to which inequality?
+x
+y
+-2 -1 1 2
+-4
+4
+8
+12
+A) y <6x − 4
+B) y >−4x + 6
+C) y >6x − 4
+D) y <−4x + 6
+September 2026 Real exam questions
+<<<PAGE_8>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+18 Real exam
+In a certain state, the population of pheasants is estimated each year by counting the number of
+pheasants observed along certain roads in the state. On average, each year from 2005 to 2015 the
+number of pheasants counted per mile of road decreased by 3 .5% of the number of pheasants per
+mile of road the previous year. Based on this average, if there were 6.22 pheasants per mile of road
+in this state in 2005, which of the following best approximates the number of pheasants per mile of
+road in 2015?
+A) 0.965(6.22)10
+B) 1.035(6.22)10
+C) 6.22(0.035)10
+D) 6.22(0.965)10
+19 Real exam
+When several resistors are connected in series in a circuit, the total resistance of the circuit is the
+sum of the resistances of these resistors. A certain circuit consists of 9 resistors connected in series,
+where the resistance of each resistor is positive. The total resistance of 4 resistors in this circuit is
+60 ohms. Each of the other 5 resistors in this circuit has a resistance of at most 25 ohms. The total
+resistance of this circuit is x ohms. Which inequality best represents this situation?
+A) 0 < x≤ 185
+B) 60 < x≤ 125
+C) 60 < x≤ 185
+D) x ≥ 125
+September 2026 Real exam questions
+<<<PAGE_9>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+20 Real exam
+18S R
+Q
+Note: Figure not drawn to scale.
+In triangle QRS shown, QR < RS. Which expression represents the length of QS?
+A) 18 cosQ
+B) 18 sinQ
+C) 18cos Q
+D) 18sin Q
+21 Real exam
+F (x) = 95 (x − 273.15) + 32
+The function F gives the temperature, in degrees Fahrenheit, that corresponds to a temperature of
+x kelvins. If a temperature increased by 2.10 kelvins, by how much did the temperature increase,
+in degrees Fahrenheit?
+A) 3.78
+B) 35.78
+C) 487.89
+D) 519.89
+September 2026 Real exam questions
+<<<PAGE_10>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+22 Real exam
+In isosceles triangle ABC , sides AB and AC are congruent. Point D divides BC such that the
+length of BD is 57 of the length of BC . Point E lies on side AB and point F lies on side AC suchthat when segments DE and DF are drawn, angle BED is congruent to angle CF D. If the length
+of BE is 10, what is the length of CF ?
+A) 4
+B) 14
+C) 50
+D) 70
+23 Real exam
+In the xy-plane, a circle has center C with coordinates ( h, k). Points A and B lie on the circle.
+Point A has coordinates
+ 
+h + 1, k +
+√
+102
+
+, and ∠ACB is a right angle. What is the length of AB?
+A)
+√
+206
+B) 2
+√
+102
+C) 103
+√
+2
+D) 103
+√
+3
+24 Real exam
+The water depth in a certain river is 78.7 feet (ft). During a 30-day period, the water depth in this
+river is predicted to increase by a minimum of 1 ft and a maximum of 3 ft. What is the predicted
+maximum water depth, in feet, during this time?
+A) 75.7
+B) 77.7
+C) 79.7
+D) 81.7
+September 2026 Real exam questions
+<<<PAGE_11>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+25 Real exam
+B
+A C
+E
+D
+Note: Figure not drawn to scale.
+In the figure shown, points A, B, C, and E lie on the circle, and AB < BC. Segment AC is
+perpendicular to segment BE at point D, and BD =
+√
+346. The diameter of the circle is 175. If
+CD
+AD = r, what is the value of r?
+26 Real exam
+The composition of an animal is defined as the muscles, bones, and fat of the animal. A scientist
+studied the composition of one young swamp buffalo and determined the buffalo had 133 kilograms
+of muscle, which made up approximately 65 .9% of its composition. Of the remaining composi-
+tion of this buffalo, approximately 46 .2% was bone, and the remainder was fat. Based on these
+approximations, to the nearest tenth, how many kilograms of this buffalo’s composition was bone?
+September 2026 Real exam questions
+<<<PAGE_12>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+27 Real exam
+Right rectangular prism X is similar to right rectangular prism Y . The surface area of right
+rectangular prism X is 56 square centimeters (cm 2), and the surface area of right rectangular
+prism Y is 896 square centimeters (cm 2). The volume of right rectangular prism Y is 1,536 cubic
+centimeters (cm3). What is the sum of the volumes, in cm 3, of right rectangular prism X and right
+rectangular prism Y ?
+28 Real exam
+A clothing store buys shirts at a wholesale price of 5.00 dollars each and resells them each at a price
+that is 270% of the wholesale price. At the end of the season, any remaining shirts are marked at
+a discounted price that is 70% of the retail price. What is the discounted price of each remaining
+shirt, in dollars?
+September 2026 Real exam questions
+<<<PAGE_13>>>
+P
+√x
+π
+R
+x2
+∞
+θ ∆
+f (x)
+α
+≈
+∠
+% P
+Fazliddin Muxammadiyev Telegram: @satmath 1
+29 Real exam
+The function g is defined by g(x) = −
+√
+x2 + bx + c, where b and c are integers. In the xy-plane,
+the graph of y = g(x) passes through the points (2 , 0) and
+ 
+0, −
+√
+299
+
+. If m is a value for which
+g(m) = 0, what is the greatest possible value of m?
+A) −150
+B) 2
+C) 148
+D) 150
+30 Real exam
+Each 3.0-ounce serving of cheddar cheese and each 1.2-ounce serving of tuna provides about 1
+microgram of vitamin B12. If a total of 3.5 micrograms of vitamin B12 are consumed from eating
+x ounces of cheese and y ounces of tuna, which equation best represents this situation?
+A) 0.33x + 0.33y = 3.5
+B) 3.0x + 1.2y = 3.5
+C) 1.2x + 3.0y = 3.5
+D) 0.33x + 0.83y = 3.5
+September 2026 Real exam questions
