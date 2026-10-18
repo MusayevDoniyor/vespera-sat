@@ -5,15 +5,17 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 
 interface KaTeXMathProps {
-  content: string;
+  content?: string;
+  mathText?: string;
   className?: string;
 }
 
-export default function KaTeXMath({ content, className = "" }: KaTeXMathProps) {
+export default function KaTeXMath({ content, mathText, className = "" }: KaTeXMathProps) {
+  const actualContent = content ?? mathText ?? "";
   const renderedContent = useMemo(() => {
-    if (!content) return "";
+    if (!actualContent) return "";
 
-    let text = content;
+    let text = actualContent;
     const tokens: { id: string; html: string }[] = [];
     const saveToken = (html: string) => {
       const id = `%%%VKATEX_${tokens.length}_${Math.random().toString(36).slice(2, 7)}%%%`;
@@ -80,7 +82,7 @@ export default function KaTeXMath({ content, className = "" }: KaTeXMathProps) {
     });
 
     // 5. Fallback math commands if no $ exists in raw content
-    if (!content.includes("$") && tokens.length === 0) {
+    if (!actualContent.includes("$") && tokens.length === 0) {
       const hasMathCommands = /\\(frac|sqrt|pm|approx|cdot|times|le|ge|degree|alpha|beta|theta|pi|div)\b/.test(text);
       const hasExponentOrSub = /(\w+)\^(\([^)]+\)|\w+)|(\w+)_(\w+)/.test(text);
 

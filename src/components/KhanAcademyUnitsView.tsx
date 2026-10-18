@@ -160,7 +160,18 @@ export default function KhanAcademyUnitsView() {
                   </p>
                 </div>
 
-                <div className="shrink-0 flex items-center gap-3">
+                <div className="shrink-0 flex items-center gap-2">
+                  <Link
+                    href={`/curriculum/units/${unit.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="px-3.5 py-1.5 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1.5 shadow-sm"
+                  >
+                    <BookOpen size={13} />
+                    <span className="hidden sm:inline">Darslikni ochish</span>
+                    <span className="sm:hidden">Darslik</span>
+                    <ArrowRight size={13} />
+                  </Link>
+
                   <button className="w-8 h-8 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-center text-[var(--text-muted)]">
                     {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </button>
@@ -170,6 +181,22 @@ export default function KhanAcademyUnitsView() {
               {/* Expanded Skills Accordion */}
               {isExpanded && (
                 <div className="border-t border-[var(--border-main)] bg-[var(--bg-surface)]/40 p-4 md:p-6 space-y-3">
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-900/30 to-purple-900/20 border border-[var(--accent-blue)]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Sparkles size={16} className="text-cyan-400 shrink-0" />
+                      <span className="text-xs font-bold text-[var(--text-main)]">
+                        Ushbu Unit bo'yicha to'liq darslik, SVG chizmalar va 10 talik Target Quiz tayyor!
+                      </span>
+                    </div>
+                    <Link
+                      href={`/curriculum/units/${unit.id}`}
+                      className="px-3 py-1 rounded-xl bg-[var(--accent-blue)] text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1 shadow-sm shrink-0"
+                    >
+                      <span>Bobni o'qish</span>
+                      <ArrowRight size={12} />
+                    </Link>
+                  </div>
+
                   <div className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2 flex items-center justify-between">
                     <span>Lessons & Skill Modules in this Unit</span>
                     <span className="text-[11px] font-normal normal-case">
