@@ -3,40 +3,202 @@ import { pool, initDb } from "@/lib/db";
 import { getSessionUser, getFullUserProfile } from "@/lib/auth";
 import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 
+// Micro-cache (15-second TTL) to deduplicate simultaneous calls from Sidebar and Dashboard
+interface CachedStats {
+  data: any;
+  timestamp: number;
+}
+const statsCache = new Map<string, CachedStats>();
+const STATS_CACHE_TTL_MS = 15000;
+
 export async function GET() {
   try {
     await initDb();
     const session = await getSessionUser();
     const userId = session?.userId || null;
-    const profile = userId ? await getFullUserProfile(userId) : null;
+    const cacheKey = userId || "guest";
 
-    // 1. Total questions in bank and user attempt status
-    const questionsRes = userId
-      ? await pool.query(
-          `
-          SELECT 
-            q.section,
-            COUNT(DISTINCT q.id)::int as total_bank_questions,
-            COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted_count,
-            COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct_count,
-            COUNT(DISTINCT CASE WHEN up.status = 'INCORRECT' THEN q.id END)::int as incorrect_count
-          FROM vespera.questions q
-          LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
-          GROUP BY q.section;
-        `,
-          [userId]
-        )
-      : await pool.query(`
-          SELECT 
-            q.section,
-            COUNT(DISTINCT q.id)::int as total_bank_questions,
-            COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted_count,
-            COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct_count,
-            COUNT(DISTINCT CASE WHEN up.status = 'INCORRECT' THEN q.id END)::int as incorrect_count
-          FROM vespera.questions q
-          LEFT JOIN vespera.user_progress up ON up.question_id = q.id
-          GROUP BY q.section;
-        `);
+    const cached = statsCache.get(cacheKey);
+    const now = Date.now();
+    if (cached && now - cached.timestamp < STATS_CACHE_TTL_MS) {
+      return NextResponse.json(cached.data, {
+        headers: { "X-Vespera-Cache": "HIT" },
+      });
+    }
+
+    // Run all 8 database queries in parallel concurrently
+    const [
+      questionsRes,
+      streakRes,
+      dueRes,
+      mathDomainsRes,
+      verbalDomainsRes,
+      topicsRes,
+      mockRes,
+      mockHistoryRes,
+    ] = await Promise.all([
+      // 1. Total questions in bank and user attempt status
+      userId
+        ? pool.query(
+            `
+            SELECT 
+              q.section,
+              COUNT(DISTINCT q.id)::int as total_bank_questions,
+              COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted_count,
+              COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct_count,
+              COUNT(DISTINCT CASE WHEN up.status = 'INCORRECT' THEN q.id END)::int as incorrect_count
+            FROM vespera.questions q
+            LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
+            GROUP BY q.section;
+          `,
+            [userId]
+          )
+        : pool.query(`
+            SELECT 
+              q.section,
+              COUNT(DISTINCT q.id)::int as total_bank_questions,
+              COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted_count,
+              COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct_count,
+              COUNT(DISTINCT CASE WHEN up.status = 'INCORRECT' THEN q.id END)::int as incorrect_count
+            FROM vespera.questions q
+            LEFT JOIN vespera.user_progress up ON up.question_id = q.id
+            GROUP BY q.section;
+          `),
+
+      // 2. Real Streak calculation from user_progress activity dates
+      userId
+        ? pool.query(
+            `
+            SELECT DISTINCT DATE(updated_at) as active_date
+            FROM vespera.user_progress
+            WHERE user_id = $1
+            ORDER BY active_date DESC
+            LIMIT 30;
+          `,
+            [userId]
+          )
+        : pool.query(`
+            SELECT DISTINCT DATE(updated_at) as active_date
+            FROM vespera.user_progress
+            ORDER BY active_date DESC
+            LIMIT 30;
+          `),
+
+      // 3. Due error reviews from SM-2
+      userId
+        ? pool.query(
+            `
+            SELECT COUNT(*)::int as due_count
+            FROM vespera.error_logs
+            WHERE user_id = $1 AND next_review_at <= NOW() AND is_resolved = FALSE;
+          `,
+            [userId]
+          )
+        : pool.query(`
+            SELECT COUNT(*)::int as due_count
+            FROM vespera.error_logs
+            WHERE next_review_at <= NOW() AND is_resolved = FALSE;
+          `),
+
+      // 4. Domain level mastery for Math
+      userId
+        ? pool.query(
+            `
+            SELECT 
+              q.domain,
+              COUNT(DISTINCT q.id)::int as total,
+              COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
+              COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
+            FROM vespera.questions q
+            LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
+            WHERE q.section = 'MATH'
+            GROUP BY q.domain
+            ORDER BY total DESC;
+          `,
+            [userId]
+          )
+        : pool.query(`
+            SELECT 
+              q.domain,
+              COUNT(DISTINCT q.id)::int as total,
+              COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
+              COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
+            FROM vespera.questions q
+            LEFT JOIN vespera.user_progress up ON up.question_id = q.id
+            WHERE q.section = 'MATH'
+            GROUP BY q.domain
+            ORDER BY total DESC;
+          `),
+
+      // 5. Domain level mastery for Verbal
+      userId
+        ? pool.query(
+            `
+            SELECT 
+              q.domain,
+              COUNT(DISTINCT q.id)::int as total,
+              COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
+              COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
+            FROM vespera.questions q
+            LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
+            WHERE q.section = 'READING_WRITING'
+            GROUP BY q.domain
+            ORDER BY total DESC;
+          `,
+            [userId]
+          )
+        : pool.query(`
+            SELECT 
+              q.domain,
+              COUNT(DISTINCT q.id)::int as total,
+              COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
+              COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
+            FROM vespera.questions q
+            LEFT JOIN vespera.user_progress up ON up.question_id = q.id
+            WHERE q.section = 'READING_WRITING'
+            GROUP BY q.domain
+            ORDER BY total DESC;
+          `),
+
+      // 6. Topics count
+      pool.query(`SELECT COUNT(*)::int as count FROM vespera.topics;`),
+
+      // 7. Mock exams history & telemetry
+      userId
+        ? pool.query(
+            `
+            SELECT 
+              COUNT(*)::int as total_exams,
+              COALESCE(MAX(score), 0)::int as highest_score,
+              COALESCE((SELECT score FROM vespera.mock_exams WHERE user_id = $1 ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
+            FROM vespera.mock_exams
+            WHERE user_id = $1;
+          `,
+            [userId]
+          )
+        : pool.query(`
+            SELECT 
+              COUNT(*)::int as total_exams,
+              COALESCE(MAX(score), 0)::int as highest_score,
+              COALESCE((SELECT score FROM vespera.mock_exams ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
+            FROM vespera.mock_exams;
+          `),
+
+      // 8. Mock history
+      userId
+        ? pool.query(
+            `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at, domain_stats
+             FROM vespera.mock_exams
+             WHERE user_id = $1 OR user_id IS NULL
+             ORDER BY completed_at DESC LIMIT 10;`,
+            [userId]
+          )
+        : pool.query(
+            `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at, domain_stats
+             FROM vespera.mock_exams
+             ORDER BY completed_at DESC LIMIT 10;`
+          ),
+    ]);
 
     let mathTotal = 0, mathAttempted = 0, mathCorrect = 0, mathIncorrect = 0;
     let verbalTotal = 0, verbalAttempted = 0, verbalCorrect = 0, verbalIncorrect = 0;
@@ -55,25 +217,6 @@ export async function GET() {
       }
     }
 
-    // 2. Real Streak calculation from user_progress activity dates
-    const streakRes = userId
-      ? await pool.query(
-          `
-          SELECT DISTINCT DATE(updated_at) as active_date
-          FROM vespera.user_progress
-          WHERE user_id = $1
-          ORDER BY active_date DESC
-          LIMIT 30;
-        `,
-          [userId]
-        )
-      : await pool.query(`
-          SELECT DISTINCT DATE(updated_at) as active_date
-          FROM vespera.user_progress
-          ORDER BY active_date DESC
-          LIMIT 30;
-        `);
-
     let currentStreak = 0;
     if (streakRes.rows.length > 0) {
       const today = new Date().toISOString().split("T")[0];
@@ -85,127 +228,12 @@ export async function GET() {
       }
     }
 
-    // 3. Due error reviews from SM-2
-    const dueRes = userId
-      ? await pool.query(
-          `
-          SELECT COUNT(*)::int as due_count
-          FROM vespera.error_logs
-          WHERE user_id = $1 AND next_review_at <= NOW() AND is_resolved = FALSE;
-        `,
-          [userId]
-        )
-      : await pool.query(`
-          SELECT COUNT(*)::int as due_count
-          FROM vespera.error_logs
-          WHERE next_review_at <= NOW() AND is_resolved = FALSE;
-        `);
-
-    // 4. Domain level mastery for Math
-    const mathDomainsRes = userId
-      ? await pool.query(
-          `
-          SELECT 
-            q.domain,
-            COUNT(DISTINCT q.id)::int as total,
-            COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
-            COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM vespera.questions q
-          LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
-          WHERE q.section = 'MATH'
-          GROUP BY q.domain
-          ORDER BY total DESC;
-        `,
-          [userId]
-        )
-      : await pool.query(`
-          SELECT 
-            q.domain,
-            COUNT(DISTINCT q.id)::int as total,
-            COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
-            COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM vespera.questions q
-          LEFT JOIN vespera.user_progress up ON up.question_id = q.id
-          WHERE q.section = 'MATH'
-          GROUP BY q.domain
-          ORDER BY total DESC;
-        `);
-
-    // 5. Domain level mastery for Verbal
-    const verbalDomainsRes = userId
-      ? await pool.query(
-          `
-          SELECT 
-            q.domain,
-            COUNT(DISTINCT q.id)::int as total,
-            COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
-            COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM vespera.questions q
-          LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
-          WHERE q.section = 'READING_WRITING'
-          GROUP BY q.domain
-          ORDER BY total DESC;
-        `,
-          [userId]
-        )
-      : await pool.query(`
-          SELECT 
-            q.domain,
-            COUNT(DISTINCT q.id)::int as total,
-            COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
-            COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
-          FROM vespera.questions q
-          LEFT JOIN vespera.user_progress up ON up.question_id = q.id
-          WHERE q.section = 'READING_WRITING'
-          GROUP BY q.domain
-          ORDER BY total DESC;
-        `);
-
-    // 6. Topics count
-    const topicsRes = await pool.query(`SELECT COUNT(*)::int as count FROM vespera.topics;`);
     const totalTopics = topicsRes.rows[0]?.count || 28;
-
-    // 7. Mock exams history & telemetry
-    const mockRes = userId
-      ? await pool.query(
-          `
-          SELECT 
-            COUNT(*)::int as total_exams,
-            COALESCE(MAX(score), 0)::int as highest_score,
-            COALESCE((SELECT score FROM vespera.mock_exams WHERE user_id = $1 ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
-          FROM vespera.mock_exams
-          WHERE user_id = $1;
-        `,
-          [userId]
-        )
-      : await pool.query(`
-          SELECT 
-            COUNT(*)::int as total_exams,
-            COALESCE(MAX(score), 0)::int as highest_score,
-            COALESCE((SELECT score FROM vespera.mock_exams ORDER BY completed_at DESC LIMIT 1), 0)::int as latest_score
-          FROM vespera.mock_exams;
-        `);
     const mockStats = mockRes.rows[0] || { total_exams: 0, highest_score: 0, latest_score: 0 };
-
-    const mockHistoryRes = userId
-      ? await pool.query(
-          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at, domain_stats
-           FROM vespera.mock_exams
-           WHERE user_id = $1 OR user_id IS NULL
-           ORDER BY completed_at DESC LIMIT 10;`,
-          [userId]
-        )
-      : await pool.query(
-          `SELECT id, title, section, score, math_score, reading_score, total_questions, correct_count, time_spent, completed_at, domain_stats
-           FROM vespera.mock_exams
-           ORDER BY completed_at DESC LIMIT 10;`
-        );
 
     // -------------------------------------------------------------
     // Official College Board SAT 1:1 Section Scoring (200 - 800)
     // -------------------------------------------------------------
-    // If a section is unattempted (0 questions answered): Score is 200 (Official Baseline)
-    // If attempted: Scaled strictly on 200 - 800 range (600 pts) based on accuracy, rounded to nearest 10
     const mathAccuracy = mathAttempted > 0 ? (mathCorrect / mathAttempted) : 0;
     const projectedMathScore = mathAttempted > 0
       ? Math.min(800, Math.max(200, Math.round((200 + mathAccuracy * 600) / 10) * 10))
@@ -218,7 +246,7 @@ export async function GET() {
 
     const compositeScore = projectedMathScore + projectedVerbalScore; // (400 - 1600)
 
-    return NextResponse.json({
+    const responsePayload = {
       totalQuestions: mathTotal + verbalTotal,
       totalSolved: mathAttempted + verbalAttempted,
       totalCorrect: mathCorrect + verbalCorrect,
@@ -250,6 +278,15 @@ export async function GET() {
         domains: verbalDomainsRes.rows,
       },
       targetScore: 1550,
+    };
+
+    // Cache the processed stats for 15s to deduplicate simultaneous requests
+    statsCache.set(cacheKey, { data: responsePayload, timestamp: Date.now() });
+
+    return NextResponse.json(responsePayload, {
+      headers: {
+        "Cache-Control": "private, no-cache, no-transform",
+      },
     });
   } catch (error: any) {
     console.error("Error fetching stats:", error);
@@ -295,6 +332,9 @@ export async function POST(req: Request) {
         domainStats ? JSON.stringify(domainStats) : null,
       ]
     );
+
+    // Invalidate stats cache so fresh data is immediately available
+    statsCache.clear();
 
     return NextResponse.json({ success: true, id });
   } catch (error: any) {

@@ -34,6 +34,7 @@ import { useAuth } from "@/components/AuthContext";
 import DiagnosticPlacementModal from "@/components/DiagnosticPlacementModal";
 import QuestionCard from "@/components/QuestionCard";
 import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
+import { fetchWithDeduplication } from "@/lib/api-cache";
 
 export default function DashboardPage() {
   const { user, openAuthModal, openOnboarding } = useAuth();
@@ -91,8 +92,7 @@ export default function DashboardPage() {
   }, [examCountdown, user?.dailyGoalMinutes]);
 
   useEffect(() => {
-    fetch("/api/stats")
-      .then((res) => res.json())
+    fetchWithDeduplication("/api/stats")
       .then((data) => {
         setStats(data);
         setLoading(false);
@@ -102,8 +102,7 @@ export default function DashboardPage() {
         setLoading(false);
       });
 
-    fetch("/api/recommendations")
-      .then((res) => res.json())
+    fetchWithDeduplication("/api/recommendations")
       .then((data) => {
         setRecommendations(data);
       })

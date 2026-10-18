@@ -46,6 +46,7 @@ import { useTheme } from "@/components/ThemeContext";
 import QuestionDiagram from "@/components/QuestionDiagram";
 import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion, getRwDisplayContent } from "@/lib/bluebook-tests";
 import { isMathDomain } from "@/lib/curriculum-data";
+import { fetchWithDeduplication } from "@/lib/api-cache";
 
 type ExamStage =
   | "lobby"
@@ -137,10 +138,9 @@ export default function BluebookMockPage() {
     } catch (e) {}
 
     // 2. Sync from database
-    fetch("/api/stats")
-      .then((res) => res.json())
+    fetchWithDeduplication("/api/stats")
       .then((data) => {
-        if (data.mockHistory && Array.isArray(data.mockHistory) && data.mockHistory.length > 0) {
+        if (data?.mockHistory && Array.isArray(data.mockHistory) && data.mockHistory.length > 0) {
           setPastAttempts(data.mockHistory);
           try {
             localStorage.setItem("vespera_mock_history", JSON.stringify(data.mockHistory));
@@ -1644,7 +1644,7 @@ export default function BluebookMockPage() {
   // RENDER: LIVE BLUEBOOK TESTING APPLICATION (1:1 College Board Layout)
   // =========================================================================
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col select-none transition-colors">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col transition-colors">
       {/* ================= TOP BAR (College Board Bluebook Header) ================= */}
       <header className="h-14 border-b border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-2.5 sm:px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
         {/* Left: Section & Module info + Directions toggle */}

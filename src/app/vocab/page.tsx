@@ -468,7 +468,7 @@ export default function VocabStudioPage() {
               {/* 🎴 3D FLIP CARD CONTAINER */}
               <div
                 onClick={() => setIsFlipped(!isFlipped)}
-                className="relative min-h-[360px] sm:min-h-[400px] w-full rounded-3xl cursor-pointer perspective select-none transition-all duration-300 hover:shadow-xl group"
+                className="relative min-h-[360px] sm:min-h-[400px] w-full rounded-3xl cursor-pointer perspective transition-all duration-300 hover:shadow-xl group"
               >
                 <div
                   className={`relative w-full h-full min-h-[360px] sm:min-h-[400px] rounded-3xl p-8 border transition-all duration-500 flex flex-col justify-between ${

@@ -4,14 +4,20 @@ import { pool, initDb } from "@/lib/db";
 
 export async function GET() {
   try {
-    await initDb();
     const session = await getSessionUser();
     if (!session) {
-      return NextResponse.json({ user: null });
+      return NextResponse.json(
+        { user: null },
+        { headers: { "Cache-Control": "private, no-cache, no-transform" } }
+      );
     }
 
+    await initDb();
     const profile = await getFullUserProfile(session.userId);
-    return NextResponse.json({ user: profile });
+    return NextResponse.json(
+      { user: profile },
+      { headers: { "Cache-Control": "private, no-cache, no-transform" } }
+    );
   } catch (err: any) {
     console.error("Auth me error:", err);
     return NextResponse.json({ user: null });
@@ -20,11 +26,12 @@ export async function GET() {
 
 export async function PATCH(req: NextRequest) {
   try {
-    await initDb();
     const session = await getSessionUser();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    await initDb();
 
     const body = await req.json();
     const {

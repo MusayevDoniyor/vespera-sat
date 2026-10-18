@@ -532,7 +532,7 @@ export default function BluebookExamRunnerPage() {
   // =========================================================================
   if (stage === "break") {
     return (
-      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center justify-center p-6 select-none">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center justify-center p-6">
         <div className="max-w-xl w-full text-center space-y-6 p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xl">
           <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
             <Coffee className="w-8 h-8" />
@@ -582,7 +582,7 @@ export default function BluebookExamRunnerPage() {
     const unansweredCount = totalModuleQs - answeredCount;
 
     return (
-      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col justify-between select-none">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col justify-between">
         {/* Header */}
         <header className="h-14 px-6 border-b border-[var(--border-main)] bg-[var(--bg-card)] flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -680,7 +680,7 @@ export default function BluebookExamRunnerPage() {
   const isFlagged = currentQuestion ? Boolean(flagged[currentQuestion.id]) : false;
 
   return (
-    <div className="fixed inset-0 w-screen h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col justify-between overflow-hidden select-none">
+    <div className="fixed inset-0 w-screen h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col justify-between overflow-hidden">
       {/* Session Restored Floating Banner */}
       {sessionRestoredNotice && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-bold shadow-xl flex items-center gap-2 animate-bounce">
@@ -796,7 +796,7 @@ export default function BluebookExamRunnerPage() {
             {/* Left: Reading Passage (split 50/50 for RW, or full prompt for Math) */}
             {passageToShow && (
               <div className="w-full md:w-1/2 h-1/2 md:h-full p-6 md:p-8 lg:p-10 border-b md:border-b-0 md:border-r border-[var(--border-main)] overflow-y-auto leading-relaxed text-sm md:text-base font-serif text-[var(--text-secondary)] whitespace-pre-line bg-[var(--bg-surface)]/30">
-                <div className="max-w-xl mx-auto break-words leading-relaxed">
+                <div className="max-w-xl mx-auto break-words leading-relaxed select-text cursor-text">
                   {passageToShow}
                 </div>
               </div>
@@ -870,7 +870,7 @@ export default function BluebookExamRunnerPage() {
                 )}
 
                 {/* Prompt Stem */}
-                <div className="text-sm sm:text-base font-medium text-[var(--text-main)] leading-relaxed">
+                <div className="text-sm sm:text-base font-medium text-[var(--text-main)] leading-relaxed select-text cursor-text">
                   <KaTeXMath content={promptToShow} />
                 </div>
 
@@ -907,7 +907,7 @@ export default function BluebookExamRunnerPage() {
                             >
                               {letter}
                             </span>
-                            <div className="leading-relaxed break-words min-w-0 flex-1">
+                            <div className="leading-relaxed break-words min-w-0 flex-1 select-text cursor-text">
                               <KaTeXMath content={cleanText} />
                             </div>
                           </div>

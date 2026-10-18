@@ -369,12 +369,12 @@ export default function QuestionCard({
                     if (!isSubmitted) setSelectedChoice(letter);
                   }
                 }}
-                className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] ${borderBgStyle} ${
+                className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] ${borderBgStyle} ${
                   isStrike ? "opacity-35" : ""
                 }`}
               >
                 <div className="flex items-center gap-3.5 flex-1 pr-4">
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0 select-none">
                     <span
                       className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs border transition-colors ${
                         isSelected
@@ -388,7 +388,7 @@ export default function QuestionCard({
                       [{letter}]
                     </span>
                   </div>
-                  <div className={`text-sm ${isStrike ? "line-through" : ""}`}>
+                  <div className={`text-sm select-text cursor-text ${isStrike ? "line-through" : ""}`}>
                     <KaTeXMath content={cleanOpt} />
                   </div>
                 </div>

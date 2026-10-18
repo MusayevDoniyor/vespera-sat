@@ -5,33 +5,44 @@ const connectionString =
 
 const globalForPg = globalThis as unknown as {
   pgPool: Pool | undefined;
+  isDbInitialized: boolean | undefined;
 };
 
 export const pool =
   globalForPg.pgPool ??
   new Pool({
     connectionString,
-    max: 10,
-    idleTimeoutMillis: 30000,
+    max: 5,
+    idleTimeoutMillis: 15000,
+    connectionTimeoutMillis: 5000,
   });
 
 (pool as any).on("connect", (client: any) => {
   client.query("SET search_path TO vespera, public;").catch(() => {});
 });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPg.pgPool = pool;
-}
+// Cache pool on globalThis for serverless reuse across function invocations
+globalForPg.pgPool = pool;
 
 let dbInitPromise: Promise<void> | null = null;
-let isDbInitialized = false;
 
 export async function initDb() {
-  if (isDbInitialized) return;
+  if (globalForPg.isDbInitialized) return;
   if (!dbInitPromise) {
     dbInitPromise = (async () => {
       const client = await pool.connect();
       try {
+        // Fast-path: Check if schema and topics table already exist (takes ~5ms vs ~1500ms for full DDL)
+        try {
+          const quickCheck = await client.query("SELECT 1 FROM vespera.topics LIMIT 1;");
+          if (quickCheck.rowCount && quickCheck.rowCount > 0) {
+            globalForPg.isDbInitialized = true;
+            return;
+          }
+        } catch {
+          // Schema does not exist yet; proceed with creation and seeding
+        }
+
         await client.query("CREATE SCHEMA IF NOT EXISTS vespera; SET search_path TO vespera, public;");
     // 1. Create tables
     await client.query(`
@@ -128,8 +139,11 @@ export async function initDb() {
       ALTER TABLE vespera.error_logs ADD COLUMN IF NOT EXISTS user_id TEXT;
       ALTER TABLE vespera.mock_exams ADD COLUMN IF NOT EXISTS user_id TEXT;
       CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON vespera.user_progress(user_id);
+      CREATE INDEX IF NOT EXISTS idx_user_progress_qid_uid ON vespera.user_progress(question_id, user_id);
       CREATE INDEX IF NOT EXISTS idx_error_logs_user_id ON vespera.error_logs(user_id);
+      CREATE INDEX IF NOT EXISTS idx_error_logs_review_due ON vespera.error_logs(user_id, next_review_at, is_resolved);
       CREATE INDEX IF NOT EXISTS idx_mock_exams_user_id ON vespera.mock_exams(user_id);
+      CREATE INDEX IF NOT EXISTS idx_mock_exams_completed ON vespera.mock_exams(completed_at DESC);
       CREATE INDEX IF NOT EXISTS idx_questions_section ON vespera.questions(section);
       CREATE INDEX IF NOT EXISTS idx_questions_domain ON vespera.questions(domain);
       CREATE INDEX IF NOT EXISTS idx_questions_topic_code ON vespera.questions(topic_code);
@@ -142,7 +156,7 @@ export async function initDb() {
       console.log("Empty DB detected. Seeding full Vespera curriculum and questions...");
       await seedDefaultData(client);
     }
-    isDbInitialized = true;
+    globalForPg.isDbInitialized = true;
   } finally {
     client.release();
   }

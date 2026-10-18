@@ -27,6 +27,7 @@ import { useAuth } from "./AuthContext";
 import VesperaLogo from "./VesperaLogo";
 import Portal from "./Portal";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import { fetchWithDeduplication } from "@/lib/api-cache";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -36,10 +37,9 @@ export default function Sidebar() {
   const [realStreak, setRealStreak] = useState<number>(0);
 
   useEffect(() => {
-    fetch("/api/stats")
-      .then((res) => res.json())
+    fetchWithDeduplication("/api/stats")
       .then((data) => {
-        if (data.realStreak !== undefined) {
+        if (data?.realStreak !== undefined) {
           setRealStreak(data.realStreak);
         }
       })
