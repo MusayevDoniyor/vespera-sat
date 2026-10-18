@@ -5,7 +5,7 @@ export interface TextbookSection {
   summary: string;
   contentMarkdown: string;
   keyTakeaways: string[];
-  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane";
+  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model";
   desmosExample?: {
     title: string;
     expression: string;
@@ -395,137 +395,360 @@ Approximately **5 to 6 questions per module** are Student-Produced Responses (fi
     sections: [
       {
         id: "u2-sec-1-linear-eq",
-        title: "1. Solving Linear Equations in One Variable: Ground Zero",
+        title: "1. Solving Linear Equations in One Variable & Solution Types",
         readTime: "7 min read",
-        summary: "A linear equation takes the standard form ax + b = c. The core principle is using inverse operations to isolate x on one side of the equal sign.",
+        summary: "A linear equation takes the standard form ax + b = c. Master the inverse operation mechanics and memorize the 3 exact solution conditions tested on the Digital SAT.",
         diagramType: "linear-graph",
         desmosExample: {
           title: "Desmos Single-Variable Solver",
-          expression: "5(2x - 3) = 35",
+          expression: "5(2x - 3) + 4 = 39",
           tip: "Desmos plots a vertical line at x = 5. You can read the solution directly off the x-axis!"
         },
         keyTakeaways: [
           "Inverse Operations: Addition undoes subtraction; division undoes multiplication.",
-          "Distributive Property: Always distribute carefully before combining like terms: $a(b - c) = ab - ac$.",
-          "No Solution condition: $ax + b = ax + c$ (where $b \\ne c$). The variable coefficients are identical, but constants differ ($0 = c - b$ impossible).",
-          "Infinitely Many Solutions: $ax + b = ax + b$. Both sides are algebraically identical ($0 = 0$ identity)."
+          "Distributive Traps: Always distribute negative signs carefully: $-3(2x - 5) = -6x + 15$.",
+          "One Unique Solution: Variable coefficients are different ($m_1 \\ne m_2$).",
+          "No Solution condition: $ax + b = ax + c$ (where $b \\ne c$). The variable terms cancel ($0 = c - b$), which is mathematically impossible.",
+          "Infinitely Many Solutions: $ax + b = ax + b$. Both sides simplify to an identical algebraic expression ($0 = 0$ identity)."
         ],
-        contentMarkdown: `### The Anatomy of Linear Equations
+        contentMarkdown: `### The Foundations of Linear Equations
 
-A linear equation is any equation where the variable is raised only to the first power ($x^1$). It represents a flat, constant rate of change.
+A linear equation is any mathematical statement where variables appear only to the first power ($x^1$). Solving an equation means finding all values of $x$ that make the equality strictly true.
 
-#### Three Possible Solution Outcomes on the SAT:
-1. **Exactly One Solution:**
-   $$3x + 7 = 19 \\implies 3x = 12 \\implies x = 4$$
-   The variable coefficients are DIFFERENT on both sides.
-2. **No Solution (Parallel / Contradiction):**
-   $$4x + 9 = 4x - 5 \\implies 9 = -5 \\quad (\\text{False!})$$
-   - **SAT Rule:** Coefficients of $x$ are **EQUAL**, but constants are **DIFFERENT**.
-   - Example SAT question: *"If $kx + 8 = 5x - 3$ has no solution, what is $k$?"* $\\implies k = 5$.
-3. **Infinitely Many Solutions (Identity):**
-   $$2(3x + 4) = 6x + 8 \\implies 6x + 8 = 6x + 8 \\quad (\\text{Always True})$$
-   - **SAT Rule:** Coefficients of $x$ are **EQUAL**, and constants are **EQUAL**.`
+#### The 3 Solution Outcomes on the Digital SAT:
+The College Board frequently tests whether you understand when an equation has one, zero, or infinite solutions without requiring you to do lengthy arithmetic:
+
+| Solution Outcome | Algebraic Condition | Visual/Geometric Meaning | College Board Keyword |
+| :--- | :--- | :--- | :--- |
+| **One Unique Solution** | $m_1 \\ne m_2$ | Lines intersect at exactly one point $(x_0, y_0)$ | *"Has exactly one solution for x"* |
+| **No Solution (Parallel)** | $m_1 = m_2$ and $b_1 \\ne b_2$ | Parallel lines with different intercepts; never meet | *"Has no solution"*, *"Contradiction"* |
+| **Infinitely Many (Identity)** | $m_1 = m_2$ and $b_1 = b_2$ | Coincident lines; every point on the line is a solution | *"True for all real values of x"* |
+
+#### Step-by-Step Isolation Algorithm:
+1. **Clear fractions or decimals:** Multiply every term by the least common denominator.
+2. **Distribute across parentheses:** Watch negative multipliers carefully.
+3. **Group variable terms:** Move all $x$ terms to one side and constants to the other side.
+4. **Isolate $x$:** Divide by the variable's coefficient.
+
+#### Worked Example:
+> *"In the equation $k(3x - 4) = 12x - 16$, the equation is true for all real values of $x$. What is the value of constant $k$?"*
+
+$$\\text{Distribute the left side: } 3kx - 4k = 12x - 16$$
+For infinitely many solutions, coefficients must match:
+$$3k = 12 \\implies k = 4$$
+$$4k = 16 \\implies k = 4$$
+Both conditions confirm that $k = 4$.`,
       },
       {
-        id: "u2-sec-2-inequalities",
-        title: "2. Linear Inequalities & The Negative Flip Rule",
-        readTime: "6 min read",
-        summary: "Whenever multiplying or dividing both sides of an inequality by a negative number, you MUST reverse (flip) the inequality symbol.",
-        diagramType: "inequality-plane",
-        keyTakeaways: [
-          "Flip Rule: $-2x < 10 \\implies x > \\frac{10}{-2} \\implies x > -5$.",
-          "Desmos Shading: Typing 'y > 2x - 4' into Desmos creates a dashed boundary line with the upper region shaded.",
-          "Boundary check: Strict inequalities ($<, >$) have dashed lines (boundary excluded); non-strict ($\\le, \\ge$) have solid lines (boundary included)."
-        ],
-        contentMarkdown: `### The Negative Invariant Rule
-
-Linear inequalities behave identically to linear equations with **one crucial exception**: multiplying or dividing by a negative value reverses the order of the real numbers on the number line.
-
-$$\\text{If } -3x \\ge 18 \\implies x \\le \\frac{18}{-3} \\implies x \\le -6$$
-
-#### Number Line & Plane Boundaries:
-- **Strict Inequalities ($<$ and $>$):** Represented by an **open circle** on a number line, or a **dashed line** in the $xy$-plane. Points directly on the line are **NOT** solutions.
-- **Inclusive Inequalities ($\\le$ and $\\ge$):** Represented by a **closed solid circle** or a **solid line**. Points directly on the line **ARE** valid solutions.`
-      },
-      {
-        id: "u2-sec-3-word-problems",
-        title: "3. Word Problems: Rate-Intercept Modeling ($y = mx + b$)",
+        id: "u2-sec-2-word-problems",
+        title: "2. Linear Equation Word Problems: Translating English to Algebra",
         readTime: "8 min read",
-        summary: "Master translating textual rates into y = mx + b. 'Per', 'each', and 'every' signal the slope m; 'flat fee', 'initial deposit', or 'starting amount' signals the y-intercept b.",
+        summary: "Translate real-world SAT scenarios into y = mx + b. 'Per', 'each', and 'every' signal the slope m; 'flat fee', 'initial deposit', or 'starting amount' signals the y-intercept b.",
+        diagramType: "word-problem-model",
+        desmosExample: {
+          title: "Direct Budget Solver",
+          expression: "14h + 25 = 95",
+          tip: "Desmos plots a vertical line at h = 5. Marco can rent the kayak for exactly 5 hours!"
+        },
         keyTakeaways: [
           "Rate of Change = Slope ($m$): Look for keywords: 'per', 'each', 'every', 'hourly'.",
           "Initial Value = y-intercept ($b$): Look for keywords: 'deposit', 'fee', 'start', 'at time t = 0'.",
-          "Total Cost equation: $\\text{Total} = (\\text{Unit Rate}) \\times x + \\text{Fixed Base}$."
+          "Total Cost equation: $\\text{Total} = (\\text{Unit Rate}) \\times x + \\text{Fixed Base}$.",
+          "Unit Alignment: Verify that the rate and time units match (hours vs minutes, dollars vs cents)."
         ],
-        contentMarkdown: `### Translating English into Mathematics
+        contentMarkdown: `### Translating English Scenarios into Mathematics
 
-Every year, thousands of students lose points on SAT word problems not because their math is weak, but because they fail to translate English sentence structure into algebraic equations.
+SAT word problems evaluate your ability to decompose narrative sentences into structured algebraic models. Most foundational problems map directly onto the slope-intercept form:
+
+$$\\text{Total } (y) = \\text{Rate of Change } (m) \\times \\text{Quantity } (x) + \\text{Initial Baseline } (b)$$
 
 #### The SAT Translation Dictionary:
-- *"is", "was", "will be", "equals", "costs"* $\\implies =$
-- *"per", "each", "every", "rate of"* $\\implies \\times$ (Slope $m$)
-- *"flat fee", "initial cost", "starting with"* $\\implies + b$ (y-intercept)
-- *"is $p\\%$ greater than $Q$"* $\\implies Q(1 + p/100)$
-- *"at least $K$"* $\\implies \\ge K$
-- *"at most $K$"* $\\implies \\le K$
+| English Keyword / Phrase | Mathematical Meaning | Algebraic Operation |
+| :--- | :--- | :--- |
+| *"is", "was", "will be", "equals", "costs"* | Equality | $=$ |
+| *"per", "each", "every", "rate of"* | Slope / Rate of change | $\\times m$ |
+| *"flat fee", "initial cost", "starting deposit"* | Vertical Intercept / Baseline | $+ b$ |
+| *"is decreased by", "drops by", "less than"* | Subtraction / Negative slope | $- mx$ |
+| *"at least", "no less than", "minimum of"* | Lower bound inequality | $\\ge$ |
+| *"at most", "cannot exceed", "maximum budget"* | Upper bound inequality | $\\le$ |
 
 #### Worked Example:
-> *"A kayak rental company charges a $\\$25$ equipment deposit plus $\\$14$ for each hour of rental. If Marco has a budget of $\\$95$, what is the maximum number of full hours he can rent the kayak?"*
+> *"A commercial electrician charges a $\\$65$ diagnostic consultation fee plus $\\$48$ for each hour of repair work on site. If a client's invoice totaled $\\$305$, how many hours did the electrician work?"*
 
-$$\\text{Model: } 14h + 25 \\le 95$$
-$$14h \\le 70 \\implies h \\le 5$$
-He can rent the kayak for a maximum of **5 full hours**.`
+$$\\text{Model: } 48h + 65 = 305$$
+$$48h = 240 \\implies h = \\frac{240}{48} = 5\\text{ hours}$$
+The electrician worked for exactly **5 hours**.`,
       },
       {
-        id: "u2-sec-4-systems",
-        title: "4. Systems of Linear Equations: Substitution, Elimination & Desmos",
+        id: "u2-sec-3-linear-relations",
+        title: "3. Linear Relationship Word Problems: Interpreting Rates, Offsets & Domain",
+        readTime: "7 min read",
+        summary: "Master the College Board's favorite question format: interpreting what the constants m and b mean in real-world contexts and evaluating realistic domains.",
+        diagramType: "word-problem-model",
+        desmosExample: {
+          title: "Table Linear Regression (~)",
+          expression: "y_1 \\sim m x_1 + b",
+          tip: "Add a table in Desmos (+ icon). Type y1 ~ m x1 + b. Desmos instantly calculates slope m and intercept b with r² = 1."
+        },
+        keyTakeaways: [
+          "Interpreting Slope ($m$): 'For every 1 unit increase in x, y increases (or decreases) by m units.'",
+          "Interpreting Intercept ($b$): 'The baseline value of y when x = 0 (before any time or events elapsed).'",
+          "Rate Constant Test: Linear models require that $\\frac{\\Delta y}{\\Delta x}$ remains strictly constant across all data pairs.",
+          "Domain Restrictions: Physical variables like time, distance, and population counts cannot be negative ($x \\ge 0$)."
+        ],
+        contentMarkdown: `### Interpreting Linear Functions in Context
+
+On the Digital SAT, the College Board frequently presents an equation like $W = 35d + 120$ and asks: *"What is the best interpretation of the number 35 in this context?"*
+
+#### The Standard Interpretation Formulas:
+- **Interpretation of Slope ($m$):**
+  > *"The estimated increase in [dependent variable $y$] for each additional 1 unit increase in [independent variable $x$]."*
+- **Interpretation of Intercept ($b$):**
+  > *"The baseline or starting value of [dependent variable $y$] when [independent variable $x$] is zero."*
+
+#### Common Distractor Traps to Avoid:
+1. **Confusing Total with Rate:** An answer choice stating *"The total amount earned over $d$ days"* is WRONG when describing slope $m$. Slope is strictly the *per-day* increment.
+2. **Reversing Variables:** Choosing *"The number of days per dollar"* instead of *"The number of dollars per day"*.
+3. **Ignoring Units:** A problem giving time in minutes but slope in hours requires multiplying or dividing by 60.
+
+#### Worked Example:
+> *"The function $C(m) = 2.75m + 14$ estimates the total weight in pounds of a shipment of $m$ metal brackets packed in a wooden shipping crate. What is the best interpretation of 14 in this model?"*
+
+In $C(m) = 2.75m + 14$:
+- $2.75$ is the slope: the weight in pounds of **one individual bracket**.
+- $14$ is the $y$-intercept ($C(0) = 14$): the weight of the **empty wooden crate** with zero brackets.`,
+      },
+      {
+        id: "u2-sec-4-graphs",
+        title: "4. Graphs of Linear Equations & Functions: Standard Form, Slopes & Intercepts",
+        readTime: "8 min read",
+        summary: "Understand the three forms of linear equations. Use rapid shortcut formulas for Standard Form Ax + By = C to calculate slopes and intercepts in under 5 seconds.",
+        diagramType: "linear-graph",
+        desmosExample: {
+          title: "Standard Form Direct Plotter",
+          expression: "3x - 4y = 24",
+          tip: "Never waste time converting standard form into y = mx + b by hand. Desmos graphs 3x - 4y = 24 directly and highlights intercepts (8, 0) and (0, -6) as clickable dots!"
+        },
+        keyTakeaways: [
+          "Slope formula: $m = \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{\\text{Rise}}{\\text{Run}}$.",
+          "Standard Form Shortcut: For $Ax + By = C$, $\\text{Slope } m = -\\frac{A}{B}$, $y\\text{-intercept } = \\frac{C}{B}$, $x\\text{-intercept } = \\frac{C}{A}$.",
+          "Horizontal line ($y = c$): Slope is 0; parallel to x-axis.",
+          "Vertical line ($x = c$): Slope is undefined; perpendicular to x-axis."
+        ],
+        contentMarkdown: `### The Three Linear Forms on the SAT
+
+Every straight line in the coordinate plane can be written in three algebraic forms:
+
+#### 1. Slope-Intercept Form:
+$$y = mx + b$$
+- $m$: Slope (rate of steepness)
+- $b$: $y$-intercept (the point where the line crosses the vertical axis: $(0, b)$)
+
+#### 2. Standard Form:
+$$Ax + By = C$$
+- **Slope:** $m = -\\frac{A}{B}$
+- **$y$-intercept:** Set $x = 0 \\implies y = \\frac{C}{B}$
+- **$x$-intercept:** Set $y = 0 \\implies x = \\frac{C}{A}$
+
+#### 3. Point-Slope Form:
+$$y - y_1 = m(x - x_1)$$
+- Ideal when you are given a slope $m$ and a passing point $(x_1, y_1)$.
+
+#### Summary of Line Orientations:
+| Line Orientation | Equation Pattern | Slope Value ($m$) | Example |
+| :--- | :--- | :--- | :--- |
+| **Rising (Left to Right)** | $y = mx + b$ | $m > 0$ | $y = 3x - 2$ |
+| **Falling (Left to Right)** | $y = -mx + b$ | $m < 0$ | $y = -2x + 7$ |
+| **Horizontal Line** | $y = c$ | $m = 0$ | $y = 4$ |
+| **Vertical Line** | $x = c$ | $m = \\text{undefined}$ | $x = -3$ |`,
+      },
+      {
+        id: "u2-sec-5-parallel-perp",
+        title: "5. Parallel & Perpendicular Lines in the xy-Plane",
+        readTime: "6 min read",
+        summary: "Parallel lines share identical slopes; perpendicular lines have negative reciprocal slopes. Learn the instant perpendicular coefficient swap trick.",
+        diagramType: "parallel-perpendicular",
+        desmosExample: {
+          title: "Perpendicular Slope Checker",
+          expression: "y = (3/4)x + 2 \\ny = (-4/3)x - 1",
+          tip: "Notice the lines cross at an exact 90-degree right angle. Their slopes (3/4 and -4/3) multiply to -1!"
+        },
+        keyTakeaways: [
+          "Parallel Lines: $m_1 = m_2$ and $b_1 \\ne b_2$. Slopes are strictly equal, never intersect.",
+          "Perpendicular Lines: $m_1 \\cdot m_2 = -1 \\iff m_2 = -\\frac{1}{m_1}$ (negative reciprocal).",
+          "Standard Form Perpendicular Shortcut: If line 1 is $Ax + By = C$, any perpendicular line has the form $Bx - Ay = K$.",
+          "Horizontal & Vertical: The line $y = 5$ is perpendicular to $x = 2$."
+        ],
+        contentMarkdown: `### Geometric Line Relationships
+
+The SAT regularly tests whether you can calculate slopes of parallel and perpendicular lines.
+
+#### Parallel Lines ($m_1 = m_2$):
+Two lines are parallel if and only if they have the **exact same slope** but different $y$-intercepts:
+$$L_1: y = 3x + 5 \\quad \\text{is parallel to} \\quad L_2: y = 3x - 11$$
+
+#### Perpendicular Lines ($m_1 \\cdot m_2 = -1$):
+Two lines are perpendicular if their slopes are **opposite (negative) reciprocals**:
+$$m_2 = -\\frac{1}{m_1}$$
+
+| Original Slope ($m_1$) | Perpendicular Slope ($m_2$) | Notes |
+| :--- | :--- | :--- |
+| $\\frac{2}{3}$ | $-\\frac{3}{2}$ | Flip fraction and change sign |
+| $-4$ | $+\\frac{1}{4}$ | Negative integer becomes positive unit fraction |
+| $-\\frac{5}{7}$ | $+\\frac{7}{5}$ | Flip and make positive |
+| $0$ (Horizontal) | $\\text{Undefined}$ (Vertical) | Perpendicular axes |
+
+#### Worked Example:
+> *"Line $j$ has the equation $3x + 5y = 15$. Line $k$ is perpendicular to line $j$ and passes through the point $(6, -2)$. What is the equation of line $k$?"*
+
+1. Find slope of line $j$: $m_j = -\\frac{A}{B} = -\\frac{3}{5}$.
+2. Perpendicular slope: $m_k = +\\frac{5}{3}$.
+3. Use point-slope with $(6, -2)$:
+$$y - (-2) = \\frac{5}{3}(x - 6) \\implies y + 2 = \\frac{5}{3}x - 10 \\implies y = \\frac{5}{3}x - 12$$`,
+      },
+      {
+        id: "u2-sec-6-systems",
+        title: "6. Systems of Linear Equations: Substitution, Elimination & Desmos",
         readTime: "8 min read",
         summary: "A system of linear equations represents two lines in the xy-plane. Their intersection point is the unique solution. Desmos finds the solution in 3 seconds flat.",
         diagramType: "system-intersection",
         desmosExample: {
           title: "System Intersection Trick",
-          expression: "3x - 2y = 8 \nx + 4y = 12",
-          tip: "Click the grey dot where lines cross: Desmos displays (4, 2). x = 4, y = 2!"
+          expression: "2x + 3y = 18 \\n4x - y = 8",
+          tip: "Click the grey dot where lines cross: Desmos displays (3, 4). x = 3, y = 4 in 4 seconds flat!"
         },
         keyTakeaways: [
-          "1 Solution: Lines intersect at one point $(x, y)$. Slopes are DIFFERENT ($m_1 \\ne m_2$).",
-          "No Solution: Lines are parallel ($m_1 = m_2$) with different intercepts ($b_1 \\ne b_2$). They never touch.",
-          "Infinitely Many Solutions: Lines are identical ($m_1 = m_2$ and $b_1 = b_2$). Every point on the line is a solution."
+          "Intersection Principle: The solution to any system is the point $(x, y)$ that satisfies both equations simultaneously.",
+          "When to use Elimination: When coefficients of one variable are additive inverses (e.g. $+3y$ and $-3y$).",
+          "When to use Substitution: When one equation has an isolated variable ($y = 2x - 5$).",
+          "When to use Desmos: On 100% of Digital SAT systems where choices or values of $x, y$ are required!",
+          "Composite Value Trap: If question asks for $3x + 3y$, add the two equations together instead of solving for $x$ and $y$ separately."
         ],
         contentMarkdown: `### Systems of Linear Equations
 
-A system consists of two linear equations with two unknown variables:
+A linear system in two variables has the general form:
 $$\\begin{cases} a_1 x + b_1 y = c_1 \\\\ a_2 x + b_2 y = c_2 \\end{cases}$$
 
 #### The Three Geometric Cases on the SAT:
 1. **Lines Intersect (One Unique Solution):**
-   - The slopes are not equal: $m_1 \\ne m_2$.
+   - The slopes are not equal: $m_1 \\ne m_2 \\iff \\frac{a_1}{a_2} \\ne \\frac{b_1}{b_2}$.
 2. **Lines are Parallel (No Solution):**
    - Slopes are equal, but $y$-intercepts are different:
    $$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} \\ne \\frac{c_1}{c_2}$$
 3. **Lines are Coincident (Infinitely Many Solutions):**
    - Both equations represent the exact same line:
-   $$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$$`
+   $$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$$
+
+#### The Desmos 4-Second SpeedHack:
+Enter Equation 1 on Line 1, Equation 2 on Line 2. A grey dot appears at their intersection. Click the dot to reveal the $(x, y)$ solution coordinates instantly.`,
+      },
+      {
+        id: "u2-sec-7-systems-word-problems",
+        title: "7. Systems Word Problems: Mixture, Tickets & Quantity-Value Systems",
+        readTime: "8 min read",
+        summary: "Deconstruct real-world systems into two simultaneous equations: the Quantity Equation (total count) and the Value Equation (total dollars or weight).",
+        diagramType: "system-intersection",
+        desmosExample: {
+          title: "Ticket System Solver",
+          expression: "s + a = 250 \\n6s + 10a = 1900",
+          tip: "Click grey dot: (150, 100). 150 student tickets and 100 adult tickets were sold!"
+        },
+        keyTakeaways: [
+          "Quantity Equation: $x + y = \\text{Total Items}$ (e.g. number of tickets, coins, hours).",
+          "Value Equation: $C_1 x + C_2 y = \\text{Total Dollar Revenue}$ (multiply each item by its unit price).",
+          "Mixture Framework: $(\\%_1)(V_1) + (\\%_2)(V_2) = (\\%_\\text{final})(V_1 + V_2)$.",
+          "Desmos Solver: Graph both word problem equations directly in Desmos using x and y."
+        ],
+        contentMarkdown: `### The Quantity-Value System Framework
+
+Almost all SAT systems word problems follow the universal **Quantity-Value Dual Equation** pattern:
+
+#### Equation 1: Quantity (Total Count)
+$$x + y = \\text{Total Number of Items}$$
+
+#### Equation 2: Value (Total Worth, Weight, or Dollars)
+$$\\text{Rate}_1 \\cdot x + \\text{Rate}_2 \\cdot y = \\text{Total Revenue}$$
+
+#### Worked Example:
+> *"A high school drama club sold a total of 250 tickets to an evening performance. Student tickets cost $\\$6$ each, and adult tickets cost $\\$10$ each. If the total ticket sales were $\\$1,900$, how many student tickets were sold?"*
+
+1. Define variables: Let $s =$ student tickets, $a =$ adult tickets.
+2. System equations:
+$$\\begin{cases} s + a = 250 \\\\ 6s + 10a = 1900 \\end{cases}$$
+3. Multiply Equation 1 by 10 to eliminate $a$:
+$$10s + 10a = 2500$$
+$$-(6s + 10a = 1900)$$
+$$4s = 600 \\implies s = 150$$
+Exactly **150 student tickets** were sold.`,
+      },
+      {
+        id: "u2-sec-8-inequalities",
+        title: "8. Linear Inequalities & Systems of Inequalities: Flip Rule & Feasible Regions",
+        readTime: "7 min read",
+        summary: "Multiply or divide by a negative number? Flip the inequality symbol! Learn how to identify boundary lines and determine valid solutions in shaded feasible regions.",
+        diagramType: "inequality-plane",
+        desmosExample: {
+          title: "Inequality Feasible Region Shading",
+          expression: "y >= 2x - 3 \\ny < -x + 4",
+          tip: "Desmos shades both regions. The darker overlapping area is the valid solution set!"
+        },
+        keyTakeaways: [
+          "Negative Inversion Rule: Multiplying or dividing both sides by a negative number REVERSES the inequality symbol ($< \\leftrightarrow >$).",
+          "Boundary Lines: Strict inequalities ($<, >$) are drawn with dashed lines; non-strict ($\\le, \\ge$) are drawn with solid lines.",
+          "Test Point Technique: Plug $(0, 0)$ into the inequality. If the resulting statement is true, shade the region containing $(0, 0)$.",
+          "Systems of Inequalities: A point $(x, y)$ is a valid solution if and only if it falls inside the overlapping shaded region of all inequalities in the system."
+        ],
+        contentMarkdown: `### Linear Inequalities in One and Two Variables
+
+An inequality describes an entire region of solutions rather than a single discrete point.
+
+#### The Fundamental Negative Inversion Rule:
+Whenever you multiply or divide both sides of an inequality by a negative number, you **MUST flip the inequality symbol**:
+
+$$-4x + 7 < 31 \\implies -4x < 24 \\implies x > \\frac{24}{-4} \\implies x > -6$$
+
+#### Shading the Coordinate Plane:
+| Inequality Form | Boundary Line Type | Shaded Half-Plane | Boundary Points Included? |
+| :--- | :--- | :--- | :--- |
+| $y > mx + b$ | **Dashed** | **Above** the line | **NO** (Strictly greater) |
+| $y < mx + b$ | **Dashed** | **Below** the line | **NO** (Strictly less) |
+| $y \\ge mx + b$ | **Solid** | **Above** the line | **YES** (Points on line are solutions) |
+| $y \\le mx + b$ | **Solid** | **Below** the line | **YES** (Points on line are solutions) |
+
+#### Testing Points:
+To verify whether point $(x_0, y_0)$ is a solution to a system of inequalities, substitute its coordinates into both inequalities. If both statements evaluate to true, the point lies in the feasible region.`,
       }
     ],
     speedHacks: [
       {
-        title: "System Intersection Clicker",
+        title: "Desmos Single-Variable Vertical Line Solver",
+        trigger: "Any complicated linear equation with only one unknown variable x",
+        shortcut: "Type the full equation directly into Desmos without solving algebraically.",
+        example: "Type '5(2x - 3) + 4 = 39'. Desmos plots a vertical line at x = 5. Read the answer!"
+      },
+      {
+        title: "Two-Line System Intersection Clicker",
         trigger: "Any system of two linear equations with choices for x or y",
-        shortcut: "Type both lines into Desmos. Click the grey intersection dot.",
+        shortcut: "Type both lines into Desmos. Tap the grey intersection dot to reveal (x, y).",
         example: "Line 1: 3x + 2y = 16. Line 2: y = 2x - 6. Tap grey dot: (4, 2). Immediate answer!"
       },
       {
-        title: "Scale Factor Matching for 'No Solution'",
-        trigger: "Equations with unknown constant $k$ and 'No Solution'",
-        shortcut: "Make the ratio of x-coefficients equal the ratio of y-coefficients.",
+        title: "Scale Factor Matching for 'No Solution' Systems",
+        trigger: "Linear systems with unknown constant k stated to have 'No Solution'",
+        shortcut: "Equate the ratio of x-coefficients to the ratio of y-coefficients.",
         example: "If 2x + 5y = 7 and kx + 10y = 15 have no solution: k must equal 2 * (10/5) = 4."
       },
       {
-        title: "Structure Substitution",
-        trigger: "Question gives $x + y = 14$ and asks for $3x + 3y + 5$",
-        shortcut: "Factor the target expression: $3(x + y) + 5 = 3(14) + 5 = 47$.",
+        title: "Composite Structure Factoring Shortcut",
+        trigger: "Question provides 2x + 5y = 11 and asks for 8x + 20y - 15",
+        shortcut: "Factor the target: 8x + 20y = 4(2x + 5y) = 4(11) = 44. Subtract 15 to get 29.",
         example: "Never solve for individual x and y when the question asks for a composite multiple!"
+      },
+      {
+        title: "Inequality Feasible Region Overlay in Desmos",
+        trigger: "Questions asking which ordered pair (x, y) satisfies a system of inequalities",
+        shortcut: "Type both inequalities into Desmos with <, >, <=, or >=. Graph the answer choices as points (a, b).",
+        example: "The valid answer choice will sit visibly inside the doubly-shaded overlapping area."
       }
     ],
     practiceQuestions: [

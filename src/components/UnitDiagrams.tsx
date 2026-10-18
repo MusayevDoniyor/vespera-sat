@@ -344,5 +344,184 @@ export default function UnitDiagrams({ type }: DiagramProps) {
     );
   }
 
+  if (type === "inequality-plane") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Linear Inequality Shading & Boundary Rules
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/30 font-bold">
+            y &gt; 2x - 2 (Dashed Boundary)
+          </span>
+        </div>
+
+        <div className="w-full overflow-x-auto flex justify-center">
+          <svg viewBox="0 0 420 280" className="w-full max-w-[440px] font-sans">
+            <defs>
+              <linearGradient id="shadeRegion" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#818cf8" stopOpacity="0.1" />
+              </linearGradient>
+            </defs>
+
+            {/* Shaded Region Polygon (y > 2x - 2, upper-left region) */}
+            <polygon points="40,240 40,30 380,30 250,30 145,240" fill="url(#shadeRegion)" />
+
+            {/* Grid Axes */}
+            <line x1="40" y1="140" x2="380" y2="140" stroke="#64748b" strokeWidth="1.5" />
+            <line x1="210" y1="30" x2="210" y2="250" stroke="#64748b" strokeWidth="1.5" />
+            <text x="370" y="132" fill="#64748b" fontSize="12" fontWeight="bold">x</text>
+            <text x="218" y="42" fill="#64748b" fontSize="12" fontWeight="bold">y</text>
+
+            {/* Dashed Boundary Line y = 2x - 2 */}
+            <line x1="145" y1="240" x2="250" y2="30" stroke="#4f46e5" strokeWidth="2.5" strokeDasharray="6,4" />
+            <text x="255" y="45" fill="#4f46e5" fontSize="11" fontWeight="bold">y &gt; 2x - 2 (Dashed Line)</text>
+
+            {/* Test Point (0, 0) */}
+            <circle cx="210" cy="140" r="5" fill="#10b981" />
+            <rect x="220" y="125" width="145" height="26" rx="6" fill="#064e3b" stroke="#10b981" strokeWidth="1" />
+            <text x="292" y="142" fill="#a7f3d0" fontSize="10" textAnchor="middle" fontWeight="bold">Test (0, 0): 0 &gt; -2 (True!)</text>
+
+            {/* Solution Region Label */}
+            <rect x="70" y="70" width="120" height="32" rx="8" fill="#312e81" stroke="#818cf8" strokeWidth="1" />
+            <text x="130" y="90" fill="#e0e7ff" fontSize="11" textAnchor="middle" fontWeight="bold">Feasible Region</text>
+          </svg>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-3 text-[11px] font-medium">
+          <div className="p-2.5 rounded-xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
+            <span><strong>Strict (&lt;, &gt;):</strong> Dashed boundary, points on line are excluded.</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span><strong>Inclusive (&le;, &ge;):</strong> Solid boundary, points on line are included.</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "parallel-perpendicular") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Slope Geometry: Parallel vs Perpendicular Lines
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-500/30 font-bold">
+            m₁ · m₂ = -1
+          </span>
+        </div>
+
+        <div className="w-full overflow-x-auto flex justify-center">
+          <svg viewBox="0 0 420 280" className="w-full max-w-[440px] font-sans">
+            {/* Axes */}
+            <line x1="40" y1="140" x2="380" y2="140" stroke="#64748b" strokeWidth="1.5" />
+            <line x1="210" y1="30" x2="210" y2="250" stroke="#64748b" strokeWidth="1.5" />
+            <text x="370" y="132" fill="#64748b" fontSize="12" fontWeight="bold">x</text>
+            <text x="218" y="42" fill="#64748b" fontSize="12" fontWeight="bold">y</text>
+
+            {/* Line 1: y = 2x + 1 (Blue) */}
+            <line x1="120" y1="240" x2="230" y2="20" stroke="#2563eb" strokeWidth="2.5" />
+            <text x="235" y="30" fill="#2563eb" fontSize="11" fontWeight="bold">Line 1: m = 2</text>
+
+            {/* Line 2: y = 2x - 3 (Cyan, Parallel) */}
+            <line x1="160" y1="240" x2="270" y2="20" stroke="#06b6d4" strokeWidth="2.5" />
+            <text x="275" y="40" fill="#06b6d4" fontSize="11" fontWeight="bold">Line 2: m = 2 (Parallel)</text>
+
+            {/* Line 3: y = -1/2 x + 2 (Rose, Perpendicular) */}
+            <line x1="60" y1="65" x2="360" y2="215" stroke="#e11d48" strokeWidth="2.5" />
+            <text x="320" y="235" fill="#e11d48" fontSize="11" fontWeight="bold">Line 3: m = -1/2 (Perpendicular)</text>
+
+            {/* 90 degree indicator square */}
+            <path d="M 197 104 L 205 108 L 201 116 L 193 112 Z" fill="#fde047" stroke="#ca8a04" strokeWidth="1" />
+            <text x="175" y="98" fill="#ca8a04" fontSize="10" fontWeight="bold">90°</text>
+          </svg>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-3 text-[11px] font-medium">
+          <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-500/30 text-blue-950 dark:text-blue-200">
+            <strong>Parallel Lines:</strong> Identical slopes (<KaTeXMath mathText="$m_1 = m_2$" />), different intercepts. They never intersect (No Solution).
+          </div>
+          <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30 text-rose-950 dark:text-rose-200">
+            <strong>Perpendicular Lines:</strong> Negative reciprocal slopes (<KaTeXMath mathText="$m_1 \cdot m_2 = -1$" /> or <KaTeXMath mathText="$m_2 = -\frac{1}{m_1}$" />). Intersect at a right angle (<KaTeXMath mathText="$90^\circ$" />).
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "word-problem-model") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Linear Word Problem Architecture: Translating English to Algebra
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 font-bold">
+            y = mx + b
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-slate-500 font-mono">Dependent Variable</span>
+            <h5 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>y (Total)</span>
+            </h5>
+            <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+              Total cost, final amount, weight, temperature at time x.
+            </p>
+            <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold font-mono">"costs", "is equal to"</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-400 font-mono">Rate of Change</span>
+            <h5 className="text-sm font-black text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
+              <span>m (Slope)</span>
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Change per unit. Multiply directly by the independent quantity x.
+            </p>
+            <div className="text-[10px] text-amber-700 dark:text-amber-400 font-bold font-mono">"per", "each", "hourly"</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-purple-700 dark:text-purple-400 font-mono">Input Variable</span>
+            <h5 className="text-sm font-black text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
+              <span>x (Quantity)</span>
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Number of hours, miles driven, items produced, days elapsed.
+            </p>
+            <div className="text-[10px] text-purple-700 dark:text-purple-400 font-bold font-mono">"for x hours", "per mile"</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">Initial Offset</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+              <span>+ b (Intercept)</span>
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              One-time charge, starting balance, deposit, base entrance fee.
+            </p>
+            <div className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold font-mono">"fee", "starts with", "deposit"</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }
