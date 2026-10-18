@@ -44,149 +44,73 @@ export default function Sidebar() {
 
   interface NavItem {
     label: string;
-    subtitle: string;
     href: string;
     icon: any;
-    badge?: string;
-    badgeColor?: string;
     matchSubpaths?: boolean;
+    badge?: string;
   }
 
-  interface NavGroup {
-    title: string;
-    stepNumber?: string;
+  interface NavSection {
+    title?: string;
     items: NavItem[];
   }
 
-  const navGroups: NavGroup[] = [
+  const sections: NavSection[] = [
     {
-      title: "Overview",
       items: [
-        {
-          label: "Dashboard",
-          subtitle: "Target score & stats",
-          href: "/",
-          icon: Compass,
-        },
+        { label: "Dashboard", href: "/", icon: Compass },
       ],
     },
     {
-      title: "1. Learn Theory",
-      stepNumber: "Step 1",
+      title: "Learn & Practice",
       items: [
-        {
-          label: "13 Units Textbook",
-          subtitle: "Theory, lessons & quizzes",
-          href: "/curriculum",
-          icon: BookOpen,
-          badge: "13 Units",
-          badgeColor: "bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
-          matchSubpaths: true,
-        },
-        {
-          label: "Desmos Speed Lab",
-          subtitle: "Graphing bypass hacks",
-          href: "/desmos",
-          icon: Sparkles,
-          badge: "Desmos",
-          badgeColor: "bg-cyan-100 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800",
-        },
+        { label: "13 Units Textbook", href: "/curriculum", icon: BookOpen, matchSubpaths: true, badge: "13" },
+        { label: "Desmos Speed Lab", href: "/desmos", icon: Sparkles },
+        { label: "Math Bank", href: "/math", icon: Calculator },
+        { label: "Reading & Writing", href: "/verbal", icon: GraduationCap },
       ],
     },
     {
-      title: "2. Practice Bank",
-      stepNumber: "Step 2",
+      title: "Test & Review",
       items: [
-        {
-          label: "Math Question Bank",
-          subtitle: "0 → 800 adaptive drills",
-          href: "/math",
-          icon: Calculator,
-          badge: "Math",
-          badgeColor: "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
-        },
-        {
-          label: "Reading & Writing Bank",
-          subtitle: "Grammar & vocabulary",
-          href: "/verbal",
-          icon: GraduationCap,
-          badge: "Verbal",
-          badgeColor: "bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800",
-        },
-      ],
-    },
-    {
-      title: "3. Full Simulation",
-      stepNumber: "Step 3",
-      items: [
-        {
-          label: "Bluebook Simulator",
-          subtitle: "134-min adaptive mock test",
-          href: "/mock",
-          icon: FileCheck2,
-          badge: "Exam",
-          badgeColor: "bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
-        },
-      ],
-    },
-    {
-      title: "4. Review & Vault",
-      stepNumber: "Step 4",
-      items: [
-        {
-          label: "AI Error Notebook",
-          subtitle: "Review mistake traps",
-          href: "/error-log",
-          icon: Repeat,
-          badge: "Review",
-          badgeColor: "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800",
-        },
-        {
-          label: "41 Prep Books Vault",
-          subtitle: "Free offline PDFs & guides",
-          href: "/satashkent",
-          icon: Award,
-          badge: "41 Books",
-          badgeColor: "bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800",
-        },
+        { label: "Bluebook Mock", href: "/mock", icon: FileCheck2 },
+        { label: "Error Notebook", href: "/error-log", icon: Repeat },
+        { label: "41 Prep Books", href: "/satashkent", icon: Award },
       ],
     },
   ];
 
   return (
     <aside
-      className={`h-screen max-h-screen sticky top-0 overflow-hidden bg-[var(--bg-card)] border-r border-[var(--border-main)] flex flex-col justify-between py-5 select-none shrink-0 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] z-30 shadow-[var(--shadow-xs)] ${
-        isCollapsed ? "w-20 px-3" : "w-72 px-4"
+      className={`h-screen max-h-screen sticky top-0 overflow-hidden bg-[var(--bg-card)] border-r border-[var(--border-main)] flex flex-col justify-between py-4 select-none shrink-0 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] z-30 shadow-[var(--shadow-xs)] ${
+        isCollapsed ? "w-20 px-3" : "w-64 px-3"
       }`}
     >
       <div className="flex-1 flex flex-col justify-start overflow-y-auto scrollbar-none space-y-4">
         {/* Header & Brand with Collapse Toggle */}
-        <div className="flex items-center justify-between px-2">
+        <div className="flex items-center justify-between px-2 pt-1 pb-1">
           {!isCollapsed ? (
             <>
-              <Link href="/" className="flex items-center gap-3 px-1 group min-w-0">
-                <VesperaLogo size={36} className="shrink-0 group-hover:scale-105 transition-transform" />
-                <div className="min-w-0 truncate">
+              <Link href="/" className="flex items-center gap-2.5 group min-w-0">
+                <VesperaLogo size={32} className="shrink-0 group-hover:scale-105 transition-transform" />
+                <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <h1 className="text-sm font-extrabold text-[var(--text-main)] tracking-wider truncate">
+                    <span className="text-sm font-extrabold text-[var(--text-main)] tracking-wider">
                       VESPERA
-                    </h1>
-                    <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 font-mono shrink-0">
+                    </span>
+                    <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono">
                       SAT
                     </span>
                   </div>
-                  <p className="text-[10px] text-[var(--text-muted)] font-medium truncate">
-                    Autonomous Suite
-                  </p>
                 </div>
               </Link>
 
               <button
                 onClick={toggleSidebar}
                 title="Collapse Sidebar (Ctrl+B)"
-                className="p-1.5 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors shrink-0"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
               >
-                <PanelLeftClose size={17} />
+                <PanelLeftClose size={16} />
               </button>
             </>
           ) : (
@@ -194,14 +118,14 @@ export default function Sidebar() {
               <Link
                 href="/"
                 title="Vespera SAT"
-                className="p-1 rounded-2xl hover:bg-[var(--bg-surface)] transition-all flex items-center justify-center"
+                className="p-1 rounded-xl hover:bg-[var(--bg-surface)] transition-all flex items-center justify-center"
               >
-                <VesperaLogo size={34} />
+                <VesperaLogo size={32} />
               </Link>
               <button
                 onClick={toggleSidebar}
                 title="Expand Sidebar (Ctrl+B)"
-                className="p-1.5 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors mt-1"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors mt-0.5"
               >
                 <PanelLeftOpen size={16} />
               </button>
@@ -209,27 +133,23 @@ export default function Sidebar() {
           )}
         </div>
 
-        {/* Navigation Sections Organized by Study Phase */}
-        <div className="space-y-4 pt-1">
-          {navGroups.map((group, gIdx) => (
-            <div key={gIdx} className="space-y-1">
-              {!isCollapsed ? (
-                <div className="flex items-center justify-between px-3 pt-1.5 pb-1">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
-                    {group.title}
+        {/* Clean, Streamlined Navigation */}
+        <div className="space-y-4">
+          {sections.map((section, sIdx) => (
+            <div key={sIdx} className="space-y-1">
+              {section.title && !isCollapsed && (
+                <div className="px-2.5 pt-2 pb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
+                    {section.title}
                   </span>
-                  {group.stepNumber && (
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">
-                      {group.stepNumber}
-                    </span>
-                  )}
                 </div>
-              ) : (
-                <div className="h-px bg-[var(--border-main)] my-2 mx-1 opacity-50" />
+              )}
+              {section.title && isCollapsed && (
+                <div className="h-px bg-[var(--border-main)] my-2 mx-2 opacity-50" />
               )}
 
-              <nav className="space-y-1">
-                {group.items.map((item) => {
+              <nav className="space-y-0.5">
+                {section.items.map((item) => {
                   const Icon = item.icon;
                   const isActive = item.matchSubpaths
                     ? pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -239,44 +159,31 @@ export default function Sidebar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      title={isCollapsed ? `${item.label} • ${item.subtitle}` : undefined}
-                      className={`flex items-center rounded-xl transition-all duration-150 ${
+                      title={isCollapsed ? item.label : undefined}
+                      className={`flex items-center rounded-lg transition-colors text-[13px] font-medium ${
                         isCollapsed
-                          ? "w-11 h-11 mx-auto justify-center"
-                          : "gap-2.5 px-2.5 py-2"
+                          ? "w-10 h-10 mx-auto justify-center"
+                          : "gap-3 px-2.5 py-2"
                       } ${
                         isActive
-                          ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 shadow-xs"
-                          : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/60 border border-transparent"
+                          ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold"
+                          : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
                       }`}
                     >
-                      <div
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                      <Icon
+                        size={17}
+                        className={`shrink-0 transition-colors ${
                           isActive
-                            ? "bg-blue-600 text-white shadow-xs"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                            ? "text-blue-600 dark:text-blue-400"
+                            : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600"
                         }`}
-                      >
-                        <Icon size={15} />
-                      </div>
+                      />
 
                       {!isCollapsed && (
-                        <div className="flex-1 min-w-0 flex items-center justify-between gap-1.5">
-                          <div className="min-w-0">
-                            <span className="text-xs font-bold block truncate leading-tight">
-                              {item.label}
-                            </span>
-                            <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate leading-tight font-medium">
-                              {item.subtitle}
-                            </span>
-                          </div>
+                        <div className="flex-1 min-w-0 flex items-center justify-between">
+                          <span className="truncate">{item.label}</span>
                           {item.badge && (
-                            <span
-                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border font-mono shrink-0 select-none ${
-                                item.badgeColor ||
-                                "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                              }`}
-                            >
+                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-mono">
                               {item.badge}
                             </span>
                           )}
