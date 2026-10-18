@@ -54,26 +54,36 @@ export async function POST(request: Request) {
       ? `IELTS ${userProfile.ieltsScore} baseline`
       : `${userProfile?.englishLevel || "Intermediate"} Verbal profile`;
 
-    let systemPrompt = `You are Vespera SAT AI Mentor, an elite, world-class Digital SAT tutor personalized for ${studentName}.
-Student Profile:
-- Target Composite Score: ${targetScore}+ (Math Target: ${mathGoal})
-- English / Reading Profile: ${englishContext}
-- Priority Focus: ${userProfile?.priorityWeakness || "Hard Module 2 Traps & Desmos Speed Lab"}
-${userProfile?.currentSatScore ? `- Baseline Score: ${userProfile.currentSatScore} (Gap: +${targetScore - userProfile.currentSatScore} points)` : ""}
+    let systemPrompt = `You are Vespera SAT AI Mentor, an elite, world-class Digital SAT master tutor personalized for ${studentName}.
+Target Composite Score: ${targetScore}+ (Math: ${mathGoal}, Verbal: ${englishContext}).
 
-Rules:
-1. Always respond in clear, academic, engaging English. Laser-focus on College Board Digital SAT test mechanics.
-2. Structure mistake breakdowns into:
-   - Stage 1 (Trap Analysis): Explain precisely why the student's selected option is tempting, and identify the exact College Board trap family (Partial Answer, Sign Flip, Reading Out-of-Scope, False Equivalency, Comma Splice).
-   - Stage 2 (First-Principles Intuition): Provide a clean, intuitive mental model or real-world analogy.
-   - Stage 3 (10-Second Desmos Shortcut): The exact lines to type into Desmos to bypass manual algebra in 10-15 seconds.
-   - Stage 4 (Golden Invariant): A single memorable rule to prevent repeat errors.
-3. Format math expressions in clean LaTeX syntax: $inline$ or $$display$$. Use markdown bolding and clean structured lists.`;
+Core Mission:
+Deliver crystal-clear, high-yield, pedagogically brilliant explanations that teach the student not just HOW to solve the problem, but WHY the answer works, the exact College Board traps to avoid, and how to execute with maximum velocity using Desmos or elimination.
 
-    // 1. TRY LIVE GEMINI API IF KEY AVAILABLE
+Pedagogical Structure Guidelines:
+1. 🎯 Direct Solution (First Principles):
+   - Break down the core mathematical or grammatical rule step-by-step.
+   - Explain the reasoning behind each step clearly and concisely.
+   - Format all math using clean LaTeX syntax: $inline$ for inline terms (e.g. $x = 4$, $y = mx + b$) and $$display$$ for major formulas or equations.
+2. ⚡ The Desmos 10-Second SpeedHack (for Math topics):
+   - Give the EXACT lines to type into Desmos (e.g. Line 1: \`...\`, Line 2: \`...\`).
+   - Describe what clickable grey dot, slider, regression (~), or visual feature gives the answer instantly without manual algebra.
+3. ⚠️ College Board Trap Analysis:
+   - If the student made a mistake or chose a specific option, diagnose precisely WHY that choice was engineered by test makers (e.g. Partial Solver Trap, Sign Flip Trap, False Equivalency, Domain Constraint).
+   - If no mistake was made, explain why common distractors are tempting and how to immediately eliminate them.
+4. 🧠 Golden Takeaway Rule:
+   - Provide a single, memorable, high-yield rule or mnemonic to lock this concept in memory for test day.
+
+Tone & Style:
+- Professional, encouraging, academic, and deeply knowledgeable of Digital SAT adaptive test mechanics.
+- Use markdown formatting with clear bold headings (###, ####), bullet points, and GitHub-style callouts (> [!TIP], > [!WARNING], > [!IMPORTANT]).
+- Keep all explanations strictly in English.`;
+
+    // 1. TRY LIVE GEMINI API (GEMINI 2.5 FLASH) IF KEY AVAILABLE
     if (geminiKey && geminiKey.trim() !== "") {
-      try {
-        const promptText = `
+      const candidateModels = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-pro"];
+      
+      const promptText = `
 Context Information:
 - Current SAT Domain: ${topicDomain}
 - Question Prompt: ${questionPrompt || "N/A"}
@@ -87,39 +97,45 @@ Student Query: "${userQ || "Why is my answer wrong and how can I solve this in 1
 
 Please provide a structured, Socratic, and actionable SAT explanation in English tailored for ${studentName} targeting ${targetScore}+.`;
 
-        const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [
-                {
-                  role: "user",
-                  parts: [{ text: `${systemPrompt}\n\n${promptText}` }],
+      for (const model of candidateModels) {
+        try {
+          const geminiRes = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [
+                  {
+                    role: "user",
+                    parts: [{ text: `${systemPrompt}\n\n${promptText}` }],
+                  },
+                ],
+                generationConfig: {
+                  temperature: 0.2,
+                  maxOutputTokens: 1500,
                 },
-              ],
-              generationConfig: {
-                temperature: 0.3,
-                maxOutputTokens: 1200,
-              },
-            }),
-          }
-        );
+              }),
+            }
+          );
 
-        if (geminiRes.ok) {
-          const geminiData = await geminiRes.json();
-          const generatedText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (generatedText) {
-            return NextResponse.json({
-              answer: generatedText,
-              source: "gemini-1.5-flash",
-              timestamp: new Date().toISOString(),
-            });
+          if (geminiRes.ok) {
+            const geminiData = await geminiRes.json();
+            const generatedText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (generatedText) {
+              return NextResponse.json({
+                answer: generatedText,
+                source: model,
+                timestamp: new Date().toISOString(),
+              });
+            }
+          } else {
+            const errData = await geminiRes.json().catch(() => ({}));
+            console.warn(`Gemini API returned ${geminiRes.status} for model ${model}:`, errData);
           }
+        } catch (geminiErr) {
+          console.warn(`Live Gemini API call failed for ${model}:`, geminiErr);
         }
-      } catch (geminiErr) {
-        console.warn("Live Gemini API call failed, falling back to cognitive engine:", geminiErr);
       }
     }
 
