@@ -224,13 +224,13 @@ export default function QuestionCard({
       }`}
     >
       {/* Header Info */}
-      <div className="flex items-center justify-between px-7 py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)]">
-        <div className="flex items-center gap-2.5">
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 font-mono">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-7 py-3 sm:py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)]">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+          <span className="text-xs font-bold px-2.5 sm:px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 font-mono">
             {question.domain}
           </span>
           <span
-            className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+            className={`text-xs font-semibold px-2 sm:px-2.5 py-1 rounded-full ${
               question.difficulty === "Easy"
                 ? "bg-[var(--accent-green)]/10 text-[var(--accent-green)]"
                 : "bg-[var(--accent-amber)]/10 text-[var(--accent-amber)]"
@@ -245,15 +245,15 @@ export default function QuestionCard({
           )}
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
           {question.desmos_latex && (
             <button
               onClick={handleSendToDesmos}
               title="Load equation directly into Desmos"
-              className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-[var(--accent-green)]/10 text-[var(--accent-green)] border border-[var(--accent-green)]/20 hover:bg-[var(--accent-green)]/20 transition-all shadow-sm"
+              className="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl bg-[var(--accent-green)]/10 text-[var(--accent-green)] border border-[var(--accent-green)]/20 hover:bg-[var(--accent-green)]/20 transition-all shadow-sm"
             >
               <Zap size={14} className="fill-current" />
-              <span>Solve in Desmos</span>
+              <span>Desmos</span>
             </button>
           )}
 
@@ -276,7 +276,7 @@ export default function QuestionCard({
               );
             }}
             title="Ask AI Mentor for instant intuition or trap analysis"
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 hover:bg-[var(--accent-blue)]/20 transition-all shadow-sm"
+            className="flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20 hover:bg-[var(--accent-blue)]/20 transition-all shadow-sm"
           >
             <Sparkles size={14} />
             <span>AI Mentor</span>
@@ -285,16 +285,16 @@ export default function QuestionCard({
           {isSubmitted && (
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 text-[var(--text-muted)] hover:text-[var(--text-main)] px-3 py-1.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] transition-colors text-xs font-medium shadow-sm"
+              className="flex items-center gap-1.5 text-[var(--text-muted)] hover:text-[var(--text-main)] px-2.5 sm:px-3 py-1.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] transition-colors text-xs font-medium shadow-sm"
             >
               <RotateCcw size={13} />
-              <span>Reset & Retry</span>
+              <span>Retry</span>
             </button>
           )}
         </div>
       </div>
 
-      <div className="p-7 md:p-8 space-y-7">
+      <div className="p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-7">
         {/* Reading Passage if available */}
         {question.passage && (
           <div className="p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-sm text-[var(--text-main)] leading-relaxed font-serif shadow-inner">
@@ -536,10 +536,10 @@ export default function QuestionCard({
 
             {/* Structured Explainer Tabs */}
             <div className="rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] overflow-hidden shadow-sm">
-              <div className="flex border-b border-[var(--border-main)] text-xs font-semibold">
+              <div className="flex border-b border-[var(--border-main)] text-xs font-semibold overflow-x-auto scrollbar-none">
                 <button
                   onClick={() => setActiveTab("solution")}
-                  className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 transition-colors border-b-2 ${
+                  className={`flex-1 min-w-[130px] py-2.5 sm:py-3 px-3 sm:px-4 flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border-b-2 whitespace-nowrap ${
                     activeTab === "solution"
                       ? "border-[var(--accent-blue)] text-[var(--accent-blue)] bg-[var(--bg-card)]"
                       : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -552,7 +552,7 @@ export default function QuestionCard({
                 {question.desmos_trick && (
                   <button
                     onClick={() => setActiveTab("desmos")}
-                    className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 transition-colors border-b-2 ${
+                    className={`flex-1 min-w-[120px] py-2.5 sm:py-3 px-3 sm:px-4 flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border-b-2 whitespace-nowrap ${
                       activeTab === "desmos"
                         ? "border-[var(--accent-green)] text-[var(--accent-green)] bg-[var(--bg-card)]"
                         : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -566,7 +566,7 @@ export default function QuestionCard({
                 {question.reference_formula && (
                   <button
                     onClick={() => setActiveTab("formula")}
-                    className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 transition-colors border-b-2 ${
+                    className={`flex-1 min-w-[130px] py-2.5 sm:py-3 px-3 sm:px-4 flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border-b-2 whitespace-nowrap ${
                       activeTab === "formula"
                         ? "border-purple-500 text-purple-600 dark:text-purple-400 bg-[var(--bg-card)]"
                         : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -579,7 +579,7 @@ export default function QuestionCard({
               </div>
 
               {/* Explainer Body */}
-              <div className="p-6 text-sm leading-relaxed text-[var(--text-main)]">
+              <div className="p-4 sm:p-6 text-sm leading-relaxed text-[var(--text-main)]">
                 {activeTab === "solution" && (
                   <div className="space-y-4 font-sans">
                     <div className="prose prose-sm dark:prose-invert max-w-none">

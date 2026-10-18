@@ -245,11 +245,11 @@ export default function AICopilotModal({
     <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm overflow-hidden animate-fadeIn">
       <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl w-full max-w-2xl h-[680px] max-h-[92vh] flex flex-col overflow-hidden shadow-2xl transition-all my-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)] shrink-0">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)] shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
             <VesperaLogo size={32} />
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-extrabold text-sm text-[var(--text-main)] tracking-wide">
                   VESPERA AI COPILOT
                 </h3>
@@ -258,7 +258,7 @@ export default function AICopilotModal({
                   Socratic SAT Engine
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--text-muted)] font-medium">
+              <p className="text-[11px] text-[var(--text-muted)] font-medium truncate">
                 Personal 1550+ SAT Mentor (Desmos Speedhacks & Trap Taxonomy)
               </p>
             </div>

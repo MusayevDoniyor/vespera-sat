@@ -96,6 +96,7 @@ export default function BluebookMockPage() {
   const [timeLeft, setTimeLeft] = useState(32 * 60);
   const [showTimer, setShowTimer] = useState(true);
   const [breakTimeLeft, setBreakTimeLeft] = useState(10 * 60);
+  const examStartTimeRef = useRef<number>(Date.now());
 
   // Review Drawer filter
   const [gridFilter, setGridFilter] = useState<"all" | "unanswered" | "flagged">("all");
@@ -112,6 +113,11 @@ export default function BluebookMockPage() {
     percentile: number;
     rwTier: string;
     mathTier: string;
+    rwM1?: { correct: number; total: number; percent: number };
+    rwM2?: { correct: number; total: number; percent: number; isHard: boolean };
+    mathM1?: { correct: number; total: number; percent: number };
+    mathM2?: { correct: number; total: number; percent: number; isHard: boolean };
+    domainStats?: Record<string, { correct: number; total: number; accuracy: number }>;
   } | null>(null);
 
   const currentQ = activeQuestions[currentIndex];
@@ -206,6 +212,7 @@ export default function BluebookMockPage() {
   // Start Exam
   const startExam = (exam: BluebookExamForm) => {
     setSelectedExam(exam);
+    examStartTimeRef.current = Date.now();
     setCurrentSection("READING_WRITING");
     setCurrentModuleNum(1);
     setActiveQuestions(exam.rwModule1);
@@ -346,11 +353,57 @@ export default function BluebookMockPage() {
     setStage("testing");
   };
 
+  // Official Digital SAT Item Response Theory (IRT) Multistage Adaptive Scoring
+  const computeBluebookScaledScore = (params: {
+    m1Correct: number;
+    m1Total: number;
+    m2Correct: number;
+    m2Total: number;
+    isHardRoute: boolean;
+    section: "RW" | "MATH";
+  }): number => {
+    const m1T = params.m1Total || (params.section === "RW" ? 27 : 22);
+    const m2T = params.m2Total || (params.section === "RW" ? 27 : 22);
+    const r1 = Math.min(1, Math.max(0, params.m1Correct / m1T));
+    const r2 = Math.min(1, Math.max(0, params.m2Correct / m2T));
+
+    if (!params.isHardRoute) {
+      // Lower Stage (Easy Module 2): Strict score ceiling capped at 590 (RW) / 610 (Math)
+      const cap = params.section === "RW" ? 590 : 610;
+      const raw = 200 + (r1 * 200) + (r2 * 200);
+      return Math.min(cap, Math.max(200, Math.round(raw / 10) * 10));
+    } else {
+      // Upper Stage (Hard Module 2): Score range 490 - 800
+      // 100% on both modules gives 800
+      const raw = 480 + (r1 * 120) + (r2 * 200);
+      return Math.max(490, Math.min(800, Math.round(raw / 10) * 10));
+    }
+  };
+
+  const getDigitalSatPercentile = (totalScore: number): number => {
+    if (totalScore >= 1550) return 99;
+    if (totalScore >= 1500) return 98;
+    if (totalScore >= 1450) return 96;
+    if (totalScore >= 1400) return 93;
+    if (totalScore >= 1350) return 90;
+    if (totalScore >= 1300) return 86;
+    if (totalScore >= 1250) return 81;
+    if (totalScore >= 1200) return 74;
+    if (totalScore >= 1150) return 67;
+    if (totalScore >= 1100) return 60;
+    if (totalScore >= 1050) return 52;
+    if (totalScore >= 1000) return 43;
+    if (totalScore >= 950) return 35;
+    if (totalScore >= 900) return 27;
+    if (totalScore >= 850) return 20;
+    return Math.max(1, Math.round((totalScore - 400) / 30));
+  };
+
   const finalizeExamScore = () => {
-    let rwCorrect = 0;
-    let rwTotal = 0;
-    let mathCorrect = 0;
-    let mathTotal = 0;
+    let rwM1Correct = 0, rwM1Total = 0;
+    let rwM2Correct = 0, rwM2Total = 0;
+    let mathM1Correct = 0, mathM1Total = 0;
+    let mathM2Correct = 0, mathM2Total = 0;
 
     // Check questions served during this attempt
     const questionsToScore = servedQuestions.length > 0 ? servedQuestions : [
@@ -360,47 +413,81 @@ export default function BluebookMockPage() {
       ...(isHardModule2Math ? selectedExam.mathModule2Hard : selectedExam.mathModule2Easy),
     ];
 
+    const domainStats: Record<string, { correct: number; total: number; accuracy: number }> = {};
+
     questionsToScore.forEach((q) => {
       const userAns = userAnswers[q.id]?.trim().toUpperCase();
       const isCorrect = userAns && userAns === q.correctAnswer.trim().toUpperCase();
+
+      if (!domainStats[q.domain]) {
+        domainStats[q.domain] = { correct: 0, total: 0, accuracy: 0 };
+      }
+      domainStats[q.domain].total++;
+      if (isCorrect) domainStats[q.domain].correct++;
+
       if (q.section === "READING_WRITING") {
-        rwTotal++;
-        if (isCorrect) rwCorrect++;
+        if (q.module === 1) {
+          rwM1Total++;
+          if (isCorrect) rwM1Correct++;
+        } else {
+          rwM2Total++;
+          if (isCorrect) rwM2Correct++;
+        }
       } else {
-        mathTotal++;
-        if (isCorrect) mathCorrect++;
+        if (q.module === 1) {
+          mathM1Total++;
+          if (isCorrect) mathM1Correct++;
+        } else {
+          mathM2Total++;
+          if (isCorrect) mathM2Correct++;
+        }
       }
     });
 
-    const rwRatio = rwTotal > 0 ? rwCorrect / rwTotal : 0.75;
-    const mathRatio = mathTotal > 0 ? mathCorrect / mathTotal : 0.8;
+    Object.keys(domainStats).forEach((d) => {
+      domainStats[d].accuracy = Math.round((domainStats[d].correct / (domainStats[d].total || 1)) * 100);
+    });
 
-    // College Board scaled scoring: 200 - 800 with 10 pt steps
-    const rwScore = Math.round((200 + rwRatio * 600) / 10) * 10;
-    const mathScore = Math.round((200 + mathRatio * 600) / 10) * 10;
+    const isHardRW = isHardModule2RW ?? (rwM1Correct / (rwM1Total || 1) >= 0.62);
+    const isHardMath = isHardModule2Math ?? (mathM1Correct / (mathM1Total || 1) >= 0.62);
+
+    const rwScore = computeBluebookScaledScore({
+      m1Correct: rwM1Correct,
+      m1Total: rwM1Total,
+      m2Correct: rwM2Correct,
+      m2Total: rwM2Total,
+      isHardRoute: isHardRW,
+      section: "RW",
+    });
+
+    const mathScore = computeBluebookScaledScore({
+      m1Correct: mathM1Correct,
+      m1Total: mathM1Total,
+      m2Correct: mathM2Correct,
+      m2Total: mathM2Total,
+      isHardRoute: isHardMath,
+      section: "MATH",
+    });
+
     const totalScore = rwScore + mathScore;
-
-    // Estimate percentile
-    let percentile = 50;
-    if (totalScore >= 1550) percentile = 99;
-    else if (totalScore >= 1500) percentile = 98;
-    else if (totalScore >= 1400) percentile = 93;
-    else if (totalScore >= 1300) percentile = 86;
-    else if (totalScore >= 1200) percentile = 74;
-    else if (totalScore >= 1100) percentile = 60;
-    else percentile = Math.max(20, Math.round((totalScore - 400) / 12));
+    const percentile = getDigitalSatPercentile(totalScore);
 
     const result = {
       totalScore,
       rwScore,
       mathScore,
-      rwCorrect,
-      mathCorrect,
-      totalCorrect: rwCorrect + mathCorrect,
-      totalQuestions: rwTotal + mathTotal || 1,
+      rwCorrect: rwM1Correct + rwM2Correct,
+      mathCorrect: mathM1Correct + mathM2Correct,
+      totalCorrect: rwM1Correct + rwM2Correct + mathM1Correct + mathM2Correct,
+      totalQuestions: rwM1Total + rwM2Total + mathM1Total + mathM2Total || 1,
       percentile,
-      rwTier: isHardModule2RW ? "Adaptive Tier 2 (Hard - 700-800 Capable)" : "Adaptive Tier 2 (Standard)",
-      mathTier: isHardModule2Math ? "Adaptive Tier 2 (Hard - 750-800 Capable)" : "Adaptive Tier 2 (Standard)",
+      rwTier: isHardRW ? "Upper Stage (Hard Module 2 — 800 Capable)" : "Lower Stage (Standard Module 2 — 590 Cap)",
+      mathTier: isHardMath ? "Upper Stage (Hard Module 2 — 800 Capable)" : "Lower Stage (Standard Module 2 — 610 Cap)",
+      rwM1: { correct: rwM1Correct, total: rwM1Total, percent: Math.round((rwM1Correct / (rwM1Total || 1)) * 100) },
+      rwM2: { correct: rwM2Correct, total: rwM2Total, percent: Math.round((rwM2Correct / (rwM2Total || 1)) * 100), isHard: isHardRW },
+      mathM1: { correct: mathM1Correct, total: mathM1Total, percent: Math.round((mathM1Correct / (mathM1Total || 1)) * 100) },
+      mathM2: { correct: mathM2Correct, total: mathM2Total, percent: Math.round((mathM2Correct / (mathM2Total || 1)) * 100), isHard: isHardMath },
+      domainStats,
     };
 
     setScoreResult(result);
@@ -418,7 +505,10 @@ export default function BluebookMockPage() {
         readingScore: rwScore,
         totalQuestions: result.totalQuestions,
         correctCount: result.totalCorrect,
-        timeSpent: (selectedExam.rwTimingMinutes + selectedExam.mathTimingMinutes) * 60 - timeLeft,
+        timeSpent: Math.max(
+          1,
+          Math.round((Date.now() - examStartTimeRef.current) / 1000)
+        ),
       }),
     }).catch(() => {});
   };
@@ -504,9 +594,12 @@ export default function BluebookMockPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-main)] text-xs text-[var(--text-secondary)]">
-                    <div className="flex items-center gap-1.5">
+                    <div
+                      className="flex items-center gap-1.5"
+                      title="Digital SAT rasmiy vaqti: 2 modul RW (64 daq) + 2 modul Math (70 daq) = 134 daqiqa (+10 daq tanaffus)"
+                    >
                       <Clock className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
-                      <span>{exam.rwTimingMinutes + exam.mathTimingMinutes} daqiqa</span>
+                      <span>134 daqiqa (2s 14d)</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Layers className="w-3.5 h-3.5 text-[var(--accent-amber)]" />
@@ -532,11 +625,15 @@ export default function BluebookMockPage() {
           </div>
 
           {/* Guidelines */}
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)] shadow-sm">
-            <div className="flex items-center gap-3">
-              <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
-              <span>
-                <strong>Official Bluebook Rules:</strong> A Section Review screen appears before ending each module. Once submitted, modules cannot be revisited. A scheduled 10-minute break occurs between Section 1 and Section 2.
+          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] p-4 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[var(--text-muted)] shadow-sm">
+            <div className="flex items-start md:items-center gap-3">
+              <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5 md:mt-0" />
+              <span className="leading-relaxed">
+                <strong>Rasmiy Digital SAT (Bluebook) vaqti va formati:</strong> Jami 98 ta savol, 4 ta adaptiv modul. 
+                Reading & Writing: 2 modul x 32 daqiqa (64 daqiqa, 54 savol). 
+                Bo'limlar o'rtasida 10 daqiqalik rasmiy tanaffus. 
+                Math: 2 modul x 35 daqiqa (70 daqiqa, 44 savol). 
+                Jami sof sinov vaqti: <strong>134 daqiqa (2 soat 14 daqiqa)</strong>. Har bir modul topshirilgach, avvalgi modulga qaytib bo'lmaydi.
               </span>
             </div>
             <Link
@@ -855,6 +952,135 @@ export default function BluebookMockPage() {
             </div>
           </div>
 
+          {/* Multistage Adaptive Pathway Diagnostic Card */}
+          <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 space-y-5 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+              <div className="flex items-center gap-2.5">
+                <Layers className="w-5 h-5 text-[var(--accent-blue)]" />
+                <h3 className="font-bold text-sm text-[var(--text-main)]">
+                  Digital SAT Multistage Adaptive Pathway (Bluebook MST)
+                </h3>
+              </div>
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]">
+                Official CB Equating Model
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              {/* RW Routing */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="text-[var(--text-main)]">Section 1: Reading & Writing</span>
+                  <span className={`px-2 py-0.5 rounded-md font-mono ${
+                    scoreResult.rwM2?.isHard
+                      ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/30"
+                      : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
+                  }`}>
+                    {scoreResult.rwM2?.isHard ? "Upper Track (Hard M2)" : "Lower Track (Easy M2)"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-[var(--text-muted)]">
+                  <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)]">
+                    <span className="block text-[11px]">Routing Module 1:</span>
+                    <strong className="text-sm text-[var(--text-main)] font-mono">
+                      {scoreResult.rwM1?.correct} / {scoreResult.rwM1?.total}
+                    </strong>
+                    <span className="text-[10px] text-[var(--text-muted)] block">({scoreResult.rwM1?.percent}%)</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)]">
+                    <span className="block text-[11px]">Adaptive Module 2:</span>
+                    <strong className="text-sm text-[var(--text-main)] font-mono">
+                      {scoreResult.rwM2?.correct} / {scoreResult.rwM2?.total}
+                    </strong>
+                    <span className="text-[10px] text-[var(--text-muted)] block">({scoreResult.rwM2?.percent}%)</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                  {scoreResult.rwM2?.isHard
+                    ? "🎉 You achieved the qualifying threshold (≥62%) on Module 1, unlocking the Hard Module 2 and qualifying for the 700–800 score band."
+                    : "⚠️ Performance on Module 1 routed to Standard Module 2. The maximum scaled score ceiling for this pathway is capped at 590."}
+                </p>
+              </div>
+
+              {/* Math Routing */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="text-[var(--text-main)]">Section 2: Math</span>
+                  <span className={`px-2 py-0.5 rounded-md font-mono ${
+                    scoreResult.mathM2?.isHard
+                      ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/30"
+                      : "bg-amber-500/10 text-amber-500 border border-amber-500/30"
+                  }`}>
+                    {scoreResult.mathM2?.isHard ? "Upper Track (Hard M2)" : "Lower Track (Easy M2)"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-[var(--text-muted)]">
+                  <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)]">
+                    <span className="block text-[11px]">Routing Module 1:</span>
+                    <strong className="text-sm text-[var(--text-main)] font-mono">
+                      {scoreResult.mathM1?.correct} / {scoreResult.mathM1?.total}
+                    </strong>
+                    <span className="text-[10px] text-[var(--text-muted)] block">({scoreResult.mathM1?.percent}%)</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)]">
+                    <span className="block text-[11px]">Adaptive Module 2:</span>
+                    <strong className="text-sm text-[var(--text-main)] font-mono">
+                      {scoreResult.mathM2?.correct} / {scoreResult.mathM2?.total}
+                    </strong>
+                    <span className="text-[10px] text-[var(--text-muted)] block">({scoreResult.mathM2?.percent}%)</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                  {scoreResult.mathM2?.isHard
+                    ? "🏆 High accuracy on Math Module 1 unlocked Hard Module 2, enabling scaled scoring up to a perfect 800."
+                    : "⚠️ Performance on Math Module 1 routed to Standard Module 2. The maximum scaled score ceiling for this pathway is capped at 610."}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Domain Breakdown Progress */}
+          {scoreResult.domainStats && Object.keys(scoreResult.domainStats).length > 0 && (
+            <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                <div className="flex items-center gap-2">
+                  <Target className="w-5 h-5 text-emerald-500" />
+                  <h3 className="font-bold text-sm text-[var(--text-main)]">
+                    College Board Domain Mastery Breakdown
+                  </h3>
+                </div>
+                <span className="text-xs text-[var(--text-muted)]">
+                  {Object.keys(scoreResult.domainStats).length} Measured Domains
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                {Object.entries(scoreResult.domainStats).map(([domain, stat]) => (
+                  <div key={domain} className="p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-[var(--text-main)] truncate max-w-[200px]">{domain}</span>
+                      <span className="font-mono font-bold text-[var(--text-secondary)]">
+                        {stat.correct}/{stat.total} ({stat.accuracy}%)
+                      </span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-[var(--bg-card)] overflow-hidden border border-[var(--border-main)]">
+                      <div
+                        className={`h-full transition-all duration-500 ${
+                          stat.accuracy >= 80
+                            ? "bg-emerald-500"
+                            : stat.accuracy >= 60
+                            ? "bg-[var(--accent-blue)]"
+                            : "bg-amber-500"
+                        }`}
+                        style={{ width: `${stat.accuracy}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
@@ -1027,9 +1253,11 @@ export default function BluebookMockPage() {
                       {/* Multiple Choice Options */}
                       {q.type === "multiple_choice" && q.options && (
                         <div className="mt-4 grid grid-cols-1 gap-2">
-                          {Object.entries(q.options).map(([letter, text]) => {
-                            const isThisCorrect = letter === q.correctAnswer;
-                            const isThisUserChoice = letter === userAns;
+                          {q.options.map((opt) => {
+                            const letter = opt.substring(0, 1).toUpperCase();
+                            const cleanText = opt.substring(3).trim();
+                            const isThisCorrect = letter === q.correctAnswer.trim().toUpperCase();
+                            const isThisUserChoice = letter === userAns?.trim().toUpperCase();
                             const isUserWrongHere = isThisUserChoice && !isThisCorrect;
 
                             return (
@@ -1055,7 +1283,7 @@ export default function BluebookMockPage() {
                                   >
                                     {letter}
                                   </span>
-                                  <span><KaTeXMath content={text} /></span>
+                                  <span><KaTeXMath content={cleanText} /></span>
                                 </div>
 
                                 {isThisCorrect && (
@@ -1180,58 +1408,58 @@ export default function BluebookMockPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col select-none transition-colors">
       {/* ================= TOP BAR (College Board Bluebook Header) ================= */}
-      <header className="h-14 border-b border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
+      <header className="h-14 border-b border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-2.5 sm:px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
         {/* Left: Section & Module info + Directions toggle */}
-        <div className="flex items-center gap-3">
-          <div className="text-xs md:text-sm font-bold text-[var(--text-main)] tracking-wide">
-            {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"}
-            <span className="text-[var(--text-muted)] font-normal ml-1.5 hidden sm:inline">
-              Module {currentModuleNum}
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+          <div className="text-xs md:text-sm font-bold text-[var(--text-main)] tracking-wide truncate">
+            <span className="sm:hidden">{currentSection === "READING_WRITING" ? "RW" : "Math"} • M{currentModuleNum}</span>
+            <span className="hidden sm:inline">
+              {currentSection === "READING_WRITING" ? "Section 1: Reading and Writing" : "Section 2: Math"} • Module {currentModuleNum}
             </span>
           </div>
           <button
             onClick={() => setShowDirections((prev) => !prev)}
-            className="flex items-center gap-1 text-xs text-[var(--accent-blue)] hover:text-blue-600 font-semibold px-2 py-1 rounded hover:bg-[var(--bg-surface)] transition"
+            className="flex items-center gap-1 text-[11px] sm:text-xs text-[var(--accent-blue)] hover:text-blue-600 font-semibold px-1.5 sm:px-2 py-1 rounded hover:bg-[var(--bg-surface)] transition shrink-0"
           >
             <span>Directions</span>
-            <ChevronDown className="w-3.5 h-3.5" />
+            <ChevronDown className="w-3 h-3" />
           </button>
         </div>
 
         {/* Center: Countdown Timer */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           {showTimer ? (
             <div
-              className={`flex items-center gap-1.5 font-mono text-sm md:text-base font-bold px-3 py-1 rounded-md border ${
+              className={`flex items-center gap-1 sm:gap-1.5 font-mono text-xs sm:text-sm md:text-base font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-md border ${
                 timeLeft <= 300
                   ? "bg-rose-500/15 border-rose-500 text-rose-500 animate-pulse"
                   : "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-main)]"
               }`}
             >
-              <Clock className="w-4 h-4 text-[var(--text-muted)]" />
+              <Clock className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
               <span>{formatTime(timeLeft)}</span>
             </div>
           ) : (
             <div className="p-1 text-[var(--text-muted)]">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-3.5 h-3.5" />
             </div>
           )}
           <button
             onClick={() => setShowTimer((prev) => !prev)}
-            className="text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] px-2 py-1 rounded hover:bg-[var(--bg-surface)] transition font-medium"
+            className="text-[11px] sm:text-xs text-[var(--text-muted)] hover:text-[var(--text-main)] px-1 sm:px-2 py-0.5 rounded hover:bg-[var(--bg-surface)] transition font-medium"
           >
             {showTimer ? "Hide" : "Show"}
           </button>
         </div>
 
         {/* Right: Testing Tools */}
-        <div className="flex items-center gap-1.5 md:gap-3">
+        <div className="flex items-center gap-0.5 sm:gap-1.5 md:gap-3 shrink-0">
           {/* Option Eliminator Toggle */}
           {currentQ?.type === "multiple_choice" && (
             <button
               onClick={() => setIsOptionEliminatorActive((prev) => !prev)}
               title="Option Eliminator (Strikethrough)"
-              className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+              className={`p-1.5 sm:p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
                 isOptionEliminatorActive
                   ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
@@ -1246,7 +1474,7 @@ export default function BluebookMockPage() {
           <button
             onClick={() => setShowFormulaSheet(true)}
             title="Formula & Invariants Reference Sheet"
-            className="p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
+            className="p-1.5 sm:p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
           >
             <FileText className="w-4 h-4 text-emerald-500" />
             <span className="hidden md:inline">Reference</span>
@@ -1256,7 +1484,7 @@ export default function BluebookMockPage() {
           <button
             onClick={() => setIsDesmosOpen((prev) => !prev)}
             title="Open Desmos Graphing Calculator"
-            className={`p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+            className={`p-1.5 sm:p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
               isDesmosOpen
                 ? "bg-emerald-600 text-white"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
@@ -1284,8 +1512,8 @@ export default function BluebookMockPage() {
                 })
               );
             }}
-            title="Ask AI Mentor for instant intuition, Desmos trick, or trap analysis"
-            className="p-2 rounded-lg text-xs font-semibold text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 transition flex items-center gap-1.5"
+            title="Ask AI Mentor"
+            className="p-1.5 sm:p-2 rounded-lg text-xs font-semibold text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 transition flex items-center gap-1.5"
           >
             <Sparkles className="w-4 h-4 text-[var(--accent-blue)]" />
             <span className="hidden md:inline">AI Mentor</span>
@@ -1295,7 +1523,7 @@ export default function BluebookMockPage() {
           <button
             onClick={toggleTheme}
             title={theme === "dark" ? "High-Contrast Light Mode" : "Dark Accommodation Mode"}
-            className="p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
+            className="p-1.5 sm:p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
           >
             {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
@@ -1307,9 +1535,9 @@ export default function BluebookMockPage() {
         {currentQ ? (
           currentQ.section === "READING_WRITING" ? (
             /* 2-COLUMN SPLIT FOR READING AND WRITING */
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border-main)] overflow-y-auto">
+            <div className="flex-1 flex flex-col md:grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--border-main)] overflow-y-auto">
               {/* Left Column: Passage / Stimulus */}
-              <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] text-[var(--text-main)] leading-relaxed text-sm md:text-base font-serif">
+              <div className="p-4 sm:p-6 md:p-10 overflow-y-auto text-[var(--text-main)] leading-relaxed text-sm md:text-base font-serif max-h-[38vh] md:max-h-[calc(100vh-7.5rem)] shrink-0 md:shrink">
                 {currentQ.passage ? (
                   <div className="space-y-4 whitespace-pre-line selection:bg-yellow-400/30">
                     {currentQ.passage}
@@ -1320,7 +1548,7 @@ export default function BluebookMockPage() {
               </div>
 
               {/* Right Column: Stem & Multiple Choice Options */}
-              <div className="p-6 md:p-10 overflow-y-auto overscroll-contain max-h-[calc(100vh-7rem)] flex flex-col justify-between space-y-6">
+              <div className="p-4 sm:p-6 md:p-10 overflow-y-auto flex-1 flex flex-col justify-between space-y-6 md:max-h-[calc(100vh-7.5rem)]">
                 <div className="space-y-6">
                   {/* Question header + Bookmark */}
                   <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
@@ -1538,12 +1766,12 @@ export default function BluebookMockPage() {
       </main>
 
       {/* ================= BOTTOM BAR (Navigation + Question Grid Drawer) ================= */}
-      <footer className="h-16 border-t border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky bottom-0 z-30">
+      <footer className="h-14 sm:h-16 border-t border-[var(--border-main)] bg-[var(--bg-card)]/95 backdrop-blur-md px-2.5 sm:px-4 md:px-8 flex items-center justify-between sticky bottom-0 z-30">
         {/* Left: Back */}
         <button
           onClick={() => currentIndex > 0 && setCurrentIndex((prev) => prev - 1)}
           disabled={currentIndex === 0}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ${
+          className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1 transition ${
             currentIndex === 0
               ? "opacity-30 cursor-not-allowed text-[var(--text-muted)]"
               : "text-[var(--text-secondary)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
@@ -1556,9 +1784,10 @@ export default function BluebookMockPage() {
         {/* Center: Question Grid Button */}
         <button
           onClick={() => setShowQuestionGrid((prev) => !prev)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-[var(--text-main)] transition shadow-sm"
+          className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-xs font-bold text-[var(--text-main)] transition shadow-sm"
         >
-          <span>Question {currentIndex + 1} of {activeQuestions.length}</span>
+          <span className="sm:hidden font-mono text-[11px]">Q {currentIndex + 1}/{activeQuestions.length}</span>
+          <span className="hidden sm:inline">Question {currentIndex + 1} of {activeQuestions.length}</span>
           <ChevronDown
             className={`w-3.5 h-3.5 transition-transform duration-200 ${
               showQuestionGrid ? "rotate-180" : ""
@@ -1570,7 +1799,7 @@ export default function BluebookMockPage() {
         {currentIndex < activeQuestions.length - 1 ? (
           <button
             onClick={() => setCurrentIndex((prev) => prev + 1)}
-            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 transition flex items-center gap-1.5"
+            className="px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 transition flex items-center gap-1"
           >
             <span>Next</span>
             <ChevronRight className="w-4 h-4" />
@@ -1578,10 +1807,10 @@ export default function BluebookMockPage() {
         ) : (
           <button
             onClick={() => setStage("section_review")}
-            className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5"
+            className="px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-md shadow-amber-600/30 transition flex items-center gap-1"
           >
-            <span>Review Section</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>Review</span>
+            <ChevronRight className="w-4 h-4" />
           </button>
         )}
       </footer>
