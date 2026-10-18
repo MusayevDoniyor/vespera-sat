@@ -427,8 +427,25 @@ export default function UnitTextbookClient({ unit }: Props) {
                           Open in Desmos
                         </button>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-amber-300 shadow-inner">
-                        {activeSection.desmosExample.expression}
+                      {/* Desmos Expression Input Display */}
+                      <div className="rounded-xl overflow-hidden border border-cyan-200 dark:border-cyan-900/60 bg-white dark:bg-slate-900 shadow-xs divide-y divide-slate-100 dark:divide-slate-800/80 font-mono text-xs">
+                        {activeSection.desmosExample.expression
+                          .split("\n")
+                          .map((line) => line.trim())
+                          .filter(Boolean)
+                          .map((exprLine, lIdx) => (
+                            <div
+                              key={lIdx}
+                              className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-900 transition-colors"
+                            >
+                              <span className="w-5 h-5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold flex items-center justify-center shrink-0 select-none border border-cyan-200 dark:border-cyan-800">
+                                {lIdx + 1}
+                              </span>
+                              <span className="text-slate-900 dark:text-cyan-200 font-semibold tracking-wide flex-1 break-all">
+                                {exprLine}
+                              </span>
+                            </div>
+                          ))}
                       </div>
                       <p className="text-xs text-cyan-950 dark:text-cyan-100 leading-relaxed font-medium">
                         {activeSection.desmosExample.tip}
@@ -720,8 +737,9 @@ export default function UnitTextbookClient({ unit }: Props) {
                       <span className="text-emerald-700 dark:text-emerald-400 font-bold">SpeedHack Shortcut: </span>
                       <KaTeXMath mathText={hack.shortcut} />
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-900 text-cyan-300 font-mono text-[11px] shadow-inner">
-                      Example: {hack.example}
+                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-slate-900 dark:text-cyan-200 font-mono text-xs shadow-xs">
+                      <span className="font-bold text-slate-500 dark:text-slate-400 select-none">Example: </span>
+                      <span className="font-semibold">{hack.example}</span>
                     </div>
                   </div>
                 </div>
