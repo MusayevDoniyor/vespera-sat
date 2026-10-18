@@ -316,8 +316,8 @@ export default function QuestionCard({
 
               {/* Visual Reference Figure if available or auto-detected */}
               <QuestionDiagram
-                preset={question.diagramPreset}
-                customSvg={question.diagramSvg}
+                preset={question.diagramPreset || (question as any).diagram_preset}
+                customSvg={question.diagramSvg || (question as any).diagram_svg}
                 prompt={passageToShow || promptToShow}
                 domain={question.domain}
               />
