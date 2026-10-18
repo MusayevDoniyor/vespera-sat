@@ -25,6 +25,7 @@ import {
   LogIn,
   Calendar,
   Clock,
+  Compass,
 } from "lucide-react";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
@@ -295,6 +296,135 @@ export default function DashboardPage() {
               </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 🚀 SAT 1550+ MASTER STUDY ROADMAP: WHERE TO BEGIN */}
+      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 dark:from-slate-900 dark:via-slate-900/90 dark:to-blue-950/20 border border-blue-200/90 dark:border-blue-500/30 shadow-md space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 text-xs font-bold font-mono mb-2">
+              <Compass size={14} className="text-blue-600 dark:text-blue-400" />
+              <span>Recommended 4-Step Pathway</span>
+            </div>
+            <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              Where Do I Begin? Your 1550+ Study Roadmap
+            </h3>
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
+              Follow this battle-tested 4-step framework used by 800-scorers to progress from foundational concepts to exam-day mastery.
+            </p>
+          </div>
+        </div>
+
+        {/* The 4 Roadmap Steps */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* STEP 1 */}
+          <Link
+            href="/curriculum"
+            className="p-5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-blue-500 hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300">
+                  Step 1 • Learn
+                </span>
+                <span className="text-xs font-bold text-slate-400 group-hover:text-blue-600 transition-colors font-mono">
+                  13 Units
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                <span>13 Units Textbook</span>
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Study foundational theory from zero with SVG diagrams, first principles, and 10-question target quizzes.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
+              <span>Open Textbook</span>
+              <ArrowRight size={13} />
+            </div>
+          </Link>
+
+          {/* STEP 2 */}
+          <Link
+            href="/desmos"
+            className="p-5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-cyan-500 hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300">
+                  Step 2 • Speed
+                </span>
+                <span className="text-xs font-bold text-slate-400 group-hover:text-cyan-600 transition-colors font-mono">
+                  Desmos Lab
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors flex items-center gap-1.5">
+                <span>Desmos Speed Lab</span>
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Bypass 60% of manual algebra using 10-second regression (~), slider intercepts, and vertical line root finders.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-0.5 transition-transform">
+              <span>Launch Speed Lab</span>
+              <ArrowRight size={13} />
+            </div>
+          </Link>
+
+          {/* STEP 3 */}
+          <Link
+            href="/math"
+            className="p-5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-emerald-500 hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                  Step 3 • Practice
+                </span>
+                <span className="text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors font-mono">
+                  Question Bank
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors flex items-center gap-1.5">
+                <span>Domain Question Bank</span>
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Drill Math & Verbal questions by domain and difficulty (Easy / Medium / Hard) with live AI step-by-step mentoring.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform">
+              <span>Start Drilling</span>
+              <ArrowRight size={13} />
+            </div>
+          </Link>
+
+          {/* STEP 4 */}
+          <Link
+            href="/mock"
+            className="p-5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-amber-500 hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300">
+                  Step 4 • Test
+                </span>
+                <span className="text-xs font-bold text-slate-400 group-hover:text-amber-600 transition-colors font-mono">
+                  Simulation
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors flex items-center gap-1.5">
+                <span>Bluebook Simulator</span>
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Take timed, authentic 134-minute adaptive tests with official Module 1 & 2 routing, then review misses in your Error Notebook.
+              </p>
+            </div>
+            <div className="pt-4 flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400 group-hover:translate-x-0.5 transition-transform">
+              <span>Take Mock Test</span>
+              <ArrowRight size={13} />
+            </div>
+          </Link>
         </div>
       </div>
 
