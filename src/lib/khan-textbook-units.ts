@@ -2130,8 +2130,25 @@ $$\\text{Sector Area } A = \\left(\\frac{\\theta}{360^\\circ}\\right) \\times \\
     ],
     prevUnitId: "unit-04-foundations-adv-math",
     nextUnitId: "unit-06-medium-algebra"
-  }
+  },
+  "unit-06-medium-algebra": UNIT_06_MEDIUM_ALGEBRA,
+  "unit-07-medium-psda": UNIT_07_MEDIUM_PSDA,
+  "unit-08-medium-adv-math": UNIT_08_MEDIUM_ADV_MATH,
+  "unit-09-medium-geom-trig": UNIT_09_MEDIUM_GEOM_TRIG,
+  "unit-10-advanced-algebra": UNIT_10_ADVANCED_ALGEBRA,
+  "unit-11-advanced-psda": UNIT_11_ADVANCED_PSDA,
+  "unit-12-advanced-adv-math": UNIT_12_ADVANCED_ADV_MATH,
+  "unit-13-advanced-geom-trig": UNIT_13_ADVANCED_GEOM_TRIG
 };
+
+import { UNIT_06_MEDIUM_ALGEBRA } from "./textbook-units/unit-06";
+import { UNIT_07_MEDIUM_PSDA } from "./textbook-units/unit-07";
+import { UNIT_08_MEDIUM_ADV_MATH } from "./textbook-units/unit-08";
+import { UNIT_09_MEDIUM_GEOM_TRIG } from "./textbook-units/unit-09";
+import { UNIT_10_ADVANCED_ALGEBRA } from "./textbook-units/unit-10";
+import { UNIT_11_ADVANCED_PSDA } from "./textbook-units/unit-11";
+import { UNIT_12_ADVANCED_ADV_MATH } from "./textbook-units/unit-12";
+import { UNIT_13_ADVANCED_GEOM_TRIG } from "./textbook-units/unit-13";
 
 import { KHAN_SAT_MATH_UNITS } from "./khan-units-data";
 
