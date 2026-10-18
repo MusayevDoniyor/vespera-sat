@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { pool, initDb } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth";
 
 export async function GET(request: Request) {
   try {
     await initDb();
+    const session = await getSessionUser();
+    const userId = session?.userId || null;
+
     const { searchParams } = new URL(request.url);
     const section = searchParams.get("section");
     const domain = searchParams.get("domain");
@@ -11,6 +15,13 @@ export async function GET(request: Request) {
     const difficulty = searchParams.get("difficulty");
     const random = searchParams.get("random") === "true";
     const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!, 10) : 200;
+
+    const params: any[] = [];
+    let progressJoin = `LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id IS NULL`;
+    if (userId) {
+      params.push(userId);
+      progressJoin = `LEFT JOIN user_progress up ON up.question_id = q.id AND up.user_id = $${params.length}`;
+    }
 
     let query = `
       SELECT 
@@ -23,10 +34,9 @@ export async function GET(request: Request) {
         up.time_spent
       FROM questions q
       JOIN topics t ON t.code = q.topic_code
-      LEFT JOIN user_progress up ON up.question_id = q.id
+      ${progressJoin}
       WHERE 1=1
     `;
-    const params: any[] = [];
 
     if (section && section !== "ALL") {
       params.push(section.trim().toUpperCase());
@@ -53,7 +63,14 @@ export async function GET(request: Request) {
     params.push(limit);
 
     const { rows } = await pool.query(query, params);
-    return NextResponse.json({ questions: rows });
+    return NextResponse.json(
+      { questions: rows },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Error fetching questions:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -23,10 +23,16 @@ if (process.env.NODE_ENV !== "production") {
   globalForPg.pgPool = pool;
 }
 
+let dbInitPromise: Promise<void> | null = null;
+let isDbInitialized = false;
+
 export async function initDb() {
-  const client = await pool.connect();
-  try {
-    await client.query("CREATE SCHEMA IF NOT EXISTS vespera; SET search_path TO vespera, public;");
+  if (isDbInitialized) return;
+  if (!dbInitPromise) {
+    dbInitPromise = (async () => {
+      const client = await pool.connect();
+      try {
+        await client.query("CREATE SCHEMA IF NOT EXISTS vespera; SET search_path TO vespera, public;");
     // 1. Create tables
     await client.query(`
       CREATE TABLE IF NOT EXISTS topics (
@@ -124,6 +130,10 @@ export async function initDb() {
       CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON vespera.user_progress(user_id);
       CREATE INDEX IF NOT EXISTS idx_error_logs_user_id ON vespera.error_logs(user_id);
       CREATE INDEX IF NOT EXISTS idx_mock_exams_user_id ON mock_exams(user_id);
+      CREATE INDEX IF NOT EXISTS idx_questions_section ON questions(section);
+      CREATE INDEX IF NOT EXISTS idx_questions_domain ON questions(domain);
+      CREATE INDEX IF NOT EXISTS idx_questions_topic_code ON questions(topic_code);
+      CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON questions(difficulty);
     `);
 
     // Check if topics exist
@@ -132,9 +142,13 @@ export async function initDb() {
       console.log("Empty DB detected. Seeding full Vespera curriculum and questions...");
       await seedDefaultData(client);
     }
+    isDbInitialized = true;
   } finally {
     client.release();
   }
+    })();
+  }
+  return dbInitPromise;
 }
 
 async function seedDefaultData(client: any) {

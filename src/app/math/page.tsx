@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo, Suspense } from "react";
+import React, { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import QuestionCard from "@/components/QuestionCard";
 import DesmosCalculator from "@/components/DesmosCalculator";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
@@ -76,6 +76,8 @@ function MathContent() {
     }
   }, [urlTopic]);
 
+  const cacheRef = useRef<Record<string, any[]>>({});
+
   // Fetch questions
   useEffect(() => {
     let url = "/api/questions?section=MATH&limit=200";
@@ -88,17 +90,33 @@ function MathContent() {
       url += `&difficulty=${encodeURIComponent(selectedDifficulty)}`;
     }
 
+    if (cacheRef.current[url]) {
+      setQuestions(cacheRef.current[url]);
+      setLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
     setLoading(true);
-    fetch(url)
+
+    fetch(url, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        setQuestions(data.questions || []);
+        const list = data.questions || [];
+        cacheRef.current[url] = list;
+        setQuestions(list);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading math questions:", err);
-        setLoading(false);
+        if (err.name !== "AbortError") {
+          console.error("Error loading math questions:", err);
+          setLoading(false);
+        }
       });
+
+    return () => {
+      controller.abort();
+    };
   }, [selectedDomain, selectedTopic, selectedDifficulty]);
 
   // Active domain's topics

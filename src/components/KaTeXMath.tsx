@@ -14,6 +14,12 @@ export default function KaTeXMath({ content, className = "" }: KaTeXMathProps) {
     if (!content) return "";
 
     let text = content;
+    const tokens: { id: string; html: string }[] = [];
+    const saveToken = (html: string) => {
+      const id = `%%%VKATEX_${tokens.length}_${Math.random().toString(36).slice(2, 7)}%%%`;
+      tokens.push({ id, html });
+      return id;
+    };
 
     // 1. Currency fixes ($45, $1,500, etc.)
     text = text.replace(/\$\s*\\+\$\s*([0-9.,{}]+)\s*\$/g, (_, val) => {
@@ -31,13 +37,15 @@ export default function KaTeXMath({ content, className = "" }: KaTeXMathProps) {
       return `&#36;${cleanVal}`;
     });
 
-    // 2. Block math: $$ ... $$ (Strictly output HTML only to prevent duplicate MathML)
+    // 2. Block math: $$ ... $$
     text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, equation) => {
       try {
-        return `<div class="my-3 py-1.5 overflow-x-auto text-center">${katex.renderToString(
-          equation.trim(),
-          { displayMode: true, throwOnError: false, output: "html" }
-        )}</div>`;
+        const rendered = katex.renderToString(equation.trim(), {
+          displayMode: true,
+          throwOnError: false,
+          output: "html",
+        });
+        return saveToken(`<div class="my-3 py-1.5 overflow-x-auto text-center">${rendered}</div>`);
       } catch (e) {
         return `$$${equation}$$`;
       }
@@ -46,29 +54,33 @@ export default function KaTeXMath({ content, className = "" }: KaTeXMathProps) {
     // 3. LaTeX environments like \begin{cases} ... \end{cases}
     text = text.replace(/\\begin\{([a-zA-Z*]+)\}[\s\S]+?\\end\{\1\}/g, (equation) => {
       try {
-        return `<div class="my-3 py-1.5 overflow-x-auto text-center">${katex.renderToString(
-          equation.trim(),
-          { displayMode: true, throwOnError: false, output: "html" }
-        )}</div>`;
+        const rendered = katex.renderToString(equation.trim(), {
+          displayMode: true,
+          throwOnError: false,
+          output: "html",
+        });
+        return saveToken(`<div class="my-3 py-1.5 overflow-x-auto text-center">${rendered}</div>`);
       } catch (e) {
         return equation;
       }
     });
 
-    // 4. Inline math: $ ... $ (Strictly output HTML only to prevent duplicate MathML)
-    text = text.replace(/(?<!\$)\$(?!\$)([^\$]+?)\$(?!\$)/g, (_, equation) => {
+    // 4. Inline math: $ ... $
+    text = text.replace(/(?<!\$)\$(?!\$)([^\$\n]+?)\$(?!\$)/g, (_, equation) => {
       try {
-        return `<span class="inline-block px-0.5 align-baseline">${katex.renderToString(
-          equation.trim(),
-          { displayMode: false, throwOnError: false, output: "html" }
-        )}</span>`;
+        const rendered = katex.renderToString(equation.trim(), {
+          displayMode: false,
+          throwOnError: false,
+          output: "html",
+        });
+        return saveToken(`<span class="inline-block px-0.5 align-baseline">${rendered}</span>`);
       } catch (e) {
         return `$${equation}$`;
       }
     });
 
     // 5. Fallback math commands if no $ exists in raw content
-    if (!content.includes("$")) {
+    if (!content.includes("$") && tokens.length === 0) {
       const hasMathCommands = /\\(frac|sqrt|pm|approx|cdot|times|le|ge|degree|alpha|beta|theta|pi|div)\b/.test(text);
       const hasExponentOrSub = /(\w+)\^(\([^)]+\)|\w+)|(\w+)_(\w+)/.test(text);
 
@@ -111,6 +123,11 @@ export default function KaTeXMath({ content, className = "" }: KaTeXMathProps) {
     // 11. Normalize newlines: Convert double newlines to paragraph spacing, single newlines to <br /> where not inside block tags
     text = text.replace(/\n\n+/g, '<div class="h-2.5"></div>');
     text = text.replace(/(?<!>)\n(?!<)/g, '<br />');
+
+    // 12. Restore KaTeX tokens safely (pure HTML without touching any internal SVG <path> d attributes)
+    for (const token of tokens) {
+      text = text.split(token.id).join(token.html);
+    }
 
     return text;
   }, [content]);
