@@ -20,6 +20,7 @@ import {
   Sliders,
   User,
   X,
+  BrainCircuit,
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "./AuthContext";
@@ -76,6 +77,7 @@ export default function Sidebar() {
         { label: "Desmos Speed Lab", href: "/desmos", icon: Sparkles },
         { label: "Math Bank", href: "/math", icon: Calculator },
         { label: "Reading & Writing", href: "/verbal", icon: GraduationCap },
+        { label: "SAT Vocab (650)", href: "/vocab", icon: BrainCircuit, badge: "SM-2" },
       ],
     },
     {

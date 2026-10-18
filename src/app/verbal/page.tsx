@@ -20,6 +20,7 @@ import {
   BookmarkCheck,
   FileText,
   AlertTriangle,
+  BrainCircuit,
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -263,6 +264,14 @@ function VerbalContent() {
             <Award size={15} />
             <span>Target 780+ Composite</span>
           </div>
+
+          <Link
+            href="/vocab"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-sm hover:opacity-95 transition"
+          >
+            <BrainCircuit size={15} />
+            <span>650 Vocab Studio (SM-2)</span>
+          </Link>
         </div>
       </div>
 

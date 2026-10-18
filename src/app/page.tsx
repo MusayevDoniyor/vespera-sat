@@ -26,6 +26,7 @@ import {
   Calendar,
   Clock,
   Compass,
+  BrainCircuit,
 } from "lucide-react";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
@@ -688,6 +689,36 @@ export default function DashboardPage() {
               <span>Take Mock Test</span>
               <ArrowRight size={13} />
             </div>
+          </Link>
+        </div>
+
+        {/* 🧠 650 SAT Real Exam Words in Context Studio Banner */}
+        <div className="p-5 md:p-6 rounded-2xl bg-gradient-to-r from-purple-900/10 via-indigo-900/10 to-blue-900/10 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="p-3 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white shadow-md shrink-0">
+              <BrainCircuit size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+                  Must-Know Real Exam Recall
+                </span>
+                <span className="text-xs text-[var(--text-muted)] font-mono">• 650 High-Frequency Words</span>
+              </div>
+              <h4 className="text-base font-bold text-[var(--text-main)] mt-0.5">
+                SAT Words in Context Studio & SM-2 Spaced Repetition
+              </h4>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5 max-w-2xl leading-relaxed">
+                Master the exact 650 vocabulary words that have repeatedly appeared in Official Digital SAT forms since March 2023 with interactive 3D flashcards, native audio pronunciation, and speed MCQ drills.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/vocab"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5 shrink-0 self-stretch sm:self-auto"
+          >
+            <span>Launch Vocab Studio</span>
+            <ArrowRight size={14} />
           </Link>
         </div>
       </div>
