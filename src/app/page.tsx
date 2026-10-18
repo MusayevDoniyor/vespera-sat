@@ -30,10 +30,13 @@ import {
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
 import { useAuth } from "@/components/AuthContext";
+import DiagnosticPlacementModal from "@/components/DiagnosticPlacementModal";
 
 export default function DashboardPage() {
   const { user, openAuthModal, openOnboarding } = useAuth();
   const [stats, setStats] = useState<any>(null);
+  const [recommendations, setRecommendations] = useState<any>(null);
+  const [isDiagnosticOpen, setIsDiagnosticOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [materialsOpen, setMaterialsOpen] = useState(false);
   const [activeStrategy, setActiveStrategy] = useState<number | null>(0);
@@ -93,6 +96,15 @@ export default function DashboardPage() {
       .catch((err) => {
         console.error("Failed to fetch stats:", err);
         setLoading(false);
+      });
+
+    fetch("/api/recommendations")
+      .then((res) => res.json())
+      .then((data) => {
+        setRecommendations(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch recommendations:", err);
       });
   }, [user]);
 
@@ -241,13 +253,20 @@ export default function DashboardPage() {
                 )
               ) : (
                 <>
-                  Complete Digital SAT preparation with <strong className="text-[var(--text-main)]">212 authentic questions</strong>, 16 visual models, and Desmos speed hacks. Create an account to save your progress and customize your study plan.
+                  Complete Digital SAT preparation with <strong className="text-[var(--text-main)]">1,182 authentic College Board questions</strong>, 13 interactive textbook units, 16 visual models, and Desmos speed hacks. Start with our 5-minute diagnostic or create an account to customize your study plan.
                 </>
               )}
             </p>
 
             {user ? (
-              <div className="pt-1 flex items-center gap-3">
+              <div className="pt-1 flex flex-wrap items-center gap-2.5">
+                <button
+                  onClick={() => setIsDiagnosticOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20"
+                >
+                  <Target size={13} />
+                  <span>{user.currentSatScore ? "Recalibrate Diagnostic" : "5-Min Diagnostic"}</span>
+                </button>
                 <button
                   onClick={openOnboarding}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] transition-colors shadow-sm"
@@ -262,7 +281,14 @@ export default function DashboardPage() {
                 )}
               </div>
             ) : (
-              <div className="pt-1 flex items-center gap-3">
+              <div className="pt-1 flex flex-wrap items-center gap-2.5">
+                <button
+                  onClick={() => setIsDiagnosticOpen(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-md shadow-emerald-500/20"
+                >
+                  <Target size={14} />
+                  <span>5-Min Diagnostic Test</span>
+                </button>
                 <button
                   onClick={() => openAuthModal("register")}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
@@ -278,9 +304,13 @@ export default function DashboardPage() {
             <div className="text-center px-4 border-r border-[var(--border-main)]">
               <span className="text-xs text-[var(--text-muted)] block font-medium mb-1">Projected Score</span>
               <span className="text-3xl font-black text-[var(--accent-green)]">
-                {stats ? (stats.compositeScore || (stats.math.projectedScore + stats.verbal.projectedScore)) : "400"}
+                {recommendations?.scorePrediction?.composite || (stats ? (stats.compositeScore || (stats.math.projectedScore + stats.verbal.projectedScore)) : "400")}
               </span>
-              <span className="text-[11px] text-[var(--text-muted)] block font-mono mt-1">/ 1600 Points</span>
+              <span className="text-[11px] text-[var(--text-muted)] block font-mono mt-1">
+                {recommendations?.scorePrediction?.scoreRange
+                  ? `Est: ${recommendations.scorePrediction.scoreRange.low}–${recommendations.scorePrediction.scoreRange.high}`
+                  : "/ 1600 Points"}
+              </span>
             </div>
             <div
               onClick={user ? openOnboarding : () => openAuthModal("login")}
@@ -292,9 +322,141 @@ export default function DashboardPage() {
                 {user?.targetSatScore || 1550}+
               </span>
               <span className="text-[11px] text-[var(--accent-green)] font-semibold block font-mono mt-1">
-                {user?.targetSatScore && user.targetSatScore >= 1550 ? "Top 1% Rank" : "Competitive"}
+                {recommendations?.scorePrediction?.readinessIndex !== undefined
+                  ? `${recommendations.scorePrediction.readinessIndex}% Ready`
+                  : (user?.targetSatScore && user.targetSatScore >= 1550 ? "Top 1% Rank" : "Competitive")}
               </span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 🎯 TODAY'S PERSONALIZED ADAPTIVE MISSIONS */}
+      <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-main)]">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold font-mono">
+              <Zap size={14} className="text-amber-500" />
+              <span>Adaptive Engine • Calibrated Daily</span>
+            </div>
+            <h3 className="text-xl md:text-2xl font-black text-[var(--text-main)] tracking-tight">
+              Today's Personalized Study Missions
+            </h3>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+              Targeted algorithmically based on your {user?.targetSatScore || 1550}+ goal, {user?.examDate || "target exam"} timeline, and empirical error rate.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-xs font-mono">
+              <span>🔥</span>
+              <span>{stats?.realStreak || 0} Day Streak</span>
+            </div>
+
+            <button
+              onClick={() => setIsDiagnosticOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] transition-colors shadow-sm"
+            >
+              <Target size={14} className="text-blue-500" />
+              <span>Placement Test</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 3 Missions Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Mission 1: Weakness / Diagnostic */}
+          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400">
+                  {recommendations?.dailyMissions?.[0]?.badge || "Priority Target"}
+                </span>
+                <span className="text-xs font-mono font-bold text-[var(--text-muted)]">
+                  Mission 1
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-[var(--text-main)]">
+                {recommendations?.dailyMissions?.[0]?.title || `Weakness Drill: ${recommendations?.weakestDomain || "Algebra"}`}
+              </h4>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {recommendations?.dailyMissions?.[0]?.subtitle || "Target your lowest accuracy topic with authentic College Board questions."}
+              </p>
+            </div>
+
+            {recommendations?.dailyMissions?.[0]?.type === "diagnostic" ? (
+              <button
+                onClick={() => setIsDiagnosticOpen(true)}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 transition-all"
+              >
+                <span>Take 5-Min Diagnostic</span>
+                <ArrowRight size={13} />
+              </button>
+            ) : (
+              <Link
+                href={recommendations?.dailyMissions?.[0]?.targetUrl || "/curriculum"}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 transition-all text-center"
+              >
+                <span>Start Weakness Drill</span>
+                <ArrowRight size={13} />
+              </Link>
+            )}
+          </div>
+
+          {/* Mission 2: Spaced Repetition Error Review */}
+          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-indigo-500/50 transition-all flex flex-col justify-between space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
+                  {recommendations?.dailyMissions?.[1]?.badge || "Active Recall"}
+                </span>
+                <span className="text-xs font-mono font-bold text-[var(--text-muted)]">
+                  Mission 2
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-[var(--text-main)]">
+                {recommendations?.dailyMissions?.[1]?.title || "Spaced Repetition Error Review"}
+              </h4>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {recommendations?.dailyMissions?.[1]?.subtitle || "Overcome test traps and prevent score regression with SM-2 spaced recall."}
+              </p>
+            </div>
+
+            <Link
+              href={recommendations?.dailyMissions?.[1]?.targetUrl || "/error-log"}
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-indigo-500/20 transition-all text-center"
+            >
+              <span>{recommendations?.dueReviewsCount > 0 ? "Review Due Errors" : "Launch Speed Drill"}</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
+
+          {/* Mission 3: Curriculum Mastery */}
+          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-emerald-500/50 transition-all flex flex-col justify-between space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                  {recommendations?.dailyMissions?.[2]?.badge || "Textbook Masterclass"}
+                </span>
+                <span className="text-xs font-mono font-bold text-[var(--text-muted)]">
+                  Mission 3
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-[var(--text-main)]">
+                {recommendations?.dailyMissions?.[2]?.title || "Daily Textbook Unit"}
+              </h4>
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                {recommendations?.dailyMissions?.[2]?.subtitle || "Study first principles, KaTeX formulas, and conquer the 10-Question Target Practice Quiz."}
+              </p>
+            </div>
+
+            <Link
+              href={recommendations?.dailyMissions?.[2]?.targetUrl || "/curriculum"}
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all text-center"
+            >
+              <span>Study Chapter</span>
+              <ArrowRight size={13} />
+            </Link>
           </div>
         </div>
       </div>
@@ -1242,6 +1404,17 @@ export default function DashboardPage() {
         </div>
         <VisualTopicDiagram topicType="slope_intercept" />
       </div>
+
+      {/* 5-Min Diagnostic Placement Test Modal */}
+      <DiagnosticPlacementModal
+        isOpen={isDiagnosticOpen}
+        onClose={() => setIsDiagnosticOpen(false)}
+        onCompleted={() => {
+          // Refresh recommendations and stats
+          fetch("/api/stats").then((r) => r.json()).then((d) => setStats(d));
+          fetch("/api/recommendations").then((r) => r.json()).then((d) => setRecommendations(d));
+        }}
+      />
     </div>
   );
 }
