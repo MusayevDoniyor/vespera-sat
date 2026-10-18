@@ -5,7 +5,7 @@ export interface TextbookSection {
   summary: string;
   contentMarkdown: string;
   keyTakeaways: string[];
-  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model" | "percent-multiplier" | "two-way-conditional" | "scatterplot-residuals" | "parabola-vertex" | "quadratic-discriminant";
+  diagramType?: "adaptive-routing" | "desmos-keyboard" | "pacing-clock" | "formula-reference" | "linear-graph" | "system-intersection" | "inequality-plane" | "parallel-perpendicular" | "word-problem-model" | "percent-multiplier" | "two-way-conditional" | "scatterplot-residuals" | "parabola-vertex" | "quadratic-discriminant" | "special-triangles-trig" | "circle-equation";
   desmosExample?: {
     title: string;
     expression: string;
@@ -1700,6 +1700,436 @@ The remainder is **4**.`
     ],
     prevUnitId: "unit-03-foundations-psda",
     nextUnitId: "unit-05-foundations-geom-trig"
+  },
+
+  // =========================================================================
+  // UNIT 5: FOUNDATIONS: GEOMETRY & TRIGONOMETRY
+  // =========================================================================
+  "unit-05-foundations-geom-trig": {
+    id: "unit-05-foundations-geom-trig",
+    unitNumber: 5,
+    title: "Unit 5: Foundations: Geometry & Trigonometry",
+    slug: "unit-05-foundations-geom-trig",
+    tier: "Foundations",
+    domain: "Geometry and Trigonometry",
+    topicCode: "GEO-02",
+    estimatedHours: "4.5 hours",
+    description: "Area and volume formulas, right triangle geometry, special right triangles (30-60-90, 45-45-90), SOH CAH TOA trigonometry, complementary angle identity, and circle equations in the xy-plane.",
+    overviewSummary: "Geometry and Trigonometry constitutes approximately 15% of the Digital SAT Math section. Questions heavily test properties of right triangles, the universal complementary angle rule (sin A = cos B), special triangle side ratios, circle geometry in standard form, and composite solid volume calculations.",
+    sections: [
+      {
+        id: "u5-sec-1-areas-volumes",
+        title: "1. Area, Perimeter & 3D Solids: Applying the Official Reference Sheet",
+        readTime: "8 min read",
+        summary: "Master 2D plane area and 3D solid volume formulas. Understand how dimensional scaling factor k scales area by k² and volume by k³.",
+        diagramType: "formula-reference",
+        desmosExample: {
+          title: "Cone Volume Evaluator",
+          expression: "V = (1/3) * \\pi * 6^2 * 14",
+          tip: "Type the exact volume formula into Desmos. Desmos evaluates 527.787 or exact fraction expressions instantly!"
+        },
+        keyTakeaways: [
+          "Reference Sheet Access: Formulas for circles, rectangles, triangles, cylinders, cones, and spheres are built into the Bluebook reference sheet icon.",
+          "Circle Area vs Circumference: Area $= \\pi r^2$; Circumference $= 2\\pi r = \\pi d$. Watch diameter vs radius traps!",
+          "3D Solid Volumes: Prism/Cylinder $= \\text{Base Area} \\times h$; Pyramid/Cone $= \\frac{1}{3} \\times \\text{Base Area} \\times h$; Sphere $= \\frac{4}{3}\\pi r^3$.",
+          "Dimensional Scaling Law: If linear dimensions scale by factor $k$, perimeter scales by $k$, area scales by $k^2$, and volume scales by $k^3$."
+        ],
+        contentMarkdown: `### 2D Area and 3D Volume Foundations
+
+The College Board provides a reference sheet with standard geometry formulas on the Digital SAT. However, high-scorers memorize them to eliminate context switching:
+
+#### 1. Core 2D Geometry Formulas:
+- **Triangle:** $\\text{Area} = \\frac{1}{2} b h$
+- **Rectangle:** $\\text{Area} = l w, \\quad \\text{Perimeter} = 2l + 2w$
+- **Circle:** $\\text{Area} = \\pi r^2, \\quad \\text{Circumference} = 2\\pi r$
+
+#### 2. Core 3D Volume Formulas:
+- **Rectangular Prism:** $V = l w h$
+- **Right Circular Cylinder:** $V = \\pi r^2 h$
+- **Right Circular Cone:** $V = \\frac{1}{3} \\pi r^2 h$
+- **Sphere:** $V = \\frac{4}{3} \\pi r^3$
+
+#### 3. The Dimensional Scaling Law (High-Yield SAT Favorite):
+When a 3D solid is scaled uniformly by a linear factor $k$:
+
+| Dimension Type | Linear Scale Factor | Formula | Example ($k = 3$) |
+| :--- | :--- | :--- | :--- |
+| **Linear Length / Perimeter** | $k^1$ | $\\text{New Length} = k \\times \\text{Original}$ | $3\\times$ longer |
+| **Surface Area / Cross-Section** | $k^2$ | $\\text{New Area} = k^2 \\times \\text{Original}$ | $3^2 = 9\\times$ larger |
+| **Volume / Capacity** | $k^3$ | $\\text{New Volume} = k^3 \\times \\text{Original}$ | $3^3 = 27\\times$ larger |
+
+#### Worked Example:
+> *"Cylinder A has a volume of $40\\text{ cm}^3$. Cylinder B is similar to Cylinder A, with all linear dimensions (radius and height) scaled by a factor of $3$. What is the volume of Cylinder B?"*
+
+$$\\text{Volume}_B = \\text{Volume}_A \\times k^3 = 40 \\times 3^3 = 40 \\times 27 = 1,080\\text{ cm}^3$$
+The volume of Cylinder B is **1,080 cm³**.`
+      },
+      {
+        id: "u5-sec-2-angles-transversals",
+        title: "2. Angles, Parallel Lines & Transversals: The Exterior Angle Theorem",
+        readTime: "7 min read",
+        summary: "Identify congruent angle pairs formed by transversals. Apply the triangle angle sum (180°) and the Exterior Angle Theorem.",
+        diagramType: "parallel-perpendicular",
+        desmosExample: {
+          title: "Linear Angle Pair Solver",
+          expression: "(3x + 15) + (2x - 10) = 180",
+          tip: "Desmos graphs a vertical line at x = 35. You can solve transversal angle equations instantly!"
+        },
+        keyTakeaways: [
+          "Supplementary Angles: Sum to $180^\\circ$ (form a straight line).",
+          "Complementary Angles: Sum to $90^\\circ$ (form a right angle).",
+          "Vertical Angles: Angles opposite each other when two lines intersect are strictly equal.",
+          "Parallel Lines Cut by a Transversal: All acute angles are equal to each other; all obtuse angles are equal to each other; any acute angle + any obtuse angle $= 180^\\circ$.",
+          "Exterior Angle Theorem: The measure of an exterior angle of a triangle equals the sum of the two remote interior angles: $d = a + b$."
+        ],
+        contentMarkdown: `### Angle Relationships and Triangles
+
+Angle puzzles on the SAT rely on a few foundational geometric invariants:
+
+#### 1. Angle Pairs:
+- **Linear Pair (Supplementary):** $\\angle 1 + \\angle 2 = 180^\\circ$
+- **Vertical Angles:** Vertically opposite angles are congruent ($\\angle 1 = \\angle 3$)
+
+#### 2. Parallel Lines with a Transversal:
+When two parallel lines $L_1 \\parallel L_2$ are intersected by a transversal $T$, only **two distinct angle measures** exist:
+1. **Equal Angles:**
+   - Alternate Interior Angles (e.g., top-right and bottom-left)
+   - Alternate Exterior Angles
+   - Corresponding Angles
+2. **Supplementary Angles:**
+   - Consecutive Interior Angles sum to $180^\\circ$.
+
+#### 3. The Triangle Exterior Angle Theorem:
+In any triangle with interior angles $a, b, c$, extend one side to form an exterior angle $d$:
+$$d = a + b$$
+> *"The measure of an exterior angle equals the sum of the two remote (opposite) interior angles."*
+
+#### Worked Example:
+> *"In $\\triangle ABC$, the measure of $\\angle A$ is $42^\\circ$ and the measure of $\\angle B$ is $68^\\circ$. If side $AC$ is extended past $C$, what is the measure of the exterior angle at vertex $C$?"*
+
+By the Exterior Angle Theorem:
+$$\\text{Exterior Angle} = \\angle A + \\angle B = 42^\\circ + 68^\\circ = 110^\\circ$$
+The exterior angle at $C$ is **110°**.`
+      },
+      {
+        id: "u5-sec-3-pythagorean-triples",
+        title: "3. Right Triangles, The Pythagorean Theorem & High-Yield Triples",
+        readTime: "8 min read",
+        summary: "Understand the Pythagorean Theorem (a² + b² = c²). Memorize the four sacred SAT Pythagorean triples to bypass arithmetic completely.",
+        diagramType: "special-triangles-trig",
+        desmosExample: {
+          title: "Hypotenuse Calculation",
+          expression: "c = \\sqrt{15^2 + 36^2}",
+          tip: "Desmos computes c = 39 immediately. Notice that 15-36-39 is simply the 5-12-13 triple scaled by 3!"
+        },
+        keyTakeaways: [
+          "Pythagorean Theorem: $a^2 + b^2 = c^2$, where $c$ is strictly the hypotenuse (opposite the $90^\\circ$ right angle).",
+          "The 4 Sacred Pythagorean Triples: $3-4-5$, $5-12-13$, $7-24-25$, $8-15-17$.",
+          "Scaled Triples: Multiples of triples are also right triangles (e.g., $6-8-10$, $9-12-15$, $10-24-26$, $15-20-25$).",
+          "Hypotenuse Isolation: Leg $a = \\sqrt{c^2 - b^2}$. Never add when solving for a leg!"
+        ],
+        contentMarkdown: `### The Pythagorean Theorem & Sacred Triples
+
+In every Euclidean right triangle with legs $a$ and $b$ and hypotenuse $c$:
+
+$$a^2 + b^2 = c^2 \\iff c = \\sqrt{a^2 + b^2}$$
+
+#### The 4 High-Yield SAT Pythagorean Triples:
+Memorizing these integer triples saves 60 seconds of scratchpad computation on every triangle problem:
+
+| Base Triple | Common Multiples Tested on the Digital SAT |
+| :--- | :--- |
+| **$3 - 4 - 5$** | $6-8-10, \\quad 9-12-15, \\quad 12-16-20, \\quad 30-40-50$ |
+| **$5 - 12 - 13$** | $10-24-26, \\quad 15-36-39, \\quad 25-60-65$ |
+| **$7 - 24 - 25$** | $14-48-50$ |
+| **$8 - 15 - 17$** | $16-30-34$ |
+
+#### Worked Example:
+> *"A right triangle has a hypotenuse of length $52$ and one leg of length $20$. What is the length of the other leg?"*
+
+1. Check for a scaled triple:
+   - Divide hypotenuse by $4$: $52 / 4 = 13$.
+   - Divide known leg by $4$: $20 / 4 = 5$.
+2. This is the sacred $5-12-13$ triple scaled by a factor of $4$!
+3. Missing leg:
+   $$12 \\times 4 = 48$$
+The missing leg has length **48**.`
+      },
+      {
+        id: "u5-sec-4-special-triangles",
+        title: "4. Special Right Triangles: 45°-45°-90° and 30°-60°-90° Side Ratios",
+        readTime: "8 min read",
+        summary: "Special right triangles have fixed geometric side length ratios. Master moving back and forth between legs and hypotenuse using radical scaling.",
+        diagramType: "special-triangles-trig",
+        desmosExample: {
+          title: "Special Triangle Leg Solver",
+          expression: "x = 18 / \\sqrt{2}",
+          tip: "Desmos computes 12.7279... or exact radical expression 9√2. Square diagonal legs in 2 seconds!"
+        },
+        keyTakeaways: [
+          "45°-45°-90° (Isosceles Right Triangle): Sides are in the ratio $x : x : x\\sqrt{2}$. Given hypotenuse $h$, legs are $\\frac{h}{\\sqrt{2}} = \\frac{h\\sqrt{2}}{2}$.",
+          "30°-60°-90° Triangle: Sides are in the ratio $x : x\\sqrt{3} : 2x$.",
+          "Short Leg is Key: In a 30-60-90 triangle, the short leg (opposite $30^\\circ$) is half the hypotenuse ($x = \\frac{1}{2}c$).",
+          "Long Leg: The long leg (opposite $60^\\circ$) is short leg times $\\sqrt{3}$ ($x\\sqrt{3}$)."
+        ],
+        contentMarkdown: `### Special Right Triangles
+
+Special right triangles appear on every Digital SAT because they bridge geometry and trigonometry without requiring a calculator.
+
+#### 1. The $45^\\circ - 45^\\circ - 90^\\circ$ Triangle (Isosceles Right):
+Formed by cutting a square in half along its diagonal:
+- **Side Ratio:** $x : x : x\\sqrt{2}$
+- **Legs:** Both legs are strictly equal ($a = b = x$).
+- **Hypotenuse:** $c = x\\sqrt{2}$.
+- **Finding Leg from Hypotenuse:**
+  $$\\text{Leg} = \\frac{\\text{Hypotenuse}}{\\sqrt{2}} = \\frac{\\text{Hypotenuse} \\times \\sqrt{2}}{2}$$
+
+#### 2. The $30^\\circ - 60^\\circ - 90^\\circ$ Triangle:
+Formed by dropping an altitude down the center of an equilateral triangle:
+- **Side Ratio:** $x : x\\sqrt{3} : 2x$
+- **Short Leg ($x$):** Opposite the $30^\\circ$ angle. Equal to **half the hypotenuse**.
+- **Long Leg ($x\\sqrt{3}$):** Opposite the $60^\\circ$ angle. Equal to **short leg $\\times \\sqrt{3}$**.
+- **Hypotenuse ($2x$):** Opposite the $90^\\circ$ angle. Equal to **$2 \\times$ short leg**.
+
+#### Worked Example:
+> *"An equilateral triangle has side lengths of $12$. An altitude is drawn from one vertex to the opposite base. What is the area of the equilateral triangle?"*
+
+1. Dropping the altitude creates two congruent $30^\\circ-60^\\circ-90^\\circ$ triangles.
+2. The hypotenuse is $12$.
+3. The short leg (half the base) is $x = 12 / 2 = 6$.
+4. The long leg (altitude height $h$) is $h = 6\\sqrt{3}$.
+5. Calculate triangle area:
+   $$\\text{Area} = \\frac{1}{2} b h = \\frac{1}{2}(12)(6\\sqrt{3}) = 36\\sqrt{3}$$
+The area is **36√3**.`
+      },
+      {
+        id: "u5-sec-5-soh-cah-toa",
+        title: "5. Trigonometry: SOH CAH TOA & The Golden Complementary Invariant",
+        readTime: "8 min read",
+        summary: "Define sine, cosine, and tangent in right triangles. Master the #1 most tested trigonometry fact on the SAT: sin(A) = cos(90° - A).",
+        diagramType: "special-triangles-trig",
+        desmosExample: {
+          title: "Complementary Invariant Solver",
+          expression: "(4x - 12) + (2x + 18) = 90",
+          tip: "Type the complementary angle equation directly into Desmos. Instant vertical line reveals x = 14!"
+        },
+        keyTakeaways: [
+          "SOH CAH TOA: $\\sin = \\frac{\\text{Opp}}{\\text{Hyp}}$, $\\cos = \\frac{\\text{Adj}}{\\text{Hyp}}$, $\\tan = \\frac{\\text{Opp}}{\\text{Adj}}$.",
+          "The SAT #1 Golden Trigonometric Identity: $\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$ (or $\\frac{\\pi}{2}$ radians).",
+          "Tangent Identity: $\\tan(\\theta) = \\frac{\\sin(\\theta)}{\\cos(\\theta)}$.",
+          "Similar Triangles Invariant: Trigonometric ratios depend ONLY on the angle, NOT on triangle size! If $\\triangle ABC \\sim \\triangle DEF$, then $\\sin(A) = \\sin(D)$."
+        ],
+        contentMarkdown: `### Right Triangle Trigonometry & SOH CAH TOA
+
+Trigonometry on the SAT is strictly right-triangle based.
+
+#### 1. Definitions (SOH CAH TOA):
+For an acute angle $\\theta$ in a right triangle:
+
+$$\\sin(\\theta) = \\frac{\\text{Opposite}}{\\text{Hypotenuse}}$$
+$$\\cos(\\theta) = \\frac{\\text{Adjacent}}{\\text{Hypotenuse}}$$
+$$\\tan(\\theta) = \\frac{\\text{Opposite}}{\\text{Adjacent}}$$
+
+#### 2. The #1 Golden SAT Trigonometric Rule:
+In any right triangle, the two acute angles $A$ and $B$ are complementary ($A + B = 90^\\circ$). Therefore:
+
+$$\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$$
+$$\\sin(x) = \\cos(90^\\circ - x)$$
+
+In radians:
+$$\\sin(x) = \\cos\\left(\\frac{\\pi}{2} - x\\right)$$
+
+> [!IMPORTANT]
+> **Test-Day Execution:** Whenever you see an equation with sine on one side and cosine on the other ($\\sin(\\text{expr}_1) = \\cos(\\text{expr}_2)$), set the expressions to sum to $90^\\circ$ (or $\\frac{\\pi}{2}$) and solve for the unknown!
+
+#### Worked Example:
+> *"In a right triangle, $\\sin(5x - 14)^\\circ = \\cos(3x + 16)^\\circ$. What is the value of $x$?"*
+
+1. Equate the sum of the angles to $90^\\circ$:
+   $$(5x - 14) + (3x + 16) = 90$$
+2. Combine like terms:
+   $$8x + 2 = 90 \\implies 8x = 88 \\implies x = 11$$
+The value of $x$ is **11**.`
+      },
+      {
+        id: "u5-sec-6-circles",
+        title: "6. Circles: Standard Equation, Arc Length & Sector Area",
+        readTime: "8 min read",
+        summary: "Understand the circle equation (x - h)² + (y - k)² = r² in the xy-plane. Calculate fractional arc lengths, sector areas, and inscribed angles.",
+        diagramType: "circle-equation",
+        desmosExample: {
+          title: "Circle Grapher & Center Locator",
+          expression: "(x - 4)^2 + (y + 2)^2 = 25",
+          tip: "Desmos graphs the circle in the coordinate plane. You can read the center (4, -2) and radius 5 directly!"
+        },
+        keyTakeaways: [
+          "Standard Equation of a Circle: $(x - h)^2 + (y - k)^2 = r^2$. Center is $(h, k)$ and radius is $r = \\sqrt{r^2}$.",
+          "Sign Reversal in Center: $(x - 5)^2 + (y + 3)^2 = 49 \\implies \\text{Center} = (5, -3)$.",
+          "Arc Length Formula: $s = \\frac{\\theta}{360^\\circ} \\times 2\\pi r = r\\theta_{\\text{rad}}$.",
+          "Sector Area Formula: $A = \\frac{\\theta}{360^\\circ} \\times \\pi r^2 = \\frac{1}{2} r^2 \\theta_{\\text{rad}}$.",
+          "Inscribed Angle Theorem: An angle inscribed on the circle is exactly HALF of the central angle intercepting the same arc: $\\angle_{\\text{inscribed}} = \\frac{1}{2} \\angle_{\\text{central}}$."
+        ],
+        contentMarkdown: `### Circle Geometry & The Coordinate Plane
+
+Circle questions on the Digital SAT fall into two categories: coordinate equations and angular sector calculations.
+
+#### 1. Standard Circle Equation in the $xy$-Plane:
+$$(x - h)^2 + (y - k)^2 = r^2$$
+
+- **Center:** $(h, k)$ (Note the minus signs: $(x - 4)$ means $h = 4$; $(y + 7)$ means $k = -7$).
+- **Radius:** $r = \\sqrt{\\text{Right Side}}$ (If the equation ends in $64$, $r = \\sqrt{64} = 8$, NOT $64$!).
+
+#### 2. Completing the Square to Find Circle Center and Radius:
+When given general form $x^2 + y^2 - 6x + 8y - 24 = 0$:
+1. Group $x$ and $y$ terms:
+   $$(x^2 - 6x) + (y^2 + 8y) = 24$$
+2. Add $\\left(\\frac{b}{2}\\right)^2$ to both sides for each variable:
+   - For $x$: $\\left(-\\frac{6}{2}\\right)^2 = 9$
+   - For $y$: $\\left(\\frac{8}{2}\\right)^2 = 16$
+3. Add to right side:
+   $$(x^2 - 6x + 9) + (y^2 + 8y + 16) = 24 + 9 + 16$$
+   $$(x - 3)^2 + (y + 4)^2 = 49$$
+- **Center:** $(3, -4)$, **Radius:** $r = \\sqrt{49} = 7$.
+
+#### 3. Arc Length and Sector Area:
+The arc and sector are proportional fractions of the total circle:
+
+$$\\text{Fraction of Circle} = \\frac{\\theta}{360^\\circ} = \\frac{\\theta_{\\text{rad}}}{2\\pi}$$
+$$\\text{Arc Length } s = \\left(\\frac{\\theta}{360^\\circ}\\right) \\times 2\\pi r$$
+$$\\text{Sector Area } A = \\left(\\frac{\\theta}{360^\\circ}\\right) \\times \\pi r^2$$`
+      }
+    ],
+    speedHacks: [
+      {
+        title: "The Complementary Angle Equation Solver",
+        trigger: "Any equation with sin(expression 1) = cos(expression 2)",
+        shortcut: "Set (expression 1) + (expression 2) = 90. Solve for x directly in Desmos.",
+        example: "sin(4x - 10) = cos(3x + 16) => type '4x - 10 + 3x + 16 = 90' in Desmos => x = 12."
+      },
+      {
+        title: "Desmos Circle Grapher & Radius Inspector",
+        trigger: "Any circle equation given in standard form or general form",
+        shortcut: "Type the full circle equation directly into Desmos. Desmos graphs it perfectly.",
+        example: "Type 'x^2 + y^2 - 8x + 6y = 0'. Desmos renders the circle. Click extremes to find center (4, -3) and r = 5."
+      },
+      {
+        title: "Scaled Pythagorean Triple Spotting",
+        trigger: "Right triangle with large hypotenuse or legs (e.g. 39 and 15)",
+        shortcut: "Divide side lengths by common factors (3, 4, 5, 10) to expose base 3-4-5 or 5-12-13 triples.",
+        example: "Sides 15 and 39: divide by 3 -> 5 and 13. Missing leg is 12 * 3 = 36 in 2 seconds."
+      },
+      {
+        title: "Linear to Area / Volume Scale Factor Power Rule",
+        trigger: "Questions asking how scaling radius/side changes area or volume",
+        shortcut: "Area scales by k²; Volume scales by k³. Never recalculate full geometric formulas.",
+        example: "If a sphere's radius is multiplied by 4, its volume is multiplied by 4^3 = 64."
+      },
+      {
+        title: "Triangle Exterior Angle Fast Sum",
+        trigger: "Exterior angle of a triangle given two opposite interior angles",
+        shortcut: "Add the two remote interior angles directly. Never compute the supplementary 3rd angle first.",
+        example: "If remote angles are 54° and 72°, the exterior angle is immediately 54 + 72 = 126°."
+      }
+    ],
+    practiceQuestions: [
+      {
+        id: "u5_q01_pythagorean_triple",
+        questionNumber: 1,
+        prompt: "A right triangle has a hypotenuse of length $39$ and one leg of length $15$. What is the length of the other leg?",
+        options: ["A. 24", "B. 32", "C. 36", "D. 38"],
+        correctAnswer: "C",
+        explanation: "1. Check for a scaled Pythagorean triple: $15 = 3 \\times 5$ and $39 = 3 \\times 13$.\n2. This matches the sacred $5-12-13$ triple scaled by a factor of $3$.\n3. Therefore, the missing leg is $3 \\times 12 = 36$.\n(Or: $\\sqrt{39^2 - 15^2} = \\sqrt{1521 - 225} = \\sqrt{1296} = 36$).",
+        desmosTrick: "Type 'sqrt(39^2 - 15^2)' into Desmos to get 36 immediately."
+      },
+      {
+        id: "u5_q02_complementary_trig",
+        questionNumber: 2,
+        prompt: "In a right-angled triangle, $\\sin(3x - 5)^\\circ = \\cos(2x + 15)^\\circ$. What is the value of $x$?",
+        options: ["A. 14", "B. 16", "C. 18", "D. 20"],
+        correctAnswer: "B",
+        explanation: "1. For any complementary angles $A$ and $B$, $\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$.\n2. Set up equation: $(3x - 5) + (2x + 15) = 90$.\n3. Combine like terms: $5x + 10 = 90 \\implies 5x = 80 \\implies x = 16$.",
+        referenceFormula: "\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ"
+      },
+      {
+        id: "u5_q03_circle_standard_eq",
+        questionNumber: 3,
+        prompt: "The equation of a circle in the $xy$-plane is $(x - 5)^2 + (y + 8)^2 = 64$. What are the coordinates of the center and the length of the radius of the circle?",
+        options: [
+          "A. Center (-5, 8), Radius 8",
+          "B. Center (5, -8), Radius 8",
+          "C. Center (5, -8), Radius 64",
+          "D. Center (-5, 8), Radius 64"
+        ],
+        correctAnswer: "B",
+        explanation: "1. Standard form is $(x - h)^2 + (y - k)^2 = r^2$.\n2. Here $h = 5$ and $k = -8$, so the center is $(5, -8)$.\n3. The radius is $r = \\sqrt{64} = 8$.\n4. Therefore, Center $(5, -8)$ and Radius $8$.",
+        satTrap: "Assuming radius is 64 without taking the square root (Option C), or forgetting the negative signs in (h, k) (Option A)."
+      },
+      {
+        id: "u5_q04_special_45_45_90",
+        questionNumber: 4,
+        prompt: "A square has a perimeter of $48\\text{ cm}$. What is the length of the diagonal of the square?",
+        options: ["A. 12 cm", "B. 12\\sqrt{2} cm", "C. 24 cm", "D. 24\\sqrt{2} cm"],
+        correctAnswer: "B",
+        explanation: "1. Find side length of the square: $s = 48 / 4 = 12\\text{ cm}$.\n2. The diagonal divides the square into two $45^\\circ-45^\\circ-90^\\circ$ right triangles with legs $12$.\n3. Hypotenuse formula for $45-45-90$: $\\text{Diagonal} = s\\sqrt{2} = 12\\sqrt{2}\\text{ cm}$.",
+        referenceFormula: "\\text{Diagonal of square with side } s = s\\sqrt{2}"
+      },
+      {
+        id: "u5_q05_special_30_60_90",
+        questionNumber: 5,
+        prompt: "An equilateral triangle has a side length of $10$. What is the area of the equilateral triangle?",
+        options: ["A. 25", "B. 25\\sqrt{3}", "C. 50", "D. 50\\sqrt{3}"],
+        correctAnswer: "B",
+        explanation: "1. Drawing an altitude creates two $30^\\circ-60^\\circ-90^\\circ$ triangles.\n2. The hypotenuse is $10$. Short leg (half the base) is $10 / 2 = 5$.\n3. The altitude (height $h$) is the long leg: $h = 5\\sqrt{3}$.\n4. Triangle area: $A = \\frac{1}{2} b h = \\frac{1}{2}(10)(5\\sqrt{3}) = 25\\sqrt{3}$.\n(Or using equilateral formula: $\\frac{s^2 \\sqrt{3}}{4} = \\frac{100\\sqrt{3}}{4} = 25\\sqrt{3}$).",
+        referenceFormula: "\\text{Area of equilateral triangle} = \\frac{s^2 \\sqrt{3}}{4}"
+      },
+      {
+        id: "u5_q06_arc_length",
+        questionNumber: 6,
+        prompt: "A circle with radius $15$ has a central angle measuring $72^\\circ$. What is the length of the minor arc intercepted by this central angle?",
+        options: ["A. 3\\pi", "B. 6\\pi", "C. 9\\pi", "D. 12\\pi"],
+        correctAnswer: "B",
+        explanation: "1. Fraction of the circle: $\\frac{72^\\circ}{360^\\circ} = \\frac{1}{5}$.\n2. Total circumference: $C = 2\\pi r = 2\\pi(15) = 30\\pi$.\n3. Arc length: $s = \\frac{1}{5} \\times 30\\pi = 6\\pi$.",
+        referenceFormula: "s = \\frac{\\theta}{360^\\circ} \\times 2\\pi r"
+      },
+      {
+        id: "u5_q07_exterior_angle",
+        questionNumber: 7,
+        prompt: "In triangle $PQR$, the measure of angle $P$ is $54^\\circ$ and the measure of angle $Q$ is $71^\\circ$. What is the measure of the exterior angle at vertex $R$?",
+        options: ["A. 55^\\circ", "B. 115^\\circ", "C. 125^\\circ", "D. 135^\\circ"],
+        correctAnswer: "C",
+        explanation: "1. By the Exterior Angle Theorem, the exterior angle at vertex $R$ equals the sum of the two remote interior angles $P$ and $Q$.\n2. $\\text{Exterior Angle} = 54^\\circ + 71^\\circ = 125^\\circ$.",
+        referenceFormula: "\\angle_{\\text{exterior}} = \\angle_1 + \\angle_2"
+      },
+      {
+        id: "u5_q08_cylinder_volume_scaling",
+        questionNumber: 8,
+        prompt: "A right circular cylinder has a volume of $18\\pi\\text{ cm}^3$. If the radius of the cylinder is multiplied by $3$ while the height remains unchanged, what is the volume of the new cylinder?",
+        options: ["A. 54\\pi cm^3", "B. 108\\pi cm^3", "C. 162\\pi cm^3", "D. 486\\pi cm^3"],
+        correctAnswer: "C",
+        explanation: "1. Cylinder volume formula: $V = \\pi r^2 h$.\n2. Since the radius $r$ is squared in the volume formula, multiplying the radius by $3$ multiplies the volume by $3^2 = 9$.\n3. New volume: $18\\pi \\times 9 = 162\\pi\\text{ cm}^3$.",
+        satTrap: "Multiplying by 3 instead of 3^2 = 9 (getting 54pi, Option A)."
+      },
+      {
+        id: "u5_q09_tangent_trig_ratio",
+        questionNumber: 9,
+        prompt: "In right triangle $DEF$, the right angle is at $E$. The length of leg $DE$ is $9$, and the length of leg $EF$ is $12$. What is the value of $\\tan(D)$?",
+        options: ["A. \\frac{3}{5}", "B. \\frac{3}{4}", "C. \\frac{4}{5}", "D. \\frac{4}{3}"],
+        correctAnswer: "D",
+        explanation: "1. For angle $D$, the opposite leg is $EF = 12$.\n2. The adjacent leg to angle $D$ is $DE = 9$.\n3. Tangent definition: $\\tan(D) = \\frac{\\text{Opposite}}{\\text{Adjacent}} = \\frac{12}{9} = \\frac{4}{3}$.",
+        referenceFormula: "\\tan(\\theta) = \\frac{\\text{Opposite}}{\\text{Adjacent}}"
+      },
+      {
+        id: "u5_q10_circle_inscribed_angle",
+        questionNumber: 10,
+        prompt: "Points $A$, $B$, and $C$ lie on a circle with center $O$. If central angle $\\angle AOC$ measures $110^\\circ$, what is the measure of the inscribed angle $\\angle ABC$?",
+        options: ["A. 45^\\circ", "B. 55^\\circ", "C. 70^\\circ", "D. 110^\\circ"],
+        correctAnswer: "B",
+        explanation: "1. By the Inscribed Angle Theorem, an inscribed angle that intercepts the same arc as a central angle is exactly half the central angle measure.\n2. $\\angle ABC = \\frac{1}{2} \\times \\angle AOC = \\frac{1}{2} \\times 110^\\circ = 55^\\circ$.",
+        referenceFormula: "\\angle_{\\text{inscribed}} = \\frac{1}{2} \\angle_{\\text{central}}"
+      }
+    ],
+    prevUnitId: "unit-04-foundations-adv-math",
+    nextUnitId: "unit-06-medium-algebra"
   }
 };
 

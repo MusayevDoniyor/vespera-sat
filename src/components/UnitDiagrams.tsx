@@ -795,5 +795,124 @@ export default function UnitDiagrams({ type }: DiagramProps) {
     );
   }
 
+  if (type === "special-triangles-trig") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Special Right Triangles & The Golden Trigonometric Invariant
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 font-bold">
+            SOH CAH TOA • sin(A) = cos(90° - A)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-blue-700 dark:text-blue-400 font-mono">1. 45°-45°-90° Triangle</span>
+            <h5 className="text-sm font-black text-slate-900 dark:text-white font-mono">
+              x : x : x√2
+            </h5>
+            <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+              Isosceles right triangle. Hypotenuse is leg times √2.
+            </p>
+            <div className="text-[10px] text-blue-700 dark:text-blue-300 font-bold font-mono">
+              sin(45°) = cos(45°) = √2 / 2
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">2. 30°-60°-90° Triangle</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200 font-mono">
+              x : x√3 : 2x
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Short leg (opp 30°) = x; Long leg = x√3; Hypotenuse = 2x.
+            </p>
+            <div className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold font-mono">
+              sin(30°) = cos(60°) = 1/2
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-purple-700 dark:text-purple-400 font-mono">3. Complementary Invariant</span>
+            <h5 className="text-sm font-black text-purple-900 dark:text-purple-200 font-mono">
+              sin(A) = cos(B) ⟺ A + B = 90°
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Whenever sin(expr 1) = cos(expr 2), their sum must strictly equal 90°.
+            </p>
+            <div className="text-[10px] text-purple-800 dark:text-purple-300 font-bold font-mono">
+              sin(x) = cos(90° - x)
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "circle-equation") {
+    return (
+      <div className="w-full my-6 p-6 rounded-3xl bg-slate-50 dark:bg-[var(--bg-surface)] border border-slate-200 dark:border-[var(--border-main)] shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-900 dark:text-[var(--text-main)]">
+              Circle Equation & Arc/Sector Geometry in the xy-Plane
+            </h4>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30 font-bold">
+            (x - h)² + (y - k)² = r²
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[var(--bg-card)] border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-cyan-700 dark:text-cyan-400 font-mono">Standard Equation</span>
+            <h5 className="text-sm font-black text-slate-900 dark:text-white font-mono">
+              (x - h)² + (y - k)² = r²
+            </h5>
+            <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+              Center is at (h, k). Radius is √r² (watch the squared trap!).
+            </p>
+            <div className="text-[10px] text-cyan-800 dark:text-cyan-300 font-bold font-mono">
+              r² = 36 ⟹ radius = 6
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-mono">Arc Length & Sector Area</span>
+            <h5 className="text-sm font-black text-emerald-900 dark:text-emerald-200 font-mono">
+              Fraction = θ / 360°
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              Arc length = (θ/360) · 2πr<br />
+              Sector area = (θ/360) · πr²
+            </p>
+            <div className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold font-mono">
+              Radian mode: s = rθ, A = ½r²θ
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 space-y-1.5 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-purple-700 dark:text-purple-400 font-mono">Inscribed Angle Theorem</span>
+            <h5 className="text-sm font-black text-purple-900 dark:text-purple-200 font-mono">
+              Inscribed = ½ × Central
+            </h5>
+            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
+              An angle inscribed on the circle is exactly half the central angle intercepting the same arc.
+            </p>
+            <div className="text-[10px] text-purple-800 dark:text-purple-300 font-bold font-mono">
+              Diameter inscribed angle = 90°
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }
