@@ -71,10 +71,16 @@ export default function Sidebar() {
       ],
     },
     {
+      title: "AI Studio",
+      items: [
+        { label: "AI Mentor", href: "/mentor", icon: Sparkles, badge: "LIVE" },
+      ],
+    },
+    {
       title: "Learn & Practice",
       items: [
         { label: "13 Units Textbook", href: "/curriculum", icon: BookOpen, matchSubpaths: true, badge: "13" },
-        { label: "Desmos Speed Lab", href: "/desmos", icon: Sparkles },
+        { label: "Desmos Speed Lab", href: "/desmos", icon: Calculator },
         { label: "Math Bank", href: "/math", icon: Calculator },
         { label: "Reading & Writing", href: "/verbal", icon: GraduationCap },
         { label: "SAT Vocab (650)", href: "/vocab", icon: BrainCircuit, badge: "SM-2" },

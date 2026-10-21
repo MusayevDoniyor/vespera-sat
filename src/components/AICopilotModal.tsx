@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import {
   X,
   Send,
@@ -17,6 +18,9 @@ import {
   Zap,
   Target,
   BookOpen,
+  Maximize2,
+  Minimize2,
+  ExternalLink,
 } from "lucide-react";
 import KaTeXMath from "./KaTeXMath";
 import VesperaLogo from "./VesperaLogo";
@@ -142,6 +146,7 @@ I can help you with:
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [lastDiagnosedKey, setLastDiagnosedKey] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -286,10 +291,18 @@ I can help you with:
         role="dialog"
         aria-modal="true"
         aria-label="Vespera AI Mentor"
-        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md p-0 sm:p-4 animate-fadeIn"
-        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md animate-fadeIn ${
+          isFullscreen ? "p-0" : "p-2 sm:p-5"
+        }`}
+        onClick={(e) => { if (e.target === e.currentTarget && !isFullscreen) onClose(); }}
       >
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl h-[92vh] sm:h-[700px] sm:max-h-[92vh] flex flex-col overflow-hidden shadow-2xl shadow-black/40">
+        <div
+          className={`bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl transition-all ${
+            isFullscreen
+              ? "w-screen h-screen rounded-none border-none"
+              : "rounded-3xl w-full sm:max-w-4xl h-[94vh] sm:h-[820px] max-h-[96vh]"
+          }`}
+        >
 
           {/* ── HEADER ── */}
           <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/90 dark:bg-[#161f30] border-b border-slate-200 dark:border-slate-800 shrink-0">
@@ -313,7 +326,28 @@ I can help you with:
               </div>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              {/* Link to Full Page Studio */}
+              <Link
+                href="/mentor"
+                onClick={onClose}
+                title="Open Dedicated Full-Page Studio"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
+              >
+                <span>Full Page</span>
+                <ExternalLink size={13} />
+              </Link>
+
+              {/* Fullscreen Toggle */}
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Expand"}
+                className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
+              >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
+
+              {/* Clear Chat */}
               <button
                 onClick={handleClearChat}
                 title="Clear chat"
@@ -321,6 +355,8 @@ I can help you with:
               >
                 <RotateCcw size={15} />
               </button>
+
+              {/* Close */}
               <button
                 onClick={onClose}
                 title="Close (Esc)"
