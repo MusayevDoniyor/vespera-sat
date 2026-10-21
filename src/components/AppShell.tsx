@@ -75,7 +75,11 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
           isDesmosOpen={isDesmosOpen}
         />
         <main
-          className="flex-1 w-full max-w-[1780px] mx-auto px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 sm:py-6 md:py-8 overflow-y-auto"
+          className={`flex-1 w-full mx-auto ${
+            pathname === "/mentor"
+              ? "p-0 h-full overflow-hidden flex flex-col"
+              : "max-w-[1780px] px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 sm:py-6 md:py-8 overflow-y-auto"
+          }`}
         >
           {children}
         </main>
