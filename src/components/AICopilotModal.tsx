@@ -289,25 +289,25 @@ I can help you with:
         className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md p-0 sm:p-4 animate-fadeIn"
         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       >
-        <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl h-[92vh] sm:h-[700px] sm:max-h-[92vh] flex flex-col overflow-hidden shadow-2xl shadow-black/40">
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl h-[92vh] sm:h-[700px] sm:max-h-[92vh] flex flex-col overflow-hidden shadow-2xl shadow-black/40">
 
           {/* ── HEADER ── */}
-          <div className="flex items-center justify-between px-5 py-3.5 bg-[var(--bg-surface)] border-b border-[var(--border-main)] shrink-0">
+          <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/90 dark:bg-[#161f30] border-b border-slate-200 dark:border-slate-800 shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/30">
                 <Sparkles size={18} className="text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-extrabold text-sm text-[var(--text-main)] tracking-tight">
+                  <h3 className="font-extrabold text-sm text-slate-900 dark:text-white tracking-tight">
                     Vespera AI Mentor
                   </h3>
-                  <span className="hidden sm:flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold">
+                  <span className="hidden sm:flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     SAT Expert
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--text-muted)] font-medium">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   Digital SAT · Desmos Hacks · Trap Taxonomy
                 </p>
               </div>
@@ -317,14 +317,14 @@ I can help you with:
               <button
                 onClick={handleClearChat}
                 title="Clear chat"
-                className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card)] transition-colors"
+                className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
               >
                 <RotateCcw size={15} />
               </button>
               <button
                 onClick={onClose}
                 title="Close (Esc)"
-                className="p-2 rounded-xl text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                className="p-2 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-500/10 transition-colors"
               >
                 <X size={18} />
               </button>
@@ -394,18 +394,24 @@ I can help you with:
                     <div
                       className={`relative group rounded-2xl leading-relaxed text-[13px] shadow-sm ${
                         isUser
-                          ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-tr-sm font-medium"
-                          : "bg-[var(--bg-surface)] text-[var(--text-main)] border border-[var(--border-main)] px-5 py-4 rounded-tl-sm"
+                          ? "bg-blue-600 text-white px-4 py-3 rounded-tr-sm font-medium shadow-md shadow-blue-500/20"
+                          : "bg-white dark:bg-[#1e293b] text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 px-5 py-4 rounded-tl-sm"
                       }`}
                     >
-                      <KaTeXMath content={m.text} />
+                      {isUser ? (
+                        <div className="text-white font-medium whitespace-pre-wrap leading-relaxed select-text text-sm">
+                          {m.text}
+                        </div>
+                      ) : (
+                        <KaTeXMath content={m.text} />
+                      )}
 
                       {/* Bot bubble footer */}
                       {!isUser && (
-                        <div className="mt-3 pt-2.5 border-t border-[var(--border-main)]/50 flex items-center justify-end">
+                        <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-slate-700/60 flex items-center justify-end">
                           <button
                             onClick={() => handleCopy(m.id, m.text)}
-                            className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-lg hover:bg-[var(--bg-card)] border border-transparent hover:border-[var(--border-main)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                            className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                           >
                             {copiedId === m.id ? (
                               <>
@@ -441,8 +447,8 @@ I can help you with:
           </div>
 
           {/* ── QUICK PROMPTS ── */}
-          <div className="px-5 py-3 bg-[var(--bg-surface)] border-t border-[var(--border-main)] flex items-center gap-2 overflow-x-auto scrollbar-none shrink-0">
-            <span className="flex items-center gap-1 text-[10px] font-bold text-[var(--text-muted)] whitespace-nowrap">
+          <div className="px-5 py-2.5 bg-slate-50 dark:bg-[#161f30] border-t border-slate-200 dark:border-slate-800 flex items-center gap-2 overflow-x-auto scrollbar-none shrink-0">
+            <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
               <Lightbulb size={11} className="text-amber-500" />
               Quick:
             </span>
@@ -451,7 +457,7 @@ I can help you with:
                 key={i}
                 onClick={() => handleSend(p.query)}
                 disabled={isLoading}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--bg-card)] hover:bg-blue-500/10 text-[var(--text-main)] hover:text-blue-500 border border-[var(--border-main)] hover:border-blue-500/30 whitespace-nowrap transition-all text-[11px] font-medium disabled:opacity-40 shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800/90 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600/40 whitespace-nowrap transition-all text-[11px] font-medium disabled:opacity-40 shadow-xs shrink-0"
               >
                 <span className="opacity-60">{p.icon}</span>
                 {p.label}
@@ -460,7 +466,7 @@ I can help you with:
           </div>
 
           {/* ── INPUT BAR ── */}
-          <div className="px-4 py-3.5 bg-[var(--bg-card)] border-t border-[var(--border-main)] flex items-center gap-3 shrink-0">
+          <div className="px-4 py-3.5 bg-white dark:bg-[#111827] border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 shrink-0">
             <div className="flex-1 relative">
               <input
                 ref={inputRef}
@@ -474,15 +480,15 @@ I can help you with:
                   }
                 }}
                 placeholder="Ask anything — paste a question, concept, or mistake..."
-                className="w-full bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-2xl px-4 py-3 text-sm text-[var(--text-main)] placeholder-[var(--text-muted)] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all pr-12"
+                className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 focus:bg-white dark:focus:bg-slate-800 transition-all pr-12 font-medium"
                 disabled={isLoading}
               />
               {inputText && (
                 <button
                   onClick={() => setInputText("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
                 >
-                  <X size={14} />
+                  <X size={15} />
                 </button>
               )}
             </div>

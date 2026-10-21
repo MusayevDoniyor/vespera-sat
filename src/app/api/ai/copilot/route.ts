@@ -125,8 +125,8 @@ One sharp, memorable takeaway rule for test day. Bold it.
                 ],
                 generationConfig: {
                   temperature: 0.25,
-                  maxOutputTokens: 1800,
-                  topP: 0.9,
+                  maxOutputTokens: 8192,
+                  topP: 0.95,
                 },
                 safetySettings: [
                   { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
