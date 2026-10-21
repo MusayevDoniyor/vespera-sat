@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
-  Send,
   User,
   Copy,
   Check,
@@ -15,10 +14,15 @@ import {
   Brain,
   Calculator,
   ArrowUp,
-  X,
+  ArrowLeft,
+  Sun,
+  Moon,
 } from "lucide-react";
 import KaTeXMath from "@/components/KaTeXMath";
+import VesperaLogo from "@/components/VesperaLogo";
+import DesmosCalculator from "@/components/DesmosCalculator";
 import { useAuth } from "@/components/AuthContext";
+import { useTheme } from "@/components/ThemeContext";
 
 interface Message {
   id: string;
@@ -62,15 +66,17 @@ const STARTER_CARDS = [
 
 export default function MentorPage() {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isDesmosOpen, setIsDesmosOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load chat history from localStorage or start fresh
+  // Load chat history from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("vespera_mentor_chat_zen_v1");
     if (saved) {
@@ -84,7 +90,7 @@ export default function MentorPage() {
     }
   }, []);
 
-  // Save on updates
+  // Save history on updates
   useEffect(() => {
     if (messages.length > 0) {
       try {
@@ -173,50 +179,77 @@ export default function MentorPage() {
     setInputText("");
   };
 
-  const handleOpenDesmos = (equation?: string) => {
-    window.dispatchEvent(
-      new CustomEvent("vespera_desmos_load", {
-        detail: { latex: equation || "y = 2x^2 - 4x + 1" },
-      })
-    );
-  };
-
   const hasMessages = messages.length > 0;
   const userName = user?.fullName?.split(" ")[0] || "Scholar";
 
   return (
-    <div className="flex flex-col h-full w-full bg-[var(--bg-main)] overflow-hidden">
-      {/* ── TOP MINIMAL APP BAR ── */}
-      <header className="h-14 border-b border-[var(--border-main)] px-4 sm:px-8 flex items-center justify-between shrink-0 bg-[var(--bg-card)]/80 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
-            <Sparkles size={16} />
-          </div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-sm font-extrabold text-[var(--text-main)] tracking-tight">
-              AI Mentor Studio
-            </h1>
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Gemini 2.5 Flash
-            </span>
+    <div className="flex flex-col h-screen w-screen bg-[var(--bg-main)] text-[var(--text-main)] overflow-hidden select-text">
+      {/* ── CLEAN TOP HEADER (NO CLUTTER, TRUE FULL PAGE) ── */}
+      <header className="h-16 border-b border-[var(--border-main)] px-4 sm:px-8 flex items-center justify-between shrink-0 bg-[var(--bg-card)]/90 backdrop-blur-md z-10">
+        <div className="flex items-center gap-3 sm:gap-4">
+          {/* Back to Dashboard */}
+          <Link
+            href="/"
+            title="Return to Dashboard"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] transition-colors shadow-xs group"
+          >
+            <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
+            <span className="hidden sm:inline">Dashboard</span>
+          </Link>
+
+          <div className="h-5 w-px bg-[var(--border-main)]" />
+
+          {/* Logo & Title */}
+          <div className="flex items-center gap-2.5">
+            <VesperaLogo size={28} />
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-extrabold tracking-tight">
+                  Vespera AI Mentor
+                </h1>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-mono">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Gemini Live
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* Action Controls */}
         <div className="flex items-center gap-2">
+          {/* Desmos Floating Calculator */}
           <button
-            onClick={() => handleOpenDesmos()}
-            title="Open Desmos Floating Calculator"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-emerald-500/10 text-xs font-semibold text-[var(--text-main)] hover:text-emerald-600 dark:hover:text-emerald-400 border border-[var(--border-main)] hover:border-emerald-500/30 transition-colors shadow-xs"
+            onClick={() => setIsDesmosOpen(!isDesmosOpen)}
+            title="Toggle Official Desmos Calculator"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all shadow-xs ${
+              isDesmosOpen
+                ? "bg-emerald-500 text-white border-emerald-500"
+                : "bg-[var(--bg-surface)] hover:bg-emerald-500/10 text-[var(--text-main)] hover:text-emerald-600 dark:hover:text-emerald-400 border-[var(--border-main)]"
+            }`}
           >
-            <Calculator size={14} className="text-emerald-500" />
-            <span className="hidden sm:inline">Desmos</span>
+            <Calculator size={14} className={isDesmosOpen ? "text-white" : "text-emerald-500"} />
+            <span className="hidden md:inline">Desmos</span>
           </button>
 
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            className="p-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors shadow-xs"
+          >
+            {theme === "dark" ? (
+              <Sun size={15} className="text-amber-400" />
+            ) : (
+              <Moon size={15} className="text-indigo-600" />
+            )}
+          </button>
+
+          {/* New Chat Button */}
           {hasMessages && (
             <button
               onClick={handleClear}
-              title="Clear conversation"
+              title="Start a new conversation"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors"
             >
               <RotateCcw size={14} />
@@ -226,25 +259,25 @@ export default function MentorPage() {
         </div>
       </header>
 
-      {/* ── CHAT SCROLL CANVAS ── */}
-      <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-6 scroll-smooth">
+      {/* ── CHAT SCROLL CANVAS (100% SPACIOUS & SERENE) ── */}
+      <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-8 py-8 scroll-smooth">
         <div className="max-w-3xl xl:max-w-4xl mx-auto w-full">
-          {/* EMPTY STATE: ZEN WELCOME WITH 4 CARDS */}
+          {/* EMPTY STATE: SERENE WELCOME WITH 4 CLEAN CARDS */}
           {!hasMessages ? (
-            <div className="pt-10 sm:pt-16 pb-12 flex flex-col items-center text-center animate-fadeIn">
+            <div className="pt-12 sm:pt-20 pb-16 flex flex-col items-center text-center animate-fadeIn">
               <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/25 mb-6">
                 <Sparkles size={32} />
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-black text-[var(--text-main)] tracking-tight mb-2.5">
+              <h2 className="text-2xl sm:text-4xl font-black text-[var(--text-main)] tracking-tight mb-3">
                 How can I help you master the SAT today, {userName}?
               </h2>
-              <p className="text-sm text-[var(--text-muted)] max-w-lg mb-10 leading-relaxed font-medium">
+              <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-lg mb-12 leading-relaxed font-medium">
                 Ask any question, paste a Bluebook problem, diagnose a mistake, or pick a high-yield concept below.
               </p>
 
               {/* 4 Clean Starter Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
                 {STARTER_CARDS.map((card, i) => {
                   const Icon = card.icon;
                   return (
@@ -252,17 +285,17 @@ export default function MentorPage() {
                       key={i}
                       onClick={() => handleSend(card.prompt)}
                       disabled={isLoading}
-                      className="p-5 rounded-2xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-blue-500/40 transition-all text-left group shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
+                      className="p-5 sm:p-6 rounded-2xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-blue-500/40 transition-all text-left group shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
                     >
-                      <div className="flex items-center gap-2.5 mb-2">
+                      <div className="flex items-center gap-3 mb-2.5">
                         <span className={`p-2 rounded-xl border ${card.color}`}>
-                          <Icon size={16} />
+                          <Icon size={18} />
                         </span>
                         <span className="text-sm font-extrabold text-[var(--text-main)] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           {card.title}
                         </span>
                       </div>
-                      <p className="text-xs text-[var(--text-muted)] leading-relaxed pl-1">
+                      <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed pl-1">
                         {card.desc}
                       </p>
                     </button>
@@ -272,7 +305,7 @@ export default function MentorPage() {
             </div>
           ) : (
             /* CONVERSATION THREAD */
-            <div className="space-y-8 pb-32">
+            <div className="space-y-8 sm:space-y-10 pb-36">
               {messages.map((m) => {
                 const isUser = m.sender === "user";
 
@@ -304,14 +337,14 @@ export default function MentorPage() {
 
                       {/* Bubble */}
                       <div
-                        className={`rounded-2xl p-5 leading-relaxed text-sm transition-all ${
+                        className={`rounded-2xl p-5 sm:p-6 leading-relaxed text-sm sm:text-base transition-all ${
                           isUser
                             ? "bg-blue-600 text-white rounded-tr-sm font-medium shadow-md shadow-blue-500/20"
                             : "bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-tl-sm w-full shadow-xs"
                         }`}
                       >
                         {isUser ? (
-                          <div className="text-white font-medium whitespace-pre-wrap leading-relaxed select-text text-sm sm:text-base">
+                          <div className="text-white font-medium whitespace-pre-wrap leading-relaxed select-text">
                             {m.text}
                           </div>
                         ) : (
@@ -319,18 +352,18 @@ export default function MentorPage() {
                             <KaTeXMath content={m.text} />
 
                             {/* Bot Actions */}
-                            <div className="mt-4 pt-3 border-t border-[var(--border-main)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
+                            <div className="mt-5 pt-3.5 border-t border-[var(--border-main)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
                               <button
-                                onClick={() => handleOpenDesmos()}
-                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-semibold text-[11px]"
+                                onClick={() => setIsDesmosOpen(true)}
+                                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-semibold text-xs"
                               >
-                                <Calculator size={12} />
-                                <span>Desmos</span>
+                                <Calculator size={13} />
+                                <span>Open Desmos</span>
                               </button>
 
                               <button
                                 onClick={() => handleCopy(m.id, m.text)}
-                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                                className="flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)] font-medium text-xs"
                               >
                                 {copiedId === m.id ? (
                                   <>
@@ -366,12 +399,12 @@ export default function MentorPage() {
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
                     <Sparkles size={15} />
                   </div>
-                  <div className="flex items-center gap-2 py-3.5 px-5 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xs">
+                  <div className="flex items-center gap-2 py-4 px-6 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xs">
                     <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.3s]" />
                     <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:-0.15s]" />
                     <span className="w-2 h-2 rounded-full bg-purple-500 animate-bounce" />
-                    <span className="ml-2 text-xs font-semibold text-[var(--text-muted)]">
-                      Analyzing with SAT first principles...
+                    <span className="ml-2.5 text-xs sm:text-sm font-semibold text-[var(--text-muted)]">
+                      Synthesizing SAT explanation from first principles...
                     </span>
                   </div>
                 </div>
@@ -383,7 +416,7 @@ export default function MentorPage() {
         </div>
       </div>
 
-      {/* ── FLOATING ZEN INPUT BAR AT BOTTOM ── */}
+      {/* ── FLOATING INPUT BAR (CENTERED, MINIMALIST, HIGH CONVERTING) ── */}
       <footer className="p-4 sm:p-6 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)] to-transparent shrink-0">
         <div className="max-w-3xl xl:max-w-4xl mx-auto w-full">
           <form
@@ -391,7 +424,7 @@ export default function MentorPage() {
               e.preventDefault();
               handleSend();
             }}
-            className="relative flex items-center rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-lg hover:border-blue-500/40 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all p-2 pl-5"
+            className="relative flex items-center rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xl hover:border-blue-500/40 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all p-2 pl-6"
           >
             <textarea
               ref={textareaRef}
@@ -424,10 +457,18 @@ export default function MentorPage() {
           </form>
 
           <p className="text-center text-[11px] text-[var(--text-muted)] mt-2 font-medium">
-            Vespera AI Mentor · Structured Socratic reasoning for 1550+ Digital SAT
+            Vespera SAT AI Mentor · Socratic reasoning engine for 1550+ Digital SAT
           </p>
         </div>
       </footer>
+
+      {/* ── EMBEDDED FLOATING DESMOS CALCULATOR ── */}
+      {isDesmosOpen && (
+        <DesmosCalculator
+          isFloating={true}
+          onClose={() => setIsDesmosOpen(false)}
+        />
+      )}
     </div>
   );
 }
