@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useDeferredValue } from "react";
 import {
   GitBranch,
   Sparkles,
@@ -47,6 +47,7 @@ export default function CurriculumPage() {
   const [activeSection, setActiveSection] = useState<"ALL" | "MATH" | "READING_WRITING">("ALL");
   const [selectedDomain, setSelectedDomain] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearch = useDeferredValue(searchQuery);
   const [expandedFormula, setExpandedFormula] = useState<string | null>(null);
   const [studyModalTopicCode, setStudyModalTopicCode] = useState<string | null>(null);
   const [mainView, setMainView] = useState<"khan" | "topics" | "dictionary" | "satashkent">("khan");
@@ -104,8 +105,8 @@ export default function CurriculumPage() {
       }
 
       // 3. Search Query
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase();
+      if (!deferredSearch.trim()) return true;
+      const q = deferredSearch.toLowerCase();
       const meta = OFFICIAL_TOPICS_DATA[t.code];
       const panda = meta?.collegePandaChapter?.toLowerCase() || "";
 
@@ -119,7 +120,7 @@ export default function CurriculumPage() {
         panda.includes(q)
       );
     });
-  }, [topics, activeSection, selectedDomain, searchQuery]);
+  }, [topics, activeSection, selectedDomain, deferredSearch]);
 
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in">

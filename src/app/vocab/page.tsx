@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useDeferredValue } from "react";
 import Link from "next/link";
 import {
   BookOpen,
@@ -48,6 +48,7 @@ export default function VocabStudioPage() {
   const [selectedTier, setSelectedTier] = useState<TierFilter>("all");
   const [selectedStatus, setSelectedStatus] = useState<StatusFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearch = useDeferredValue(searchQuery);
   
   // Flashcard State
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -98,8 +99,8 @@ export default function VocabStudioPage() {
       }
 
       // Search query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
+      if (deferredSearch.trim()) {
+        const q = deferredSearch.toLowerCase().trim();
         const matchesWord = w.word.toLowerCase().includes(q);
         const matchesUz = w.uzbek.toLowerCase().includes(q);
         const matchesDef = w.definition.toLowerCase().includes(q);
@@ -109,7 +110,7 @@ export default function VocabStudioPage() {
 
       return true;
     });
-  }, [selectedTier, selectedStatus, searchQuery, progressMap]);
+  }, [selectedTier, selectedStatus, deferredSearch, progressMap]);
 
   // Current Card
   const currentCard: SATVocabWord | undefined = filteredWords[currentIndex] || filteredWords[0];

@@ -105,6 +105,68 @@ function TypingDots() {
   );
 }
 
+const ModalInputBar = React.memo(function ModalInputBar({
+  onSend,
+  isLoading,
+}: {
+  onSend: (text: string) => void;
+  isLoading: boolean;
+}) {
+  const [inputText, setInputText] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const q = inputText.trim();
+    if (!q || isLoading) return;
+    onSend(q);
+    setInputText("");
+  };
+
+  return (
+    <div className="px-4 py-3.5 bg-white dark:bg-[#111827] border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 shrink-0">
+      <div className="flex-1 relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
+          placeholder="Ask anything — paste a question, concept, or mistake..."
+          className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 focus:bg-white dark:focus:bg-slate-800 transition-all pr-12 font-medium"
+          disabled={isLoading}
+        />
+        {inputText && (
+          <button
+            onClick={() => setInputText("")}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
+          >
+            <X size={15} />
+          </button>
+        )}
+      </div>
+
+      <button
+        onClick={() => handleSubmit()}
+        disabled={!inputText.trim() || isLoading}
+        title="Send (Enter)"
+        className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:hover:brightness-100 transition-all shadow-lg shadow-blue-500/25 shrink-0 cursor-pointer disabled:cursor-not-allowed"
+      >
+        {isLoading ? (
+          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        ) : (
+          <Send size={15} />
+        )}
+      </button>
+    </div>
+  );
+});
+
 export default function AICopilotModal({
   isOpen,
   onClose,
@@ -142,13 +204,11 @@ I can help you with:
   const [messages, setMessages] = useState<Message[]>([
     { id: "init-1", sender: "bot", text: getGreeting(), timestamp: "Just now" },
   ]);
-  const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [lastDiagnosedKey, setLastDiagnosedKey] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -157,7 +217,6 @@ I can help you with:
   useEffect(() => {
     if (isOpen) {
       scrollToBottom();
-      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [messages, isOpen, scrollToBottom]);
 
@@ -198,15 +257,14 @@ I can help you with:
 
   if (!isOpen) return null;
 
-  const handleSend = async (textToSend?: string) => {
-    const q = (textToSend || inputText).trim();
+  const handleSend = async (textToSend: string) => {
+    const q = textToSend.trim();
     if (!q || isLoading) return;
 
     const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const userMsg: Message = { id: "u-" + Date.now(), sender: "user", text: q, timestamp: timeStr };
 
     setMessages((prev) => [...prev, userMsg]);
-    setInputText("");
     setIsLoading(true);
 
     try {
@@ -280,7 +338,6 @@ I can help you with:
         timestamp: "Just now",
       },
     ]);
-    setInputText("");
   };
 
   const hasMistakeContext = userChoice && correctChoice && userChoice !== correctChoice;
@@ -501,47 +558,8 @@ I can help you with:
             ))}
           </div>
 
-          {/* ── INPUT BAR ── */}
-          <div className="px-4 py-3.5 bg-white dark:bg-[#111827] border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 shrink-0">
-            <div className="flex-1 relative">
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                  }
-                }}
-                placeholder="Ask anything — paste a question, concept, or mistake..."
-                className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 focus:bg-white dark:focus:bg-slate-800 transition-all pr-12 font-medium"
-                disabled={isLoading}
-              />
-              {inputText && (
-                <button
-                  onClick={() => setInputText("")}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
-                >
-                  <X size={15} />
-                </button>
-              )}
-            </div>
-
-            <button
-              onClick={() => handleSend()}
-              disabled={!inputText.trim() || isLoading}
-              title="Send (Enter)"
-              className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:hover:brightness-100 transition-all shadow-lg shadow-blue-500/25 shrink-0"
-            >
-              {isLoading ? (
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Send size={15} />
-              )}
-            </button>
-          </div>
+          {/* ── INPUT BAR (ISOLATED COMPONENT - ZERO KEYSTROKE DELAY) ── */}
+          <ModalInputBar onSend={handleSend} isLoading={isLoading} />
         </div>
       </div>
     </Portal>

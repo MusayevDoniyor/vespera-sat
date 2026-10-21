@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useDeferredValue } from "react";
 import KaTeXMath from "./KaTeXMath";
 import {
   SAT_MATH_TERMINOLOGY,
@@ -22,6 +22,7 @@ import {
 
 export default function MathDictionary() {
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearch = useDeferredValue(searchQuery);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const filteredTerms = useMemo(() => {
@@ -32,8 +33,8 @@ export default function MathDictionary() {
       }
 
       // 2. Search query filter (matches English term, Uzbek translation, or definition)
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase().trim();
+      if (deferredSearch.trim()) {
+        const query = deferredSearch.toLowerCase().trim();
         const matchTerm = item.term.toLowerCase().includes(query);
         const matchUzbek = item.uzbek.toLowerCase().includes(query);
         const matchDefEn = item.definitionEn.toLowerCase().includes(query);
@@ -44,7 +45,7 @@ export default function MathDictionary() {
 
       return true;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, deferredSearch]);
 
   return (
     <div className="w-full space-y-6">

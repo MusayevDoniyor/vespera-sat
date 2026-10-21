@@ -64,17 +64,176 @@ const STARTER_CARDS = [
   },
 ];
 
+const MessageBubble = React.memo(function MessageBubble({
+  message,
+  userName,
+  copiedId,
+  onCopy,
+  onOpenDesmos,
+}: {
+  message: Message;
+  userName: string;
+  copiedId: string | null;
+  onCopy: (id: string, text: string) => void;
+  onOpenDesmos: () => void;
+}) {
+  const isUser = message.sender === "user";
+
+  return (
+    <div
+      className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} animate-fadeIn`}
+    >
+      {/* Bot Avatar */}
+      {!isUser && (
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
+          <Sparkles size={15} />
+        </div>
+      )}
+
+      <div className={`flex flex-col gap-1.5 ${isUser ? "items-end" : "items-start"} max-w-[92%] sm:max-w-[85%]`}>
+        {/* Meta header */}
+        <div className="flex items-center gap-2 px-1 text-xs text-[var(--text-muted)]">
+          <span className="font-bold text-[var(--text-main)]">
+            {isUser ? userName : "Vespera AI"}
+          </span>
+          <span className="text-[10px] opacity-60 font-mono">{message.timestamp}</span>
+          {!isUser && message.source && (
+            <span className="text-[10px] font-mono px-2 py-0.2 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              {message.source}
+            </span>
+          )}
+        </div>
+
+        {/* Bubble */}
+        <div
+          className={`rounded-2xl p-5 sm:p-6 leading-relaxed text-sm sm:text-base transition-all ${
+            isUser
+              ? "bg-blue-600 text-white rounded-tr-sm font-medium shadow-md shadow-blue-500/20"
+              : "bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-tl-sm w-full shadow-xs"
+          }`}
+        >
+          {isUser ? (
+            <div className="text-white font-medium whitespace-pre-wrap leading-relaxed select-text">
+              {message.text}
+            </div>
+          ) : (
+            <>
+              <KaTeXMath content={message.text} />
+
+              {/* Bot Actions */}
+              <div className="mt-5 pt-3.5 border-t border-[var(--border-main)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
+                <button
+                  onClick={onOpenDesmos}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-semibold text-xs"
+                >
+                  <Calculator size={13} />
+                  <span>Open Desmos</span>
+                </button>
+
+                <button
+                  onClick={() => onCopy(message.id, message.text)}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)] font-medium text-xs"
+                >
+                  {copiedId === message.id ? (
+                    <>
+                      <Check size={13} className="text-emerald-500" />
+                      <span className="text-emerald-500 font-semibold">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={13} />
+                      <span>Copy</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* User Avatar */}
+      {isUser && (
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
+          <User size={15} />
+        </div>
+      )}
+    </div>
+  );
+});
+
+const ChatInputBar = React.memo(function ChatInputBar({
+  onSend,
+  isLoading,
+}: {
+  onSend: (text: string) => void;
+  isLoading: boolean;
+}) {
+  const [inputText, setInputText] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const q = inputText.trim();
+    if (!q || isLoading) return;
+    onSend(q);
+    setInputText("");
+  };
+
+  return (
+    <footer className="p-4 sm:p-6 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)] to-transparent shrink-0">
+      <div className="max-w-3xl xl:max-w-4xl mx-auto w-full">
+        <form
+          onSubmit={handleSubmit}
+          className="relative flex items-center rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xl hover:border-blue-500/40 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all p-2 pl-6"
+        >
+          <textarea
+            ref={textareaRef}
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+            rows={1}
+            placeholder="Ask anything or paste a question (Enter to send)..."
+            className="flex-1 bg-transparent border-none outline-none text-sm sm:text-base text-[var(--text-main)] placeholder:text-[var(--text-muted)] resize-none py-2 font-medium"
+            disabled={isLoading}
+          />
+
+          <button
+            type="submit"
+            disabled={!inputText.trim() || isLoading}
+            title="Send (Enter)"
+            className="w-10 h-10 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:bg-[var(--bg-surface)] text-white disabled:text-[var(--text-muted)] flex items-center justify-center transition-all shadow-md shadow-blue-500/20 disabled:shadow-none shrink-0 cursor-pointer disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <ArrowUp size={18} strokeWidth={2.5} />
+            )}
+          </button>
+        </form>
+
+        <p className="text-center text-[11px] text-[var(--text-muted)] mt-2 font-medium">
+          Vespera SAT AI Mentor · Socratic reasoning engine for 1550+ Digital SAT
+        </p>
+      </div>
+    </footer>
+  );
+});
+
 export default function MentorPage() {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isDesmosOpen, setIsDesmosOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Load chat history from localStorage
   useEffect(() => {
@@ -100,8 +259,8 @@ export default function MentorPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = async (overrideText?: string) => {
-    const textToSend = (overrideText || inputText).trim();
+  const handleSend = async (overrideText: string) => {
+    const textToSend = overrideText.trim();
     if (!textToSend || isLoading) return;
 
     const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -113,7 +272,6 @@ export default function MentorPage() {
     };
 
     setMessages((prev) => [...prev, userMsg]);
-    setInputText("");
     setIsLoading(true);
 
     try {
@@ -163,7 +321,6 @@ export default function MentorPage() {
       ]);
     } finally {
       setIsLoading(false);
-      setTimeout(() => textareaRef.current?.focus(), 50);
     }
   };
 
@@ -176,7 +333,6 @@ export default function MentorPage() {
   const handleClear = () => {
     localStorage.removeItem("vespera_mentor_chat_zen_v1");
     setMessages([]);
-    setInputText("");
   };
 
   const hasMessages = messages.length > 0;
@@ -306,92 +462,16 @@ export default function MentorPage() {
           ) : (
             /* CONVERSATION THREAD */
             <div className="space-y-8 sm:space-y-10 pb-36">
-              {messages.map((m) => {
-                const isUser = m.sender === "user";
-
-                return (
-                  <div
-                    key={m.id}
-                    className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} animate-fadeIn`}
-                  >
-                    {/* Bot Avatar */}
-                    {!isUser && (
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
-                        <Sparkles size={15} />
-                      </div>
-                    )}
-
-                    <div className={`flex flex-col gap-1.5 ${isUser ? "items-end" : "items-start"} max-w-[92%] sm:max-w-[85%]`}>
-                      {/* Meta header */}
-                      <div className="flex items-center gap-2 px-1 text-xs text-[var(--text-muted)]">
-                        <span className="font-bold text-[var(--text-main)]">
-                          {isUser ? userName : "Vespera AI"}
-                        </span>
-                        <span className="text-[10px] opacity-60 font-mono">{m.timestamp}</span>
-                        {!isUser && m.source && (
-                          <span className="text-[10px] font-mono px-2 py-0.2 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)]">
-                            {m.source}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Bubble */}
-                      <div
-                        className={`rounded-2xl p-5 sm:p-6 leading-relaxed text-sm sm:text-base transition-all ${
-                          isUser
-                            ? "bg-blue-600 text-white rounded-tr-sm font-medium shadow-md shadow-blue-500/20"
-                            : "bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-tl-sm w-full shadow-xs"
-                        }`}
-                      >
-                        {isUser ? (
-                          <div className="text-white font-medium whitespace-pre-wrap leading-relaxed select-text">
-                            {m.text}
-                          </div>
-                        ) : (
-                          <>
-                            <KaTeXMath content={m.text} />
-
-                            {/* Bot Actions */}
-                            <div className="mt-5 pt-3.5 border-t border-[var(--border-main)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
-                              <button
-                                onClick={() => setIsDesmosOpen(true)}
-                                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-semibold text-xs"
-                              >
-                                <Calculator size={13} />
-                                <span>Open Desmos</span>
-                              </button>
-
-                              <button
-                                onClick={() => handleCopy(m.id, m.text)}
-                                className="flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-main)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-main)] font-medium text-xs"
-                              >
-                                {copiedId === m.id ? (
-                                  <>
-                                    <Check size={13} className="text-emerald-500" />
-                                    <span className="text-emerald-500 font-semibold">Copied!</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy size={13} />
-                                    <span>Copy</span>
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* User Avatar */}
-                    {isUser && (
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
-                        <User size={15} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {messages.map((m) => (
+                <MessageBubble
+                  key={m.id}
+                  message={m}
+                  userName={userName}
+                  copiedId={copiedId}
+                  onCopy={handleCopy}
+                  onOpenDesmos={() => setIsDesmosOpen(true)}
+                />
+              ))}
 
               {/* Typing indicator */}
               {isLoading && (
@@ -416,51 +496,8 @@ export default function MentorPage() {
         </div>
       </div>
 
-      {/* ── FLOATING INPUT BAR (CENTERED, MINIMALIST, HIGH CONVERTING) ── */}
-      <footer className="p-4 sm:p-6 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)] to-transparent shrink-0">
-        <div className="max-w-3xl xl:max-w-4xl mx-auto w-full">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="relative flex items-center rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xl hover:border-blue-500/40 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all p-2 pl-6"
-          >
-            <textarea
-              ref={textareaRef}
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              rows={1}
-              placeholder="Ask anything or paste a question (Enter to send)..."
-              className="flex-1 bg-transparent border-none outline-none text-sm sm:text-base text-[var(--text-main)] placeholder:text-[var(--text-muted)] resize-none py-2 font-medium"
-              disabled={isLoading}
-            />
-
-            <button
-              type="submit"
-              disabled={!inputText.trim() || isLoading}
-              title="Send (Enter)"
-              className="w-10 h-10 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:bg-[var(--bg-surface)] text-white disabled:text-[var(--text-muted)] flex items-center justify-center transition-all shadow-md shadow-blue-500/20 disabled:shadow-none shrink-0"
-            >
-              {isLoading ? (
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <ArrowUp size={18} strokeWidth={2.5} />
-              )}
-            </button>
-          </form>
-
-          <p className="text-center text-[11px] text-[var(--text-muted)] mt-2 font-medium">
-            Vespera SAT AI Mentor · Socratic reasoning engine for 1550+ Digital SAT
-          </p>
-        </div>
-      </footer>
+      {/* ── FLOATING INPUT BAR (ISOLATED COMPONENT - ZERO KEYSTROKE LAG) ── */}
+      <ChatInputBar onSend={handleSend} isLoading={isLoading} />
 
       {/* ── EMBEDDED FLOATING DESMOS CALCULATOR ── */}
       {isDesmosOpen && (
