@@ -40,7 +40,10 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
       return id;
     };
 
-    // 1. Currency fixes ($45, $1,500, etc.)
+    // 1. Currency fixes ($45, $1,500, $30 billion, etc.)
+    text = text.replace(/\$([0-9]{1,3}(?:,[0-9]{3})+(?:\.[0-9]+)?)(?!\s*[+\-*/=^_\\])/g, '&#36;$1');
+    text = text.replace(/\$([0-9]+(?:\.[0-9]+)?\s+(?:million|billion|trillion|thousand|hundred))\b/gi, '&#36;$1');
+
     text = text.replace(/\$\s*\\+\$\s*([0-9.,{}]+)\s*\$/g, (_, val) => {
       const cleanVal = val.replace(/[{}]/g, "");
       return `&#36;${cleanVal}`;

@@ -73,6 +73,13 @@ export function getAutoDiagramPreset(prompt: string, domain?: string): DiagramPr
   if (p.includes("box plot") || p.includes("interquartile") || (p.includes("median") && p.includes("quartile"))) {
     return "box_plot";
   }
+  if (
+    p.includes("similar to triangle") ||
+    (p.includes("similar") && p.includes("triangle")) ||
+    p.includes("triangle cae is similar")
+  ) {
+    return "similar_triangles";
+  }
   return null;
 }
 

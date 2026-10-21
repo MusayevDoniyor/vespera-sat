@@ -484,16 +484,12 @@ export default function MockResultsView({ report, onRetake }: MockResultsViewPro
                             </div>
                           )}
 
-                          {(q.diagramPreset || q.diagramSvg) && (
-                            <div className="mt-3">
-                              <QuestionDiagram
-                                preset={q.diagramPreset}
-                                customSvg={q.diagramSvg}
-                                prompt={passageToShow || promptToShow}
-                                domain={q.domain}
-                              />
-                            </div>
-                          )}
+                          <QuestionDiagram
+                            preset={q.diagramPreset}
+                            customSvg={q.diagramSvg}
+                            prompt={passageToShow || promptToShow}
+                            domain={q.domain}
+                          />
 
                           <div className="text-xs md:text-sm text-[var(--text-main)] font-medium leading-relaxed">
                             <KaTeXMath content={promptToShow} />

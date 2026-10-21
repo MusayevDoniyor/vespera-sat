@@ -857,17 +857,13 @@ export default function BluebookExamRunnerPage() {
                   </div>
                 </div>
 
-                {/* Geometric Diagram if present */}
-                {(currentQuestion.diagramPreset || currentQuestion.diagramSvg) && (
-                  <div className="py-2">
-                    <QuestionDiagram
-                      preset={currentQuestion.diagramPreset}
-                      customSvg={currentQuestion.diagramSvg}
-                      prompt={promptToShow}
-                      domain={currentQuestion.domain}
-                    />
-                  </div>
-                )}
+                {/* Geometric Diagram / Reference Figure if present or auto-detected */}
+                <QuestionDiagram
+                  preset={currentQuestion.diagramPreset}
+                  customSvg={currentQuestion.diagramSvg}
+                  prompt={promptToShow}
+                  domain={currentQuestion.domain}
+                />
 
                 {/* Prompt Stem */}
                 <div className="text-sm sm:text-base font-medium text-[var(--text-main)] leading-relaxed select-text cursor-text">

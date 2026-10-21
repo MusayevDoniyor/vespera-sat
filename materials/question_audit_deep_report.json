@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-10-21T18:55:43.116Z",
+  "mockSummary": {
+    "total": 1029,
+    "missingStrictVisualCount": 0,
+    "missingStrictVisualList": [],
+    "possibleMissingVisualList": [],
+    "invalidOptionsList": [],
+    "missingCorrectAnswerList": []
+  },
+  "dbSummary": {
+    "total": 1182,
+    "missingStrictVisualCount": 0,
+    "missingStrictVisualList": [],
+    "possibleMissingVisualList": [],
+    "invalidOptionsList": [],
+    "missingCorrectAnswerList": [],
+    "unbalancedLatexList": [],
+    "missingExpUzCount": 0
+  }
+}
