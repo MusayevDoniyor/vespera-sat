@@ -1,9 +1,11 @@
 import fs from 'fs';
 import { Pool } from 'pg';
 
-const connectionString =
-  process.env.DATABASE_URL ||
-  "postgresql://neondb_owner:npg_saXeymWvA81k@ep-jolly-mode-asnk8cug-pooler.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require";
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  console.error("Error: DATABASE_URL environment variable is required.");
+  process.exit(1);
+}
 
 const pool = new Pool({ connectionString });
 

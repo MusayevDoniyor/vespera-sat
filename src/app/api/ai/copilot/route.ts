@@ -27,11 +27,11 @@ interface CopilotPayload {
 
 // Working Gemini models (latest stable)
 const GEMINI_MODELS = [
-  "gemini-2.0-flash",
-  "gemini-2.0-flash-lite",
-  "gemini-1.5-flash",
-  "gemini-1.5-flash-8b",
-  "gemini-1.5-pro",
+  "gemini-2.5-flash",
+  "gemini-flash-latest",
+  "gemini-3.8-flash",
+  "gemini-2.5-pro",
+  "gemini-pro-latest",
 ];
 
 export async function POST(request: Request) {
