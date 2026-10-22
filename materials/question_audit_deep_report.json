@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-21T18:55:43.116Z",
+  "timestamp": "2026-10-22T05:43:43.508Z",
   "mockSummary": {
     "total": 1029,
     "missingStrictVisualCount": 0,
@@ -9,10 +9,155 @@
     "missingCorrectAnswerList": []
   },
   "dbSummary": {
-    "total": 1182,
+    "total": 1372,
     "missingStrictVisualCount": 0,
     "missingStrictVisualList": [],
-    "possibleMissingVisualList": [],
+    "possibleMissingVisualList": [
+      {
+        "id": "q_june_2026_037",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Algebra",
+        "difficulty": "Medium",
+        "promptSnippet": "The table shows three values of $x$ and their corresponding values of $y$, where",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_062",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "The maximum temperature on April 1, in degrees Fahrenheit, was recorded each yea",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_085",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Geometry & Trigonometry",
+        "difficulty": "Medium",
+        "promptSnippet": "In the figure, $\\overline{LQ}$ intersects $\\overline{MP}$ at point $R$, and $\\ov",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_086",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Medium",
+        "promptSnippet": "The scatterplot shows the relationship between $x$ and $y$ for the 10 data point",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_091",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Easy",
+        "promptSnippet": "For the function $f$, the table shows four values of $x$ and their corresponding",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_096",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Easy",
+        "promptSnippet": "Sam opened a savings account at a bank. The table shows the exponential relation",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_113",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "The scatterplot shows the relationship between two variables, $x$ and $y$, with ",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_143",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Algebra",
+        "difficulty": "Medium",
+        "promptSnippet": "The table shows values of $x$ and their corresponding values of $y$ for three po",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      }
+    ],
     "invalidOptionsList": [],
     "missingCorrectAnswerList": [],
     "unbalancedLatexList": [],

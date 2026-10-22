@@ -1,0 +1,11 @@
+{
+  "question": "The scatterplot shows the relationship between $x$ and $y$ for the 10 data points in data set $A$. Data set B is created by multiplying the $y$-value of each data point from data set A by 30. Which of the following equations is the most appropriate model for data set B?",
+  "image": "images/question_322.png",
+  "options": [
+    "$y = 5(2.04)^x$",
+    "$y = 149(2.04)^x$",
+    "$y = 5(2.04)^x + 30$",
+    "$y = 30(2.04)^x + 30$"
+  ],
+  "answer": "C"
+}
