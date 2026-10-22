@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-22T05:43:43.508Z",
+  "timestamp": "2026-10-22T06:08:30.165Z",
   "mockSummary": {
     "total": 1029,
     "missingStrictVisualCount": 0,
@@ -9,10 +9,118 @@
     "missingCorrectAnswerList": []
   },
   "dbSummary": {
-    "total": 1372,
+    "total": 1491,
     "missingStrictVisualCount": 0,
     "missingStrictVisualList": [],
     "possibleMissingVisualList": [
+      {
+        "id": "q_cb120_p07_2",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Geometry & Trigonometry",
+        "difficulty": "Hard",
+        "promptSnippet": "In the figure, $\\overline{LQ}$ intersects $\\overline{MP}$ at point $R$, and $\\ov",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p22_2",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Medium",
+        "promptSnippet": "The scatterplot shows the relationship between the number of swans, $y$, in a ce",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p23_1",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "A group of $10$ botanists recorded data on the germination rates of a certain ty",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p25_3",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Easy",
+        "promptSnippet": "The bar graph shows the frequency of each data value in a data set. The horizont",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p26_1",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "As part of a study of lake conditions, the water temperature was recorded at dif",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p38_2",
+        "source": "Database:vespera.questions",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Easy",
+        "promptSnippet": "While walking on a trail, Mary stopped to read a trail sign. The graph shows the",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
       {
         "id": "q_june_2026_037",
         "source": "Database:vespera.questions",
