@@ -86,9 +86,7 @@ export default function AuthModal() {
 
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center space-y-2 mb-6">
-          <div className="p-2 rounded-2xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 shadow-sm mb-1">
-            <VesperaLogo size={42} />
-          </div>
+          <VesperaLogo size={48} className="mb-1" />
           <h2 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight">
             {mode === "login" ? "Sign In" : "Create Account"}
           </h2>

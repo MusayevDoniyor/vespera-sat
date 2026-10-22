@@ -2,93 +2,152 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-// 1. Core Vector Definitions
-function getVesperaMarkSVG({ withTile = true, size = 512 } = {}) {
-  const tileBackground = withTile
-    ? `<rect width="100" height="100" rx="24" fill="#0b0f19"/>
-       <rect width="100" height="100" rx="24" stroke="rgba(255,255,255,0.08)" stroke-width="1.2"/>`
-    : '';
+// Root directories
+const rootDir = path.resolve(__dirname, '..');
+const publicDir = path.join(rootDir, 'public');
+const appDir = path.join(rootDir, 'src', 'app');
+
+/**
+ * Generates the perfected Vespera Vector Emblem SVG.
+ * Completely transparent background, precision optical centering (X center ~ 50),
+ * crisp jewel-tone gradients, and radiant Evening Star beacon.
+ */
+function getVesperaMarkSVG({ theme = 'universal', size = 512 } = {}) {
+  // Color ramps based on theme target
+  // universal: rich saturated jewel tones that pop on BOTH pure white (#ffffff) and pure dark (#090d16)
+  // dark: luminous electric cyan-violet
+  // light: deep sapphire azure to royal violet with contrast boost
+  let cyanStop0 = '#00f2fe';
+  let cyanStop40 = '#00c6ff';
+  let cyanStop80 = '#0072ff';
+  let cyanStop100 = '#1d4ed8';
+
+  let violetStop0 = '#3b82f6';
+  let violetStop50 = '#6366f1';
+  let violetStop100 = '#a855f7';
+
+  let starFlare = '#38bdf8';
+  let starCoreStop100 = '#e0f2fe';
+  let ambientShadowColor = '#0284c7';
+  let ambientOpacity = 0.32;
+  let wingShadowColor = '#090d16';
+  let wingShadowOpacity = 0.55;
+
+  if (theme === 'light') {
+    cyanStop0 = '#0284c7';
+    cyanStop40 = '#0ea5e9';
+    cyanStop80 = '#2563eb';
+    cyanStop100 = '#1d4ed8';
+
+    violetStop0 = '#2563eb';
+    violetStop50 = '#4f46e5';
+    violetStop100 = '#7c3aed';
+
+    starFlare = '#0284c7';
+    starCoreStop100 = '#bae6fd';
+    ambientShadowColor = '#0f172a';
+    ambientOpacity = 0.16;
+    wingShadowColor = '#0f172a';
+    wingShadowOpacity = 0.22;
+  } else if (theme === 'universal') {
+    // Saturated so it holds deep punch against white and brilliant glow against black
+    cyanStop0 = '#00e5ff';
+    cyanStop40 = '#00b0ff';
+    cyanStop80 = '#0066ff';
+    cyanStop100 = '#1e40af';
+
+    violetStop0 = '#2979ff';
+    violetStop50 = '#651fff';
+    violetStop100 = '#9c27b0';
+
+    starFlare = '#00b0ff';
+    starCoreStop100 = '#e1f5fe';
+    ambientShadowColor = '#0052cc';
+    ambientOpacity = 0.28;
+    wingShadowColor = '#0b0f19';
+    wingShadowOpacity = 0.45;
+  }
+
+  const id = `vespera-${theme}`;
 
   return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Left Wing Gradient: Electric Cyan into Deep Azure -->
-    <linearGradient id="v-cyan-pure" x1="20" y1="26" x2="50" y2="86" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#00f2fe" />
-      <stop offset="40%" stop-color="#00c6ff" />
-      <stop offset="80%" stop-color="#0072ff" />
-      <stop offset="100%" stop-color="#1e40af" />
+    <!-- Left Wing Gradient: Electric Cyan into Deep Sapphire -->
+    <linearGradient id="${id}-cyan" x1="16" y1="26" x2="46" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${cyanStop0}" />
+      <stop offset="40%" stop-color="${cyanStop40}" />
+      <stop offset="80%" stop-color="${cyanStop80}" />
+      <stop offset="100%" stop-color="${cyanStop100}" />
     </linearGradient>
 
     <!-- Right Wing Gradient: Royal Indigo into Vibrant Purple -->
-    <linearGradient id="v-violet-pure" x1="50" y1="86" x2="80" y2="26" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#3b82f6" />
-      <stop offset="50%" stop-color="#6366f1" />
-      <stop offset="100%" stop-color="#a855f7" />
+    <linearGradient id="${id}-violet" x1="46" y1="86" x2="76" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${violetStop0}" />
+      <stop offset="50%" stop-color="${violetStop50}" />
+      <stop offset="100%" stop-color="${violetStop100}" />
     </linearGradient>
 
-    <!-- Natural Soft Shadow between wings -->
-    <filter id="v-wing-shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#090d16" flood-opacity="0.5" />
+    <!-- Natural Soft Shadow between overlapping wings -->
+    <filter id="${id}-wing-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2.8" flood-color="${wingShadowColor}" flood-opacity="${wingShadowOpacity}" />
     </filter>
 
-    <!-- Star Glow -->
-    <radialGradient id="star-beacon-glow" cx="84" cy="18" r="22" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.7" />
-      <stop offset="50%" stop-color="#818cf8" stop-opacity="0.2" />
-      <stop offset="100%" stop-color="#0b0f19" stop-opacity="0" />
+    <!-- Ambient Beacon Starlight Glow -->
+    <radialGradient id="${id}-star-glow" cx="80" cy="18" r="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${starFlare}" stop-opacity="${theme === 'light' ? 0.35 : 0.75}" />
+      <stop offset="50%" stop-color="#818cf8" stop-opacity="${theme === 'light' ? 0.08 : 0.22}" />
+      <stop offset="100%" stop-color="${starFlare}" stop-opacity="0" />
     </radialGradient>
 
     <!-- Star Core Radiant Gradient -->
-    <linearGradient id="star-core-grad" x1="80" y1="12" x2="88" y2="24" gradientUnits="userSpaceOnUse">
+    <linearGradient id="${id}-star-core" x1="76" y1="12" x2="84" y2="24" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="100%" stop-color="#e0f2fe" />
+      <stop offset="100%" stop-color="${starCoreStop100}" />
     </linearGradient>
 
-    <!-- Overall Mark Ambient Shadow -->
-    <filter id="mark-ambient-shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0284c7" flood-opacity="0.32" />
+    <!-- Overall Mark Ambient Shadow for physical surface lift -->
+    <filter id="${id}-ambient-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="${ambientShadowColor}" flood-opacity="${ambientOpacity}" />
     </filter>
   </defs>
 
-  ${tileBackground}
+  <!-- Ambient Beacon Starlight Glow (completely transparent background, no box!) -->
+  <circle cx="80" cy="18" r="22" fill="url(#${id}-star-glow)" />
 
-  <!-- Ambient Beacon Starlight Glow -->
-  <circle cx="84" cy="18" r="22" fill="url(#star-beacon-glow)" />
-
-  <g filter="url(#mark-ambient-shadow)">
-    <!-- Right Wing (Behind left wing) -->
+  <g filter="url(#${id}-ambient-shadow)">
+    <!-- Right Wing (Behind left wing, optically balanced at X=46..76) -->
     <path
-      d="M 80 26 L 62 26 L 50 62 L 50 86 Z"
-      fill="url(#v-violet-pure)"
+      d="M 76 26 L 58 26 L 46 64 L 46 86 Z"
+      fill="url(#${id}-violet)"
     />
 
-    <!-- Left Wing (Casts gentle shadow onto right wing) -->
+    <!-- Left Wing (Casts gentle drop shadow onto right wing, X=16..46) -->
     <path
-      d="M 20 26 L 38 26 L 50 62 L 50 86 Z"
-      fill="url(#v-cyan-pure)"
-      filter="url(#v-wing-shadow)"
+      d="M 16 26 L 34 26 L 46 64 L 46 86 Z"
+      fill="url(#${id}-cyan)"
+      filter="url(#${id}-wing-shadow)"
     />
   </g>
 
-  <!-- The Vespera Evening Star Beacon -->
+  <!-- The Vespera Evening Star Beacon (Balanced apex at cx=80, cy=18) -->
   <!-- Outer Star Flare -->
   <path
-    d="M 84 4 Q 84 18 98 18 Q 84 18 84 32 Q 84 18 70 18 Q 84 18 84 4 Z"
-    fill="#38bdf8"
+    d="M 80 4 Q 80 18 94 18 Q 80 18 80 32 Q 80 18 66 18 Q 80 18 80 4 Z"
+    fill="${starFlare}"
   />
 
   <!-- Inner Diamond Flare -->
   <path
-    d="M 84 8 Q 84 18 94 18 Q 84 18 84 28 Q 84 18 74 18 Q 84 18 84 8 Z"
-    fill="url(#star-core-grad)"
+    d="M 80 8 Q 80 18 90 18 Q 80 18 80 28 Q 80 18 70 18 Q 80 18 80 8 Z"
+    fill="url(#${id}-star-core)"
   />
 
-  <!-- White-hot core center spark -->
-  <circle cx="84" cy="18" r="2" fill="#ffffff" />
+  <!-- White-hot diamond spark center -->
+  <circle cx="80" cy="18" r="2.2" fill="#ffffff" />
 </svg>`;
 }
 
-// 2. ICO Builder (Packs 16, 32, 48 PNGs into standard .ico format)
+// Packs 16, 32, 48 PNGs into standard .ico format
 function buildIco(pngBuffers) {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0); // Reserved
@@ -118,66 +177,90 @@ function buildIco(pngBuffers) {
   return Buffer.concat([header, ...dirEntries, ...imageBuffers]);
 }
 
-async function buildAllAssets() {
-  console.log('Building brand assets for Vespera SAT...');
+async function buildAllBrandAssets() {
+  console.log('✨ Building pure transparent, high-res brand assets for Vespera SAT...');
 
-  const tileSvg = getVesperaMarkSVG({ withTile: true });
-  const transSvg = getVesperaMarkSVG({ withTile: false });
+  const universalSvg = getVesperaMarkSVG({ theme: 'universal' });
+  const darkSvg = getVesperaMarkSVG({ theme: 'dark' });
+  const lightSvg = getVesperaMarkSVG({ theme: 'light' });
 
-  // 1. Write SVGs to public and app
-  fs.writeFileSync(path.join(__dirname, 'public', 'icon.svg'), tileSvg, 'utf8');
-  fs.writeFileSync(path.join(__dirname, 'src', 'app', 'icon.svg'), tileSvg, 'utf8');
-  fs.writeFileSync(path.join(__dirname, 'public', 'logo.svg'), transSvg, 'utf8');
-  console.log('✓ SVGs written (public/icon.svg, src/app/icon.svg, public/logo.svg)');
+  // 1. Write standalone SVGs (100% transparent, 0 background boxes)
+  fs.writeFileSync(path.join(publicDir, 'icon.svg'), universalSvg, 'utf8');
+  fs.writeFileSync(path.join(appDir, 'icon.svg'), universalSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'logo.svg'), universalSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'logo-dark.svg'), darkSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'logo-light.svg'), lightSvg, 'utf8');
+  console.log('✓ SVGs written (public/icon.svg, src/app/icon.svg, public/logo.svg, logo-dark.svg, logo-light.svg)');
 
-  // 2. High-res transparent logo PNG
-  await sharp(Buffer.from(transSvg))
+  // 2. High-res Transparent PNGs (512x512)
+  // Universal: works on both dark and light
+  await sharp(Buffer.from(universalSvg))
     .resize(512, 512)
-    .png()
-    .toFile(path.join(__dirname, 'public', 'logo.png'));
-  console.log('✓ public/logo.png (512x512) generated');
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'logo.png'));
+  console.log('✓ public/logo.png (512x512 transparent) generated');
 
-  // 3. Apple Touch Icon (180x180)
-  await sharp(Buffer.from(tileSvg))
+  await sharp(Buffer.from(universalSvg))
+    .resize(512, 512)
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'icon.png'));
+  console.log('✓ public/icon.png (512x512 transparent) generated');
+
+  // Dark variant (for dark UI / presentations)
+  await sharp(Buffer.from(darkSvg))
+    .resize(512, 512)
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'logo-dark.png'));
+  console.log('✓ public/logo-dark.png (512x512 transparent) generated');
+
+  // Light variant (for light UI / white presentations)
+  await sharp(Buffer.from(lightSvg))
+    .resize(512, 512)
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'logo-light.png'));
+  console.log('✓ public/logo-light.png (512x512 transparent) generated');
+
+  // 3. Apple Touch Icon (180x180 transparent PNG)
+  await sharp(Buffer.from(universalSvg))
     .resize(180, 180)
-    .png()
-    .toFile(path.join(__dirname, 'public', 'apple-touch-icon.png'));
-  console.log('✓ public/apple-touch-icon.png (180x180) generated');
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'apple-touch-icon.png'));
+  console.log('✓ public/apple-touch-icon.png (180x180 transparent) generated');
 
-  // 4. Android Chrome Icons
-  await sharp(Buffer.from(tileSvg))
+  // 4. Android Chrome Icons (192, 512 transparent PNGs)
+  await sharp(Buffer.from(universalSvg))
     .resize(192, 192)
-    .png()
-    .toFile(path.join(__dirname, 'public', 'android-chrome-192x192.png'));
-  await sharp(Buffer.from(tileSvg))
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'android-chrome-192x192.png'));
+  await sharp(Buffer.from(universalSvg))
     .resize(512, 512)
-    .png()
-    .toFile(path.join(__dirname, 'public', 'android-chrome-512x512.png'));
-  console.log('✓ Android Chrome icons (192, 512) generated');
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(publicDir, 'android-chrome-512x512.png'));
+  console.log('✓ public/android-chrome-*.png generated');
 
-  // 5. Standard Favicons (16, 32, 48)
-  const png16 = await sharp(Buffer.from(tileSvg)).resize(16, 16).png().toBuffer();
-  const png32 = await sharp(Buffer.from(tileSvg)).resize(32, 32).png().toBuffer();
-  const png48 = await sharp(Buffer.from(tileSvg)).resize(48, 48).png().toBuffer();
+  // 5. Favicons (16x16, 32x32)
+  const png16 = await sharp(Buffer.from(universalSvg)).resize(16, 16).png().toBuffer();
+  const png32 = await sharp(Buffer.from(universalSvg)).resize(32, 32).png().toBuffer();
+  const png48 = await sharp(Buffer.from(universalSvg)).resize(48, 48).png().toBuffer();
 
-  fs.writeFileSync(path.join(__dirname, 'public', 'favicon-16x16.png'), png16);
-  fs.writeFileSync(path.join(__dirname, 'public', 'favicon-32x32.png'), png32);
+  fs.writeFileSync(path.join(publicDir, 'favicon-16x16.png'), png16);
+  fs.writeFileSync(path.join(publicDir, 'favicon-32x32.png'), png32);
   console.log('✓ public/favicon-16x16.png and 32x32.png generated');
 
-  // 6. Favicon ICO (Multi-Resolution)
+  // 6. Multi-resolution ICO (16, 32, 48)
   const icoBuffer = buildIco([
     { width: 16, height: 16, buffer: png16 },
     { width: 32, height: 32, buffer: png32 },
     { width: 48, height: 48, buffer: png48 },
   ]);
-  fs.writeFileSync(path.join(__dirname, 'public', 'favicon.ico'), icoBuffer);
-  fs.writeFileSync(path.join(__dirname, 'src', 'app', 'favicon.ico'), icoBuffer);
-  console.log('✓ favicon.ico generated with 16x16, 32x32, 48x48 multi-resolution support');
+  fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoBuffer);
+  fs.writeFileSync(path.join(appDir, 'favicon.ico'), icoBuffer);
+  console.log('✓ favicon.ico generated (public/favicon.ico and src/app/favicon.ico)');
 
-  console.log('All brand assets successfully built and validated!');
+  console.log('🎉 All brand assets built successfully with 100% alpha transparency and NO background boxes!');
 }
 
-buildAllAssets().catch((err) => {
+buildAllBrandAssets().catch((err) => {
   console.error('Build failed:', err);
   process.exit(1);
 });

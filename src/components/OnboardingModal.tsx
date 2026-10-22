@@ -144,9 +144,7 @@ export default function OnboardingModal() {
         {/* Progress Header */}
         <div className="flex items-center justify-between pb-5 border-b border-[var(--border-main)] mb-6">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 shadow-sm">
-              <VesperaLogo size={28} />
-            </div>
+            <VesperaLogo size={32} />
             <div>
               <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--accent-blue)]">
                 Step {step} of 4

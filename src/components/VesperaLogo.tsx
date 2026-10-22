@@ -7,19 +7,24 @@ interface VesperaLogoProps {
   size?: number;
   className?: string;
   showWordmark?: boolean;
-  variant?: "tile" | "mark" | "gradient" | "monochrome";
+  variant?: "mark" | "tile" | "gradient" | "monochrome";
   themeOverride?: "light" | "dark" | "auto";
 }
 
+/**
+ * Vespera SAT Emblem
+ * Pure standalone vector mark with 100% transparent background.
+ * Dynamic light/dark theme adaptation with zero unwanted bounding boxes.
+ */
 export default function VesperaLogo({
   size = 36,
   className = "",
   showWordmark = false,
-  variant = "tile",
+  variant = "mark",
   themeOverride = "auto",
 }: VesperaLogoProps) {
   const idPrefix = React.useId().replace(/:/g, "_");
-  const isMarkOnly = variant === "mark" || variant === "monochrome";
+  const isTile = variant === "tile";
 
   // Access current theme safely with fallback
   let currentTheme: "light" | "dark" = "dark";
@@ -38,7 +43,7 @@ export default function VesperaLogo({
 
   return (
     <div className={`inline-flex items-center gap-3 ${className}`}>
-      {/* Precision Vector Emblem (Theme-Adaptive SVG) */}
+      {/* Precision Vector Emblem (Theme-Adaptive SVG with Pure Alpha Transparency) */}
       <svg
         width={size}
         height={size}
@@ -48,12 +53,12 @@ export default function VesperaLogo({
         className="shrink-0 transition-transform duration-300 group-hover:scale-105 select-none"
       >
         <defs>
-          {/* Left Wing Gradient (Cyan into Azure) */}
+          {/* Left Wing Gradient (Electric Cyan into Deep Sapphire Azure) */}
           <linearGradient
             id={`${idPrefix}-cyan-grad`}
-            x1="20"
+            x1="16"
             y1="26"
-            x2="50"
+            x2="46"
             y2="86"
             gradientUnits="userSpaceOnUse"
           >
@@ -62,7 +67,7 @@ export default function VesperaLogo({
                 <stop offset="0%" stopColor="#00f2fe" />
                 <stop offset="40%" stopColor="#00c6ff" />
                 <stop offset="80%" stopColor="#0072ff" />
-                <stop offset="100%" stopColor="#1e40af" />
+                <stop offset="100%" stopColor="#1d4ed8" />
               </>
             ) : (
               <>
@@ -77,9 +82,9 @@ export default function VesperaLogo({
           {/* Right Wing Gradient (Royal Indigo into Vibrant Purple) */}
           <linearGradient
             id={`${idPrefix}-violet-grad`}
-            x1="50"
+            x1="46"
             y1="86"
-            x2="80"
+            x2="76"
             y2="26"
             gradientUnits="userSpaceOnUse"
           >
@@ -98,36 +103,36 @@ export default function VesperaLogo({
             )}
           </linearGradient>
 
-          {/* Natural Soft Shadow between wings */}
+          {/* Natural Soft Shadow between overlapping wings */}
           <filter id={`${idPrefix}-wing-shadow`} x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow
               dx="2"
               dy="2"
-              stdDeviation="3"
-              floodColor={isDark ? "#050811" : "#0f172a"}
-              floodOpacity={isDark ? 0.6 : 0.25}
+              stdDeviation="2.8"
+              floodColor={isDark ? "#090d16" : "#0f172a"}
+              floodOpacity={isDark ? 0.55 : 0.22}
             />
           </filter>
 
           {/* Beacon Radial Ambient Glow */}
           <radialGradient
             id={`${idPrefix}-beacon-glow`}
-            cx="84"
+            cx="80"
             cy="18"
             r="22"
             gradientUnits="userSpaceOnUse"
           >
             {isDark ? (
               <>
-                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#818cf8" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#0b0f19" stopOpacity="0" />
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.75" />
+                <stop offset="50%" stopColor="#818cf8" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
               </>
             ) : (
               <>
                 <stop offset="0%" stopColor="#0284c7" stopOpacity="0.35" />
-                <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.1" />
-                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                <stop offset="50%" stopColor="#818cf8" stopOpacity="0.08" />
+                <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
               </>
             )}
           </radialGradient>
@@ -135,9 +140,9 @@ export default function VesperaLogo({
           {/* Star Core Radiant Gradient */}
           <linearGradient
             id={`${idPrefix}-star-core`}
-            x1="80"
+            x1="76"
             y1="12"
-            x2="88"
+            x2="84"
             y2="24"
             gradientUnits="userSpaceOnUse"
           >
@@ -146,19 +151,19 @@ export default function VesperaLogo({
           </linearGradient>
 
           {/* Overall Mark Ambient Shadow */}
-          <filter id={`${idPrefix}-ambient-shadow`} x="-20%" y="-20%" width="140%" height="140%">
+          <filter id={`${idPrefix}-ambient-shadow`} x="-25%" y="-25%" width="150%" height="150%">
             <feDropShadow
               dx="0"
               dy="4"
-              stdDeviation={isDark ? 6 : 4}
-              floodColor={isDark ? "#0284c7" : "#0284c7"}
-              floodOpacity={isDark ? 0.35 : 0.2}
+              stdDeviation={isDark ? 5 : 4}
+              floodColor={isDark ? "#0284c7" : "#0f172a"}
+              floodOpacity={isDark ? 0.32 : 0.16}
             />
           </filter>
         </defs>
 
-        {/* Squircle Tile Background (Responsive to Light / Dark Mode) */}
-        {!isMarkOnly && (
+        {/* Squircle Tile Background (Only if explicitly requested via variant='tile') */}
+        {isTile && (
           <>
             <rect
               width="100"
@@ -178,38 +183,38 @@ export default function VesperaLogo({
         )}
 
         {/* Ambient Beacon Starlight Glow */}
-        <circle cx="84" cy="18" r="22" fill={`url(#${idPrefix}-beacon-glow)`} />
+        <circle cx="80" cy="18" r="22" fill={`url(#${idPrefix}-beacon-glow)`} />
 
         <g filter={`url(#${idPrefix}-ambient-shadow)`}>
-          {/* Right Wing (Behind left wing) */}
+          {/* Right Wing (Behind left wing, optical balance X=46..76) */}
           <path
-            d="M 80 26 L 62 26 L 50 62 L 50 86 Z"
+            d="M 76 26 L 58 26 L 46 64 L 46 86 Z"
             fill={`url(#${idPrefix}-violet-grad)`}
           />
 
-          {/* Left Wing (Casts gentle shadow onto right wing) */}
+          {/* Left Wing (Casts gentle shadow onto right wing, optical balance X=16..46) */}
           <path
-            d="M 20 26 L 38 26 L 50 62 L 50 86 Z"
+            d="M 16 26 L 34 26 L 46 64 L 46 86 Z"
             fill={`url(#${idPrefix}-cyan-grad)`}
             filter={`url(#${idPrefix}-wing-shadow)`}
           />
         </g>
 
-        {/* The Vespera Evening Star Beacon (4-Point Diamond Star) */}
+        {/* The Vespera Evening Star Beacon (4-Point Diamond Star at cx=80, cy=18) */}
         {/* Outer Star Flare */}
         <path
-          d="M 84 4 Q 84 18 98 18 Q 84 18 84 32 Q 84 18 70 18 Q 84 18 84 4 Z"
+          d="M 80 4 Q 80 18 94 18 Q 80 18 80 32 Q 80 18 66 18 Q 80 18 80 4 Z"
           fill={isDark ? "#38bdf8" : "#0284c7"}
         />
 
         {/* Inner Diamond Flare */}
         <path
-          d="M 84 8 Q 84 18 94 18 Q 84 18 84 28 Q 84 18 74 18 Q 84 18 84 8 Z"
+          d="M 80 8 Q 80 18 90 18 Q 80 18 80 28 Q 80 18 70 18 Q 80 18 80 8 Z"
           fill={`url(#${idPrefix}-star-core)`}
         />
 
         {/* Center Spark */}
-        <circle cx="84" cy="18" r="2.2" fill="#ffffff" />
+        <circle cx="80" cy="18" r="2.2" fill="#ffffff" />
       </svg>
 
       {/* Typography Wordmark (Optional) */}

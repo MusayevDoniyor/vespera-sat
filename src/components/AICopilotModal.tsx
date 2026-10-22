@@ -364,9 +364,7 @@ I can help you with:
           {/* ── HEADER ── */}
           <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/90 dark:bg-[#161f30] border-b border-slate-200 dark:border-slate-800 shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/30">
-                <Sparkles size={18} className="text-white" />
-              </div>
+              <VesperaLogo size={32} />
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-extrabold text-sm text-slate-900 dark:text-white tracking-tight">
