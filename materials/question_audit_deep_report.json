@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-22T06:31:39.931Z",
+  "timestamp": "2026-10-22T07:46:44.924Z",
   "mockSummary": {
     "total": 1323,
     "missingStrictVisualCount": 0,
@@ -442,7 +442,7 @@
     "missingCorrectAnswerList": []
   },
   "dbSummary": {
-    "total": 1491,
+    "total": 1622,
     "missingStrictVisualCount": 0,
     "missingStrictVisualList": [],
     "possibleMissingVisualList": [
@@ -701,7 +701,44 @@
     ],
     "invalidOptionsList": [],
     "missingCorrectAnswerList": [],
-    "unbalancedLatexList": [],
+    "unbalancedLatexList": [
+      {
+        "id": "cb_3118ca93",
+        "source": "Database:vespera.questions",
+        "section": "READING_WRITING",
+        "domain": "Craft and Structure",
+        "difficulty": "Easy",
+        "promptSnippet": "Which choice completes the text with the most logical and precise word or phrase",
+        "mentionsFigure": false,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "UNBALANCED_LATEX_DOLLARS",
+            "severity": "MEDIUM",
+            "detail": "Odd count of '$' signs (1), may cause KaTeX render failure."
+          }
+        ]
+      },
+      {
+        "id": "cb_983d33fa",
+        "source": "Database:vespera.questions",
+        "section": "READING_WRITING",
+        "domain": "Standard English Conventions",
+        "difficulty": "Easy",
+        "promptSnippet": "In 1637, the price of tulips skyrocketed in Amsterdam, with single bulbs of rare",
+        "mentionsFigure": false,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "UNBALANCED_LATEX_DOLLARS",
+            "severity": "MEDIUM",
+            "detail": "Odd count of '$' signs (1), may cause KaTeX render failure."
+          }
+        ]
+      }
+    ],
     "missingExpUzCount": 0
   }
 }

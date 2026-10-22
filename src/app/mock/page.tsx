@@ -2201,7 +2201,7 @@ export default function BluebookMockPage() {
             aria-modal="true"
             className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-hidden"
           >
-            <div className="bg-[var(--bg-card)] border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center my-auto">
+            <div className="bg-[var(--bg-card)] border border-amber-500/50 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center my-auto animate-modal-pop">
               <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto">
                 <Clock className="w-6 h-6 animate-pulse" />
               </div>
@@ -2229,7 +2229,7 @@ export default function BluebookMockPage() {
             className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md overflow-hidden"
             onClick={() => setShowFormulaSheet(false)}
           >
-          <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh] overscroll-contain">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh] overscroll-contain animate-modal-pop">
             <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-emerald-500" />
@@ -2451,7 +2451,7 @@ export default function BluebookMockPage() {
 
       {/* ================= DESMOS FLOATING PANEL ================= */}
       {isDesmosOpen && (
-        <div className="fixed right-4 bottom-20 z-50 w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl shadow-2xl p-4 overflow-hidden">
+        <div className="fixed right-4 bottom-20 z-50 w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border-main)] rounded-2xl shadow-2xl p-4 overflow-hidden animate-modal-pop">
           <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)]">
             <span className="text-xs font-bold text-emerald-500 flex items-center gap-1.5">
               <Calculator className="w-4 h-4" />

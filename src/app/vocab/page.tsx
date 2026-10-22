@@ -26,9 +26,11 @@ import {
   BrainCircuit,
   Eye,
   Check,
-  X
+  X,
+  Grid
 } from "lucide-react";
 import { SAT_650_VOCABULARY, SATVocabWord } from "@/lib/sat-vocab-data";
+import SAT_WIC_DATA from "@/lib/sat-wic-questions.json";
 import {
   loadVocabProgress,
   recordVocabReview,
@@ -39,9 +41,27 @@ import {
   VocabStats
 } from "@/lib/vocab-storage";
 
-type StudyMode = "flashcards" | "quiz" | "vault";
+type StudyMode = "flashcards" | "wic_bank" | "quiz" | "vault";
 type TierFilter = "all" | 1 | 2 | 3;
 type StatusFilter = "all" | "due" | "learning" | "mastered" | "starred";
+
+interface WicQuestion {
+  num: number;
+  id: string;
+  raw_id: string;
+  section: string;
+  domain: string;
+  topic_code: string;
+  topicTitle: string;
+  difficulty: string;
+  prompt: string;
+  passage: string;
+  options: string[];
+  correct_answer: string;
+  explanation_en: string;
+  explanation_uz: string;
+  source: string;
+}
 
 export default function VocabStudioPage() {
   const [mode, setMode] = useState<StudyMode>("flashcards");
@@ -49,6 +69,17 @@ export default function VocabStudioPage() {
   const [selectedStatus, setSelectedStatus] = useState<StatusFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const deferredSearch = useDeferredValue(searchQuery);
+
+  // --- Words in Context (261 Qs) State ---
+  const [wicDifficultyFilter, setWicDifficultyFilter] = useState<"all" | "Easy" | "Medium" | "Hard">("all");
+  const [wicTypeFilter, setWicTypeFilter] = useState<"all" | "fill" | "synonym">("all");
+  const [wicIndex, setWicIndex] = useState(0);
+  const [wicSelectedOption, setWicSelectedOption] = useState<string | null>(null);
+  const [wicIsSubmitted, setWicIsSubmitted] = useState(false);
+  const [wicShowGridModal, setWicShowGridModal] = useState(false);
+  const [wicBookmarked, setWicBookmarked] = useState<Record<number, boolean>>({});
+  const [wicAnswerHistory, setWicAnswerHistory] = useState<Record<number, { selected: string; isCorrect: boolean }>>({});
+  const [wicShowExpl, setWicShowExpl] = useState(true);
   
   // Flashcard State
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -116,6 +147,61 @@ export default function VocabStudioPage() {
   const currentCard: SATVocabWord | undefined = filteredWords[currentIndex] || filteredWords[0];
   const currentProgress = currentCard ? progressMap[currentCard.id] : undefined;
 
+  // Words in Context (261 Qs) Filtered Pool
+  const filteredWicQuestions = useMemo(() => {
+    return (SAT_WIC_DATA as WicQuestion[]).filter((q) => {
+      if (wicDifficultyFilter !== "all" && q.difficulty !== wicDifficultyFilter) return false;
+      if (wicTypeFilter === "fill" && q.num > 221) return false;
+      if (wicTypeFilter === "synonym" && q.num <= 221) return false;
+      if (deferredSearch.trim()) {
+        const query = deferredSearch.toLowerCase().trim();
+        const matchesPassage = q.passage?.toLowerCase().includes(query);
+        const matchesOptions = q.options.some((o) => o.toLowerCase().includes(query));
+        const matchesExpl = q.explanation_uz?.toLowerCase().includes(query) || q.explanation_en?.toLowerCase().includes(query);
+        if (!matchesPassage && !matchesOptions && !matchesExpl) return false;
+      }
+      return true;
+    });
+  }, [wicDifficultyFilter, wicTypeFilter, deferredSearch]);
+
+  const currentWic: WicQuestion | undefined = filteredWicQuestions[wicIndex] || filteredWicQuestions[0];
+  const currentWicHistory = currentWic ? wicAnswerHistory[currentWic.num] : undefined;
+
+  // WIC navigation handlers
+  const handleNextWic = useCallback(() => {
+    setWicSelectedOption(null);
+    setWicIsSubmitted(false);
+    setWicIndex((prev) => (prev + 1 < filteredWicQuestions.length ? prev + 1 : 0));
+  }, [filteredWicQuestions.length]);
+
+  const handlePrevWic = useCallback(() => {
+    setWicSelectedOption(null);
+    setWicIsSubmitted(false);
+    setWicIndex((prev) => (prev > 0 ? prev - 1 : filteredWicQuestions.length - 1));
+  }, [filteredWicQuestions.length]);
+
+  const handleSelectWicOption = (letter: string) => {
+    if (wicIsSubmitted || currentWicHistory) return;
+    setWicSelectedOption(letter);
+  };
+
+  const handleSubmitWicAnswer = () => {
+    if (!currentWic || !wicSelectedOption || wicIsSubmitted) return;
+    const isCorrect = wicSelectedOption === currentWic.correct_answer;
+    setWicIsSubmitted(true);
+    setWicAnswerHistory((prev) => ({
+      ...prev,
+      [currentWic.num]: { selected: wicSelectedOption, isCorrect }
+    }));
+  };
+
+  const handleToggleWicBookmark = (num: number) => {
+    setWicBookmarked((prev) => ({
+      ...prev,
+      [num]: !prev[num]
+    }));
+  };
+
   // Next / Prev card navigation
   const handleNextCard = useCallback(() => {
     setIsFlipped(false);
@@ -148,39 +234,79 @@ export default function VocabStudioPage() {
     window.speechSynthesis.speak(utterance);
   }, []);
 
-  // Keyboard navigation
+  // Keyboard navigation for Flashcards & Words in Context
   useEffect(() => {
-    if (mode !== "flashcards") return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger if user is typing in search input
       if ((e.target as HTMLElement)?.tagName === "INPUT") return;
 
-      if (e.code === "Space") {
-        e.preventDefault();
-        setIsFlipped((prev) => !prev);
-      } else if (e.code === "ArrowRight") {
-        e.preventDefault();
-        handleNextCard();
-      } else if (e.code === "ArrowLeft") {
-        e.preventDefault();
-        handlePrevCard();
-      } else if (e.key === "1") {
-        handleReview("again");
-      } else if (e.key === "2") {
-        handleReview("hard");
-      } else if (e.key === "3") {
-        handleReview("good");
-      } else if (e.key === "4") {
-        handleReview("easy");
-      } else if (e.key.toLowerCase() === "p" && currentCard) {
-        speakWord(currentCard.word);
+      if (mode === "flashcards") {
+        if (e.code === "Space") {
+          e.preventDefault();
+          setIsFlipped((prev) => !prev);
+        } else if (e.code === "ArrowRight") {
+          e.preventDefault();
+          handleNextCard();
+        } else if (e.code === "ArrowLeft") {
+          e.preventDefault();
+          handlePrevCard();
+        } else if (e.key === "1") {
+          handleReview("again");
+        } else if (e.key === "2") {
+          handleReview("hard");
+        } else if (e.key === "3") {
+          handleReview("good");
+        } else if (e.key === "4") {
+          handleReview("easy");
+        } else if (e.key.toLowerCase() === "p" && currentCard) {
+          speakWord(currentCard.word);
+        }
+      } else if (mode === "wic_bank") {
+        if (e.code === "ArrowRight") {
+          e.preventDefault();
+          handleNextWic();
+        } else if (e.code === "ArrowLeft") {
+          e.preventDefault();
+          handlePrevWic();
+        } else if (e.key === "1" || e.key.toLowerCase() === "a") {
+          handleSelectWicOption("A");
+        } else if (e.key === "2" || e.key.toLowerCase() === "b") {
+          handleSelectWicOption("B");
+        } else if (e.key === "3" || e.key.toLowerCase() === "c") {
+          handleSelectWicOption("C");
+        } else if (e.key === "4" || e.key.toLowerCase() === "d") {
+          handleSelectWicOption("D");
+        } else if (e.code === "Enter") {
+          e.preventDefault();
+          if (!wicIsSubmitted && !currentWicHistory) {
+            handleSubmitWicAnswer();
+          } else {
+            handleNextWic();
+          }
+        } else if (e.key.toLowerCase() === "m" && currentWic) {
+          handleToggleWicBookmark(currentWic.num);
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mode, handleNextCard, handlePrevCard, handleReview, currentCard, speakWord]);
+  }, [
+    mode,
+    handleNextCard,
+    handlePrevCard,
+    handleReview,
+    currentCard,
+    speakWord,
+    handleNextWic,
+    handlePrevWic,
+    handleSelectWicOption,
+    handleSubmitWicAnswer,
+    handleToggleWicBookmark,
+    wicIsSubmitted,
+    currentWicHistory,
+    currentWic
+  ]);
 
   // Star Toggle
   const handleToggleStar = (wordId: number) => {
@@ -342,10 +468,10 @@ export default function VocabStudioPage() {
       {/* 🎛 MODE TABS & FILTERS */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
         {/* Mode Switcher */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[var(--bg-surface)] w-full md:w-auto">
+        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[var(--bg-surface)] w-full md:w-auto overflow-x-auto scrollbar-none">
           <button
             onClick={() => setMode("flashcards")}
-            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "flashcards"
                 ? "bg-purple-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -356,8 +482,20 @@ export default function VocabStudioPage() {
           </button>
 
           <button
+            onClick={() => setMode("wic_bank")}
+            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              mode === "wic_bank"
+                ? "bg-purple-600 text-white shadow-sm"
+                : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+            }`}
+          >
+            <BookOpen size={14} />
+            <span>Words in Context (261 Qs)</span>
+          </button>
+
+          <button
             onClick={() => setMode("quiz")}
-            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "quiz"
                 ? "bg-purple-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -369,7 +507,7 @@ export default function VocabStudioPage() {
 
           <button
             onClick={() => setMode("vault")}
-            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "vault"
                 ? "bg-purple-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
@@ -380,27 +518,80 @@ export default function VocabStudioPage() {
           </button>
         </div>
 
-        {/* Tier & Status Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none text-xs">
-          <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] shrink-0 pl-1">Tier:</span>
-          {(["all", 1, 2, 3] as const).map((t) => (
+        {/* Dynamic Filters depending on mode */}
+        {mode === "wic_bank" ? (
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none text-xs">
+            <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] shrink-0 pl-1">Level:</span>
+            {(["all", "Easy", "Medium", "Hard"] as const).map((diff) => (
+              <button
+                key={diff}
+                onClick={() => {
+                  setWicDifficultyFilter(diff);
+                  setWicIndex(0);
+                  setWicSelectedOption(null);
+                  setWicIsSubmitted(false);
+                }}
+                className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
+                  wicDifficultyFilter === diff
+                    ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
+                }`}
+              >
+                {diff === "all" ? "All (261)" : diff}
+              </button>
+            ))}
+
+            <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] shrink-0 pl-2">Type:</span>
+            {(["all", "fill", "synonym"] as const).map((tp) => (
+              <button
+                key={tp}
+                onClick={() => {
+                  setWicTypeFilter(tp);
+                  setWicIndex(0);
+                  setWicSelectedOption(null);
+                  setWicIsSubmitted(false);
+                }}
+                className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
+                  wicTypeFilter === tp
+                    ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
+                }`}
+              >
+                {tp === "all" ? "All Formats" : tp === "fill" ? "Fill Blank (221)" : "Synonym (40)"}
+              </button>
+            ))}
+
             <button
-              key={t}
-              onClick={() => {
-                setSelectedTier(t);
-                setCurrentIndex(0);
-                setIsFlipped(false);
-              }}
-              className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
-                selectedTier === t
-                  ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
-                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
-              }`}
+              onClick={() => setWicShowGridModal(true)}
+              className="px-3 py-1.5 rounded-xl bg-purple-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0"
+              title="Jump to question"
             >
-              {t === "all" ? "All Tiers (650)" : t === 1 ? "Tier 1: Core 150" : t === 2 ? "Tier 2: 700+ (250)" : "Tier 3: 800 Elite (250)"}
+              <Grid size={13} />
+              <span>Grid ({filteredWicQuestions.length})</span>
             </button>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none text-xs">
+            <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] shrink-0 pl-1">Tier:</span>
+            {(["all", 1, 2, 3] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setSelectedTier(t);
+                  setCurrentIndex(0);
+                  setIsFlipped(false);
+                }}
+                className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
+                  selectedTier === t
+                    ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
+                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
+                }`}
+              >
+                {t === "all" ? "All Tiers (650)" : t === 1 ? "Tier 1: Core 150" : t === 2 ? "Tier 2: 700+ (250)" : "Tier 3: 800 Elite (250)"}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ======================================================== */}
@@ -664,8 +855,321 @@ export default function VocabStudioPage() {
       )}
 
       {/* ======================================================== */}
-      {/* MODE 2: SPEED QUIZ (WORDS IN CONTEXT ACTIVE RECALL)       */}
+      {/* MODE 2: WORDS IN CONTEXT (261 REAL COLLEGE BOARD QUESTIONS) */}
       {/* ======================================================== */}
+      {mode === "wic_bank" && (
+        <div className="space-y-6 animate-fade-in">
+          {filteredWicQuestions.length === 0 ? (
+            <div className="p-12 text-center rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-3">
+              <HelpCircle className="w-12 h-12 text-[var(--text-muted)] mx-auto opacity-50" />
+              <h3 className="text-lg font-bold">No questions match this filter</h3>
+              <p className="text-xs text-[var(--text-muted)]">
+                Try switching the Level or Type filter to view more questions.
+              </p>
+              <button
+                onClick={() => {
+                  setWicDifficultyFilter("all");
+                  setWicTypeFilter("all");
+                  setSearchQuery("");
+                }}
+                className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm"
+              >
+                Reset All Filters
+              </button>
+            </div>
+          ) : currentWic ? (
+            <div className="max-w-3xl mx-auto space-y-6">
+              {/* Question Navigation & Header Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-2xl bg-purple-500/10 text-purple-600 font-bold font-mono text-xs">
+                    #{currentWic.num}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono font-bold text-[var(--text-main)]">
+                        Question {wicIndex + 1} of {filteredWicQuestions.length}
+                      </span>
+                      <span>•</span>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[var(--bg-surface)] border border-[var(--border-main)]">
+                        ID: {currentWic.raw_id}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                      {currentWic.num <= 221 ? "Fill in the Blank" : "Find the Synonym (Word Meaning)"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-end sm:self-auto">
+                  <span
+                    className={`px-2.5 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider font-mono border ${
+                      currentWic.difficulty === "Easy"
+                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                        : currentWic.difficulty === "Medium"
+                        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                        : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20"
+                    }`}
+                  >
+                    {currentWic.difficulty}
+                  </span>
+
+                  <button
+                    onClick={() => handleToggleWicBookmark(currentWic.num)}
+                    className={`p-2 rounded-xl border transition shadow-sm ${
+                      wicBookmarked[currentWic.num]
+                        ? "bg-amber-500/15 border-amber-500/40 text-amber-500"
+                        : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-muted)] hover:text-amber-500"
+                    }`}
+                    title="Bookmark Question"
+                  >
+                    <Bookmark size={14} className={wicBookmarked[currentWic.num] ? "fill-amber-500" : ""} />
+                  </button>
+
+                  <button
+                    onClick={() => setWicShowGridModal(true)}
+                    className="p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500 text-[var(--text-muted)] hover:text-[var(--text-main)] transition shadow-sm"
+                    title="Question Grid Selector"
+                  >
+                    <Grid size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Passage & Prompt Card */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-md space-y-6">
+                {/* Passage */}
+                {currentWic.passage && (
+                  <div className="text-sm sm:text-base leading-relaxed text-[var(--text-main)] font-normal p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] select-text">
+                    {currentWic.passage.includes("______") ? (
+                      <>
+                        {currentWic.passage.split("______")[0]}
+                        <span className="inline-block px-3 py-0.5 mx-1 font-bold font-mono text-purple-600 dark:text-purple-400 bg-purple-500/20 border-b-2 border-purple-500 rounded-md">
+                          ______
+                        </span>
+                        {currentWic.passage.split("______")[1]}
+                      </>
+                    ) : (
+                      currentWic.passage
+                    )}
+                  </div>
+                )}
+
+                {/* Prompt */}
+                <h3 className="text-sm sm:text-base font-bold text-[var(--text-main)] leading-snug">
+                  {currentWic.prompt}
+                </h3>
+
+                {/* 4 Interactive MCQ Choices */}
+                <div className="space-y-3 pt-1">
+                  {currentWic.options.map((optStr, oIdx) => {
+                    const letter = String.fromCharCode(65 + oIdx); // A, B, C, D
+                    const optText = optStr.replace(/^[A-D][\.\)]\s*/, "");
+                    const isSelected = (wicSelectedOption === letter) || (currentWicHistory?.selected === letter);
+                    const isSubmittedState = wicIsSubmitted || !!currentWicHistory;
+                    const isCorrectLetter = letter === currentWic.correct_answer;
+
+                    let btnClass = "bg-[var(--bg-surface)] border-[var(--border-main)] hover:border-purple-500 text-[var(--text-main)]";
+                    if (isSubmittedState) {
+                      if (isCorrectLetter) {
+                        btnClass = "bg-emerald-500/15 border-emerald-500 text-emerald-700 dark:text-emerald-300 font-bold shadow-sm glow-emerald";
+                      } else if (isSelected && !isCorrectLetter) {
+                        btnClass = "bg-rose-500/15 border-rose-500 text-rose-700 dark:text-rose-300 font-bold shadow-sm";
+                      } else {
+                        btnClass = "opacity-45 border-[var(--border-main)] text-[var(--text-muted)]";
+                      }
+                    } else if (isSelected) {
+                      btnClass = "bg-purple-500/15 border-purple-500 text-purple-700 dark:text-purple-300 font-bold shadow-sm glow-purple";
+                    }
+
+                    return (
+                      <button
+                        key={letter}
+                        onClick={() => handleSelectWicOption(letter)}
+                        disabled={isSubmittedState}
+                        className={`w-full p-4 rounded-2xl border text-left text-xs sm:text-sm transition-all flex items-center justify-between option-press shadow-sm ${btnClass}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
+                              isSelected
+                                ? "bg-purple-600 text-white"
+                                : "bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)]"
+                            }`}
+                          >
+                            {letter}
+                          </span>
+                          <span className="leading-relaxed">{optText}</span>
+                        </div>
+
+                        {isSubmittedState && isCorrectLetter && (
+                          <CheckCircle2 size={18} className="text-emerald-600 shrink-0 ml-2" />
+                        )}
+                        {isSubmittedState && isSelected && !isCorrectLetter && (
+                          <X size={18} className="text-rose-600 shrink-0 ml-2" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Bottom Action Controls */}
+                <div className="pt-4 border-t border-[var(--border-main)] flex items-center justify-between gap-3">
+                  <button
+                    onClick={handlePrevWic}
+                    className="px-4 py-2.5 rounded-2xl bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-xs font-bold transition flex items-center gap-1.5 btn-press shadow-sm"
+                  >
+                    <ArrowLeft size={14} />
+                    <span>Previous</span>
+                  </button>
+
+                  {!wicIsSubmitted && !currentWicHistory ? (
+                    <button
+                      onClick={handleSubmitWicAnswer}
+                      disabled={!wicSelectedOption}
+                      className={`px-6 py-2.5 rounded-2xl font-bold text-xs transition flex items-center gap-2 btn-press shadow-md ${
+                        wicSelectedOption
+                          ? "bg-purple-600 hover:bg-purple-500 text-white"
+                          : "bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-main)]"
+                      }`}
+                    >
+                      <Check size={14} />
+                      <span>Check Answer</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleNextWic}
+                      className="px-6 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition flex items-center gap-2 btn-press shadow-md"
+                    >
+                      <span>Next Question</span>
+                      <ArrowRight size={14} />
+                    </button>
+                  )}
+
+                  <button
+                    onClick={handleNextWic}
+                    className="px-4 py-2.5 rounded-2xl bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-xs font-bold transition flex items-center gap-1.5 btn-press shadow-sm"
+                  >
+                    <span>Next</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Explanations Card (Appears after submission) */}
+              {(wicIsSubmitted || currentWicHistory) && (
+                <div className="p-6 sm:p-7 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-lg space-y-5 animate-scale-in">
+                  <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                      <h4 className="text-sm font-bold text-[var(--text-main)]">
+                        Deep Question Tahlili & College Board Izohi
+                      </h4>
+                    </div>
+                    <button
+                      onClick={() => setWicShowExpl(!wicShowExpl)}
+                      className="text-xs font-bold text-purple-600 hover:text-purple-500 transition"
+                    >
+                      {wicShowExpl ? "Yashirish" : "Ko'rsatish"}
+                    </button>
+                  </div>
+
+                  {wicShowExpl && (
+                    <div className="space-y-4 text-xs sm:text-sm leading-relaxed">
+                      {/* Uzbek Pedagogical Explanation */}
+                      {currentWic.explanation_uz && (
+                        <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 space-y-2.5">
+                          <div className="font-bold text-xs uppercase tracking-wider text-purple-700 dark:text-purple-300 font-mono">
+                            🇺🇿 O'zbekcha Pedagogik Tahlil:
+                          </div>
+                          <div className="whitespace-pre-line text-[var(--text-main)] leading-relaxed">
+                            {currentWic.explanation_uz}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Official College Board English Explanation */}
+                      {currentWic.explanation_en && (
+                        <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
+                          <div className="font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] font-mono">
+                            🏛️ Official College Board Rationale (English):
+                          </div>
+                          <div className="whitespace-pre-line text-[var(--text-secondary)] leading-relaxed">
+                            {currentWic.explanation_en}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {/* Question Grid Modal for 261 Questions */}
+          {wicShowGridModal && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md overflow-hidden"
+              onClick={() => setWicShowGridModal(false)}
+            >
+              <div
+                className="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-3xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto animate-modal-pop"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
+                  <div className="flex items-center gap-2">
+                    <Grid className="w-5 h-5 text-purple-600" />
+                    <h3 className="text-sm font-bold text-[var(--text-main)]">
+                      Words in Context Navigator (261 Questions)
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setWicShowGridModal(false)}
+                    className="p-1.5 rounded-full hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-6 sm:grid-cols-10 gap-1.5 max-h-[60vh] overflow-y-auto pr-1">
+                  {filteredWicQuestions.map((q, idx) => {
+                    const hist = wicAnswerHistory[q.num];
+                    const isCurr = idx === wicIndex;
+                    const isBookmarked = wicBookmarked[q.num];
+
+                    let pillClass = "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-main)]";
+                    if (isCurr) {
+                      pillClass = "bg-purple-600 text-white font-bold ring-2 ring-purple-400";
+                    } else if (hist?.isCorrect) {
+                      pillClass = "bg-emerald-500/20 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 font-bold";
+                    } else if (hist && !hist.isCorrect) {
+                      pillClass = "bg-rose-500/20 border-rose-500/50 text-rose-600 dark:text-rose-400 font-bold";
+                    }
+
+                    return (
+                      <button
+                        key={q.num}
+                        onClick={() => {
+                          setWicIndex(idx);
+                          setWicSelectedOption(null);
+                          setWicIsSubmitted(false);
+                          setWicShowGridModal(false);
+                        }}
+                        className={`p-2 rounded-xl border text-xs font-mono transition text-center flex flex-col items-center justify-center relative ${pillClass}`}
+                      >
+                        <span>{q.num}</span>
+                        {isBookmarked && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1 right-1" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       {mode === "quiz" && (
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Quiz Header */}
