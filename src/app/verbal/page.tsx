@@ -274,7 +274,7 @@ function VerbalContent() {
           </Link>
 
           <a
-            href="/api/materials/Reading%20Writing%20Professor%20IV.pdf"
+            href="/materials/Reading%20Writing%20Professor%20IV.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-main)] shadow-sm hover:border-[var(--accent-blue)] transition"
@@ -523,7 +523,7 @@ function VerbalContent() {
               </div>
 
               <a
-                href="/api/materials/Reading%20Writing%20Professor%20IV.pdf"
+                href="/materials/Reading%20Writing%20Professor%20IV.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-sm flex items-center justify-center gap-2 shrink-0 self-start md:self-auto"

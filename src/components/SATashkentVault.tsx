@@ -453,7 +453,7 @@ export default function SATashkentVault() {
 
                   <div className="pt-3 border-t border-[var(--border-main)] mt-auto flex items-center justify-between gap-2">
                     <a
-                      href={`/api/materials/${encodeURIComponent(book.filename)}`}
+                      href={`/materials/${encodeURIComponent(book.filename)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-2.5 py-1 rounded-lg bg-[var(--bg-surface)] hover:bg-emerald-600 hover:text-white border border-[var(--border-main)] text-[11px] font-mono text-[var(--text-muted)] transition-colors flex items-center gap-1.5"
@@ -1281,7 +1281,7 @@ export default function SATashkentVault() {
 
               <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <a
-                  href={`/api/materials/${encodeURIComponent(selectedBook.filename)}`}
+                  href={`/materials/${encodeURIComponent(selectedBook.filename)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"

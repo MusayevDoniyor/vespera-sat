@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/materials/:filename*",
+        destination: "/materials/:filename*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

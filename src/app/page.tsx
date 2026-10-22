@@ -1495,7 +1495,7 @@ export default function DashboardPage() {
             {materialsList.map((m) => (
               <a
                 key={m.name}
-                href={`/api/materials/${encodeURIComponent(m.name)}`}
+                href={`/materials/${encodeURIComponent(m.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3.5 rounded-2xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all text-xs flex flex-col justify-between group shadow-sm"
