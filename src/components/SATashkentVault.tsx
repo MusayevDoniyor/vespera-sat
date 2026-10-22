@@ -198,7 +198,7 @@ export default function SATashkentVault() {
   return (
     <div className="w-full space-y-8 pb-16 text-[var(--text-main)]">
       {/* Top Banner */}
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-[var(--bg-card)] via-[var(--bg-surface)] to-[var(--accent-blue)]/5 border border-[var(--border-main)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] font-mono border border-[var(--accent-blue)]/30">
@@ -231,7 +231,7 @@ export default function SATashkentVault() {
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Real Questions</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
-            <div className="text-xl font-black text-purple-600 dark:text-purple-400">445+</div>
+            <div className="text-xl font-black text-[var(--accent-blue)]">445+</div>
             <div className="text-[10px] text-[var(--text-muted)] uppercase">Vocab Pgs</div>
           </div>
           <div className="p-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
@@ -271,7 +271,7 @@ export default function SATashkentVault() {
           onClick={() => handleTabChange("gramilliy3x1")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "gramilliy3x1"
-              ? "bg-purple-600 text-white shadow-sm font-bold"
+              ? "bg-[var(--accent-blue)] text-white shadow-sm font-bold"
               : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
           }`}
         >
@@ -334,7 +334,7 @@ export default function SATashkentVault() {
                 onClick={() => handleCategoryFilterChange("Reading & Writing")}
                 className={`px-3 py-1.5 rounded-lg transition-all ${
                   categoryFilter === "Reading & Writing"
-                    ? "bg-purple-600 text-white font-bold"
+                    ? "bg-[var(--accent-blue)] text-white font-bold"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
                 }`}
               >
@@ -397,10 +397,8 @@ export default function SATashkentVault() {
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <span
                       className={`text-[9px] font-bold px-2 py-0.5 rounded font-mono ${
-                        isMath
+                        isMath || isRW
                           ? "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]"
-                          : isRW
-                          ? "bg-purple-500/10 text-purple-600 dark:text-purple-400"
                           : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
                       }`}
                     >
@@ -571,8 +569,8 @@ export default function SATashkentVault() {
       {/* TAB 3: GRAMILLIY 3X1 ELIMINATION MASTERCLASS */}
       {activeTab === "gramilliy3x1" && (
         <div className="space-y-6">
-          <div className="p-6 md:p-8 rounded-3xl bg-purple-500/5 border border-purple-500/20 space-y-4">
-            <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-mono text-xs font-bold uppercase">
+          <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-4">
+            <div className="flex items-center gap-2 text-[var(--accent-blue)] font-mono text-xs font-bold uppercase">
               <Zap size={16} />
               <span>SATashkent Gramilliy Chapter V: Signature Elimination Architecture</span>
             </div>
@@ -587,7 +585,7 @@ export default function SATashkentVault() {
           {/* 3 Step Protocol */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-purple-600 text-white font-mono font-black flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-mono font-black flex items-center justify-center text-sm">
                 1
               </div>
               <h4 className="font-bold text-sm text-[var(--text-main)]">
@@ -599,7 +597,7 @@ export default function SATashkentVault() {
             </div>
 
             <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-purple-600 text-white font-mono font-black flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-mono font-black flex items-center justify-center text-sm">
                 2
               </div>
               <h4 className="font-bold text-sm text-[var(--text-main)]">
@@ -611,7 +609,7 @@ export default function SATashkentVault() {
             </div>
 
             <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-purple-600 text-white font-mono font-black flex items-center justify-center text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-mono font-black flex items-center justify-center text-sm">
                 3
               </div>
               <h4 className="font-bold text-sm text-[var(--text-main)]">
@@ -686,7 +684,7 @@ export default function SATashkentVault() {
             </div>
 
             <div className="p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex items-start gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white font-black flex items-center justify-center font-mono shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white font-black flex items-center justify-center font-mono shrink-0">
                 2
               </div>
               <div>
@@ -734,10 +732,10 @@ export default function SATashkentVault() {
       {activeTab === "vocabook" && (
         <div className="space-y-6 animate-in fade-in duration-200">
           {/* Header Info Banner */}
-          <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-[var(--bg-card)] to-[var(--bg-surface)] border border-emerald-500/25 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-mono border border-emerald-500/30 uppercase">
+                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono border border-[var(--accent-blue)]/20 uppercase">
                   420-Page Lexicon Synthesizer
                 </span>
                 <span className="text-[var(--text-muted)]">•</span>
@@ -746,7 +744,7 @@ export default function SATashkentVault() {
                 </span>
               </div>
               <h3 className="text-2xl font-black text-[var(--text-main)] flex items-center gap-3">
-                <Sparkles className="text-emerald-600 dark:text-emerald-400" size={26} />
+                <Sparkles className="text-[var(--accent-blue)]" size={26} />
                 <span>Vocabook 3.0 Interactive Mastery Studio</span>
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-2 max-w-2xl leading-relaxed">
@@ -843,17 +841,17 @@ export default function SATashkentVault() {
               {/* The Interactive Flippable Flashcard */}
               <div
                 onClick={() => setCardFlipped(!cardFlipped)}
-                className="cursor-pointer min-h-[360px] p-8 md:p-12 rounded-3xl bg-gradient-to-br from-[var(--bg-card)] via-[var(--bg-surface)] to-[var(--bg-card)] border-2 border-emerald-500/30 hover:border-emerald-500/60 transition-all duration-300 shadow-xl flex flex-col justify-between group relative overflow-hidden"
+                className="cursor-pointer min-h-[360px] p-8 md:p-12 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all duration-300 shadow-sm flex flex-col justify-between group relative overflow-hidden"
               >
                 {/* Background watermarked text */}
-                <div className="absolute right-6 bottom-4 text-7xl md:text-9xl font-black text-emerald-500/5 select-none pointer-events-none font-mono">
+                <div className="absolute right-6 bottom-4 text-7xl md:text-9xl font-black text-slate-500/5 select-none pointer-events-none font-mono">
                   {VOCABOOK_CARDS[activeCardIndex]?.word.slice(0, 3).toUpperCase()}
                 </div>
 
                 {/* Card Top */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-mono uppercase">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono uppercase">
                       Vocabook 3.0
                     </span>
                     <span className="text-[10px] text-[var(--text-muted)] font-mono">

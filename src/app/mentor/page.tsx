@@ -85,7 +85,7 @@ const MessageBubble = React.memo(function MessageBubble({
     >
       {/* Bot Avatar */}
       {!isUser && (
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
+        <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
           <Sparkles size={15} />
         </div>
       )}
@@ -154,7 +154,7 @@ const MessageBubble = React.memo(function MessageBubble({
 
       {/* User Avatar */}
       {isUser && (
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
+        <div className="w-8 h-8 rounded-xl bg-slate-700 dark:bg-slate-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
           <User size={15} />
         </div>
       )}
@@ -422,8 +422,8 @@ export default function MentorPage() {
           {/* EMPTY STATE: SERENE WELCOME WITH 4 CLEAN CARDS */}
           {!hasMessages ? (
             <div className="pt-12 sm:pt-20 pb-16 flex flex-col items-center text-center animate-fadeIn">
-              <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/25 mb-6">
-                <Sparkles size={32} />
+              <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 mb-6">
+                <Sparkles size={28} />
               </div>
 
               <h2 className="text-2xl sm:text-4xl font-black text-[var(--text-main)] tracking-tight mb-3">
@@ -477,13 +477,13 @@ export default function MentorPage() {
               {/* Typing indicator */}
               {isLoading && (
                 <div className="flex items-start gap-4 animate-fadeIn">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
+                  <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
                     <Sparkles size={15} />
                   </div>
                   <div className="flex items-center gap-2 py-4 px-6 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xs">
-                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-2 h-2 rounded-full bg-purple-500 animate-bounce" />
+                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce [animation-delay:-0.3s]" />
+                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
+                    <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" />
                     <span className="ml-2.5 text-xs sm:text-sm font-semibold text-[var(--text-muted)]">
                       Synthesizing SAT explanation from first principles...
                     </span>

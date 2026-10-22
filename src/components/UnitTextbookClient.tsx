@@ -154,7 +154,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               aria-label="Toggle Desmos Graphing Calculator"
               className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
                 showDesmosSplit
-                  ? "bg-cyan-600 text-white border-cyan-500 shadow-sm"
+                  ? "bg-blue-600 text-white border-blue-600 shadow-sm"
                   : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-[var(--border-main)] hover:text-[var(--text-main)] hover:border-[var(--accent-blue)]"
               }`}
             >
@@ -197,7 +197,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-blue-100 text-blue-900 border border-blue-300 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30 font-mono">
                   {unit.tier} Track
                 </span>
-                <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/30 font-mono">
+                <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 font-mono">
                   {unit.estimatedHours} Study Time
                 </span>
                 <span className="text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 font-mono">
@@ -266,7 +266,7 @@ export default function UnitTextbookClient({ unit }: Props) {
               onClick={() => setActiveTab("ai")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                 activeTab === "ai"
-                  ? "bg-purple-600 text-white shadow-sm ring-1 ring-purple-600"
+                  ? "bg-blue-600 text-white shadow-sm ring-1 ring-blue-600"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
               }`}
             >
@@ -278,10 +278,10 @@ export default function UnitTextbookClient({ unit }: Props) {
 
         {/* Desmos Split View (If Toggled) */}
         {showDesmosSplit && (
-          <div className="mb-6 p-4 rounded-3xl bg-slate-50 dark:bg-slate-900 border-2 border-cyan-500/50 shadow-lg">
+          <div className="mb-6 p-4 rounded-3xl bg-[var(--bg-card)] border border-[var(--accent-blue)]/50 shadow-sm">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <Calculator size={16} className="text-cyan-600 dark:text-cyan-400" />
+                <Calculator size={16} className="text-[var(--accent-blue)]" />
                 <span className="text-xs font-bold text-slate-900 dark:text-white">
                   Official Bluebook Desmos Graphing Calculator Sandbox
                 </span>
@@ -418,21 +418,21 @@ export default function UnitTextbookClient({ unit }: Props) {
 
                   {/* Desmos Interactive Callout with High Contrast */}
                   {activeSection.desmosExample && (
-                    <div className="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-500/40 space-y-2.5">
+                    <div className="p-5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-500/30 space-y-2.5">
                       <div className="flex items-center justify-between flex-wrap gap-2">
-                        <div className="text-xs font-bold text-cyan-950 dark:text-cyan-200 flex items-center gap-2">
-                          <Calculator size={15} className="text-cyan-700 dark:text-cyan-400" />
+                        <div className="text-xs font-bold text-blue-950 dark:text-blue-200 flex items-center gap-2">
+                          <Calculator size={15} className="text-[var(--accent-blue)]" />
                           <span>Desmos SpeedHack: {activeSection.desmosExample.title}</span>
                         </div>
                         <button
                           onClick={() => setShowDesmosSplit(true)}
-                          className="px-3 py-1 rounded-xl bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 text-white text-[11px] font-bold shadow-sm transition-all"
+                          className="px-3 py-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold shadow-sm transition-all"
                         >
                           Open in Desmos
                         </button>
                       </div>
                       {/* Desmos Expression Input Display */}
-                      <div className="rounded-xl overflow-hidden border border-cyan-200 dark:border-cyan-900/60 bg-white dark:bg-slate-900 shadow-xs divide-y divide-slate-100 dark:divide-slate-800/80 font-mono text-xs">
+                      <div className="rounded-xl overflow-hidden border border-blue-200 dark:border-blue-900/60 bg-white dark:bg-slate-900 shadow-xs divide-y divide-slate-100 dark:divide-slate-800/80 font-mono text-xs">
                         {activeSection.desmosExample.expression
                           .split("\n")
                           .map((line) => line.trim())
@@ -442,16 +442,16 @@ export default function UnitTextbookClient({ unit }: Props) {
                               key={lIdx}
                               className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-900 transition-colors"
                             >
-                              <span className="w-5 h-5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold flex items-center justify-center shrink-0 select-none border border-cyan-200 dark:border-cyan-800">
+                              <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 text-[10px] font-bold flex items-center justify-center shrink-0 select-none border border-blue-200 dark:border-blue-800">
                                 {lIdx + 1}
                               </span>
-                              <span className="text-slate-900 dark:text-cyan-200 font-semibold tracking-wide flex-1 break-all">
+                              <span className="text-slate-900 dark:text-blue-200 font-semibold tracking-wide flex-1 break-all">
                                 {exprLine}
                               </span>
                             </div>
                           ))}
                       </div>
-                      <p className="text-xs text-cyan-950 dark:text-cyan-100 leading-relaxed font-medium">
+                      <p className="text-xs text-blue-950 dark:text-blue-100 leading-relaxed font-medium">
                         {activeSection.desmosExample.tip}
                       </p>
                     </div>
@@ -686,10 +686,10 @@ export default function UnitTextbookClient({ unit }: Props) {
                         )}
 
                         {q.desmosTrick && (
-                          <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-950 dark:text-cyan-200 font-medium">
-                            <Zap size={15} className="shrink-0 text-cyan-600 dark:text-cyan-400 mt-0.5" />
+                          <div className="p-3.5 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-500/30 flex items-start gap-2.5 text-xs text-blue-950 dark:text-blue-200 font-medium">
+                            <Zap size={15} className="shrink-0 text-[var(--accent-blue)] mt-0.5" />
                             <div>
-                              <strong className="text-cyan-900 dark:text-cyan-100">Desmos SpeedHack:</strong> {q.desmosTrick}
+                              <strong className="text-blue-900 dark:text-blue-100">Desmos SpeedHack:</strong> {q.desmosTrick}
                             </div>
                           </div>
                         )}
@@ -742,7 +742,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                       <span className="text-emerald-700 dark:text-emerald-400 font-bold">SpeedHack Shortcut: </span>
                       <KaTeXMath mathText={hack.shortcut} />
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-slate-900 dark:text-cyan-200 font-mono text-xs shadow-xs">
+                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-slate-900 dark:text-slate-100 font-mono text-xs shadow-xs">
                       <span className="font-bold text-slate-500 dark:text-slate-400 select-none">Example: </span>
                       <span className="font-semibold">{hack.example}</span>
                     </div>
@@ -758,7 +758,7 @@ export default function UnitTextbookClient({ unit }: Props) {
           <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-600/20 border border-purple-300 dark:border-purple-500/30 flex items-center justify-center text-purple-700 dark:text-purple-400">
+                <div className="w-10 h-10 rounded-2xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 flex items-center justify-center text-[var(--accent-blue)]">
                   <Sparkles size={20} />
                 </div>
                 <div>
@@ -778,7 +778,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onClick={() =>
                   handleSendAiMessage("Summarize the 3 most essential rules from this unit with clear examples.")
                 }
-                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-[var(--accent-blue)] shrink-0 transition-colors font-medium"
               >
                 💡 3 Essential Rules with Examples
               </button>
@@ -786,7 +786,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onClick={() =>
                   handleSendAiMessage("How do I use Desmos to solve this unit's problems in under 30 seconds?")
                 }
-                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-[var(--accent-blue)] shrink-0 transition-colors font-medium"
               >
                 ⚡ Desmos 30-Second SpeedHacks
               </button>
@@ -794,7 +794,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onClick={() =>
                   handleSendAiMessage("What are the most common traps test writers set on Hard Module 2 for this topic?")
                 }
-                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-purple-400 shrink-0 transition-colors font-medium"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:border-[var(--accent-blue)] shrink-0 transition-colors font-medium"
               >
                 ⚠️ Hard Module 2 Traps
               </button>
@@ -808,7 +808,7 @@ export default function UnitTextbookClient({ unit }: Props) {
                   className={`flex gap-3 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {msg.sender === "ai" && (
-                    <div className="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 flex items-center justify-center shrink-0 mt-0.5 border border-purple-300 dark:border-purple-500/30">
+                    <div className="w-7 h-7 rounded-lg bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] flex items-center justify-center shrink-0 mt-0.5 border border-[var(--accent-blue)]/20">
                       <Sparkles size={14} />
                     </div>
                   )}
@@ -826,7 +826,7 @@ export default function UnitTextbookClient({ unit }: Props) {
 
               {aiLoading && (
                 <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 p-2">
-                  <Loader2 size={16} className="animate-spin text-purple-600 dark:text-purple-400" />
+                  <Loader2 size={16} className="animate-spin text-[var(--accent-blue)]" />
                   <span>AI Mentor is analyzing mathematical principles...</span>
                 </div>
               )}
@@ -840,12 +840,12 @@ export default function UnitTextbookClient({ unit }: Props) {
                 onChange={(e) => setAiInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSendAiMessage()}
                 placeholder="Ask any question about this unit (e.g., How do I solve systems with Desmos?)..."
-                className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs md:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors shadow-sm"
+                className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs md:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[var(--accent-blue)] transition-colors shadow-sm"
               />
               <button
                 disabled={!aiInput.trim() || aiLoading}
                 onClick={() => handleSendAiMessage()}
-                className="px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+                className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
               >
                 <span>Send</span>
                 <Send size={14} />

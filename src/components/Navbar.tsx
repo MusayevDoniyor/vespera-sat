@@ -133,7 +133,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
               title={`Personalized as ${user.fullName} • Goal: ${user.targetSatScore || 1550}+`}
               className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--border-hover)] transition-all shadow-sm text-xs font-bold shrink-0"
             >
-              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center text-[10px] font-mono shrink-0">
+              <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-mono font-bold shrink-0">
                 {user.fullName.charAt(0).toUpperCase()}
               </div>
               <span className="hidden md:inline text-[var(--text-main)] max-w-[90px] truncate">
@@ -146,7 +146,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-sm shadow-blue-500/20 shrink-0"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all shadow-sm shrink-0"
             >
               <LogIn size={13} />
               <span className="hidden sm:inline">Sign In</span>
@@ -267,7 +267,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
 
                     {/* Special Right Triangle 30-60-90 */}
                     <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
-                      <span className="text-xs font-bold text-cyan-500 font-mono">30° - 60° - 90°</span>
+                      <span className="text-xs font-bold text-[var(--accent-blue)] font-mono">30° - 60° - 90°</span>
                       <div className="font-mono text-sm space-y-0.5">
                         <div>Short: <strong className="text-[var(--text-main)]">x</strong> (opp 30°)</div>
                         <div>Long: <strong className="text-[var(--text-main)]">x√3</strong> (opp 60°)</div>

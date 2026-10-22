@@ -146,7 +146,7 @@ export default function DiagnosticPlacementModal({
               {/* Progress track */}
               <div className="w-full h-1.5 bg-[var(--bg-card)] rounded-full overflow-hidden border border-[var(--border-main)]">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 transition-all duration-300"
+                  className="h-full bg-blue-600 transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -210,7 +210,7 @@ export default function DiagnosticPlacementModal({
                 type="button"
                 onClick={handleNext}
                 disabled={!answers[currentQ.id]}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition-all shadow-md shadow-blue-500/20 disabled:opacity-40 disabled:pointer-events-none"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-sm disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
               >
                 <span>{currentIdx === DIAGNOSTIC_BENCHMARK_QUESTIONS.length - 1 ? "Submit & View Report" : "Next Question"}</span>
                 <ArrowRight size={15} />
@@ -261,7 +261,7 @@ export default function DiagnosticPlacementModal({
             </div>
 
             {/* Personalized Strategy Banner */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-purple-500/10 border border-blue-500/20 space-y-3">
+            <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
               <div className="flex items-center gap-2 text-xs font-bold text-blue-500">
                 <Zap size={16} />
                 <span>Recommended First Move</span>
@@ -279,7 +279,7 @@ export default function DiagnosticPlacementModal({
               <a
                 href={`/curriculum/units/${report.recommendedFirstUnit.slug}`}
                 onClick={onClose}
-                className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all text-center"
+                className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all text-center cursor-pointer"
               >
                 <span>Start {report.recommendedFirstUnit.title}</span>
                 <ArrowRight size={16} />

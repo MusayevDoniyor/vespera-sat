@@ -373,14 +373,14 @@ export default function VocabStudioPage() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2.5 py-0.5 rounded-full border border-purple-500/20">
+              <span className="text-[10px] font-bold uppercase tracking-wider font-mono text-[var(--accent-blue)] bg-[var(--accent-blue)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-blue)]/20">
                 Official Digital SAT 2023–2026 Form Recalls
               </span>
               <span className="text-xs text-[var(--text-muted)]">• 650 Real Exam Words</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-0.5 flex items-center gap-2">
               <span>SAT Words in Context Studio</span>
-              <span className="text-base sm:text-lg px-2.5 py-0.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-mono font-bold shadow-sm">
+              <span className="text-base sm:text-lg px-2.5 py-0.5 rounded-xl bg-blue-600 text-white font-mono font-bold shadow-sm">
                 SM-2 Engine
               </span>
             </h1>
@@ -406,11 +406,11 @@ export default function VocabStudioPage() {
           <span className="text-xs text-[var(--text-muted)] font-medium">Total Exam Words</span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black text-[var(--text-main)] font-mono">{stats.totalWords}</span>
-            <span className="text-[11px] text-purple-600 font-bold">100% CB Forms</span>
+            <span className="text-[11px] text-[var(--accent-blue)] font-bold">100% CB Forms</span>
           </div>
           <div className="w-full bg-[var(--bg-surface)] h-2 rounded-full overflow-hidden mt-2">
             <div
-              className="bg-purple-600 h-full rounded-full transition-all duration-500"
+              className="bg-blue-600 h-full rounded-full transition-all duration-500"
               style={{ width: `${Math.round((stats.masteredCount / stats.totalWords) * 100)}%` }}
             />
           </div>
@@ -473,7 +473,7 @@ export default function VocabStudioPage() {
             onClick={() => setMode("flashcards")}
             className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "flashcards"
-                ? "bg-purple-600 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
@@ -485,7 +485,7 @@ export default function VocabStudioPage() {
             onClick={() => setMode("wic_bank")}
             className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "wic_bank"
-                ? "bg-purple-600 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
@@ -497,7 +497,7 @@ export default function VocabStudioPage() {
             onClick={() => setMode("quiz")}
             className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "quiz"
-                ? "bg-purple-600 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
@@ -509,7 +509,7 @@ export default function VocabStudioPage() {
             onClick={() => setMode("vault")}
             className={`flex-1 md:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               mode === "vault"
-                ? "bg-purple-600 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
@@ -533,7 +533,7 @@ export default function VocabStudioPage() {
                 }}
                 className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
                   wicDifficultyFilter === diff
-                    ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
+                    ? "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border-[var(--accent-blue)]/30 font-bold"
                     : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
                 }`}
               >
@@ -553,7 +553,7 @@ export default function VocabStudioPage() {
                 }}
                 className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
                   wicTypeFilter === tp
-                    ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
+                    ? "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border-[var(--accent-blue)]/30 font-bold"
                     : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
                 }`}
               >
@@ -563,7 +563,7 @@ export default function VocabStudioPage() {
 
             <button
               onClick={() => setWicShowGridModal(true)}
-              className="px-3 py-1.5 rounded-xl bg-purple-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0"
+              className="px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0"
               title="Jump to question"
             >
               <Grid size={13} />
@@ -583,7 +583,7 @@ export default function VocabStudioPage() {
                 }}
                 className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap border transition ${
                   selectedTier === t
-                    ? "bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30 font-bold"
+                    ? "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border-[var(--accent-blue)]/30 font-bold"
                     : "bg-[var(--bg-surface)] text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)]"
                 }`}
               >
@@ -612,7 +612,7 @@ export default function VocabStudioPage() {
                   setSelectedStatus("all");
                   setSearchQuery("");
                 }}
-                className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm"
+                className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-sm"
               >
                 Reset All Filters
               </button>
@@ -630,7 +630,7 @@ export default function VocabStudioPage() {
                     {currentCard.partOfSpeech}
                   </span>
                   <span>•</span>
-                  <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold">
+                  <span className="px-2 py-0.5 rounded-md bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-bold">
                     Tier {currentCard.tier}
                   </span>
                 </div>
@@ -638,7 +638,7 @@ export default function VocabStudioPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleShuffle}
-                    className="p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500 text-[var(--text-muted)] hover:text-[var(--text-main)] transition shadow-sm"
+                    className="p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition shadow-sm"
                     title="Shuffle deck"
                   >
                     <Shuffle size={14} />
@@ -663,10 +663,10 @@ export default function VocabStudioPage() {
                 className="relative min-h-[360px] sm:min-h-[400px] w-full rounded-3xl cursor-pointer perspective transition-all duration-300 hover:shadow-xl group"
               >
                 <div
-                  className={`relative w-full h-full min-h-[360px] sm:min-h-[400px] rounded-3xl p-8 border transition-all duration-500 flex flex-col justify-between ${
+                  className={`relative w-full h-full min-h-[360px] sm:min-h-[400px] rounded-3xl p-8 border transition-all duration-300 flex flex-col justify-between ${
                     isFlipped
-                      ? "bg-gradient-to-br from-[var(--bg-card)] via-[var(--bg-surface)] to-[var(--bg-card)] border-purple-500/40 shadow-lg"
-                      : "bg-gradient-to-br from-[var(--bg-card)] to-[var(--bg-surface)] border-[var(--border-main)] shadow-md hover:border-purple-500/40"
+                      ? "bg-[var(--bg-card)] border-[var(--accent-blue)] shadow-lg"
+                      : "bg-[var(--bg-card)] border-[var(--border-main)] shadow-sm hover:border-[var(--accent-blue)]/50"
                   }`}
                 >
                   {/* FRONT: Word + Pronunciation + Prompt */}
@@ -681,7 +681,7 @@ export default function VocabStudioPage() {
                             e.stopPropagation();
                             speakWord(currentCard.word);
                           }}
-                          className="p-2 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 transition"
+                          className="p-2 rounded-full bg-[var(--accent-blue)]/10 hover:bg-[var(--accent-blue)]/20 text-[var(--accent-blue)] transition"
                           title="Listen to pronunciation (P)"
                         >
                           <Volume2 size={18} />
@@ -699,7 +699,7 @@ export default function VocabStudioPage() {
                       </div>
 
                       <div className="text-center">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition font-medium">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] group-hover:text-[var(--accent-blue)] dark:group-hover:text-[var(--accent-blue)] transition font-medium">
                           <RotateCw size={12} className="group-hover:rotate-180 transition-transform duration-500" />
                           <span>Click to reveal definition & Uzbek meaning (Space)</span>
                         </span>
@@ -710,7 +710,7 @@ export default function VocabStudioPage() {
                     <div className="space-y-5 animate-in fade-in duration-300">
                       <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
                         <div className="flex items-center gap-2.5">
-                          <h3 className="text-xl font-black text-purple-600 dark:text-purple-400">
+                          <h3 className="text-xl font-black text-[var(--accent-blue)]">
                             {currentCard.word}
                           </h3>
                           <button
@@ -718,7 +718,7 @@ export default function VocabStudioPage() {
                               e.stopPropagation();
                               speakWord(currentCard.word);
                             }}
-                            className="p-1.5 rounded-full bg-purple-500/10 text-purple-600 hover:bg-purple-500/20 transition"
+                            className="p-1.5 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/20 transition"
                           >
                             <Volume2 size={14} />
                           </button>
@@ -739,11 +739,11 @@ export default function VocabStudioPage() {
                       </div>
 
                       {/* Uzbek Translation */}
-                      <div className="p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/20 space-y-1">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-purple-700 dark:text-purple-300">
+                      <div className="p-3.5 rounded-2xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 space-y-1">
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[var(--accent-blue)]">
                           <span>🇺🇿 O'zbekcha Ma'nosi & Izohi:</span>
                         </div>
-                        <p className="text-xs sm:text-sm font-bold text-purple-900 dark:text-purple-200 leading-relaxed">
+                        <p className="text-xs sm:text-sm font-bold text-[var(--text-main)] leading-relaxed">
                           {currentCard.uzbek}
                         </p>
                       </div>
@@ -829,7 +829,7 @@ export default function VocabStudioPage() {
               <div className="flex items-center justify-between pt-2">
                 <button
                   onClick={handlePrevCard}
-                  className="px-4 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="px-4 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
                 >
                   <ArrowLeft size={13} />
                   <span>Previous</span>
@@ -843,7 +843,7 @@ export default function VocabStudioPage() {
 
                 <button
                   onClick={handleNextCard}
-                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
                 >
                   <span>Next Card</span>
                   <ArrowRight size={13} />
@@ -872,7 +872,7 @@ export default function VocabStudioPage() {
                   setWicTypeFilter("all");
                   setSearchQuery("");
                 }}
-                className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-sm"
+                className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-sm"
               >
                 Reset All Filters
               </button>
@@ -882,7 +882,7 @@ export default function VocabStudioPage() {
               {/* Question Navigation & Header Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-2xl bg-purple-500/10 text-purple-600 font-bold font-mono text-xs">
+                  <div className="p-2.5 rounded-2xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-bold font-mono text-xs">
                     #{currentWic.num}
                   </div>
                   <div>
@@ -928,7 +928,7 @@ export default function VocabStudioPage() {
 
                   <button
                     onClick={() => setWicShowGridModal(true)}
-                    className="p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500 text-[var(--text-muted)] hover:text-[var(--text-main)] transition shadow-sm"
+                    className="p-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition shadow-sm"
                     title="Question Grid Selector"
                   >
                     <Grid size={14} />
@@ -944,7 +944,7 @@ export default function VocabStudioPage() {
                     {currentWic.passage.includes("______") ? (
                       <>
                         {currentWic.passage.split("______")[0]}
-                        <span className="inline-block px-3 py-0.5 mx-1 font-bold font-mono text-purple-600 dark:text-purple-400 bg-purple-500/20 border-b-2 border-purple-500 rounded-md">
+                        <span className="inline-block px-3 py-0.5 mx-1 font-bold font-mono text-[var(--accent-blue)] bg-[var(--accent-blue)]/15 border-b-2 border-[var(--accent-blue)] rounded-md">
                           ______
                         </span>
                         {currentWic.passage.split("______")[1]}
@@ -969,7 +969,7 @@ export default function VocabStudioPage() {
                     const isSubmittedState = wicIsSubmitted || !!currentWicHistory;
                     const isCorrectLetter = letter === currentWic.correct_answer;
 
-                    let btnClass = "bg-[var(--bg-surface)] border-[var(--border-main)] hover:border-purple-500 text-[var(--text-main)]";
+                    let btnClass = "bg-[var(--bg-surface)] border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-main)]";
                     if (isSubmittedState) {
                       if (isCorrectLetter) {
                         btnClass = "bg-emerald-500/15 border-emerald-500 text-emerald-700 dark:text-emerald-300 font-bold shadow-sm glow-emerald";
@@ -979,7 +979,7 @@ export default function VocabStudioPage() {
                         btnClass = "opacity-45 border-[var(--border-main)] text-[var(--text-muted)]";
                       }
                     } else if (isSelected) {
-                      btnClass = "bg-purple-500/15 border-purple-500 text-purple-700 dark:text-purple-300 font-bold shadow-sm glow-purple";
+                      btnClass = "bg-[var(--accent-blue)]/10 border-[var(--accent-blue)] text-[var(--accent-blue)] font-bold shadow-sm shadow-sm";
                     }
 
                     return (
@@ -993,7 +993,7 @@ export default function VocabStudioPage() {
                           <span
                             className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
                               isSelected
-                                ? "bg-purple-600 text-white"
+                                ? "bg-blue-600 text-white"
                                 : "bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)]"
                             }`}
                           >
@@ -1029,7 +1029,7 @@ export default function VocabStudioPage() {
                       disabled={!wicSelectedOption}
                       className={`px-6 py-2.5 rounded-2xl font-bold text-xs transition flex items-center gap-2 btn-press shadow-md ${
                         wicSelectedOption
-                          ? "bg-purple-600 hover:bg-purple-500 text-white"
+                          ? "bg-blue-600 hover:bg-blue-500 text-white"
                           : "bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-main)]"
                       }`}
                     >
@@ -1039,7 +1039,7 @@ export default function VocabStudioPage() {
                   ) : (
                     <button
                       onClick={handleNextWic}
-                      className="px-6 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition flex items-center gap-2 btn-press shadow-md"
+                      className="px-6 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center gap-2 btn-press shadow-md"
                     >
                       <span>Next Question</span>
                       <ArrowRight size={14} />
@@ -1061,14 +1061,14 @@ export default function VocabStudioPage() {
                 <div className="p-6 sm:p-7 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-lg space-y-5 animate-scale-in">
                   <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                      <Sparkles className="w-5 h-5 text-[var(--accent-blue)]" />
                       <h4 className="text-sm font-bold text-[var(--text-main)]">
                         Deep Question Tahlili & College Board Izohi
                       </h4>
                     </div>
                     <button
                       onClick={() => setWicShowExpl(!wicShowExpl)}
-                      className="text-xs font-bold text-purple-600 hover:text-purple-500 transition"
+                      className="text-xs font-bold text-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition"
                     >
                       {wicShowExpl ? "Yashirish" : "Ko'rsatish"}
                     </button>
@@ -1078,8 +1078,8 @@ export default function VocabStudioPage() {
                     <div className="space-y-4 text-xs sm:text-sm leading-relaxed">
                       {/* Uzbek Pedagogical Explanation */}
                       {currentWic.explanation_uz && (
-                        <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 space-y-2.5">
-                          <div className="font-bold text-xs uppercase tracking-wider text-purple-700 dark:text-purple-300 font-mono">
+                        <div className="p-4 rounded-2xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 space-y-2.5">
+                          <div className="font-bold text-xs uppercase tracking-wider text-[var(--accent-blue)] font-mono">
                             🇺🇿 O'zbekcha Pedagogik Tahlil:
                           </div>
                           <div className="whitespace-pre-line text-[var(--text-main)] leading-relaxed">
@@ -1118,7 +1118,7 @@ export default function VocabStudioPage() {
               >
                 <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
                   <div className="flex items-center gap-2">
-                    <Grid className="w-5 h-5 text-purple-600" />
+                    <Grid className="w-5 h-5 text-[var(--accent-blue)]" />
                     <h3 className="text-sm font-bold text-[var(--text-main)]">
                       Words in Context Navigator (261 Questions)
                     </h3>
@@ -1139,7 +1139,7 @@ export default function VocabStudioPage() {
 
                     let pillClass = "bg-[var(--bg-surface)] border-[var(--border-main)] text-[var(--text-main)]";
                     if (isCurr) {
-                      pillClass = "bg-purple-600 text-white font-bold ring-2 ring-purple-400";
+                      pillClass = "bg-blue-600 text-white font-bold ring-2 ring-blue-500";
                     } else if (hist?.isCorrect) {
                       pillClass = "bg-emerald-500/20 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 font-bold";
                     } else if (hist && !hist.isCorrect) {
@@ -1175,7 +1175,7 @@ export default function VocabStudioPage() {
           {/* Quiz Header */}
           <div className="flex items-center justify-between p-4 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-purple-500/10 text-purple-600 font-bold">
+              <div className="p-2.5 rounded-2xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-bold">
                 <Zap size={18} />
               </div>
               <div>
@@ -1187,7 +1187,7 @@ export default function VocabStudioPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <span className="text-[10px] uppercase font-mono text-[var(--text-muted)] block">Score</span>
-                <span className="text-base font-black text-purple-600 font-mono">{quizScore} pts</span>
+                <span className="text-base font-black text-[var(--accent-blue)] font-mono">{quizScore} pts</span>
               </div>
               <div className="text-right pl-3 border-l border-[var(--border-main)]">
                 <span className="text-[10px] uppercase font-mono text-[var(--text-muted)] block">Streak</span>
@@ -1203,7 +1203,7 @@ export default function VocabStudioPage() {
             <div className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-6">
               {/* Question Prompt */}
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 text-xs font-mono font-bold">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] text-xs font-mono font-bold">
                   <span>Match Definition</span>
                   <span>•</span>
                   <span>Part of Speech: {currentQuizWord.partOfSpeech}</span>
@@ -1221,7 +1221,7 @@ export default function VocabStudioPage() {
                 {quizOptions.map((opt) => {
                   const isSelected = selectedOption === opt.word;
                   const isCorrect = opt.word === currentQuizWord.word;
-                  let btnStyle = "bg-[var(--bg-surface)] border-[var(--border-main)] hover:border-purple-500 text-[var(--text-main)]";
+                  let btnStyle = "bg-[var(--bg-surface)] border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-main)]";
 
                   if (isAnswerSubmitted) {
                     if (isCorrect) {
@@ -1250,14 +1250,14 @@ export default function VocabStudioPage() {
 
               {/* Explanation & Next Question */}
               {isAnswerSubmitted && (
-                <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 space-y-3 animate-in fade-in duration-300">
+                <div className="p-4 rounded-2xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 space-y-3 animate-in fade-in duration-300">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-purple-700 dark:text-purple-300">
+                    <span className="text-xs font-bold text-[var(--accent-blue)]">
                       💡 Vocabulary Breakdown:
                     </span>
                     <button
                       onClick={handleNextQuizQuestion}
-                      className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                      className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
                     >
                       <span>Next Question</span>
                       <ArrowRight size={13} />
@@ -1266,7 +1266,7 @@ export default function VocabStudioPage() {
                   <p className="text-xs text-[var(--text-main)] leading-relaxed">
                     <strong>{currentQuizWord.word}</strong> means: <em>{currentQuizWord.definition}</em>
                   </p>
-                  <p className="text-xs text-purple-900 dark:text-purple-200 font-semibold">
+                  <p className="text-xs text-[var(--text-main)] font-semibold">
                     🇺🇿 O'zbekcha: {currentQuizWord.uzbek}
                   </p>
                 </div>
@@ -1290,7 +1290,7 @@ export default function VocabStudioPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search across all 650 words, Uzbek meanings, synonyms, or definitions..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] focus:border-purple-500 text-xs text-[var(--text-main)] outline-none transition shadow-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] focus:border-[var(--accent-blue)] text-xs text-[var(--text-main)] outline-none transition shadow-sm"
               />
               {searchQuery && (
                 <button
@@ -1310,7 +1310,7 @@ export default function VocabStudioPage() {
                   onClick={() => setSelectedStatus(st)}
                   className={`px-3 py-2 rounded-xl font-semibold capitalize whitespace-nowrap border transition ${
                     selectedStatus === st
-                      ? "bg-purple-600 text-white font-bold border-purple-600 shadow-sm"
+                      ? "bg-blue-600 text-white font-bold border-blue-600 shadow-sm"
                       : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
                   }`}
                 >
@@ -1337,12 +1337,12 @@ export default function VocabStudioPage() {
               return (
                 <div
                   key={item.id}
-                  className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-purple-500/40 transition shadow-sm space-y-3 flex flex-col justify-between"
+                  className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/30 transition shadow-sm space-y-3 flex flex-col justify-between"
                 >
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono font-bold text-purple-600 dark:text-purple-400">
+                        <span className="text-xs font-mono font-bold text-[var(--accent-blue)]">
                           #{item.id}
                         </span>
                         <h4 className="text-base font-black text-[var(--text-main)] tracking-tight">
@@ -1350,7 +1350,7 @@ export default function VocabStudioPage() {
                         </h4>
                         <button
                           onClick={() => speakWord(item.word)}
-                          className="p-1 rounded-full text-[var(--text-muted)] hover:text-purple-600 transition"
+                          className="p-1 rounded-full text-[var(--text-muted)] hover:text-[var(--accent-blue)] transition"
                           title="Listen to pronunciation"
                         >
                           <Volume2 size={13} />
@@ -1381,7 +1381,7 @@ export default function VocabStudioPage() {
                       {item.definition}
                     </p>
 
-                    <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-900 dark:text-purple-200 font-semibold leading-relaxed">
+                    <div className="p-2.5 rounded-xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 text-xs text-[var(--text-main)] font-semibold leading-relaxed">
                       🇺🇿 {item.uzbek}
                     </div>
                   </div>

@@ -240,7 +240,7 @@ function SidebarComponent() {
               <div className="p-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center font-bold text-xs font-mono shrink-0 shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs font-mono shrink-0 shadow-sm">
                       {user.fullName.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
@@ -294,7 +294,7 @@ function SidebarComponent() {
                 <Link
                   href="/register"
                   onClick={() => isMobile && closeMobileSidebar()}
-                  className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition-all"
+                  className="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
                 >
                   <LogIn size={14} />
                   <span>Sign In / Register</span>
@@ -314,7 +314,7 @@ function SidebarComponent() {
                 <button
                   onClick={openOnboarding}
                   title={`${user.fullName} • Goal: ${user.targetSatScore || 1550}+ • Click to edit profile`}
-                  className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center font-bold text-xs font-mono shadow-sm hover:scale-105 transition-transform"
+                  className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs font-mono shadow-sm hover:scale-105 transition-transform"
                 >
                   {user.fullName.charAt(0).toUpperCase()}
                 </button>

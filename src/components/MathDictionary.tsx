@@ -66,7 +66,7 @@ export default function MathDictionary() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+            <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20">
               {filteredTerms.length} / {SAT_MATH_TERMINOLOGY.length} Terms
             </span>
           </div>

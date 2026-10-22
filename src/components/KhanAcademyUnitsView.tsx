@@ -40,7 +40,7 @@ export default function KhanAcademyUnitsView() {
   return (
     <div className="w-full space-y-6">
       {/* Header Banner */}
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-blue-900/20 via-[var(--bg-card)] to-purple-900/10 border border-[var(--border-main)] relative overflow-hidden shadow-sm">
+      <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] relative overflow-hidden shadow-sm">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">

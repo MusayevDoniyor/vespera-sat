@@ -1,59 +1,67 @@
 <svg width="512" height="512" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Left Wing Gradient: Electric Cyan into Deep Sapphire -->
-    <linearGradient id="vespera-universal-cyan" x1="16" y1="26" x2="46" y2="86" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#00e5ff" />
-      <stop offset="40%" stop-color="#00b0ff" />
-      <stop offset="80%" stop-color="#0066ff" />
-      <stop offset="100%" stop-color="#1e40af" />
+    <!-- Left Wing Gradient: Academic Cobalt into Deep Midnight Navy -->
+    <linearGradient id="vespera-universal-wing-left" x1="16" y1="26" x2="46" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="40%" stop-color="#2563eb" />
+      <stop offset="80%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#172554" />
     </linearGradient>
 
-    <!-- Right Wing Gradient: Royal Indigo into Vibrant Purple -->
-    <linearGradient id="vespera-universal-violet" x1="46" y1="86" x2="76" y2="26" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2979ff" />
-      <stop offset="50%" stop-color="#651fff" />
-      <stop offset="100%" stop-color="#9c27b0" />
+    <!-- Right Wing Gradient: Sovereign Deep Sapphire into Architectural Obsidian -->
+    <linearGradient id="vespera-universal-wing-right" x1="46" y1="86" x2="76" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="50%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#0a0f1d" />
     </linearGradient>
 
     <!-- Natural Soft Shadow between overlapping wings -->
     <filter id="vespera-universal-wing-shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="2" dy="2" stdDeviation="2.8" flood-color="#0b0f19" flood-opacity="0.45" />
+      <feDropShadow dx="2" dy="2" stdDeviation="2.8" flood-color="#020617" flood-opacity="0.5" />
     </filter>
 
-    <!-- Ambient Beacon Starlight Glow -->
+    <!-- Ambient Beacon Starlight Glow (Subtle, Refined) -->
     <radialGradient id="vespera-universal-star-glow" cx="80" cy="18" r="22" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#00b0ff" stop-opacity="0.75" />
-      <stop offset="50%" stop-color="#818cf8" stop-opacity="0.22" />
-      <stop offset="100%" stop-color="#00b0ff" stop-opacity="0" />
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.6" />
+      <stop offset="60%" stop-color="#2563eb" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0" />
     </radialGradient>
 
-    <!-- Star Core Radiant Gradient -->
+    <!-- Platinum Diamond Star Core -->
     <linearGradient id="vespera-universal-star-core" x1="76" y1="12" x2="84" y2="24" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="100%" stop-color="#e1f5fe" />
+      <stop offset="100%" stop-color="#f8fafc" />
     </linearGradient>
 
     <!-- Overall Mark Ambient Shadow for physical surface lift -->
     <filter id="vespera-universal-ambient-shadow" x="-25%" y="-25%" width="150%" height="150%">
-      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0052cc" flood-opacity="0.28" />
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#020617" flood-opacity="0.28" />
     </filter>
   </defs>
 
-  <!-- Ambient Beacon Starlight Glow (completely transparent background, no box!) -->
+  <!-- Ambient Beacon Starlight Glow (completely transparent background) -->
   <circle cx="80" cy="18" r="22" fill="url(#vespera-universal-star-glow)" />
 
   <g filter="url(#vespera-universal-ambient-shadow)">
-    <!-- Right Wing (Behind left wing, optically balanced at X=46..76) -->
+    <!-- Right Wing (Behind left wing, optical balance X=46..76) -->
     <path
       d="M 76 26 L 58 26 L 46 64 L 46 86 Z"
-      fill="url(#vespera-universal-violet)"
+      fill="url(#vespera-universal-wing-right)"
     />
 
-    <!-- Left Wing (Casts gentle drop shadow onto right wing, X=16..46) -->
+    <!-- Left Wing (Casts gentle shadow onto right wing, X=16..46) -->
     <path
       d="M 16 26 L 34 26 L 46 64 L 46 86 Z"
-      fill="url(#vespera-universal-cyan)"
+      fill="url(#vespera-universal-wing-left)"
       filter="url(#vespera-universal-wing-shadow)"
+    />
+
+    <!-- Architectural Bevel Seam Line (Precision Diamond Highlight) -->
+    <path
+      d="M 46 64 L 46 86"
+      stroke="rgba(255, 255, 255, 0.35)"
+      stroke-width="0.8"
+      stroke-linecap="round"
     />
   </g>
 
@@ -61,7 +69,7 @@
   <!-- Outer Star Flare -->
   <path
     d="M 80 4 Q 80 18 94 18 Q 80 18 80 32 Q 80 18 66 18 Q 80 18 80 4 Z"
-    fill="#00b0ff"
+    fill="#2563eb"
   />
 
   <!-- Inner Diamond Flare -->
@@ -71,5 +79,5 @@
   />
 
   <!-- White-hot diamond spark center -->
-  <circle cx="80" cy="18" r="2.2" fill="#ffffff" />
+  <circle cx="80" cy="18" r="2" fill="#ffffff" />
 </svg>

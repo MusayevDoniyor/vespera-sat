@@ -164,7 +164,7 @@ export default function OnboardingModal() {
                 key={i}
                 className={`w-7 h-1.5 rounded-full transition-all ${
                   step === i
-                    ? "bg-gradient-to-r from-blue-600 to-cyan-500 w-9"
+                    ? "bg-blue-600 w-9"
                     : step > i
                     ? "bg-emerald-500"
                     : "bg-[var(--border-main)]"
@@ -352,7 +352,7 @@ export default function OnboardingModal() {
             <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-[var(--text-main)] flex items-center gap-2">
-                  <Award size={16} className="text-purple-500" />
+                  <Award size={16} className="text-[var(--accent-blue)]" />
                   <span>Do you have an IELTS score?</span>
                 </label>
                 <div className="flex items-center gap-2">
@@ -372,7 +372,7 @@ export default function OnboardingModal() {
                     onClick={() => setHasIelts(true)}
                     className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                       hasIelts
-                        ? "bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/30 shadow-sm"
+                        ? "bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30 shadow-sm"
                         : "text-[var(--text-muted)]"
                     }`}
                   >
@@ -390,7 +390,7 @@ export default function OnboardingModal() {
                       onClick={() => setIeltsScore(score)}
                       className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold font-mono transition-all ${
                         ieltsScore === score
-                          ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
                           : "bg-[var(--bg-card)] border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
                       }`}
                     >
@@ -402,7 +402,7 @@ export default function OnboardingModal() {
                     placeholder="Custom (e.g. 7.5)"
                     value={ieltsScore}
                     onChange={(e) => setIeltsScore(e.target.value)}
-                    className="w-32 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] text-xs text-[var(--text-main)] font-mono focus:outline-none focus:border-purple-500"
+                    className="w-32 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] text-xs text-[var(--text-main)] font-mono focus:outline-none focus:border-[var(--accent-blue)]"
                   />
                 </div>
               )}
@@ -574,7 +574,7 @@ export default function OnboardingModal() {
             <button
               type="button"
               onClick={() => setStep(step + 1)}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-blue-500/20"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-sm cursor-pointer"
             >
               <span>Continue</span>
               <ArrowRight size={15} />
@@ -584,7 +584,7 @@ export default function OnboardingModal() {
               type="button"
               disabled={submitting}
               onClick={handleFinish}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 hover:opacity-95 text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-500/25 disabled:opacity-50"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
             >
               {submitting ? (
                 <span className="flex items-center gap-2">

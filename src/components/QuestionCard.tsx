@@ -537,7 +537,7 @@ export default function QuestionCard({
                         })
                       );
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-blue-500/20 active:scale-95 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
                   >
                     <Sparkles size={13} className="text-amber-300 fill-amber-300" />
                     <span>💡 AI Diagnosis: Why is [{selectedChoice}] wrong?</span>
@@ -580,7 +580,7 @@ export default function QuestionCard({
                     onClick={() => setActiveTab("formula")}
                     className={`flex-1 min-w-[130px] py-2.5 sm:py-3 px-3 sm:px-4 flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border-b-2 whitespace-nowrap ${
                       activeTab === "formula"
-                        ? "border-purple-500 text-purple-600 dark:text-purple-400 bg-[var(--bg-card)]"
+                        ? "border-[var(--accent-blue)] text-[var(--accent-blue)] bg-[var(--bg-card)] font-bold"
                         : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
                     }`}
                   >

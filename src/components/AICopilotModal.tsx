@@ -92,13 +92,13 @@ function SourceBadge({ source, model }: { source?: string; model?: string }) {
 function TypingDots() {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/30">
+      <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-sm">
         <Sparkles size={14} className="text-white" />
       </div>
       <div className="flex items-center gap-1.5 py-3 px-4 rounded-2xl rounded-tl-sm bg-[var(--bg-surface)] border border-[var(--border-main)] shadow-sm">
-        <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.3s]" />
-        <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:-0.15s]" />
-        <span className="w-2 h-2 rounded-full bg-purple-500 animate-bounce" />
+        <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce [animation-delay:-0.3s]" />
+        <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
+        <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" />
         <span className="ml-2 text-[11px] font-medium text-[var(--text-muted)]">Vespera AI thinking...</span>
       </div>
     </div>
@@ -155,7 +155,7 @@ const ModalInputBar = React.memo(function ModalInputBar({
         onClick={() => handleSubmit()}
         disabled={!inputText.trim() || isLoading}
         title="Send (Enter)"
-        className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:hover:brightness-100 transition-all shadow-lg shadow-blue-500/25 shrink-0 cursor-pointer disabled:cursor-not-allowed"
+        className="w-10 h-10 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center active:scale-95 disabled:opacity-30 transition-all shadow-sm shrink-0 cursor-pointer disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -466,7 +466,7 @@ I can help you with:
                 <div key={m.id} className={`flex gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
                   {/* Bot avatar */}
                   {!isUser && (
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/30 mt-0.5">
+                    <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       <Sparkles size={14} className="text-white" />
                     </div>
                   )}
@@ -523,7 +523,7 @@ I can help you with:
 
                   {/* User avatar */}
                   {isUser && (
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                    <div className="w-8 h-8 rounded-xl bg-slate-700 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       <User size={14} className="text-white" />
                     </div>
                   )}

@@ -296,7 +296,7 @@ function MathContent() {
           onClick={() => setMathMode("units")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all whitespace-nowrap ${
             mathMode === "units"
-              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm font-bold"
+              ? "bg-blue-600 text-white shadow-sm font-bold"
               : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
           }`}
         >
@@ -314,9 +314,9 @@ function MathContent() {
         <>
           {/* Adaptive Mode Banner */}
           {isAdaptiveMode && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm text-xs">
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm text-xs">
               <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
                 <span className="font-bold text-[var(--text-main)]">
                   🎯 Adaptive Weakness Drill Active:
                 </span>
@@ -339,9 +339,9 @@ function MathContent() {
 
           {/* User Personalized Track Banner */}
           {user && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-600/10 via-cyan-500/10 to-transparent border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-blue)] animate-ping" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-blue)]" />
             <span className="text-xs font-bold text-[var(--text-main)]">
               Personalized Track:{" "}
               <span className="text-[var(--accent-blue)] font-black uppercase font-mono">

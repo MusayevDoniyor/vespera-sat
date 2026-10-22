@@ -95,13 +95,7 @@ export default function TopicStudyModal({
         <div className="p-5 md:p-6 border-b border-[var(--border-main)] bg-[var(--bg-surface)] shrink-0 flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1.5">
-              <span
-                className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md font-mono ${
-                  isMath
-                    ? "bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30"
-                    : "bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/30"
-                }`}
-              >
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-md font-mono bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30">
                 {topic.code} • {topic.domain}
               </span>
 
@@ -195,7 +189,7 @@ export default function TopicStudyModal({
             onClick={() => setActiveTab("practice")}
             className={`flex items-center gap-2 pb-3 px-3 border-b-2 transition-all whitespace-nowrap ${
               activeTab === "practice"
-                ? "border-purple-600 text-purple-600 dark:text-purple-400"
+                ? "border-[var(--accent-blue)] text-[var(--accent-blue)]"
                 : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
@@ -228,18 +222,18 @@ export default function TopicStudyModal({
               </div>
 
               {/* SATashkent Resource Mapping */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-[var(--bg-surface)] to-[var(--accent-blue)]/5 border border-[var(--border-main)] flex items-start gap-3.5">
-                <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5">
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-start gap-3.5">
+                <div className="p-2.5 rounded-xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] shrink-0 mt-0.5">
                   <GraduationCap size={18} />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-wider font-mono flex items-center gap-2">
                     <span>SAT Tashkent Resource Reference</span>
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-bold">
                       National Vault
                     </span>
                   </h4>
-                  <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mt-0.5">
+                  <p className="text-xs font-semibold text-[var(--accent-blue)] mt-0.5">
                     {isMath
                       ? "SAT Math Cheat Sheet & Math Hard Book / Mathbook 3.0"
                       : "Gramilliy (Grammar Bible) & SAToplam Writing / Vocabook 3.0"}
@@ -294,7 +288,7 @@ export default function TopicStudyModal({
 
               {/* Visual Model Link (if available) */}
               {topic.diagramKey && onLaunchVisualDiagram && (
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-[var(--accent-blue)]/10 via-[var(--bg-card)] to-purple-500/10 border border-[var(--border-main)] flex items-center justify-between gap-4">
+                <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between gap-4">
                   <div>
                     <h4 className="text-xs font-bold text-[var(--text-main)] flex items-center gap-1.5">
                       <Sparkles size={14} className="text-[var(--accent-blue)]" />
@@ -492,11 +486,7 @@ export default function TopicStudyModal({
                   ? `/math?topic=${encodeURIComponent(topic.code)}`
                   : `/verbal?topic=${encodeURIComponent(topic.code)}`
               }
-              className={`px-4 py-2 rounded-xl text-xs font-bold text-white shadow-sm transition-all flex items-center gap-1.5 ${
-                isMath
-                  ? "bg-[var(--accent-blue)] hover:opacity-90"
-                  : "bg-purple-600 hover:opacity-90"
-              }`}
+              className="px-4 py-2 rounded-xl text-xs font-bold text-white shadow-sm transition-all flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500"
             >
               <span>Practice in {isMath ? "Math" : "Verbal"} Hub</span>
               <ArrowRight size={13} />

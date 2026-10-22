@@ -193,7 +193,7 @@ export default function CurriculumPage() {
             onClick={() => handleSelectSection("READING_WRITING")}
             className={`px-3.5 py-2 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
               activeSection === "READING_WRITING"
-                ? "bg-purple-600 text-white shadow-sm font-black"
+                ? "bg-[var(--accent-blue)] text-white shadow-sm font-black"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
             }`}
           >
@@ -252,7 +252,7 @@ export default function CurriculumPage() {
 
         <Link
           href="/satashkent"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 border border-purple-500/20"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20"
         >
           <GraduationCap size={15} />
           <span>🇺🇿 Digital SAT Masterclass & Materials Vault (55 Books) →</span>
@@ -351,13 +351,7 @@ export default function CurriculumPage() {
                   {/* Top Metadata Badges */}
                   <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
                     <div className="flex items-center gap-1.5">
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded font-mono ${
-                          isMath
-                            ? "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20"
-                            : "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20"
-                        }`}
-                      >
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded font-mono bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20">
                         {t.code} • {t.domain}
                       </span>
 
@@ -401,8 +395,8 @@ export default function CurriculumPage() {
                   )}
 
                   {/* SATashkent Mapping Pill */}
-                  <div className="mb-3.5 p-2 rounded-xl bg-purple-500/5 border border-purple-500/20 flex items-center justify-between text-[11px]">
-                    <div className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-mono">
+                  <div className="mb-3.5 p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between text-[11px]">
+                    <div className="flex items-center gap-1.5 text-[var(--accent-blue)] font-mono">
                       <GraduationCap size={13} className="shrink-0" />
                       <span className="font-semibold">SATashkent:</span>
                       <span className="text-[var(--text-muted)] truncate max-w-[190px] sm:max-w-[240px]">
@@ -413,7 +407,7 @@ export default function CurriculumPage() {
                     </div>
                     <button
                       onClick={() => setMainView("satashkent")}
-                      className="text-[10px] font-bold text-purple-600 dark:text-purple-400 hover:underline shrink-0"
+                      className="text-[10px] font-bold text-[var(--accent-blue)] hover:underline shrink-0"
                     >
                       Vault →
                     </button>

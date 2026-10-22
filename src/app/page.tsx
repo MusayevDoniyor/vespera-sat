@@ -230,14 +230,14 @@ export default function DashboardPage() {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] text-xs font-semibold border border-[var(--accent-blue)]/20 font-mono">
-              <span className="w-2 h-2 rounded-full bg-[var(--accent-green)] animate-live-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               Digital SAT Suite
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--text-main)] tracking-tight flex flex-wrap items-center gap-3">
               <span>{user ? `Welcome back, ${user.fullName}!` : "Welcome to Vespera"}</span>
               <span
                 onClick={user ? openOnboarding : () => openAuthModal("register")}
-                className="text-xs px-2.5 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-mono font-bold tracking-wider uppercase cursor-pointer hover:opacity-90 transition-opacity"
+                className="text-xs px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold tracking-wider uppercase cursor-pointer transition-colors shadow-sm"
                 title="Click to edit score target"
               >
                 Target {user?.targetSatScore || 1550}+
@@ -265,14 +265,14 @@ export default function DashboardPage() {
               <div className="pt-1 flex flex-wrap items-center gap-2.5">
                 <button
                   onClick={() => setIsDiagnosticOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold transition-all shadow-sm cursor-pointer"
                 >
                   <Target size={13} />
                   <span>{user.currentSatScore ? "Recalibrate Diagnostic" : "5-Min Diagnostic"}</span>
                 </button>
                 <button
                   onClick={openOnboarding}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-bold text-[var(--text-main)] transition-colors shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-xs font-semibold text-[var(--text-main)] transition-colors shadow-sm cursor-pointer"
                 >
                   <Sliders size={13} className="text-[var(--accent-blue)]" />
                   <span>Edit Goals</span>
@@ -287,14 +287,14 @@ export default function DashboardPage() {
               <div className="pt-1 flex flex-wrap items-center gap-2.5">
                 <button
                   onClick={() => setIsDiagnosticOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-md shadow-emerald-500/20"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold transition-all shadow-sm cursor-pointer"
                 >
                   <Target size={14} />
                   <span>5-Min Diagnostic Test</span>
                 </button>
                 <button
                   onClick={() => openAuthModal("register")}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all shadow-sm cursor-pointer"
                 >
                   <LogIn size={14} />
                   <span>Get Started Free</span>
@@ -390,7 +390,7 @@ export default function DashboardPage() {
             {recommendations?.dailyMissions?.[0]?.type === "diagnostic" ? (
               <button
                 onClick={() => setIsDiagnosticOpen(true)}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 transition-all"
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
               >
                 <span>Take 5-Min Diagnostic</span>
                 <ArrowRight size={13} />
@@ -398,7 +398,7 @@ export default function DashboardPage() {
             ) : (
               <Link
                 href={recommendations?.dailyMissions?.[0]?.targetUrl || "/curriculum"}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 transition-all text-center"
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all text-center"
               >
                 <span>Start Weakness Drill</span>
                 <ArrowRight size={13} />
@@ -407,10 +407,10 @@ export default function DashboardPage() {
           </div>
 
           {/* Mission 2: Spaced Repetition Error Review */}
-          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-indigo-500/50 transition-all flex flex-col justify-between space-y-4">
+          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-slate-400/50 transition-all flex flex-col justify-between space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
+                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/20">
                   {recommendations?.dailyMissions?.[1]?.badge || "Active Recall"}
                 </span>
                 <span className="text-xs font-mono font-bold text-[var(--text-muted)]">
@@ -427,7 +427,7 @@ export default function DashboardPage() {
 
             <Link
               href={recommendations?.dailyMissions?.[1]?.targetUrl || "/error-log"}
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-indigo-500/20 transition-all text-center"
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all text-center"
             >
               <span>{recommendations?.dueReviewsCount > 0 ? "Review Due Errors" : "Launch Speed Drill"}</span>
               <ArrowRight size={13} />
@@ -435,10 +435,10 @@ export default function DashboardPage() {
           </div>
 
           {/* Mission 3: Curriculum Mastery */}
-          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-emerald-500/50 transition-all flex flex-col justify-between space-y-4">
+          <div className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-slate-400/50 transition-all flex flex-col justify-between space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                   {recommendations?.dailyMissions?.[2]?.badge || "Textbook Masterclass"}
                 </span>
                 <span className="text-xs font-mono font-bold text-[var(--text-muted)]">
@@ -455,7 +455,7 @@ export default function DashboardPage() {
 
             <Link
               href={recommendations?.dailyMissions?.[2]?.targetUrl || "/curriculum"}
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition-all text-center"
+              className="w-full py-2.5 px-4 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-main)] text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all text-center"
             >
               <span>Study Chapter</span>
               <ArrowRight size={13} />
@@ -564,7 +564,7 @@ export default function DashboardPage() {
       )}
 
       {/* 🚀 SAT 1550+ MASTER STUDY ROADMAP: WHERE TO BEGIN */}
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 dark:from-slate-900 dark:via-slate-900/90 dark:to-blue-950/20 border border-blue-200/90 dark:border-blue-500/30 shadow-md space-y-6">
+      <div className="p-6 md:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 text-xs font-bold font-mono mb-2">
@@ -612,25 +612,25 @@ export default function DashboardPage() {
           {/* STEP 2 */}
           <Link
             href="/desmos"
-            className="p-5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-cyan-500 hover:shadow-md transition-all group flex flex-col justify-between"
+            className="p-5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-[var(--accent-blue)] hover:shadow-md transition-all group flex flex-col justify-between"
           >
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300">
+                <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]">
                   Step 2 • Speed
                 </span>
-                <span className="text-xs font-bold text-slate-400 group-hover:text-cyan-600 transition-colors font-mono">
+                <span className="text-xs font-bold text-slate-400 group-hover:text-[var(--accent-blue)] transition-colors font-mono">
                   Desmos Lab
                 </span>
               </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors flex items-center gap-1.5">
+              <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-[var(--accent-blue)] transition-colors flex items-center gap-1.5">
                 <span>Desmos Speed Lab</span>
               </h4>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Bypass 60% of manual algebra using 10-second regression (~), slider intercepts, and vertical line root finders.
               </p>
             </div>
-            <div className="pt-4 flex items-center gap-1 text-xs font-bold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-0.5 transition-transform">
+            <div className="pt-4 flex items-center gap-1 text-xs font-bold text-[var(--accent-blue)] group-hover:translate-x-0.5 transition-transform">
               <span>Launch Speed Lab</span>
               <ArrowRight size={13} />
             </div>
@@ -692,14 +692,14 @@ export default function DashboardPage() {
         </div>
 
         {/* 🧠 650 SAT Real Exam Words in Context Studio Banner */}
-        <div className="p-5 md:p-6 rounded-2xl bg-gradient-to-r from-purple-900/10 via-indigo-900/10 to-blue-900/10 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+        <div className="p-5 md:p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
           <div className="flex items-start sm:items-center gap-3.5">
-            <div className="p-3 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white shadow-md shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shrink-0">
               <BrainCircuit size={22} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+                <span className="text-[10px] font-bold uppercase tracking-wider font-mono text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
                   Must-Know Real Exam Recall
                 </span>
                 <span className="text-xs text-[var(--text-muted)] font-mono">• 650 High-Frequency Words</span>
@@ -714,7 +714,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/vocab"
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5 shrink-0 self-stretch sm:self-auto"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition shadow-sm flex items-center justify-center gap-1.5 shrink-0 self-stretch sm:self-auto cursor-pointer"
           >
             <span>Launch Vocab Studio</span>
             <ArrowRight size={14} />
@@ -724,10 +724,10 @@ export default function DashboardPage() {
 
       {/* Personalized Study Command Center */}
       {user && (
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-[var(--bg-card)] via-[var(--bg-surface)] to-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-4">
+        <div className="p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-main)]">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white shadow-md">
+              <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shrink-0">
                 <Target size={22} />
               </div>
               <div>
@@ -857,7 +857,7 @@ export default function DashboardPage() {
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black text-[var(--text-main)]">{stats?.totalTopics || 29}</span>
-            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-mono">Topics</span>
+            <span className="text-xs font-semibold text-[var(--accent-blue)] font-mono">Topics</span>
           </div>
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
             100% Complete Coverage
@@ -921,7 +921,7 @@ export default function DashboardPage() {
                 className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all group flex flex-col justify-between"
               >
                 <div>
-                  <span className="text-[10px] font-bold uppercase font-mono text-purple-600 dark:text-purple-400 block mb-1">
+                  <span className="text-[10px] font-bold uppercase font-mono text-[var(--accent-blue)] block mb-1">
                     Step 1 • Terminology
                   </span>
                   <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
@@ -1004,20 +1004,20 @@ export default function DashboardPage() {
 
               <Link
                 href="/satashkent"
-                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-purple-500/50 transition-all group flex flex-col justify-between"
+                className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 transition-all group flex flex-col justify-between"
               >
                 <div>
-                  <span className="text-[10px] font-bold uppercase font-mono text-purple-600 dark:text-purple-400 block mb-1">
+                  <span className="text-[10px] font-bold uppercase font-mono text-[var(--accent-blue)] block mb-1">
                     Hard Module 2 • Book 2.0
                   </span>
-                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-purple-500 transition-colors">
+                  <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
                     SATashkent Hard Book 2.0
                   </h4>
                   <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
                     The 145 most punishing 800-gatekeeper problems collected from real 2024-2025 Digital SAT administrations.
                   </p>
                 </div>
-                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-purple-600 dark:text-purple-400">
+                <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[var(--accent-blue)]">
                   <span>View Hard Book 2.0</span>
                   <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -1114,10 +1114,10 @@ export default function DashboardPage() {
       </div>
 
       {/* Digital SAT Masterclass & 54-Book Archive Showcase Banner */}
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-purple-500/10 via-[var(--bg-card)] to-[var(--accent-blue)]/10 border border-purple-500/25 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 font-mono uppercase">
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono uppercase">
               🇺🇿 National & Official Curriculum Hub
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
@@ -1125,7 +1125,7 @@ export default function DashboardPage() {
             </span>
           </div>
           <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-2.5">
-            <GraduationCap className="text-purple-600 dark:text-purple-400" size={28} />
+            <GraduationCap className="text-[var(--accent-blue)]" size={28} />
             <span>Digital SAT Masterclass Vault & Authentic Archives</span>
           </h3>
           <p className="text-xs text-[var(--text-muted)] max-w-2xl leading-relaxed">
@@ -1136,7 +1136,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3 shrink-0">
           <Link
             href="/satashkent"
-            className="px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
+            className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2"
           >
             <span>Explore 55 Books & Vault</span>
             <ArrowRight size={15} />
@@ -1193,13 +1193,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Verbal IELTS 7.5 Accelerator Card */}
-        <div className="p-7 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col justify-between hover:border-[var(--accent-purple)]/40 transition-all duration-200 shadow-[var(--shadow-sm)] card-hover">
+        <div className="p-7 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col justify-between hover:border-[var(--accent-blue)]/40 transition-all duration-200 shadow-[var(--shadow-sm)] card-hover">
           <div>
             <div className="flex items-center justify-between mb-5">
-              <div className="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+              <div className="w-11 h-11 rounded-xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] flex items-center justify-center font-bold">
                 <BookOpen size={22} />
               </div>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 font-semibold font-mono">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-main)] font-semibold font-mono">
                 780+ Verbal
               </span>
             </div>
@@ -1212,7 +1212,7 @@ export default function DashboardPage() {
           <div className="space-y-3 pt-4 border-t border-[var(--border-main)]">
             <div className="flex justify-between items-center text-xs font-mono">
               <span className="text-[var(--text-muted)]">Projected Verbal:</span>
-              <span className="font-bold text-purple-600 dark:text-purple-400">
+              <span className="font-bold text-[var(--accent-blue)]">
                 {stats?.verbal?.projectedScore ?? 200} / 800
               </span>
             </div>
@@ -1222,7 +1222,7 @@ export default function DashboardPage() {
             </div>
             <div className="w-full bg-[var(--bg-surface)] rounded-full h-2 overflow-hidden">
               <div
-                className="bg-purple-600 h-2 rounded-full transition-all"
+                className="bg-[var(--accent-blue)] h-2 rounded-full transition-all"
                 style={{
                   width: `${stats ? Math.min(100, Math.max(0, ((stats.verbal.projectedScore - 200) / 600) * 100)) : 0}%`,
                 }}
@@ -1230,7 +1230,7 @@ export default function DashboardPage() {
             </div>
             <Link
               href="/verbal"
-              className="flex items-center justify-between text-xs font-semibold text-purple-600 dark:text-purple-400 hover:translate-x-1 transition-transform pt-1"
+              className="flex items-center justify-between text-xs font-semibold text-[var(--accent-blue)] hover:translate-x-1 transition-transform pt-1"
             >
               <span>Practice Verbal ({stats?.verbal?.total || 94}+ Questions)</span>
               <ArrowRight size={14} />
@@ -1239,13 +1239,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Spaced Repetition Card */}
-        <div className="p-7 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col justify-between hover:border-[var(--accent-rose)]/40 transition-all duration-200 shadow-[var(--shadow-sm)] card-hover">
+        <div className="p-7 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col justify-between hover:border-[var(--accent-blue)]/40 transition-all duration-200 shadow-[var(--shadow-sm)] card-hover">
           <div>
             <div className="flex items-center justify-between mb-5">
-              <div className="w-11 h-11 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold">
+              <div className="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
                 <Repeat size={22} />
               </div>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-500 font-semibold font-mono">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 font-semibold font-mono">
                 SM-2 Engine
               </span>
             </div>
@@ -1258,19 +1258,19 @@ export default function DashboardPage() {
           <div className="space-y-3 pt-4 border-t border-[var(--border-main)]">
             <div className="flex justify-between text-xs font-mono">
               <span className="text-[var(--text-muted)]">Due For Review Today:</span>
-              <span className="font-bold text-rose-500">
+              <span className="font-bold text-amber-600 dark:text-amber-400">
                 {stats?.dueReviewsCount || 0} questions
               </span>
             </div>
             <div className="w-full bg-[var(--bg-surface)] rounded-full h-2 overflow-hidden">
               <div
-                className="bg-rose-500 h-2 rounded-full"
+                className="bg-amber-500 h-2 rounded-full"
                 style={{ width: `${stats?.dueReviewsCount ? 100 : 0}%` }}
               ></div>
             </div>
             <Link
               href="/error-log"
-              className="flex items-center justify-between text-xs font-semibold text-rose-500 hover:translate-x-1 transition-transform pt-1"
+              className="flex items-center justify-between text-xs font-semibold text-amber-600 dark:text-amber-400 hover:translate-x-1 transition-transform pt-1"
             >
               <span>Open Error Log Queue</span>
               <ArrowRight size={14} />
@@ -1359,7 +1359,7 @@ export default function DashboardPage() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono">
                       VERBAL
                     </span>
                     <span className="text-xs font-mono font-bold text-[var(--text-main)]">
@@ -1377,13 +1377,13 @@ export default function DashboardPage() {
                 <div className="mt-3 pt-3 border-t border-[var(--border-main)] space-y-1.5">
                   <div className="flex justify-between text-[11px] font-mono">
                     <span className="text-[var(--text-muted)]">Accuracy:</span>
-                    <span className={`font-bold ${pct >= 80 ? "text-emerald-500" : pct > 0 ? "text-purple-600" : "text-[var(--text-muted)]"}`}>
+                    <span className={`font-bold ${pct >= 80 ? "text-emerald-500" : pct > 0 ? "text-[var(--accent-blue)]" : "text-[var(--text-muted)]"}`}>
                       {pct}%
                     </span>
                   </div>
                   <div className="w-full bg-[var(--bg-card)] rounded-full h-1.5 overflow-hidden">
                     <div
-                      className="bg-purple-600 h-1.5 rounded-full transition-all"
+                      className="bg-[var(--accent-blue)] h-1.5 rounded-full transition-all"
                       style={{ width: `${pct}%` }}
                     ></div>
                   </div>
@@ -1475,7 +1475,7 @@ export default function DashboardPage() {
             <div>
               <h3 className="text-sm font-bold text-[var(--text-main)] flex items-center gap-2">
                 <span>Integrated Study Materials Vault (41 Primary PDF Sources & Books)</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono">
                   100% Indexed
                 </span>
               </h3>

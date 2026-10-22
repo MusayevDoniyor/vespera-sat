@@ -1064,7 +1064,7 @@ export default function BluebookMockPage() {
           {/* Main Score Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Total Scaled Score */}
-            <div className="md:col-span-1 rounded-3xl bg-gradient-to-b from-[var(--accent-blue)]/15 to-[var(--bg-card)] border border-[var(--accent-blue)]/30 p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-2xl">
+            <div className="md:col-span-1 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-sm">
               <span className="text-xs uppercase tracking-widest text-[var(--accent-blue)] font-bold mb-2">
                 Total Scaled Score
               </span>
@@ -1253,7 +1253,7 @@ export default function BluebookMockPage() {
               </div>
 
               {/* Targeted Weakness Practice Launcher */}
-              <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-transparent border border-blue-500/20 space-y-3">
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
@@ -1585,9 +1585,9 @@ export default function BluebookMockPage() {
                               })
                             );
                           }}
-                          className="px-3.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold flex items-center gap-1.5 transition border border-purple-500/20 active:scale-95 shadow-sm"
+                          className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm"
                         >
-                          <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                          <Sparkles className="w-3.5 h-3.5 text-white" />
                           <span>💡 AI Copilot Breakdown (Why wrong?)</span>
                         </button>
                       </div>

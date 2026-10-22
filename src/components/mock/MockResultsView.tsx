@@ -280,7 +280,7 @@ export default function MockResultsView({ report, onRetake }: MockResultsViewPro
             </div>
 
             {/* 1-Click Adaptive Drill suggestions */}
-            <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-transparent border border-blue-500/20 space-y-3">
+            <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-amber-500" />

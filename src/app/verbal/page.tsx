@@ -234,12 +234,12 @@ function VerbalContent() {
               <ArrowLeft size={14} /> Dashboard
             </Link>
             <span className="text-[var(--text-muted)]">•</span>
-            <span className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider font-mono">
+            <span className="text-xs font-bold text-[var(--accent-blue)] uppercase tracking-wider font-mono">
               Target 780+ SAT Verbal
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-3">
-            <BookOpen className="text-purple-600 dark:text-purple-400" size={28} />
+            <BookOpen className="text-[var(--accent-blue)]" size={28} />
             <span>SAT Reading & Writing Accelerator</span>
           </h1>
           <p className="text-xs text-[var(--text-muted)] mt-1.5 max-w-2xl leading-relaxed">
@@ -252,7 +252,7 @@ function VerbalContent() {
             onClick={() => setShowVisualGuide(!showVisualGuide)}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${
               showVisualGuide
-                ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                ? "bg-blue-600 text-white border-blue-600 shadow-sm"
                 : "bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-main)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
             }`}
           >
@@ -260,14 +260,14 @@ function VerbalContent() {
             <span>Visual RW Models</span>
           </button>
 
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-600 dark:text-purple-400 font-semibold font-mono">
-            <Award size={15} />
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] font-semibold font-mono">
+            <Award size={15} className="text-[var(--accent-blue)]" />
             <span>Target 780+ Composite</span>
           </div>
 
           <Link
             href="/vocab"
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-sm hover:opacity-95 transition"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition"
           >
             <BrainCircuit size={15} />
             <span>650 Vocab Studio (SM-2)</span>
@@ -277,10 +277,10 @@ function VerbalContent() {
             href="/api/materials/Reading%20Writing%20Professor%20IV.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] border border-purple-500/30 text-purple-600 dark:text-purple-400 shadow-sm hover:bg-purple-500/10 transition"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-main)] shadow-sm hover:border-[var(--accent-blue)] transition"
             title="Open 1,474-page SAT Reading & Writing Professor IV (Built for 800)"
           >
-            <BookOpen size={15} />
+            <BookOpen size={15} className="text-[var(--accent-blue)]" />
             <span>Professor IV (1,845 Qs)</span>
           </a>
         </div>
@@ -288,9 +288,9 @@ function VerbalContent() {
 
       {/* Adaptive Mode Banner */}
       {isAdaptiveMode && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm text-xs">
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm text-xs">
           <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
             <span className="font-bold text-[var(--text-main)]">
               🎯 Adaptive Weakness Drill Active:
             </span>
@@ -313,12 +313,12 @@ function VerbalContent() {
 
       {/* User Personalized Track Banner */}
       {user && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-600/10 via-indigo-500/10 to-transparent border border-purple-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 animate-ping" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-blue)]" />
             <span className="text-xs font-bold text-[var(--text-main)]">
               Personalized Track:{" "}
-              <span className="text-purple-600 dark:text-purple-400 font-black uppercase font-mono">
+              <span className="text-[var(--accent-blue)] font-black uppercase font-mono">
                 {user.ieltsScore ? `IELTS ${user.ieltsScore} Fast-Track` : `${user.englishLevel} Track`}
               </span>
             </span>
@@ -338,8 +338,8 @@ function VerbalContent() {
               }}
               className={`text-[11px] font-bold px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 shadow-sm ${
                 isRecommendedActive
-                  ? "bg-purple-600 text-white border-purple-600 shadow-md"
-                  : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-purple-500 text-purple-600 dark:text-purple-400"
+                  ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                  : "bg-[var(--bg-card)] border-[var(--border-main)] hover:border-[var(--accent-blue)] text-[var(--text-main)]"
               }`}
             >
               <Sparkles size={12} />
@@ -371,7 +371,7 @@ function VerbalContent() {
       <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm space-y-4">
         <div className="flex items-center justify-between border-b border-[var(--border-main)] pb-3">
           <div className="flex items-center gap-2.5">
-            <BookmarkCheck size={18} className="text-purple-600 dark:text-purple-400" />
+            <BookmarkCheck size={18} className="text-[var(--accent-blue)]" />
             <h3 className="text-sm font-bold text-[var(--text-main)]">
               Digital SAT Verbal Golden Rules & Trap Elimination
             </h3>
@@ -381,7 +381,7 @@ function VerbalContent() {
               onClick={() => setActiveTab("questions")}
               className={`px-3 py-1 rounded-lg font-bold transition-all ${
                 activeTab === "questions"
-                  ? "bg-purple-600 text-white"
+                  ? "bg-blue-600 text-white"
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
               }`}
             >
@@ -391,7 +391,7 @@ function VerbalContent() {
               onClick={() => setActiveTab("transitions")}
               className={`px-3 py-1 rounded-lg font-bold transition-all ${
                 activeTab === "transitions"
-                  ? "bg-purple-600 text-white"
+                  ? "bg-blue-600 text-white"
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
               }`}
             >
@@ -401,7 +401,7 @@ function VerbalContent() {
               onClick={() => setActiveTab("boundaries")}
               className={`px-3 py-1 rounded-lg font-bold transition-all ${
                 activeTab === "boundaries"
-                  ? "bg-purple-600 text-white"
+                  ? "bg-blue-600 text-white"
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
               }`}
             >
@@ -411,7 +411,7 @@ function VerbalContent() {
               onClick={() => setActiveTab("professor")}
               className={`px-3 py-1 rounded-lg font-bold transition-all ${
                 activeTab === "professor"
-                  ? "bg-purple-600 text-white"
+                  ? "bg-blue-600 text-white"
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)]"
               }`}
             >
@@ -458,8 +458,8 @@ function VerbalContent() {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/20 space-y-1.5">
-              <span className="font-bold text-purple-600 dark:text-purple-400 block font-mono">
+            <div className="p-3.5 rounded-2xl bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 space-y-1.5">
+              <span className="font-bold text-[var(--accent-blue)] block font-mono">
                 4. Exemplification
               </span>
               <p className="text-[11px] text-[var(--text-muted)]">
@@ -475,7 +475,7 @@ function VerbalContent() {
         {activeTab === "boundaries" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1 animate-in fade-in duration-200">
             <div className="p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
-              <span className="font-bold text-purple-600 dark:text-purple-400 block font-mono">
+              <span className="font-bold text-[var(--accent-blue)] block font-mono">
                 Period ≡ Semicolon
               </span>
               <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
@@ -506,10 +506,10 @@ function VerbalContent() {
         {activeTab === "professor" && (
           <div className="space-y-4 text-xs pt-1 animate-in fade-in duration-200">
             {/* Header / Guide banner */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-600/15 via-indigo-600/10 to-transparent border border-purple-500/25 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-600 dark:text-purple-300 font-mono uppercase">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono uppercase">
                     Built for 800 · 1,845 Questions · 1,474 Pages
                   </span>
                   <span className="text-[10px] font-mono text-[var(--text-muted)]">Easy → Medium → Hard</span>
@@ -526,7 +526,7 @@ function VerbalContent() {
                 href="/api/materials/Reading%20Writing%20Professor%20IV.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-md flex items-center justify-center gap-2 shrink-0 self-start md:self-auto"
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-sm flex items-center justify-center gap-2 shrink-0 self-start md:self-auto"
               >
                 <BookOpen size={14} />
                 <span>Open Complete 1,474-Page PDF</span>
@@ -537,7 +537,7 @@ function VerbalContent() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Pillar 1: Roadmaps */}
               <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
-                <span className="font-bold text-purple-600 dark:text-purple-400 block font-mono text-[11px] uppercase">
+                <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase">
                   1. The Score Roadmaps
                 </span>
                 <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-1 font-mono text-[11px]">
@@ -545,7 +545,7 @@ function VerbalContent() {
                   <div className="text-[var(--text-muted)]">Professor I → Professor IV</div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-1 font-mono text-[11px]">
-                  <div className="text-purple-600 dark:text-purple-400 font-bold">Aiming for 800:</div>
+                  <div className="text-[var(--accent-blue)] font-bold">Aiming for 800:</div>
                   <div className="text-[var(--text-muted)]">Prof I → Prof IV → Prof II → Prof III</div>
                 </div>
                 <p className="text-[10px] text-[var(--text-muted)] italic">
@@ -596,7 +596,7 @@ function VerbalContent() {
               onClick={() => handleDomainSelect(d.key)}
               className={`px-4 py-2 rounded-xl font-semibold whitespace-nowrap transition-all border ${
                 selectedDomain === d.key
-                  ? "bg-purple-600 text-white font-bold border-purple-600 shadow-sm"
+                  ? "bg-blue-600 text-white font-bold border-blue-600 shadow-sm"
                   : "bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-main)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
               }`}
             >
@@ -615,7 +615,7 @@ function VerbalContent() {
             onClick={() => handleTopicSelect("ALL")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
               selectedTopic === "ALL"
-                ? "bg-purple-600 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)] border border-[var(--border-main)]"
             }`}
           >
@@ -632,7 +632,7 @@ function VerbalContent() {
                 onClick={() => handleTopicSelect(code)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                   isSelected
-                    ? "bg-purple-600 text-white shadow-sm"
+                    ? "bg-blue-600 text-white shadow-sm"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-surface)] border border-[var(--border-main)]"
                 }`}
               >
@@ -659,7 +659,7 @@ function VerbalContent() {
               }}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
                 selectedTopic === "ALL" && selectedDifficulty === "ALL"
-                  ? "bg-purple-600 text-white shadow-sm font-bold"
+                  ? "bg-blue-600 text-white shadow-sm font-bold"
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)] bg-[var(--bg-card)] border border-[var(--border-main)]"
               }`}
             >
@@ -688,8 +688,8 @@ function VerbalContent() {
               }}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
                 selectedTopic === "ENG-AGR"
-                  ? "bg-purple-600 text-white shadow-sm font-bold"
-                  : "text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-500/30 hover:bg-purple-100 dark:hover:bg-purple-950/50"
+                  ? "bg-blue-600 text-white shadow-sm font-bold"
+                  : "text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-500/30 hover:bg-blue-100 dark:hover:bg-blue-950/50"
               }`}
             >
               <span>⚡</span>
@@ -719,7 +719,7 @@ function VerbalContent() {
         <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono">
                 {activeTopicData.code} • {activeTopicData.domain}
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono">
@@ -730,7 +730,7 @@ function VerbalContent() {
               {activeTopicData.title_en}
             </h3>
             <p className="text-xs text-[var(--text-muted)] flex items-center gap-1.5">
-              <FileText size={13} className="text-purple-600 dark:text-purple-400" />
+              <FileText size={13} className="text-[var(--accent-blue)]" />
               <span>{activeTopicData.collegePandaChapter}</span>
             </p>
           </div>
@@ -738,7 +738,7 @@ function VerbalContent() {
           <div className="flex items-center gap-2.5 shrink-0">
             <button
               onClick={() => setStudyModalTopic(activeTopicData.code)}
-              className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:opacity-90 transition-all flex items-center gap-1.5 shadow-sm"
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition-all flex items-center gap-1.5 shadow-sm"
             >
               <BookOpen size={14} />
               <span>Deep-Dive Theory & Traps</span>
@@ -769,7 +769,7 @@ function VerbalContent() {
           {selectedTopic !== "ALL" && (
             <button
               onClick={() => handleTopicSelect("ALL")}
-              className="text-purple-600 dark:text-purple-400 hover:underline"
+              className="text-[var(--accent-blue)] hover:underline"
             >
               Clear topic filter
             </button>
@@ -778,12 +778,12 @@ function VerbalContent() {
 
         {loading ? (
           <div className="p-12 text-center text-[var(--text-muted)] text-sm bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
-            <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+            <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
             Loading Reading & Writing questions (Page {page})...
           </div>
         ) : questions.length === 0 ? (
           <div className="p-10 text-center space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto text-xl font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] flex items-center justify-center mx-auto text-xl font-bold">
               🔍
             </div>
             <h3 className="font-bold text-sm text-[var(--text-main)]">
@@ -798,7 +798,7 @@ function VerbalContent() {
                 handleTopicSelect("ALL");
                 handleDomainSelect("ALL");
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:opacity-95 transition-opacity shadow-sm"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition-opacity shadow-sm"
             >
               <span>Reset All Filters & View All Questions</span>
             </button>
@@ -842,7 +842,7 @@ export default function VerbalAcceleratorPage() {
     <Suspense
       fallback={
         <div className="p-16 text-center text-[var(--text-muted)]">
-          <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
           Loading Reading & Writing Studio...
         </div>
       }
