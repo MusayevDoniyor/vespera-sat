@@ -1,10 +1,443 @@
 {
-  "timestamp": "2026-10-22T06:08:30.165Z",
+  "timestamp": "2026-10-22T06:31:39.931Z",
   "mockSummary": {
-    "total": 1029,
+    "total": 1323,
     "missingStrictVisualCount": 0,
     "missingStrictVisualList": [],
-    "possibleMissingVisualList": [],
+    "possibleMissingVisualList": [
+      {
+        "id": "q_cb120_p38_2",
+        "source": "Mock:bluebook-official-1:mathModule1",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Easy",
+        "promptSnippet": "While walking on a trail, Mary stopped to read a trail sign. The graph shows the",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_real_sep2026_16",
+        "source": "Mock:bluebook-official-1:mathModule2Easy",
+        "section": "MATH",
+        "domain": "Geometry & Trigonometry",
+        "difficulty": "Easy",
+        "promptSnippet": "In the figure, triangle $CAE$ is similar to triangle $CBD$. The measure of angle",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p25_3",
+        "source": "Mock:bluebook-official-2:mathModule1",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Easy",
+        "promptSnippet": "The bar graph shows the frequency of each data value in a data set. The horizont",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p07_2",
+        "source": "Mock:bluebook-official-2:mathModule1",
+        "section": "MATH",
+        "domain": "Geometry & Trigonometry",
+        "difficulty": "Hard",
+        "promptSnippet": "In the figure, $\\overline{LQ}$ intersects $\\overline{MP}$ at point $R$, and $\\ov",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p22_2",
+        "source": "Mock:bluebook-official-2:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Medium",
+        "promptSnippet": "The scatterplot shows the relationship between the number of swans, $y$, in a ce",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p23_1",
+        "source": "Mock:bluebook-official-2:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "A group of $10$ botanists recorded data on the germination rates of a certain ty",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "cb_a9040290",
+        "source": "Mock:bluebook-official-3:rwModule2Easy",
+        "section": "READING_WRITING",
+        "domain": "Information and Ideas",
+        "difficulty": "Easy",
+        "promptSnippet": "200\n175\n150\n125\n100\n75\n50\n25\n0\nElectricity (in thousands of MWh)\nAmount of Addit",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_085",
+        "source": "Mock:bluebook-official-4:mathModule1",
+        "section": "MATH",
+        "domain": "Geometry & Trigonometry",
+        "difficulty": "Medium",
+        "promptSnippet": "In the figure, $\\overline{LQ}$ intersects $\\overline{MP}$ at point $R$, and $\\ov",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_086",
+        "source": "Mock:bluebook-official-4:mathModule1",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Medium",
+        "promptSnippet": "The scatterplot shows the relationship between $x$ and $y$ for the 10 data point",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_143",
+        "source": "Mock:bluebook-official-4:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Algebra",
+        "difficulty": "Medium",
+        "promptSnippet": "The table shows values of $x$ and their corresponding values of $y$ for three po",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "cb_e441da80",
+        "source": "Mock:bluebook-official-5:rwModule2Easy",
+        "section": "READING_WRITING",
+        "domain": "Information and Ideas",
+        "difficulty": "Easy",
+        "promptSnippet": "1,750\n1,500\n1,250\n1,000\n750\n500\n250\n0\nNumber of articles\n2010\t\n2011\t\n2012\t\n2013\t",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_037",
+        "source": "Mock:bluebook-official-5:mathModule1",
+        "section": "MATH",
+        "domain": "Algebra",
+        "difficulty": "Medium",
+        "promptSnippet": "The table shows three values of $x$ and their corresponding values of $y$, where",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_062",
+        "source": "Mock:bluebook-official-5:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "The maximum temperature on April 1, in degrees Fahrenheit, was recorded each yea",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p07_2",
+        "source": "Mock:bluebook-official-5:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Geometry & Trigonometry",
+        "difficulty": "Hard",
+        "promptSnippet": "In the figure, $\\overline{LQ}$ intersects $\\overline{MP}$ at point $R$, and $\\ov",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p38_2",
+        "source": "Mock:bluebook-official-5:mathModule2Easy",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Easy",
+        "promptSnippet": "While walking on a trail, Mary stopped to read a trail sign. The graph shows the",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p25_3",
+        "source": "Mock:satashkent-october-real:mathModule2Easy",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Easy",
+        "promptSnippet": "The bar graph shows the frequency of each data value in a data set. The horizont",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_037",
+        "source": "Mock:satashkent-october-real:mathModule2Easy",
+        "section": "MATH",
+        "domain": "Algebra",
+        "difficulty": "Medium",
+        "promptSnippet": "The table shows three values of $x$ and their corresponding values of $y$, where",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "cb_e441da80",
+        "source": "Mock:satashkent-june-2026-recalled:rwModule2Easy",
+        "section": "READING_WRITING",
+        "domain": "Information and Ideas",
+        "difficulty": "Easy",
+        "promptSnippet": "1,750\n1,500\n1,250\n1,000\n750\n500\n250\n0\nNumber of articles\n2010\t\n2011\t\n2012\t\n2013\t",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "cb_f452410b",
+        "source": "Mock:satashkent-june-2026-recalled:rwModule2Easy",
+        "section": "READING_WRITING",
+        "domain": "Information and Ideas",
+        "difficulty": "Easy",
+        "promptSnippet": "Results of Footprint Analysis for Two Sets of Theropod Tracks\nTracks\nEstimated f",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_096",
+        "source": "Mock:satashkent-english-elite:mathModule1",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Easy",
+        "promptSnippet": "Sam opened a savings account at a bank. The table shows the exponential relation",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p26_1",
+        "source": "Mock:satashkent-english-elite:mathModule1",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "As part of a study of lake conditions, the water temperature was recorded at dif",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_june_2026_091",
+        "source": "Mock:satashkent-hard-math-800:mathModule1",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Easy",
+        "promptSnippet": "For the function $f$, the table shows four values of $x$ and their corresponding",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p22_2",
+        "source": "Mock:satashkent-hard-math-800:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Advanced Math",
+        "difficulty": "Medium",
+        "promptSnippet": "The scatterplot shows the relationship between the number of swans, $y$, in a ce",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      },
+      {
+        "id": "q_cb120_p23_1",
+        "source": "Mock:satashkent-hard-math-800:mathModule2Hard",
+        "section": "MATH",
+        "domain": "Problem Solving & Data Analysis",
+        "difficulty": "Medium",
+        "promptSnippet": "A group of $10$ botanists recorded data on the germination rates of a certain ty",
+        "mentionsFigure": true,
+        "strictlyRequiresVisual": false,
+        "hasVisual": false,
+        "issues": [
+          {
+            "type": "POSSIBLE_MISSING_DIAGRAM",
+            "severity": "MEDIUM",
+            "detail": "Mentions graph/scatterplot/table without attached visual or preset."
+          }
+        ]
+      }
+    ],
     "invalidOptionsList": [],
     "missingCorrectAnswerList": []
   },

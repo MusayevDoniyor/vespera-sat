@@ -117,7 +117,7 @@ function auditSingleQuestion(q, sourceName) {
     });
   }
 
-  const isGridIn = q.type === 'grid_in' || (Array.isArray(options) && options.length === 0) || q.is_grid_in;
+  const isGridIn = q.type === 'grid_in' || q.type === 'spr' || !options || (Array.isArray(options) && options.length === 0) || q.is_grid_in;
   if (!isGridIn) {
     if (!Array.isArray(options) || options.length < 4) {
       issues.push({
