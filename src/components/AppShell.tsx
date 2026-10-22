@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import DesmosCalculator from "./DesmosCalculator";
 import AICopilotModal from "./AICopilotModal";
 import { ThemeProvider } from "./ThemeContext";
-import { SidebarProvider, useSidebar } from "./SidebarContext";
+import { SidebarProvider } from "./SidebarContext";
 import { AuthProvider } from "./AuthContext";
 import AuthModal from "./AuthModal";
 import OnboardingModal from "./OnboardingModal";
@@ -26,7 +26,6 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     desmosTrick?: string | null;
     autoDiagnose?: boolean;
   } | null>(null);
-  const { isCollapsed } = useSidebar();
 
   useEffect(() => {
     const handleOpenCopilot = (e: any) => {
@@ -49,6 +48,22 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("vespera_open_copilot", handleOpenCopilot);
   }, []);
 
+  const handleToggleDesmos = useCallback(() => {
+    setIsDesmosOpen((prev) => !prev);
+  }, []);
+
+  const handleCloseDesmos = useCallback(() => {
+    setIsDesmosOpen(false);
+  }, []);
+
+  const handleCloseCopilot = useCallback(() => {
+    setIsCopilotOpen(false);
+  }, []);
+
+  const handleClearCopilotContext = useCallback(() => {
+    setCopilotContext(null);
+  }, []);
+
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname === "/register";
   const isExamPage = pathname?.startsWith("/mock/exam/");
@@ -56,7 +71,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
 
   if (isAuthPage || isExamPage || isMentorPage) {
     return (
-      <div className="h-screen w-screen overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)] transition-colors">
+      <div className="h-screen w-screen overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)]">
         {children}
         <AuthModal />
         <OnboardingModal />
@@ -65,14 +80,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)] transition-colors">
+    <div className="flex h-screen overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)]">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         <Navbar
-          onToggleDesmos={() => setIsDesmosOpen(!isDesmosOpen)}
+          onToggleDesmos={handleToggleDesmos}
           isDesmosOpen={isDesmosOpen}
         />
         <main
@@ -90,14 +105,14 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
       {isDesmosOpen && (
         <DesmosCalculator
           isFloating={true}
-          onClose={() => setIsDesmosOpen(false)}
+          onClose={handleCloseDesmos}
         />
       )}
 
       {/* AI Copilot Mentor Modal */}
       <AICopilotModal
         isOpen={isCopilotOpen}
-        onClose={() => setIsCopilotOpen(false)}
+        onClose={handleCloseCopilot}
         contextQuestion={copilotContext?.question}
         topicDomain={copilotContext?.domain}
         userChoice={copilotContext?.userChoice}
@@ -107,7 +122,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         explanationEn={copilotContext?.explanationEn}
         desmosTrick={copilotContext?.desmosTrick}
         autoDiagnose={copilotContext?.autoDiagnose}
-        onClearContext={() => setCopilotContext(null)}
+        onClearContext={handleClearCopilotContext}
       />
 
       {/* Authentication & Personalization Modals */}

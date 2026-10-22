@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 
 export interface FullUserProfile {
   id: string;
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsOnboardingOpen(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -137,9 +137,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (err: any) {
       return { success: false, error: err.message || "Network error" };
     }
-  };
+  }, []);
 
-  const register = async (userData: {
+  const register = useCallback(async (userData: {
     email: string;
     password: string;
     fullName?: string;
@@ -175,9 +175,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (err: any) {
       return { success: false, error: err.message || "Network error" };
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } catch (err) {
@@ -186,9 +186,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null);
       setIsOnboardingOpen(false);
     }
-  };
+  }, []);
 
-  const updateProfile = async (data: Partial<FullUserProfile>) => {
+  const updateProfile = useCallback(async (data: Partial<FullUserProfile>) => {
     try {
       const res = await fetch("/api/auth/me", {
         method: "PATCH",
@@ -204,27 +204,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (err: any) {
       return { success: false, error: err.message || "Network error" };
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      user,
+      loading,
+      isAuthModalOpen,
+      authModalMode,
+      isOnboardingOpen,
+      openAuthModal,
+      closeAuthModal,
+      openOnboarding,
+      closeOnboarding,
+      login,
+      register,
+      logout,
+      updateProfile,
+      refreshUser,
+    }),
+    [
+      user,
+      loading,
+      isAuthModalOpen,
+      authModalMode,
+      isOnboardingOpen,
+      openAuthModal,
+      closeAuthModal,
+      openOnboarding,
+      closeOnboarding,
+      login,
+      register,
+      logout,
+      updateProfile,
+      refreshUser,
+    ]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        isAuthModalOpen,
-        authModalMode,
-        isOnboardingOpen,
-        openAuthModal,
-        closeAuthModal,
-        openOnboarding,
-        closeOnboarding,
-        login,
-        register,
-        logout,
-        updateProfile,
-        refreshUser,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

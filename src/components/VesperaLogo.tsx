@@ -16,7 +16,7 @@ interface VesperaLogoProps {
  * Pure standalone vector mark with 100% transparent background.
  * Dynamic light/dark theme adaptation with zero unwanted bounding boxes.
  */
-export default function VesperaLogo({
+export function VesperaLogoComponent({
   size = 36,
   className = "",
   showWordmark = false,
@@ -236,3 +236,5 @@ export default function VesperaLogo({
     </div>
   );
 }
+
+export default React.memo(VesperaLogoComponent);

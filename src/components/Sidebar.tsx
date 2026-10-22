@@ -29,7 +29,7 @@ import Portal from "./Portal";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { fetchWithDeduplication } from "@/lib/api-cache";
 
-export default function Sidebar() {
+function SidebarComponent() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobileOpen, closeMobileSidebar } = useSidebar();
   const { user, openAuthModal, openOnboarding, logout } = useAuth();
@@ -375,3 +375,5 @@ export default function Sidebar() {
     </>
   );
 }
+
+export default React.memo(SidebarComponent);

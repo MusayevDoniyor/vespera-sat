@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -24,7 +24,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
       if (saved !== null) {
         setIsCollapsed(saved === "true");
       }
-    } catch (e) {}
+    } catch {}
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl + B or Cmd + B to toggle sidebar
@@ -34,7 +34,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
           const next = !prev;
           try {
             localStorage.setItem("vespera_sidebar_collapsed", String(next));
-          } catch (err) {}
+          } catch {}
           return next;
         });
       }
@@ -47,36 +47,47 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setIsCollapsed((prev) => {
       const next = !prev;
       try {
         localStorage.setItem("vespera_sidebar_collapsed", String(next));
-      } catch (err) {}
+      } catch {}
       return next;
     });
-  };
+  }, []);
 
-  const toggleMobileSidebar = () => {
+  const toggleMobileSidebar = useCallback(() => {
     setIsMobileOpen((prev) => !prev);
-  };
+  }, []);
 
-  const closeMobileSidebar = () => {
+  const closeMobileSidebar = useCallback(() => {
     setIsMobileOpen(false);
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      isCollapsed,
+      setIsCollapsed,
+      toggleSidebar,
+      isMobileOpen,
+      setIsMobileOpen,
+      toggleMobileSidebar,
+      closeMobileSidebar,
+    }),
+    [
+      isCollapsed,
+      setIsCollapsed,
+      toggleSidebar,
+      isMobileOpen,
+      setIsMobileOpen,
+      toggleMobileSidebar,
+      closeMobileSidebar,
+    ]
+  );
 
   return (
-    <SidebarContext.Provider
-      value={{
-        isCollapsed,
-        setIsCollapsed,
-        toggleSidebar,
-        isMobileOpen,
-        setIsMobileOpen,
-        toggleMobileSidebar,
-        closeMobileSidebar,
-      }}
-    >
+    <SidebarContext.Provider value={value}>
       {children}
     </SidebarContext.Provider>
   );
