@@ -199,7 +199,8 @@ const ChatInputBar = React.memo(function ChatInputBar({
             }}
             rows={1}
             placeholder="Ask anything or paste a question (Enter to send)..."
-            className="flex-1 bg-transparent border-none outline-none text-sm sm:text-base text-[var(--text-main)] placeholder:text-[var(--text-muted)] resize-none py-2 font-medium"
+            className="flex-1 bg-transparent border-0 ring-0 focus:ring-0 focus-visible:ring-0 outline-none focus:outline-none focus-visible:outline-none text-sm sm:text-base text-[var(--text-main)] placeholder:text-[var(--text-muted)] resize-none py-2 font-medium shadow-none focus:shadow-none"
+            style={{ outline: "none", boxShadow: "none" }}
             disabled={isLoading}
           />
 

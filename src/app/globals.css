@@ -102,6 +102,17 @@
   border-radius: var(--radius-sm);
 }
 
+/* Explicitly prevent duplicate inner outlines on borderless inputs/textareas */
+input.outline-none:focus,
+input.outline-none:focus-visible,
+textarea.outline-none:focus,
+textarea.outline-none:focus-visible,
+.no-focus-outline:focus,
+.no-focus-outline:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+
 /* --- Premium Scrollbar --- */
 ::-webkit-scrollbar {
   width: 7px;
