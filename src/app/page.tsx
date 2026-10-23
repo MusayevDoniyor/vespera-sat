@@ -498,6 +498,7 @@ export default function DashboardPage() {
                   question={q}
                   onAnswerSubmitted={() => {
                     fetch("/api/stats").then((r) => r.json()).then((d) => setStats(d));
+                    fetch("/api/recommendations").then((r) => r.json()).then((d) => setRecommendations(d));
                   }}
                 />
               ))}

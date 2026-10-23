@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { pool, initDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { clearRecsCache } from "../recommendations/route";
 
 export async function POST(request: Request) {
   try {
@@ -118,6 +119,8 @@ export async function POST(request: Request) {
         ]
       );
     }
+
+    clearRecsCache(userId);
 
     return NextResponse.json({
       success: true,

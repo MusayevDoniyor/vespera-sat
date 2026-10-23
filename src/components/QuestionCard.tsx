@@ -38,6 +38,8 @@ interface QuestionCardProps {
     topic_title_en?: string;
     diagramPreset?: string | null;
     diagramSvg?: string | null;
+    progress_status?: string | null;
+    user_choice?: string | null;
   };
   onAnswerSubmitted?: (isCorrect: boolean) => void;
   onOpenDesmosWithEquation?: (equation: string) => void;
@@ -48,9 +50,18 @@ export default function QuestionCard({
   onAnswerSubmitted,
   onOpenDesmosWithEquation,
 }: QuestionCardProps) {
-  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const initialChoice = question.user_choice || null;
+  const initialSubmitted = Boolean(question.progress_status);
+  const initialCorrect =
+    question.progress_status === "CORRECT"
+      ? true
+      : question.progress_status === "INCORRECT"
+      ? false
+      : null;
+
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(initialChoice);
+  const [isSubmitted, setIsSubmitted] = useState(initialSubmitted);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(initialCorrect);
   const [activeTab, setActiveTab] = useState<"solution" | "desmos" | "formula">("solution");
   const [struckOut, setStruckOut] = useState<Record<string, boolean>>({});
   const [mistakeType, setMistakeType] = useState<string>("CONCEPT_GAP");
@@ -58,6 +69,21 @@ export default function QuestionCard({
   const [sm2Result, setSm2Result] = useState<any>(null);
   const [isCardActive, setIsCardActive] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Sync state when question prop changes
+  useEffect(() => {
+    setSelectedChoice(question.user_choice || null);
+    setIsSubmitted(Boolean(question.progress_status));
+    setIsCorrect(
+      question.progress_status === "CORRECT"
+        ? true
+        : question.progress_status === "INCORRECT"
+        ? false
+        : null
+    );
+    setStruckOut({});
+    setSm2Result(null);
+  }, [question.id, question.progress_status, question.user_choice]);
 
   // Parse options safely
   let optionsArray: string[] = [];
@@ -244,6 +270,27 @@ export default function QuestionCard({
           >
             {question.difficulty}
           </span>
+          {isSubmitted && (
+            <span
+              className={`text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 transition-all ${
+                isCorrect
+                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                  : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+              }`}
+            >
+              {isCorrect ? (
+                <>
+                  <CheckCircle2 size={13} className="shrink-0" />
+                  <span>Solved</span>
+                </>
+              ) : (
+                <>
+                  <XCircle size={13} className="shrink-0" />
+                  <span>Needs Review</span>
+                </>
+              )}
+            </span>
+          )}
           {question.topic_title_en && (
             <span className="text-xs text-[var(--text-muted)] hidden md:inline font-medium">
               • {question.topic_title_en}

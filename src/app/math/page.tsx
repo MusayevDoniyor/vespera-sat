@@ -67,6 +67,7 @@ function MathContent() {
   const [selectedDomain, setSelectedDomain] = useState<string>("ALL");
   const [selectedTopic, setSelectedTopic] = useState<string>("ALL");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
+  const [selectedStatus, setSelectedStatus] = useState<"ALL" | "UNSOLVED" | "SOLVED">("ALL");
   const [isSplitDesmos, setIsSplitDesmos] = useState(true);
   const [showVisualGuide, setShowVisualGuide] = useState(false);
   const [activeEquation, setActiveEquation] = useState<string>("");
@@ -136,6 +137,13 @@ function MathContent() {
   const handleDifficultySelect = (diff: string) => {
     setSelectedDifficulty(diff);
     setPage(1);
+    cacheRef.current = {};
+  };
+
+  const handleStatusSelect = (status: "ALL" | "UNSOLVED" | "SOLVED") => {
+    setSelectedStatus(status);
+    setPage(1);
+    cacheRef.current = {};
   };
 
   const handlePageChange = (newPage: number) => {
@@ -146,6 +154,7 @@ function MathContent() {
   const handlePageSizeChange = (newSize: number) => {
     setPageSize(newSize);
     setPage(1);
+    cacheRef.current = {};
     questionsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -159,6 +168,9 @@ function MathContent() {
     }
     if (selectedDifficulty !== "ALL") {
       url += `&difficulty=${encodeURIComponent(selectedDifficulty)}`;
+    }
+    if (selectedStatus !== "ALL") {
+      url += `&status=${encodeURIComponent(selectedStatus)}`;
     }
 
     if (cacheRef.current[url]) {
@@ -200,7 +212,7 @@ function MathContent() {
     return () => {
       controller.abort();
     };
-  }, [selectedDomain, selectedTopic, selectedDifficulty, page, pageSize]);
+  }, [selectedDomain, selectedTopic, selectedDifficulty, selectedStatus, page, pageSize]);
 
   // Active domain's topics
   const currentDomainTopics = useMemo(() => {
@@ -498,6 +510,44 @@ function MathContent() {
               <span>🔥</span>
               <span>Hard (Target 800)</span>
             </button>
+
+            <span className="text-[var(--border-main)] hidden sm:inline">•</span>
+
+            {/* Status Filter */}
+            <div className="flex items-center gap-1 p-0.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)]">
+              <button
+                onClick={() => handleStatusSelect("ALL")}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  selectedStatus === "ALL"
+                    ? "bg-[var(--accent-blue)] text-white shadow-xs font-bold"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+              >
+                All Questions
+              </button>
+              <button
+                onClick={() => handleStatusSelect("UNSOLVED")}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  selectedStatus === "UNSOLVED"
+                    ? "bg-amber-500 text-white shadow-xs font-bold"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+                title="Show only questions you have not solved yet"
+              >
+                Unsolved Only
+              </button>
+              <button
+                onClick={() => handleStatusSelect("SOLVED")}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  selectedStatus === "SOLVED"
+                    ? "bg-emerald-600 text-white shadow-xs font-bold"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                }`}
+                title="Review questions you have already completed"
+              >
+                Solved
+              </button>
+            </div>
           </div>
 
           <div className="text-xs font-mono text-[var(--text-muted)]">
@@ -605,6 +655,20 @@ function MathContent() {
                     key={q.id}
                     question={q}
                     onOpenDesmosWithEquation={(eq) => setActiveEquation(eq)}
+                    onAnswerSubmitted={(isCorrect) => {
+                      cacheRef.current = {};
+                      setQuestions((prev) =>
+                        prev.map((item) =>
+                          item.id === q.id
+                            ? {
+                                ...item,
+                                progress_status: isCorrect ? "CORRECT" : "INCORRECT",
+                                user_choice: q.correct_answer,
+                              }
+                            : item
+                        )
+                      );
+                    }}
                   />
                 ))}
               </div>

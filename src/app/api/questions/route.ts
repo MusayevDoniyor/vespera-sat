@@ -13,6 +13,7 @@ export async function GET(request: Request) {
     const domain = searchParams.get("domain");
     const topicCode = searchParams.get("topicCode");
     const difficulty = searchParams.get("difficulty");
+    const statusParam = searchParams.get("status");
     const random = searchParams.get("random") === "true";
 
     // Pagination parameters
@@ -47,6 +48,13 @@ export async function GET(request: Request) {
     if (difficulty && difficulty !== "ALL") {
       params.push(difficulty.trim().toLowerCase());
       baseFilter += ` AND LOWER(q.difficulty) = $${params.length}`;
+    }
+    if (statusParam === "UNSOLVED") {
+      baseFilter += ` AND (up.id IS NULL OR up.status IS NULL)`;
+    } else if (statusParam === "SOLVED") {
+      baseFilter += ` AND up.status = 'CORRECT'`;
+    } else if (statusParam === "INCORRECT") {
+      baseFilter += ` AND up.status = 'INCORRECT'`;
     }
 
     let query = `

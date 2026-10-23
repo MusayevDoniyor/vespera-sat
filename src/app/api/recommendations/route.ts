@@ -16,6 +16,11 @@ interface CachedRecs {
 const recsCache = new Map<string, CachedRecs>();
 const RECS_CACHE_TTL_MS = 15000;
 
+export function clearRecsCache(userId?: string | null) {
+  if (userId) recsCache.delete(userId);
+  recsCache.delete("guest");
+}
+
 export async function GET() {
   try {
     await initDb();
@@ -281,7 +286,9 @@ export async function GET() {
     }
 
     const priorityDomains = Array.from(new Set([weakestDomain, weakestMathDomain, weakestVerbalDomain]));
-    const recommendedQuestionsRes = await pool.query(
+    
+    // Prioritize questions the user has NOT solved yet (or needs review)
+    let recommendedQuestionsRes = await pool.query(
       `
       SELECT 
         q.id,
@@ -297,15 +304,51 @@ export async function GET() {
         q.desmos_trick,
         q.reference_formula,
         t.title_en as topic_title_en,
-        t.title_uz as topic_title_uz
+        t.title_uz as topic_title_uz,
+        up.status as progress_status,
+        up.user_choice
       FROM vespera.questions q
       JOIN vespera.topics t ON t.code = q.topic_code
+      LEFT JOIN vespera.user_progress up ON up.question_id = q.id ${userId ? "AND up.user_id = $3" : "AND up.user_id IS NULL"}
       WHERE q.domain = ANY($1) AND q.difficulty = ANY($2)
+        AND (up.id IS NULL OR up.status != 'CORRECT')
       ORDER BY RANDOM()
       LIMIT 8;
     `,
-      [priorityDomains, targetDifficulties]
+      userId ? [priorityDomains, targetDifficulties, userId] : [priorityDomains, targetDifficulties]
     );
+
+    // If all questions in priority domains are solved, fallback to all questions
+    if (recommendedQuestionsRes.rows.length < 4) {
+      recommendedQuestionsRes = await pool.query(
+        `
+        SELECT 
+          q.id,
+          q.section,
+          q.domain,
+          q.difficulty,
+          q.prompt,
+          q.passage,
+          q.options,
+          q.correct_answer,
+          q.explanation_uz,
+          q.explanation_en,
+          q.desmos_trick,
+          q.reference_formula,
+          t.title_en as topic_title_en,
+          t.title_uz as topic_title_uz,
+          up.status as progress_status,
+          up.user_choice
+        FROM vespera.questions q
+        JOIN vespera.topics t ON t.code = q.topic_code
+        LEFT JOIN vespera.user_progress up ON up.question_id = q.id ${userId ? "AND up.user_id = $3" : "AND up.user_id IS NULL"}
+        WHERE q.domain = ANY($1) AND q.difficulty = ANY($2)
+        ORDER BY RANDOM()
+        LIMIT 8;
+      `,
+        userId ? [priorityDomains, targetDifficulties, userId] : [priorityDomains, targetDifficulties]
+      );
+    }
 
     const payload = {
       scorePrediction,
