@@ -199,6 +199,8 @@ export default function BluebookMockPage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (stage !== "testing" || !currentQ) return;
+      // Never intercept browser or OS hotkeys (Ctrl+A, Ctrl+C, Ctrl+F, Cmd+A, Alt+..., etc.)
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||

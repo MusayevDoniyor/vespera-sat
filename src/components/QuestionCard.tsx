@@ -71,6 +71,11 @@ export default function QuestionCard({
   // Keyboard Shortcuts: A, B, C, D (or 1-4) to pick; Enter to submit; R to retry
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Never intercept browser or OS hotkeys (Ctrl+A, Ctrl+C, Ctrl+V, Cmd+A, Alt+..., etc.)
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return;
+      }
+
       // Ignore if user is currently typing in an input, textarea or contentEditable
       if (
         e.target instanceof HTMLInputElement ||

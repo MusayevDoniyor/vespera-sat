@@ -237,6 +237,9 @@ export default function VocabStudioPage() {
   // Keyboard navigation for Flashcards & Words in Context
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Never intercept browser or OS hotkeys (Ctrl+A, Ctrl+C, Cmd+A, Alt+..., etc.)
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
       // Don't trigger if user is typing in search input
       if ((e.target as HTMLElement)?.tagName === "INPUT") return;
 
