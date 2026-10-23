@@ -10,6 +10,14 @@ interface KaTeXMathProps {
   className?: string;
 }
 
+// Helper to detect if a string contains human language sentences rather than a bare math formula
+function isSentenceText(str: string): boolean {
+  const sentenceWordRegex = /\b(the|is|of|in|to|and|on|at|for|with|curves|enter|plot|type|deb|yozing|teng|burchak|agar|chunki|bo'ladi|qiymati|javob|variant|which|following|expressions|equivalent|both|identically|overlap|line|slider|graph|touch|peak|vertex)\b/i;
+  if (sentenceWordRegex.test(str)) return true;
+  if (/[a-zA-Z]{3,}\s+[a-zA-Z]{3,}/.test(str)) return true;
+  return false;
+}
+
 export default React.memo(function KaTeXMath({ content, mathText, className = "" }: KaTeXMathProps) {
   const actualContent = content ?? mathText ?? "";
   const renderedContent = useMemo(() => {
@@ -27,7 +35,8 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
       !actualContent.includes(">") &&
       !actualContent.includes("\n") &&
       !actualContent.includes("^") &&
-      !actualContent.includes("_")
+      !actualContent.includes("_") &&
+      !actualContent.includes("'")
     ) {
       return actualContent;
     }
@@ -89,6 +98,28 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
       }
     });
 
+    // 3.5 Quoted or backticked math formulas in sentences (e.g. '32x^2 + 32' or 'y = 2x + 1')
+    text = text.replace(/(['`])([^'`\n]+?)\1/g, (match, quote, inner) => {
+      const trimmed = inner.trim();
+      if (/[=+\-*/^\\_()]/.test(trimmed) && !isSentenceText(trimmed)) {
+        try {
+          const normalized = trimmed.replace(/\^(\(([^)]+)\))/g, "^{$2}");
+          const rendered = katex.renderToString(normalized, {
+            displayMode: false,
+            throwOnError: false,
+            output: "html",
+            strict: false,
+          });
+          if (!rendered.includes("katex-error")) {
+            return saveToken(`<span class="inline-block px-1 align-baseline font-medium">${rendered}</span>`);
+          }
+        } catch (e) {
+          return match;
+        }
+      }
+      return match;
+    });
+
     // 4. Inline math: $ ... $
     text = text.replace(/(?<!\$)\$(?!\$)([^\$\n]+?)\$(?!\$)/g, (_, equation) => {
       try {
@@ -104,8 +135,8 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
       }
     });
 
-    // 5. Fallback math commands if no $ exists in raw content
-    if (!actualContent.includes("$") && tokens.length === 0) {
+    // 5. Fallback math commands for pure standalone formulas (no natural sentence words)
+    if (!actualContent.includes("$") && tokens.length === 0 && !isSentenceText(text)) {
       const hasMathCommands = /\\(frac|sqrt|pm|approx|cdot|times|le|ge|degree|alpha|beta|theta|pi|div)\b/.test(text);
       const hasExponentOrSub = /(\w+)\^(\([^)]+\)|\w+)|(\w+)_(\w+)/.test(text);
 
