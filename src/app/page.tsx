@@ -33,6 +33,7 @@ import VesperaLogo from "@/components/VesperaLogo";
 import { useAuth } from "@/components/AuthContext";
 import DiagnosticPlacementModal from "@/components/DiagnosticPlacementModal";
 import QuestionCard from "@/components/QuestionCard";
+import StudentRadarAnalytics from "@/components/analytics/StudentRadarAnalytics";
 import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
 import { fetchWithDeduplication } from "@/lib/api-cache";
 import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
@@ -428,6 +429,15 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* 🧭 MULTI-DOMAIN DIAGNOSTIC MASTERY RADAR & SPEED TELEMETRY */}
+      <StudentRadarAnalytics
+        domainMasteryList={stats?.domainMasteryList}
+        paceStats={stats?.paceStats}
+        mockHistory={stats?.mockHistory}
+        compositeScore={stats?.compositeScore}
+        targetScore={user?.targetSatScore || 1550}
+      />
 
       {/* 🎯 ADAPTIVE RECOMMENDED QUESTIONS SECTION */}
       {recommendations?.recommendedQuestions?.length > 0 && (

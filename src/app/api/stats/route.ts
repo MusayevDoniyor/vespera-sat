@@ -27,7 +27,7 @@ export async function GET() {
       });
     }
 
-    // Run all 8 database queries in parallel concurrently
+    // Run all 9 database queries in parallel concurrently
     const [
       questionsRes,
       streakRes,
@@ -37,6 +37,7 @@ export async function GET() {
       topicsRes,
       mockRes,
       mockHistoryRes,
+      paceRes,
     ] = await Promise.all([
       // 1. Total questions in bank and user attempt status
       userId
@@ -199,6 +200,24 @@ export async function GET() {
              FROM vespera.mock_exams
              ORDER BY completed_at DESC LIMIT 10;`
           ),
+
+      // 9. Pace telemetry (average seconds per question)
+      userId
+        ? pool.query(
+            `SELECT q.section, ROUND(AVG(NULLIF(up.time_spent, 0)))::int as avg_time, COUNT(*)::int as attempts
+             FROM vespera.user_progress up
+             JOIN vespera.questions q ON q.id = up.question_id
+             WHERE up.user_id = $1 AND up.time_spent > 0 AND up.time_spent < 600
+             GROUP BY q.section;`,
+            [userId]
+          )
+        : pool.query(
+            `SELECT q.section, ROUND(AVG(NULLIF(up.time_spent, 0)))::int as avg_time, COUNT(*)::int as attempts
+             FROM vespera.user_progress up
+             JOIN vespera.questions q ON q.id = up.question_id
+             WHERE up.time_spent > 0 AND up.time_spent < 600
+             GROUP BY q.section;`
+          ),
     ]);
 
     let mathTotal = 0, mathAttempted = 0, mathCorrect = 0, mathIncorrect = 0;
@@ -247,6 +266,101 @@ export async function GET() {
 
     const compositeScore = projectedMathScore + projectedVerbalScore; // (400 - 1600)
 
+    // Official College Board Target Benchmarks & Pace Telemetry
+    let mathAvgPace = 92;
+    let verbalAvgPace = 68;
+    let mathPaceAttempts = 0;
+    let verbalPaceAttempts = 0;
+
+    for (const row of paceRes.rows) {
+      if (row.section === "MATH" && row.avg_time) {
+        mathAvgPace = row.avg_time;
+        mathPaceAttempts = row.attempts;
+      } else if (row.section === "READING_WRITING" && row.avg_time) {
+        verbalAvgPace = row.avg_time;
+        verbalPaceAttempts = row.attempts;
+      }
+    }
+
+    const MATH_BENCHMARK_SEC = 95; // 35 min / 22 questions
+    const VERBAL_BENCHMARK_SEC = 71; // 32 min / 27 questions
+
+    const paceStats = {
+      math: {
+        avgSeconds: mathAvgPace,
+        targetSeconds: MATH_BENCHMARK_SEC,
+        status: mathAvgPace > 115 ? "slow" : mathAvgPace < 60 ? "rushing" : "optimal",
+        deltaSeconds: mathAvgPace - MATH_BENCHMARK_SEC,
+        totalLogged: mathPaceAttempts,
+      },
+      verbal: {
+        avgSeconds: verbalAvgPace,
+        targetSeconds: VERBAL_BENCHMARK_SEC,
+        status: verbalAvgPace > 88 ? "slow" : verbalAvgPace < 45 ? "rushing" : "optimal",
+        deltaSeconds: verbalAvgPace - VERBAL_BENCHMARK_SEC,
+        totalLogged: verbalPaceAttempts,
+      },
+    };
+
+    // Standardized 8 Domain Mapping & Mastery calculation
+    const DOMAIN_SLUG_MAP: Record<string, { slug: string; shortCode: string }> = {
+      "Algebra": { slug: "unit-06-medium-algebra", shortCode: "ALG" },
+      "Advanced Math": { slug: "unit-08-medium-adv-math", shortCode: "ADV" },
+      "Problem Solving & Data Analysis": { slug: "unit-07-medium-psda", shortCode: "DAT" },
+      "Geometry & Trigonometry": { slug: "unit-09-medium-geom-trig", shortCode: "GEO" },
+      "Craft and Structure": { slug: "unit-01-about-sat", shortCode: "CAS" },
+      "Information and Ideas": { slug: "unit-03-foundations-psda", shortCode: "IAI" },
+      "Standard English Conventions": { slug: "unit-02-foundations-algebra", shortCode: "SEC" },
+      "Expression of Ideas": { slug: "unit-02-foundations-algebra", shortCode: "EOI" },
+    };
+
+    const domainMasteryList = [
+      ...mathDomainsRes.rows.map((row: any) => {
+        const attempted = row.attempted || 0;
+        const correct = row.correct || 0;
+        const total = row.total || 0;
+        const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+        const meta = DOMAIN_SLUG_MAP[row.domain] || { slug: "unit-06-medium-algebra", shortCode: "MTH" };
+        const status = attempted === 0 ? "Untested" : accuracy >= 85 ? "Mastered" : accuracy >= 65 ? "Proficient" : "Needs Focus";
+        const estimatedPointLoss = attempted > 0 && accuracy < 85 ? Math.round((1 - accuracy / 100) * 120) : 0;
+
+        return {
+          domain: row.domain,
+          section: "MATH",
+          shortCode: meta.shortCode,
+          slug: meta.slug,
+          total,
+          attempted,
+          correct,
+          accuracy,
+          status,
+          estimatedPointLoss,
+        };
+      }),
+      ...verbalDomainsRes.rows.map((row: any) => {
+        const attempted = row.attempted || 0;
+        const correct = row.correct || 0;
+        const total = row.total || 0;
+        const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+        const meta = DOMAIN_SLUG_MAP[row.domain] || { slug: "unit-01-about-sat", shortCode: "VRB" };
+        const status = attempted === 0 ? "Untested" : accuracy >= 85 ? "Mastered" : accuracy >= 65 ? "Proficient" : "Needs Focus";
+        const estimatedPointLoss = attempted > 0 && accuracy < 85 ? Math.round((1 - accuracy / 100) * 120) : 0;
+
+        return {
+          domain: row.domain,
+          section: "READING_WRITING",
+          shortCode: meta.shortCode,
+          slug: meta.slug,
+          total,
+          attempted,
+          correct,
+          accuracy,
+          status,
+          estimatedPointLoss,
+        };
+      }),
+    ];
+
     const responsePayload = {
       totalQuestions: mathTotal + verbalTotal,
       totalSolved: mathAttempted + verbalAttempted,
@@ -260,6 +374,8 @@ export async function GET() {
       dueReviewsCount: dueRes.rows[0]?.due_count || 0,
       realStreak: currentStreak,
       compositeScore,
+      paceStats,
+      domainMasteryList,
       math: {
         total: mathTotal,
         attempted: mathAttempted,
