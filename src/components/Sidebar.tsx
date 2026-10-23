@@ -28,6 +28,7 @@ import VesperaLogo from "./VesperaLogo";
 import Portal from "./Portal";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { fetchWithDeduplication } from "@/lib/api-cache";
+import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 
 function SidebarComponent() {
   const pathname = usePathname();
@@ -91,7 +92,7 @@ function SidebarComponent() {
       items: [
         { label: "Bluebook Mock", href: "/mock", icon: FileCheck2 },
         { label: "Error Notebook", href: "/error-log", icon: Repeat },
-        { label: "55 Prep Books", href: "/satashkent", icon: Award },
+        { label: `${SATASHKENT_LIBRARY.length} Prep Books`, href: "/satashkent", icon: Award },
       ],
     },
   ];

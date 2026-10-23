@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Calculator,
@@ -35,6 +35,7 @@ import DiagnosticPlacementModal from "@/components/DiagnosticPlacementModal";
 import QuestionCard from "@/components/QuestionCard";
 import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
 import { fetchWithDeduplication } from "@/lib/api-cache";
+import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 
 export default function DashboardPage() {
   const { user, openAuthModal, openOnboarding } = useAuth();
@@ -172,51 +173,15 @@ export default function DashboardPage() {
     },
   ];
 
-  // 25 Integrated Source Materials
-  const materialsList = [
-    { name: "1. Exponents and Radicals.pdf", topic: "ADV-01 / ADV-04", pages: 4, type: "College Panda" },
-    { name: "2. Percent.pdf", topic: "DAT-02", pages: 6, type: "College Panda" },
-    { name: "3. Exponential and Linear Growth.pdf", topic: "ADV-03", pages: 6, type: "College Panda" },
-    { name: "4. Rates.pdf", topic: "DAT-01", pages: 6, type: "College Panda" },
-    { name: "5. Ratio and Proportion.pdf", topic: "DAT-01", pages: 5, type: "College Panda" },
-    { name: "6. Ratio and Proportions.pdf", topic: "DAT-01", pages: 4, type: "College Panda" },
-    { name: "7. Constructing Models.pdf", topic: "ALG-01 / ALG-02", pages: 6, type: "College Panda" },
-    { name: "8. Manipulating and Solving equations.pdf", topic: "ALG-01 / ADV-01", pages: 9, type: "College Panda" },
-    { name: "9. More Equation Solving strategies.pdf", topic: "ALG-03", pages: 6, type: "College Panda" },
-    { name: "10. Systems of Equations.pdf", topic: "ALG-03 / ADV-05", pages: 8, type: "College Panda" },
-    { name: "11. Inequalities.pdf", topic: "ALG-04", pages: 6, type: "College Panda" },
-    { name: "12. Word Problems.pdf", topic: "ALG-01 / ADV-02", pages: 7, type: "College Panda" },
-    { name: "13. Min/Max Word Problems.pdf", topic: "ADV-02", pages: 7, type: "College Panda" },
-    { name: "14. Lines.pdf", topic: "ALG-02", pages: 5, type: "College Panda" },
-    { name: "15. Interpreting Linear Models.pdf", topic: "ALG-02 / DAT-04", pages: 6, type: "College Panda" },
-    { name: "16. Functions.pdf", topic: "ADV-02 / ADV-03", pages: 9, type: "College Panda" },
-    { name: "17. Quadratics.pdf", topic: "ADV-02", pages: 6, type: "College Panda" },
-    { name: "18. Synthetic division.pdf", topic: "ADV-01", pages: 4, type: "College Panda" },
-    { name: "19. Complex Numbers.pdf", topic: "ADV-01", pages: 3, type: "College Panda" },
-    { name: "20. Absolute Value.pdf", topic: "ALG-01", pages: 5, type: "College Panda" },
-    { name: "Trigonometric Identities.pdf", topic: "GEO-03", pages: 2, type: "Reference Handbook" },
-    { name: "digital-sat-sample-questions.pdf", topic: "Full Exam Spec", pages: 19, type: "Official College Board" },
-    { name: "SAT_October_2026_All_Version.pdf", topic: "Hard/Easy Modules", pages: 66, type: "Recent Test Bank" },
-    { name: "Bluebook 4 official Digital SAT tests.pdf", topic: "Tests #1–4", pages: 440, type: "Official Bluebook" },
-    { name: "OFFICIAL DIGITAL SAT BOOK.pdf", topic: "Complete Spec", pages: 440, type: "Official Bluebook" },
-    // SAT Tashkent Official Curriculum Materials (14 Books)
-    { name: "Gramilliy.pdf", topic: "ENG-BOU / ENG-AGR / 3x1 Tactics", pages: 58, type: "SAT Tashkent Grammar Bible" },
-    { name: "SAT Math Cheat Sheet.pdf", topic: "ALG-01-04 / ADV-01-05 / GEO", pages: 6, type: "SAT Tashkent Formula Vault" },
-    { name: "Vocabook 30.pdf", topic: "ENG-WIC (Vocabulary)", pages: 420, type: "SAT Tashkent Mega Vocab" },
-    { name: "Math Hard Book.pdf", topic: "Target 800 Hard Math", pages: 96, type: "SAT Tashkent Hard Problems" },
-    { name: "Math Hardbook 20.pdf", topic: "Target 800 (+130 Real Exam Qs)", pages: 125, type: "SAT Tashkent Hard Problems" },
-    { name: "SAToplam Reading Book.pdf", topic: "ENG-CID / CDE / INF / WIC", pages: 555, type: "SAT Tashkent 846 Real Qs" },
-    { name: "SAToplam Writing Book.pdf", topic: "ENG-BOU / AGR / TRA / SYN", pages: 344, type: "SAT Tashkent 973 Real Qs" },
-    { name: "English Elite Book.pdf", topic: "Real Monthly Tests 2025-2026", pages: 85, type: "SAT Tashkent Exam Forms" },
-    { name: "Atlas Agora writing.pdf", topic: "Rhetorical Writing Masterclass", pages: 79, type: "SAT Tashkent Agora Strategy" },
-    { name: "SAT Mathbook 20.pdf", topic: "Real Exam Math Archive", pages: 384, type: "SAT Tashkent Real Exam Math" },
-    { name: "Mathbook 30.pdf", topic: "Real Exam Math 2025-2026", pages: 133, type: "SAT Tashkent Real Exam Math" },
-    { name: "SAT Math Problem Solving and Data Analysis Revision file.pdf", topic: "DAT-01-04 (149 Bluebook Sets)", pages: 149, type: "SAT Tashkent Data Revision" },
-    { name: "SATakror.pdf", topic: "Multi-Version Real Exam Variants", pages: 103, type: "SAT Tashkent Variant Bank" },
-    { name: "All in One.pdf", topic: "4-Stage Preparation Syllabus", pages: 5, type: "SAT Tashkent Master Roadmap" },
-    { name: "facts-and-formulas-0.pdf", topic: "All Math Domains / Fast Formula Vault", pages: 6, type: "Erik the Red SAT Math" },
-    { name: "jerry-phd-bobrowdale-ma-johnson-joe-ma-skinner-mastering-sat-math.pdf", topic: "Comprehensive SAT Math Bible (All Domains)", pages: 312, type: "Wiley SAT Math Guide" },
-  ];
+  // Fully synchronized study materials list mapped from SATASHKENT_LIBRARY (61 Books)
+  const materialsList = useMemo(() => {
+    return SATASHKENT_LIBRARY.map((b) => ({
+      name: b.filename,
+      topic: b.keyTopics[0] || b.targetScore,
+      pages: b.pages,
+      type: b.badge,
+    }));
+  }, []);
 
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in">
@@ -1113,7 +1078,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Digital SAT Masterclass & 54-Book Archive Showcase Banner */}
+      {/* Digital SAT Masterclass & 61-Book Archive Showcase Banner */}
       <div className="p-6 md:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -1121,7 +1086,7 @@ export default function DashboardPage() {
               🇺🇿 National & Official Curriculum Hub
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              55 Textbooks • 4,000+ Real Questions • 445+ Vocab Pages
+              {materialsList.length} Textbooks • 4,000+ Real Questions • 445+ Vocab Pages
             </span>
           </div>
           <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight flex items-center gap-2.5">
@@ -1129,7 +1094,7 @@ export default function DashboardPage() {
             <span>Digital SAT Masterclass Vault & Authentic Archives</span>
           </h3>
           <p className="text-xs text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            The complete national standard in SAT prep: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions), Official College Board Question Banks, Gramilliy grammar bible with 3x1 elimination, 20 modular math textbooks, Vocabook 3.0, 650 Real Words (@DSATuz), English Elite, and real exam test recalls.
+            The complete national standard in SAT prep: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions), Official College Board Question Banks, Gramilliy grammar bible with 3x1 elimination, 20 modular math textbooks, Vocabook 3.0, August 2026 Predictions, English Elite, and real exam test recalls.
           </p>
         </div>
 
@@ -1138,7 +1103,7 @@ export default function DashboardPage() {
             href="/satashkent"
             className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2"
           >
-            <span>Explore 55 Books & Vault</span>
+            <span>Explore {materialsList.length} Books & Vault</span>
             <ArrowRight size={15} />
           </Link>
         </div>
@@ -1474,13 +1439,13 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-[var(--text-main)] flex items-center gap-2">
-                <span>Integrated Study Materials Vault (41 Primary PDF Sources & Books)</span>
+                <span>Integrated Study Materials Vault ({materialsList.length} Primary PDF Sources & Books)</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] font-mono">
                   100% Indexed
                 </span>
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                All {stats?.totalQuestions || 212}+ practice problems, 7 official Bluebook mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, October SAT, and all 41 primary SAT Tashkent textbooks and authoritative references.
+                All {stats?.totalBankQuestions || stats?.totalQuestions || 1720}+ practice problems, 7 official Bluebook mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, August SAT Predictions, and all {materialsList.length} primary textbooks and authoritative references.
               </p>
             </div>
           </div>

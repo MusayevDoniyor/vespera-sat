@@ -206,7 +206,7 @@ export default function SATashkentVault() {
             </span>
             <span className="text-[var(--text-muted)]">•</span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              55 Authentic Textbooks & 4,000+ Real Questions
+              {SATASHKENT_LIBRARY.length} Authentic Textbooks & 4,000+ Real Questions
             </span>
           </div>
 
@@ -216,7 +216,7 @@ export default function SATashkentVault() {
           </h2>
 
           <p className="text-xs text-[var(--text-muted)] mt-2 max-w-2xl leading-relaxed">
-            Exhaustive 55-volume national and official repository: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions by SAT League), College Board Question Banks (940 & 1,090 pages), SAT Tashkent archives (Gramilliy 3x1, Vocabook 3.0, 20 Modular Math books, Hardbooks 1.0 & 2.0), English Elite, Atlas Agora, Elbek SAT, 650 Real Exam Words (@DSATuz), @satmath_1, and Wiley Math.
+            Exhaustive {SATASHKENT_LIBRARY.length}-volume national and official repository: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions by SAT League), College Board Question Banks (940 & 1,090 pages), August 2026 Predictions, SAT Tashkent archives (Gramilliy 3x1, Vocabook 3.0, 20 Modular Math books, Hardbooks 1.0 & 2.0), English Elite, Atlas Agora, Elbek SAT, 650 Real Exam Words (@DSATuz), @satmath_1, and Wiley Math.
           </p>
         </div>
 
@@ -359,7 +359,7 @@ export default function SATashkentVault() {
               />
               <input
                 type="text"
-                placeholder="Search all 55 books, bibles & question banks..."
+                placeholder={`Search all ${SATASHKENT_LIBRARY.length} books, bibles & question banks...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-blue)]"

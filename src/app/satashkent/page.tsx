@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Layers } from "lucide-react";
 import SATashkentVault from "@/components/SATashkentVault";
+import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 
 export const metadata: Metadata = {
-  title: "Digital SAT Masterclass Vault & Archive (55 Books) | Vespera SAT",
+  title: "Digital SAT Masterclass Vault & Archive (61 Books) | Vespera SAT",
   description:
-    "Exhaustive 55-book archive: SAT Reading & Writing Professor IV (1,474 pages), College Board Question Banks, SAT Tashkent archives, Gramilliy grammar bible, Vocabook 3.0, Math Hard Books 1.0 & 2.0, English Elite, Elbek SAT, and 4,000+ real exam questions.",
+    "Exhaustive 61-book archive: SAT Reading & Writing Professor IV (1,474 pages), College Board Question Banks, August 2026 Predictions, SAT Tashkent archives, Gramilliy grammar bible, Vocabook 3.0, Math Hard Books 1.0 & 2.0, English Elite, Elbek SAT, and 4,000+ real exam questions.",
 };
 
 export default function SATashkentPage() {
@@ -31,7 +32,7 @@ export default function SATashkentPage() {
         </Link>
         <span>/</span>
         <span className="text-[var(--accent-blue)] font-bold">
-          Digital SAT Materials Vault (55 Books)
+          Digital SAT Materials Vault ({SATASHKENT_LIBRARY.length} Books)
         </span>
       </div>
 

@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import TopicStudyModal from "@/components/TopicStudyModal";
 import SATashkentVault from "@/components/SATashkentVault";
+import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 import MathDictionary from "@/components/MathDictionary";
 import KhanAcademyUnitsView from "@/components/KhanAcademyUnitsView";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
@@ -255,7 +256,7 @@ export default function CurriculumPage() {
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20"
         >
           <GraduationCap size={15} />
-          <span>🇺🇿 Digital SAT Masterclass & Materials Vault (55 Books) →</span>
+          <span>🇺🇿 Digital SAT Masterclass & Materials Vault ({SATASHKENT_LIBRARY.length} Books) →</span>
         </Link>
       </div>
 
