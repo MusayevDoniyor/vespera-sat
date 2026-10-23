@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { pool, initDb } from "@/lib/db";
 import { getSessionUser, getFullUserProfile } from "@/lib/auth";
 import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
+import { BLUEBOOK_EXAMS } from "@/lib/bluebook-tests";
 
 // Micro-cache (15-second TTL) to deduplicate simultaneous calls from Sidebar and Dashboard
 interface CachedStats {
@@ -253,7 +254,7 @@ export async function GET() {
       totalTopics,
       totalDiagrams: 16,
       totalMaterials: SATASHKENT_LIBRARY.length,
-      totalMockExams: 7, // 7 Full Bluebook practice exams available
+      totalMockExams: BLUEBOOK_EXAMS.length,
       userMockStats: mockStats,
       mockHistory: mockHistoryRes.rows || [],
       dueReviewsCount: dueRes.rows[0]?.due_count || 0,

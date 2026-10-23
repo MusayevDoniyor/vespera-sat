@@ -103,7 +103,7 @@ export default function BluebookExamRunnerPage() {
   const [showLeaveConfirmation, setShowLeaveConfirmation] = useState(false);
   const [showFiveMinAlert, setShowFiveMinAlert] = useState(false);
   const [hasShownFiveMinAlert, setHasShownFiveMinAlert] = useState(false);
-  const [formulaTab, setFormulaTab] = useState<"cb" | "satashkent" | "desmos" | "rw">("cb");
+  const [formulaTab, setFormulaTab] = useState<"cb" | "vespera" | "desmos" | "rw">("cb");
 
   // Timer states
   const [timeLeft, setTimeLeft] = useState(32 * 60);
@@ -751,31 +751,33 @@ export default function BluebookExamRunnerPage() {
             <span className="hidden md:inline">Eliminate</span>
           </button>
 
-          {/* Math Tools */}
-          {currentSection === "MATH" && (
-            <>
-              <button
-                onClick={() => setShowFormulaSheet(true)}
-                className="p-2 rounded-xl text-xs font-bold bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition flex items-center gap-1.5"
-                title="Reference Sheet"
-              >
-                <BookOpen className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
-                <span className="hidden md:inline">Reference</span>
-              </button>
+          {/* Reference Sheet (Math formulas + RW strategy rules) */}
+          <button
+            onClick={() => {
+              setFormulaTab(currentSection === "READING_WRITING" ? "rw" : "cb");
+              setShowFormulaSheet(true);
+            }}
+            className="p-2 rounded-xl text-xs font-bold bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition flex items-center gap-1.5"
+            title="Reference Sheet & Strategy Invariants"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
+            <span className="hidden md:inline">Reference</span>
+          </button>
 
-              <button
-                onClick={() => setIsDesmosOpen(!isDesmosOpen)}
-                className={`p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
-                  isDesmosOpen
-                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
-                    : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border-[var(--border-main)]"
-                }`}
-                title="Desmos Graphing Calculator"
-              >
-                <Calculator className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">Desmos</span>
-              </button>
-            </>
+          {/* Desmos Graphing Calculator (Math only) */}
+          {currentSection === "MATH" && (
+            <button
+              onClick={() => setIsDesmosOpen(!isDesmosOpen)}
+              className={`p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                isDesmosOpen
+                  ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                  : "bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border-[var(--border-main)]"
+              }`}
+              title="Desmos Graphing Calculator"
+            >
+              <Calculator className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Desmos</span>
+            </button>
           )}
 
           {/* Theme Toggle */}
@@ -1151,7 +1153,7 @@ export default function BluebookExamRunnerPage() {
         </Portal>
       )}
 
-      {/* Official Math Formula Sheet Modal */}
+      {/* Official Math & RW Reference Sheet Modal */}
       {showFormulaSheet && (
         <Portal>
           <div
@@ -1166,10 +1168,10 @@ export default function BluebookExamRunnerPage() {
                 <div>
                   <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
                     <BookOpen className="text-amber-500 w-5 h-5" />
-                    Official Digital SAT Math Reference Sheet
+                    Digital SAT Reference Sheet & Strategies
                   </h2>
                   <p className="text-xs text-[var(--text-muted)] mt-1">
-                    Provided by College Board for all Digital SAT Math questions.
+                    Official College Board formulas, Vespera math invariants, Desmos bypasses, and grammar invariants.
                   </p>
                 </div>
                 <button
@@ -1180,79 +1182,199 @@ export default function BluebookExamRunnerPage() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
-                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
-                    1. Circle Formulas
-                  </span>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Area:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">A = π r²</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Circumference:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">C = 2 π r</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Arc Length:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">s = r θ</code> (θ in radians)
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Sector Area:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">A = (1/2) r² θ</code>
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
-                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
-                    2. Triangle Geometry & Trigonometry
-                  </span>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Area:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">A = (1/2) b h</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Pythagorean Theorem:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">a² + b² = c²</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Special 30°-60°-90°:</strong> Sides <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">x : x√3 : 2x</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Special 45°-45°-90°:</strong> Sides <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">x : x : x√2</code>
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
-                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
-                    3. 3D Solid Volumes
-                  </span>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Rectangular Prism:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = l w h</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Right Cylinder:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = π r² h</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Sphere:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = (4/3) π r³</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Cone:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = (1/3) π r² h</code>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • <strong>Pyramid:</strong> <code className="bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--border-main)]">V = (1/3) l w h</code>
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
-                  <span className="font-bold text-[var(--accent-blue)] block font-mono text-[11px] uppercase tracking-wide">
-                    4. Degree & Radian Invariants
-                  </span>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • Degrees in a circle = <strong>360°</strong>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • Radians in a circle = <strong>2π</strong>
-                  </p>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    • Angles in a triangle = <strong>180°</strong>
-                  </p>
-                </div>
+              {/* Tabs Navigation */}
+              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] overflow-x-auto text-xs">
+                <button
+                  onClick={() => setFormulaTab("cb")}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                    formulaTab === "cb"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  }`}
+                >
+                  Official Reference (Math)
+                </button>
+                <button
+                  onClick={() => setFormulaTab("vespera")}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                    formulaTab === "vespera"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  }`}
+                >
+                  Vespera Math Invariants
+                </button>
+                <button
+                  onClick={() => setFormulaTab("desmos")}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                    formulaTab === "desmos"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  }`}
+                >
+                  Desmos Bypass Hacks
+                </button>
+                <button
+                  onClick={() => setFormulaTab("rw")}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
+                    formulaTab === "rw"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  }`}
+                >
+                  Reading & Writing Bible
+                </button>
               </div>
+
+              {/* Tab 1: College Board Official Reference */}
+              {formulaTab === "cb" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--text-secondary)]">
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--text-main)]">Circle / Aylana</div>
+                    <div><KaTeXMath content="\text{Area: } A = \pi r^2" /></div>
+                    <div><KaTeXMath content="\text{Circumference: } C = 2\pi r" /></div>
+                    <div className="text-[var(--text-muted)] text-[11px]">360° = 2π radians</div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--text-main)]">Rectangle / To'rtburchak</div>
+                    <div><KaTeXMath content="\text{Area: } A = l \cdot w" /></div>
+                    <div><KaTeXMath content="\text{Perimeter: } P = 2l + 2w" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--text-main)]">Triangle / Uchburchak</div>
+                    <div><KaTeXMath content="\text{Area: } A = \frac{1}{2}bh" /></div>
+                    <div><KaTeXMath content="\text{Pythagorean: } a^2 + b^2 = c^2" /></div>
+                    <div className="text-[var(--text-muted)] text-[11px]">Sum of interior angles: 180°</div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--text-main)]">Special Right Triangles</div>
+                    <div><KaTeXMath content="45^\circ - 45^\circ - 90^\circ: x, x, x\sqrt{2}" /></div>
+                    <div><KaTeXMath content="30^\circ - 60^\circ - 90^\circ: x, x\sqrt{3}, 2x" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--text-main)]">Volume Formulas / Hajm</div>
+                    <div><KaTeXMath content="\text{Cylinder: } V = \pi r^2 h" /></div>
+                    <div><KaTeXMath content="\text{Sphere: } V = \frac{4}{3}\pi r^3" /></div>
+                    <div><KaTeXMath content="\text{Cone: } V = \frac{1}{3}\pi r^2 h" /></div>
+                    <div><KaTeXMath content="\text{Pyramid: } V = \frac{1}{3}lwh" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--text-main)]">Trigonometric Ratios</div>
+                    <div><KaTeXMath content="\sin(\theta) = \frac{\text{Opposite}}{\text{Hypotenuse}}" /></div>
+                    <div><KaTeXMath content="\cos(\theta) = \frac{\text{Adjacent}}{\text{Hypotenuse}}" /></div>
+                    <div><KaTeXMath content="\tan(\theta) = \frac{\text{Opposite}}{\text{Adjacent}}" /></div>
+                    <div><KaTeXMath content="\sin(x) = \cos(90^\circ - x)" /></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 2: Vespera High-Yield Math Invariants */}
+              {formulaTab === "vespera" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--text-secondary)]">
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--accent-blue)]">3 Essential Quadratic Forms</div>
+                    <div><KaTeXMath content="\text{Standard: } y = ax^2 + bx + c \implies (0, c)" /></div>
+                    <div><KaTeXMath content="\text{Vertex: } y = a(x - h)^2 + k \implies (h, k)" /></div>
+                    <div><KaTeXMath content="\text{Factored: } y = a(x - x_1)(x - x_2) \implies \text{Roots}" /></div>
+                    <div className="text-[var(--text-muted)] text-[11px]">Axis of symmetry: <KaTeXMath content="x = -\frac{b}{2a}" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--accent-blue)]">Discriminant & Solutions</div>
+                    <div><KaTeXMath content="D = b^2 - 4ac" /></div>
+                    <div><KaTeXMath content="D > 0 \implies \text{2 Real Solutions (Two Intersections)}" /></div>
+                    <div><KaTeXMath content="D = 0 \implies \text{1 Real Solution (Tangent / Single Root)}" /></div>
+                    <div><KaTeXMath content="D < 0 \implies \text{0 Real Solutions (No Intersections)}" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--accent-blue)]">2x2 Linear Systems (Chiziqli Sistemalar)</div>
+                    <div><KaTeXMath content="\frac{a_1}{a_2} \ne \frac{b_1}{b_2} \implies \text{1 Solution}" /></div>
+                    <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} \ne \frac{c_1}{c_2} \implies \text{No Solution (Parallel Lines)}" /></div>
+                    <div><KaTeXMath content="\frac{a_1}{a_2} = \frac{b_1}{b_2} = \frac{c_1}{c_2} \implies \text{Infinitely Many (Coincident Lines)}" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--accent-blue)]">Perpendicular Invariant & Altitude</div>
+                    <div><KaTeXMath content="m_1 \cdot m_2 = -1 \implies m_\perp = -\frac{1}{m}" /></div>
+                    <div><KaTeXMath content="\text{Altitude to Hypotenuse: } h = \sqrt{c_a \cdot c_b}" /></div>
+                    <div><KaTeXMath content="\text{Altitude Formula: } h = \frac{a \cdot b}{c}" /></div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--accent-blue)]">Circle Equation in xy-plane</div>
+                    <div><KaTeXMath content="(x - h)^2 + (y - k)^2 = r^2" /></div>
+                    <div className="text-[var(--text-muted)] text-[11px]">Center: (h, k), Radius: r. Completing square: add <KaTeXMath content="(\frac{b}{2})^2" />.</div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
+                    <div className="font-bold text-[var(--accent-blue)]">Margin of Error & Box Plots</div>
+                    <div><KaTeXMath content="\text{MoE} \propto \frac{1}{\sqrt{n}} \quad (\uparrow n \implies \downarrow \text{MoE})" /></div>
+                    <div><KaTeXMath content="\text{IQR} = Q_3 - Q_1, \quad \text{Range} = \text{Max} - \text{Min}" /></div>
+                    <div className="text-[var(--text-muted)] text-[11px]">Middle 50% of distribution is enclosed in the box!</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 3: Desmos Speedhack Commands */}
+              {formulaTab === "desmos" && (
+                <div className="space-y-3 text-xs text-[var(--text-secondary)]">
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-emerald-500 font-mono">1. Direct Equation Root Finding</div>
+                    <p>
+                      Type any one-variable equation directly, e.g., <code className="px-1.5 py-0.5 rounded bg-[var(--bg-card)] border border-[var(--border-main)] font-mono">4x + 12 = 36</code>. Desmos automatically plots vertical lines at the exact root <code className="font-mono font-bold">x = 6</code>!
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-emerald-500 font-mono">2. Table Regression Shortcut (Table + ~)</div>
+                    <p>
+                      Add a table (+) and insert coordinates. On the next line, type regression syntax:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1 pl-2 font-mono">
+                      <li>Linear: <span className="text-blue-500">y1 ~ mx1 + b</span></li>
+                      <li>Quadratic: <span className="text-blue-500">y1 ~ ax1^2 + bx1 + c</span></li>
+                      <li>Exponential: <span className="text-blue-500">y1 ~ ab^(x1)</span></li>
+                    </ul>
+                    <p className="text-[var(--text-muted)] text-[11px]">Parameters calculated instantly with zero manual algebra!</p>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-emerald-500 font-mono">3. System Intersection Click Shortcut</div>
+                    <p>
+                      Type both linear/nonlinear equations. Click directly on the intersection point — coordinates <code className="font-mono">(x, y)</code> appear instantly!
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 4: Reading & Writing Bible */}
+              {formulaTab === "rw" && (
+                <div className="space-y-3 text-xs text-[var(--text-secondary)]">
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-indigo-500">1. 3x1 Elimination Tactic (Vespera Grammar Methodology)</div>
+                    <p>
+                      If 3 answer choices share the identical grammatical feature or structural flaw (e.g., 3 are past tense while 1 is present tense, or 3 produce comma splices), the 1 distinct outlier choice has a 95%+ probability of being correct!
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-indigo-500">2. Punctuation Invariants (Semicolon vs Colon)</div>
+                    <ul className="list-disc list-inside space-y-1 pl-2">
+                      <li><strong>Semicolon (;):</strong> <KaTeXMath content="\text{Independent Clause ; Independent Clause}" /> (Identical to a period in function).</li>
+                      <li><strong>Colon (:):</strong> Left side MUST be a complete independent clause! The right side provides an explanation, list, or dramatic elaboration.</li>
+                      <li><strong>Comma Splice Trap:</strong> <KaTeXMath content="\text{IC , IC} \quad \text{(ERROR! Requires FANBOYS or semicolon)}" /></li>
+                    </ul>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-indigo-500">3. Modifier Placement (Dangling Modifier Trap)</div>
+                    <p>
+                      For introductory phrases <KaTeXMath content="\text{[Having studied...]}, \text{[Subject]}" />, the exact agent performing the introductory action MUST immediately follow the comma.
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
+                    <div className="font-bold text-indigo-500">4. Transition Signal Matrix</div>
+                    <p>
+                      <strong>Addition:</strong> Furthermore, In addition, Moreover. <br />
+                      <strong>Contrast:</strong> However, Nevertheless, In contrast, On the other hand. <br />
+                      <strong>Cause & Effect:</strong> Consequently, Therefore, As a result, Thus. <br />
+                      <strong>Exemplification:</strong> Specifically, For instance, In particular.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="pt-2 border-t border-[var(--border-main)] flex justify-end">
                 <button

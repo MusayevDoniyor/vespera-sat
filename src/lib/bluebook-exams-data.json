@@ -2772,7 +2772,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_08",
+        "id": "q_vesp_math_hard_08",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -2789,14 +2789,14 @@
           "D) f(x) = -(2x - 6)^2 + 8"
         ],
         "correctAnswer": "A",
-        "explanationEn": "To display the maximum or minimum value of a quadratic function as a constant or coefficient, the function must be written in vertex form: $f(x) = a(x - h)^2 + k$, where $(h, k)$ is the vertex. Completing the square for $f(x) = -2(x^2 - 6x) - 10 = -2(x - 3)^2 + 18 - 10 = -2(x - 3)^2 + 8$. The maximum value $k = 8$ is explicitly visible in Choice A. Source: SATashkent Math Hard Book (Page 24, Q24).",
-        "explanationUz": "Kvadrat funksiyaning maksimum yoki minimum qiymatini konstanta sifatida ko'rsatish uchun u cho'qqi (vertex) ko'rinishida yozilishi shart: f(x) = a(x - h)^2 + k. Qavsni to'ldirsak: f(x) = -2(x - 3)^2 + 8 bo'ladi va maksimum qiymat 8 aynan ko'rinadi. Shuning uchun to'g'ri javob A. Manba: SATashkent Math Hard Book (24-bet).",
+        "explanationEn": "To display the maximum or minimum value of a quadratic function as a constant or coefficient, the function must be written in vertex form: $f(x) = a(x - h)^2 + k$, where $(h, k)$ is the vertex. Completing the square for $f(x) = -2(x^2 - 6x) - 10 = -2(x - 3)^2 + 18 - 10 = -2(x - 3)^2 + 8$. The maximum value $k = 8$ is explicitly visible in Choice A. Source: Vespera 800 Gatekeeper Problemset (Page 24, Q24).",
+        "explanationUz": "Kvadrat funksiyaning maksimum yoki minimum qiymatini konstanta sifatida ko'rsatish uchun u cho'qqi (vertex) ko'rinishida yozilishi shart: f(x) = a(x - h)^2 + k. Qavsni to'ldirsak: f(x) = -2(x - 3)^2 + 8 bo'ladi va maksimum qiymat 8 aynan ko'rinadi. Shuning uchun to'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (24-bet).",
         "desmosTrick": "Graph all 4 choices in Desmos. They all produce the same parabola with vertex (3, 8), but only Choice A explicitly displays 8 as an isolated constant!",
         "referenceFormula": "f(x) = a(x - h)^2 + k",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_09",
+        "id": "q_vesp_math_hard_09",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -2813,14 +2813,14 @@
           "D) g(x) = 140((1.08)^x - 3)"
         ],
         "correctAnswer": "A",
-        "explanationEn": "We are given $g(x) = f(x - 3) = 140(1.08)^{x - 3}$. Expanding using exponent properties: $140(1.08)^{x - 3} = 140(1.08)^{-3}(1.08)^x = \\frac{140}{(1.08)^3}(1.08)^x$. When $x = 0$, $g(0) = \\frac{140}{(1.08)^3}$. In Choice A, this exact value $\\frac{140}{(1.08)^3}$ is displayed directly as the leading coefficient. Source: SATashkent Math Hard Book (Page 23, Q23).",
-        "explanationUz": "g(x) = f(x - 3) = 140(1.08)^(x - 3). Daraja xossasidan foydalansak: 140(1.08)^(-3) * (1.08)^x = [140 / (1.08)^3] * (1.08)^x. x = 0 bo'lganda g(0) = 140 / (1.08)^3 bo'ladi va bu qiymat aynan A javobda koeffitsient sifatida ko'rsatilgan. To'g'ri javob A. Manba: SATashkent Math Hard Book (23-bet).",
+        "explanationEn": "We are given $g(x) = f(x - 3) = 140(1.08)^{x - 3}$. Expanding using exponent properties: $140(1.08)^{x - 3} = 140(1.08)^{-3}(1.08)^x = \\frac{140}{(1.08)^3}(1.08)^x$. When $x = 0$, $g(0) = \\frac{140}{(1.08)^3}$. In Choice A, this exact value $\\frac{140}{(1.08)^3}$ is displayed directly as the leading coefficient. Source: Vespera 800 Gatekeeper Problemset (Page 23, Q23).",
+        "explanationUz": "g(x) = f(x - 3) = 140(1.08)^(x - 3). Daraja xossasidan foydalansak: 140(1.08)^(-3) * (1.08)^x = [140 / (1.08)^3] * (1.08)^x. x = 0 bo'lganda g(0) = 140 / (1.08)^3 bo'ladi va bu qiymat aynan A javobda koeffitsient sifatida ko'rsatilgan. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (23-bet).",
         "desmosTrick": "Calculate g(0) = 140*(1.08)^(-3) ≈ 111.137 in Desmos. The coefficient in Choice A is 140 / 1.08^3 = 111.137!",
         "referenceFormula": "a^{m-n} = \\frac{a^m}{a^n}",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_11",
+        "id": "q_vesp_math_hard_11",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -2837,14 +2837,14 @@
           "D) 2x^3 - 5x^2 - x + 7"
         ],
         "correctAnswer": "A",
-        "explanationEn": "By the polynomial division algorithm: $p(x) = (\\text{divisor})(\\text{quotient}) + \\text{remainder} = (x - 4)(2x^2 + 3x - 1) + 7$. Expanding: $x(2x^2 + 3x - 1) - 4(2x^2 + 3x - 1) + 7 = 2x^3 + 3x^2 - x - 8x^2 - 12x + 4 + 7 = 2x^3 - 5x^2 - 13x + 11$. Therefore, Choice A is correct. Source: SATashkent Math Hard Book (Page 31, Q31).",
-        "explanationUz": "Ko'phadni bo'lish teoremasi: p(x) = bo'luvchi * bo'linma + qoldiq = (x - 4)(2x^2 + 3x - 1) + 7. Qavslarni ochsak: 2x^3 + 3x^2 - x - 8x^2 - 12x + 4 + 7 = 2x^3 - 5x^2 - 13x + 11. To'g'ri javob A. Manba: SATashkent Math Hard Book (31-bet).",
+        "explanationEn": "By the polynomial division algorithm: $p(x) = (\\text{divisor})(\\text{quotient}) + \\text{remainder} = (x - 4)(2x^2 + 3x - 1) + 7$. Expanding: $x(2x^2 + 3x - 1) - 4(2x^2 + 3x - 1) + 7 = 2x^3 + 3x^2 - x - 8x^2 - 12x + 4 + 7 = 2x^3 - 5x^2 - 13x + 11$. Therefore, Choice A is correct. Source: Vespera 800 Gatekeeper Problemset (Page 31, Q31).",
+        "explanationUz": "Ko'phadni bo'lish teoremasi: p(x) = bo'luvchi * bo'linma + qoldiq = (x - 4)(2x^2 + 3x - 1) + 7. Qavslarni ochsak: 2x^3 + 3x^2 - x - 8x^2 - 12x + 4 + 7 = 2x^3 - 5x^2 - 13x + 11. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (31-bet).",
         "desmosTrick": "By Remainder Theorem, p(4) must equal 7! Test x = 4 in Choice A: 2(64) - 5(16) - 13(4) + 11 = 128 - 80 - 52 + 11 = 7. Instant 5-second check!",
         "referenceFormula": "p(x) = d(x) \\cdot q(x) + r",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_15",
+        "id": "q_vesp_math_hard_15",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -2861,8 +2861,8 @@
           "D) 5"
         ],
         "correctAnswer": "B",
-        "explanationEn": "Setting the equations equal to find intersection points: $2x^2 - 8x + c = 3 \\implies 2x^2 - 8x + (c - 3) = 0$. Since there is exactly one intersection point, the quadratic equation must have exactly one real solution, meaning its discriminant equals zero: $\\Delta = b^2 - 4ac = (-8)^2 - 4(2)(c - 3) = 0$. Simplifying: $64 - 8(c - 3) = 0 \\implies 8(c - 3) = 64 \\implies c - 3 = 8 \\implies c = 11$. Choice B is correct. Source: SATashkent Math Hard Book (Page 45, Q45).",
-        "explanationUz": "Tenglamalarni tenglashtiramiz: 2x^2 - 8x + c = 3 => 2x^2 - 8x + (c - 3) = 0. Aniq 1 ta kesishish nuqtasi bo'lishi uchun diskriminant nolga teng bo'lishi kerak: (-8)^2 - 4*2*(c - 3) = 0 => 64 - 8(c - 3) = 0 => c - 3 = 8 => c = 11. To'g'ri javob B. Manba: SATashkent Math Hard Book (45-bet).",
+        "explanationEn": "Setting the equations equal to find intersection points: $2x^2 - 8x + c = 3 \\implies 2x^2 - 8x + (c - 3) = 0$. Since there is exactly one intersection point, the quadratic equation must have exactly one real solution, meaning its discriminant equals zero: $\\Delta = b^2 - 4ac = (-8)^2 - 4(2)(c - 3) = 0$. Simplifying: $64 - 8(c - 3) = 0 \\implies 8(c - 3) = 64 \\implies c - 3 = 8 \\implies c = 11$. Choice B is correct. Source: Vespera 800 Gatekeeper Problemset (Page 45, Q45).",
+        "explanationUz": "Tenglamalarni tenglashtiramiz: 2x^2 - 8x + c = 3 => 2x^2 - 8x + (c - 3) = 0. Aniq 1 ta kesishish nuqtasi bo'lishi uchun diskriminant nolga teng bo'lishi kerak: (-8)^2 - 4*2*(c - 3) = 0 => 64 - 8(c - 3) = 0 => c - 3 = 8 => c = 11. To'g'ri javob B. Manba: Vespera 800 Gatekeeper Problemset (45-bet).",
         "desmosTrick": "Enter y = 2x^2 - 8x + c with slider c. Add line y = 3. Slide c until the vertex of the parabola touches the line y = 3. It touches perfectly when c = 11!",
         "referenceFormula": "\\Delta = b^2 - 4ac = 0",
         "diagramPreset": null
@@ -6960,7 +6960,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_04",
+        "id": "q_vesp_math_hard_04",
         "section": "MATH",
         "module": 2,
         "tier": "easy",
@@ -6977,14 +6977,14 @@
           "D) f = 20 + 9/4(p + c)"
         ],
         "correctAnswer": "B",
-        "explanationEn": "Total energy equation: $4.0p + 9.0f + 4.0c = 180$. Group terms with like coefficients: $9f + 4(p + c) = 180 \\implies 9f = 180 - 4(p + c)$. Divide both sides by 9: $f = \\frac{180}{9} - \\frac{4}{9}(p + c) = 20 - \\frac{4}{9}(p + c)$. Source: SATashkent Math Hard Book (Page 8, Q6).",
+        "explanationEn": "Total energy equation: $4.0p + 9.0f + 4.0c = 180$. Group terms with like coefficients: $9f + 4(p + c) = 180 \\implies 9f = 180 - 4(p + c)$. Divide both sides by 9: $f = \\frac{180}{9} - \\frac{4}{9}(p + c) = 20 - \\frac{4}{9}(p + c)$. Source: Vespera 800 Gatekeeper Problemset (Page 8, Q6).",
         "explanationUz": "Jami kaloriya tenglamasi: 4p + 9f + 4c = 180. O'xshash hadlarni guruhlaymiz: 9f + 4(p + c) = 180 => 9f = 180 - 4(p + c). 9 ga bo'lamiz: f = 20 - 4/9(p + c). To'g'ri javob B.",
         "desmosTrick": "Substitute simple values: let p = 0 and c = 0. Then 9f = 180 => f = 20. If p = 9, c = 0, then 4(9) + 9f = 180 => 36 + 9f = 180 => 9f = 144 => f = 16. Choice B gives 20 - 4/9(9) = 16!",
         "referenceFormula": "\\text{Calories} = 4p + 9f + 4c",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_07",
+        "id": "q_vesp_math_hard_07",
         "section": "MATH",
         "module": 2,
         "tier": "easy",
@@ -7001,8 +7001,8 @@
           "D) 8"
         ],
         "correctAnswer": "C",
-        "explanationEn": "The slope of line $p$ through $(0, 2)$ and $(6, -1)$ is $m_p = \\frac{-1 - 2}{6 - 0} = -\\frac{3}{6} = -\\frac{1}{2}$. Since line $k$ is perpendicular to line $p$, its slope is the negative reciprocal: $m_k = -\\frac{1}{-1/2} = 2$. Given that $m_k = \\frac{n}{3}$, we have $\\frac{n}{3} = 2 \\implies n = 6$. Source: SATashkent Math Hard Book (Page 26, Q26).",
-        "explanationUz": "p to'g'ri chiziqning burchak koeffitsienti: m_p = (-1 - 2)/(6 - 0) = -3/6 = -1/2. k to'g'ri chiziq unga perpendikulyar bo'lgani uchun uning burchak koeffitsienti qarama-qarshi teskari: m_k = 2 bo'ladi. m_k = n/3 berilganligi sababli, n/3 = 2 => n = 6. To'g'ri javob C. Manba: SATashkent Math Hard Book (26-bet).",
+        "explanationEn": "The slope of line $p$ through $(0, 2)$ and $(6, -1)$ is $m_p = \\frac{-1 - 2}{6 - 0} = -\\frac{3}{6} = -\\frac{1}{2}$. Since line $k$ is perpendicular to line $p$, its slope is the negative reciprocal: $m_k = -\\frac{1}{-1/2} = 2$. Given that $m_k = \\frac{n}{3}$, we have $\\frac{n}{3} = 2 \\implies n = 6$. Source: Vespera 800 Gatekeeper Problemset (Page 26, Q26).",
+        "explanationUz": "p to'g'ri chiziqning burchak koeffitsienti: m_p = (-1 - 2)/(6 - 0) = -3/6 = -1/2. k to'g'ri chiziq unga perpendikulyar bo'lgani uchun uning burchak koeffitsienti qarama-qarshi teskari: m_k = 2 bo'ladi. m_k = n/3 berilganligi sababli, n/3 = 2 => n = 6. To'g'ri javob C. Manba: Vespera 800 Gatekeeper Problemset (26-bet).",
         "desmosTrick": "Calculate slope of p: (-1 - 2)/(6 - 0) = -0.5. Negative reciprocal is 2. Solve n/3 = 2 in Desmos -> n = 6.",
         "referenceFormula": "m_1 \\cdot m_2 = -1",
         "diagramPreset": null
@@ -7404,7 +7404,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_rw_gramilliy_01",
+        "id": "q_vesp_rw_gramilliy_01",
         "section": "READING_WRITING",
         "module": 1,
         "tier": "standard",
@@ -7421,8 +7421,8 @@
           "D) phenomenon, in"
         ],
         "correctAnswer": "C",
-        "explanationEn": "The sentence consists of two independent clauses: Clause 1 ('Kizomba... has become an international phenomenon') and Clause 2 ('In 2022, the Indian dance duo... defeated performers...'). A comma alone produces a comma splice (Choice D). Choices A and B create ungrammatical run-ons and fragments. Only Choice C with a period correctly separates the two independent clauses. This is an authentic application of SATashkent's Gramilliy 3x1 elimination tactic (3 dependent run-ons vs 1 valid boundary). Source: SATashkent Gramilliy (Page 35).",
-        "explanationUz": "Matn ikkita mustaqil gapdan iborat. Ikkita mustaqil gapni shunchaki vergul bilan bog'lab bo'lmaydi (Comma Splice). Faqatgina C variantida nuqta bilan ikki mustaqil gap to'g'ri ajratilgan (SATashkent Gramilliy 3x1 taktikasi).",
+        "explanationEn": "The sentence consists of two independent clauses: Clause 1 ('Kizomba... has become an international phenomenon') and Clause 2 ('In 2022, the Indian dance duo... defeated performers...'). A comma alone produces a comma splice (Choice D). Choices A and B create ungrammatical run-ons and fragments. Only Choice C with a period correctly separates the two independent clauses. This is an authentic application of Vespera Grammar Methodology's 3x1 elimination tactic (3 dependent run-ons vs 1 valid boundary). Source: Vespera Grammar Methodology (Page 35).",
+        "explanationUz": "Matn ikkita mustaqil gapdan iborat. Ikkita mustaqil gapni shunchaki vergul bilan bog'lab bo'lmaydi (Comma Splice). Faqatgina C variantida nuqta bilan ikki mustaqil gap to'g'ri ajratilgan (Vespera Grammar Methodology 3x1 taktikasi).",
         "desmosTrick": null,
         "referenceFormula": "\\text{IC} . \\text{IC}",
         "diagramPreset": null
@@ -11098,7 +11098,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_13",
+        "id": "q_vesp_writing_13",
         "section": "READING_WRITING",
         "module": 1,
         "tier": "standard",
@@ -11122,7 +11122,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_16",
+        "id": "q_vesp_writing_16",
         "section": "READING_WRITING",
         "module": 1,
         "tier": "standard",
@@ -12844,7 +12844,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_10",
+        "id": "q_vesp_math_hard_10",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -12861,14 +12861,14 @@
           "D) v = 60m / d"
         ],
         "correctAnswer": "A",
-        "explanationEn": "Speed is defined as distance divided by time: $v = \\frac{\\text{distance}}{\\text{time in hours}}$. The time given is $m$ minutes, which equals $\\frac{m}{60}$ hours. Therefore, $v = \\frac{d}{\\frac{m}{60}} = \\frac{60d}{m}$. Choice A is correct. Source: SATashkent Math Hard Book (Page 28, Q28).",
-        "explanationUz": "Tezlik v = masofa / soatdagi vaqt. m minut = m / 60 soat. Shuning uchun v = d / (m / 60) = 60d / m. To'g'ri javob A. Manba: SATashkent Math Hard Book (28-bet).",
+        "explanationEn": "Speed is defined as distance divided by time: $v = \\frac{\\text{distance}}{\\text{time in hours}}$. The time given is $m$ minutes, which equals $\\frac{m}{60}$ hours. Therefore, $v = \\frac{d}{\\frac{m}{60}} = \\frac{60d}{m}$. Choice A is correct. Source: Vespera 800 Gatekeeper Problemset (Page 28, Q28).",
+        "explanationUz": "Tezlik v = masofa / soatdagi vaqt. m minut = m / 60 soat. Shuning uchun v = d / (m / 60) = 60d / m. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (28-bet).",
         "desmosTrick": "Test with easy numbers: let distance d = 60 miles, time m = 60 minutes (1 hour). Speed must be 60 mph. Plug into choices: Choice A gives 60(60)/60 = 60. Choice B gives 60/3600 = 1/60. Match is A!",
         "referenceFormula": "v = \\frac{d}{t}",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_14",
+        "id": "q_vesp_math_hard_14",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -14576,7 +14576,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_14",
+        "id": "q_vesp_writing_14",
         "section": "READING_WRITING",
         "module": 1,
         "tier": "standard",
@@ -14600,7 +14600,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_17",
+        "id": "q_vesp_writing_17",
         "section": "READING_WRITING",
         "module": 1,
         "tier": "standard",
@@ -15876,7 +15876,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_13",
+        "id": "q_vesp_writing_13",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "easy",
@@ -15900,7 +15900,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_16",
+        "id": "q_vesp_writing_16",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "easy",
@@ -16352,7 +16352,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_12",
+        "id": "q_vesp_math_hard_12",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -16369,14 +16369,14 @@
           "D) 24"
         ],
         "correctAnswer": "A",
-        "explanationEn": "By the complementary angle trigonometric identity, $\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$ for acute angles. Setting the sum of the angles equal to $90^\\circ$: $(3x + 14) + (2x + 6) = 90 \\implies 5x + 20 = 90 \\implies 5x = 70 \\implies x = 14$. Choice A is correct. Source: SATashkent Trigonometric Identities Guide.",
-        "explanationUz": "To'ldiruvchi burchaklar uchun sin(A) = cos(B) <=> A + B = 90 gradus. Demak: (3x + 14) + (2x + 6) = 90 => 5x + 20 = 90 => 5x = 70 => x = 14. To'g'ri javob A. Manba: SATashkent Trigonometric Identities Guide.",
+        "explanationEn": "By the complementary angle trigonometric identity, $\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$ for acute angles. Setting the sum of the angles equal to $90^\\circ$: $(3x + 14) + (2x + 6) = 90 \\implies 5x + 20 = 90 \\implies 5x = 70 \\implies x = 14$. Choice A is correct. Source: Vespera Trigonometric Identities Guide.",
+        "explanationUz": "To'ldiruvchi burchaklar uchun sin(A) = cos(B) <=> A + B = 90 gradus. Demak: (3x + 14) + (2x + 6) = 90 => 5x + 20 = 90 => 5x = 70 => x = 14. To'g'ri javob A. Manba: Vespera Trigonometric Identities Guide.",
         "desmosTrick": "Type 3x + 14 + 2x + 6 = 90 into Desmos in degree mode. Desmos displays a vertical line at x = 14!",
         "referenceFormula": "A + B = 90^\\circ \\iff \\sin(A) = \\cos(B)",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_13",
+        "id": "q_vesp_math_hard_13",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -16400,7 +16400,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_17",
+        "id": "q_vesp_math_hard_17",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -17456,11 +17456,11 @@
     ]
   },
   {
-    "id": "satashkent-october-real",
-    "title": "SAT Tashkent - October Real Exam Form",
+    "id": "vespera-october-pro",
+    "title": "Vespera October Pro Practice Test",
     "formCode": "SAT-OCT-2026",
     "descriptionUz": "2026-yil oktyabr xalqaro Digital SAT imtihonida tushgan real savollar va test shakli asosida tuzilgan maxsus forma.",
-    "badge": "SATashkent Signature",
+    "badge": "Vespera Signature",
     "totalQuestions": 98,
     "rwTimingMinutes": 32,
     "mathTimingMinutes": 35,
@@ -19366,7 +19366,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_14",
+        "id": "q_vesp_writing_14",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "easy",
@@ -19390,7 +19390,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_17",
+        "id": "q_vesp_writing_17",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "easy",
@@ -19812,7 +19812,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_07",
+        "id": "q_vesp_math_hard_07",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -19829,14 +19829,14 @@
           "D) 8"
         ],
         "correctAnswer": "C",
-        "explanationEn": "The slope of line $p$ through $(0, 2)$ and $(6, -1)$ is $m_p = \\frac{-1 - 2}{6 - 0} = -\\frac{3}{6} = -\\frac{1}{2}$. Since line $k$ is perpendicular to line $p$, its slope is the negative reciprocal: $m_k = -\\frac{1}{-1/2} = 2$. Given that $m_k = \\frac{n}{3}$, we have $\\frac{n}{3} = 2 \\implies n = 6$. Source: SATashkent Math Hard Book (Page 26, Q26).",
-        "explanationUz": "p to'g'ri chiziqning burchak koeffitsienti: m_p = (-1 - 2)/(6 - 0) = -3/6 = -1/2. k to'g'ri chiziq unga perpendikulyar bo'lgani uchun uning burchak koeffitsienti qarama-qarshi teskari: m_k = 2 bo'ladi. m_k = n/3 berilganligi sababli, n/3 = 2 => n = 6. To'g'ri javob C. Manba: SATashkent Math Hard Book (26-bet).",
+        "explanationEn": "The slope of line $p$ through $(0, 2)$ and $(6, -1)$ is $m_p = \\frac{-1 - 2}{6 - 0} = -\\frac{3}{6} = -\\frac{1}{2}$. Since line $k$ is perpendicular to line $p$, its slope is the negative reciprocal: $m_k = -\\frac{1}{-1/2} = 2$. Given that $m_k = \\frac{n}{3}$, we have $\\frac{n}{3} = 2 \\implies n = 6$. Source: Vespera 800 Gatekeeper Problemset (Page 26, Q26).",
+        "explanationUz": "p to'g'ri chiziqning burchak koeffitsienti: m_p = (-1 - 2)/(6 - 0) = -3/6 = -1/2. k to'g'ri chiziq unga perpendikulyar bo'lgani uchun uning burchak koeffitsienti qarama-qarshi teskari: m_k = 2 bo'ladi. m_k = n/3 berilganligi sababli, n/3 = 2 => n = 6. To'g'ri javob C. Manba: Vespera 800 Gatekeeper Problemset (26-bet).",
         "desmosTrick": "Calculate slope of p: (-1 - 2)/(6 - 0) = -0.5. Negative reciprocal is 2. Solve n/3 = 2 in Desmos -> n = 6.",
         "referenceFormula": "m_1 \\cdot m_2 = -1",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_16",
+        "id": "q_vesp_math_hard_16",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -19853,8 +19853,8 @@
           "D) -6"
         ],
         "correctAnswer": "A",
-        "explanationEn": "For a linear system to have infinitely many solutions, the ratio of coefficients must be equal: $\\frac{4}{6} = \\frac{-k}{9} = \\frac{18}{c}$. Since $\\frac{4}{6} = \\frac{2}{3}$: First, $\\frac{-k}{9} = \\frac{2}{3} \\implies -3k = 18 \\implies k = -6$. Second, $\\frac{18}{c} = \\frac{2}{3} \\implies 2c = 54 \\implies c = 27$. Therefore, $k + c = -6 + 27 = 21$. Choice A is correct. Source: SATashkent Math Hard Book (Page 52, Q52).",
-        "explanationUz": "Chiziqli tenglamalar sistemasi cheksiz ko'p yechimga ega bo'lishi uchun barcha koeffitsientlar nisbati teng bo'lishi shart: 4/6 = -k/9 = 18/c. 4/6 = 2/3. Demak, -k/9 = 2/3 => k = -6. 18/c = 2/3 => c = 27. U holda k + c = -6 + 27 = 21. To'g'ri javob A. Manba: SATashkent Math Hard Book (52-bet).",
+        "explanationEn": "For a linear system to have infinitely many solutions, the ratio of coefficients must be equal: $\\frac{4}{6} = \\frac{-k}{9} = \\frac{18}{c}$. Since $\\frac{4}{6} = \\frac{2}{3}$: First, $\\frac{-k}{9} = \\frac{2}{3} \\implies -3k = 18 \\implies k = -6$. Second, $\\frac{18}{c} = \\frac{2}{3} \\implies 2c = 54 \\implies c = 27$. Therefore, $k + c = -6 + 27 = 21$. Choice A is correct. Source: Vespera 800 Gatekeeper Problemset (Page 52, Q52).",
+        "explanationUz": "Chiziqli tenglamalar sistemasi cheksiz ko'p yechimga ega bo'lishi uchun barcha koeffitsientlar nisbati teng bo'lishi shart: 4/6 = -k/9 = 18/c. 4/6 = 2/3. Demak, -k/9 = 2/3 => k = -6. 18/c = 2/3 => c = 27. U holda k + c = -6 + 27 = 21. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (52-bet).",
         "desmosTrick": "Type 4/6 = -k/9 and 4/6 = 18/c in Desmos -> k = -6, c = 27 -> sum = 21.",
         "referenceFormula": "\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}",
         "diagramPreset": null
@@ -20940,7 +20940,7 @@
     ]
   },
   {
-    "id": "satashkent-june-2026-recalled",
+    "id": "vespera-june-recalled",
     "title": "June 2026 Recalled Real Exam Form (Mock 8)",
     "formCode": "JUNE-2026-REAL",
     "descriptionUz": "2026-yil iyun oyidagi eng so'nggi Digital SAT imtihonida tushgan real Math va Verbal savollaridan tuzilgan to'liq haqiqiy imtihon.",
@@ -21960,7 +21960,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_11",
+        "id": "q_vesp_writing_11",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "hard",
@@ -21984,7 +21984,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_12",
+        "id": "q_vesp_writing_12",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "hard",
@@ -22008,7 +22008,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_writing_15",
+        "id": "q_vesp_writing_15",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "hard",
@@ -23730,7 +23730,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_10",
+        "id": "q_vesp_math_hard_10",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -23747,14 +23747,14 @@
           "D) v = 60m / d"
         ],
         "correctAnswer": "A",
-        "explanationEn": "Speed is defined as distance divided by time: $v = \\frac{\\text{distance}}{\\text{time in hours}}$. The time given is $m$ minutes, which equals $\\frac{m}{60}$ hours. Therefore, $v = \\frac{d}{\\frac{m}{60}} = \\frac{60d}{m}$. Choice A is correct. Source: SATashkent Math Hard Book (Page 28, Q28).",
-        "explanationUz": "Tezlik v = masofa / soatdagi vaqt. m minut = m / 60 soat. Shuning uchun v = d / (m / 60) = 60d / m. To'g'ri javob A. Manba: SATashkent Math Hard Book (28-bet).",
+        "explanationEn": "Speed is defined as distance divided by time: $v = \\frac{\\text{distance}}{\\text{time in hours}}$. The time given is $m$ minutes, which equals $\\frac{m}{60}$ hours. Therefore, $v = \\frac{d}{\\frac{m}{60}} = \\frac{60d}{m}$. Choice A is correct. Source: Vespera 800 Gatekeeper Problemset (Page 28, Q28).",
+        "explanationUz": "Tezlik v = masofa / soatdagi vaqt. m minut = m / 60 soat. Shuning uchun v = d / (m / 60) = 60d / m. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (28-bet).",
         "desmosTrick": "Test with easy numbers: let distance d = 60 miles, time m = 60 minutes (1 hour). Speed must be 60 mph. Plug into choices: Choice A gives 60(60)/60 = 60. Choice B gives 60/3600 = 1/60. Match is A!",
         "referenceFormula": "v = \\frac{d}{t}",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_14",
+        "id": "q_vesp_math_hard_14",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -24454,7 +24454,7 @@
     ]
   },
   {
-    "id": "satashkent-english-elite",
+    "id": "vespera-verbal-elite",
     "title": "English Elite — Recalled Monthly Exam Form",
     "formCode": "EE-RECALL-2026",
     "descriptionUz": "Gramilliy va Atlas Agora kitoblaridan saralangan eng qiyin Reading & Writing savollarini o'z ichiga olgan maxsus Verbal mock.",
@@ -26888,7 +26888,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_08",
+        "id": "q_vesp_math_hard_08",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -26905,14 +26905,14 @@
           "D) f(x) = -(2x - 6)^2 + 8"
         ],
         "correctAnswer": "A",
-        "explanationEn": "To display the maximum or minimum value of a quadratic function as a constant or coefficient, the function must be written in vertex form: $f(x) = a(x - h)^2 + k$, where $(h, k)$ is the vertex. Completing the square for $f(x) = -2(x^2 - 6x) - 10 = -2(x - 3)^2 + 18 - 10 = -2(x - 3)^2 + 8$. The maximum value $k = 8$ is explicitly visible in Choice A. Source: SATashkent Math Hard Book (Page 24, Q24).",
-        "explanationUz": "Kvadrat funksiyaning maksimum yoki minimum qiymatini konstanta sifatida ko'rsatish uchun u cho'qqi (vertex) ko'rinishida yozilishi shart: f(x) = a(x - h)^2 + k. Qavsni to'ldirsak: f(x) = -2(x - 3)^2 + 8 bo'ladi va maksimum qiymat 8 aynan ko'rinadi. Shuning uchun to'g'ri javob A. Manba: SATashkent Math Hard Book (24-bet).",
+        "explanationEn": "To display the maximum or minimum value of a quadratic function as a constant or coefficient, the function must be written in vertex form: $f(x) = a(x - h)^2 + k$, where $(h, k)$ is the vertex. Completing the square for $f(x) = -2(x^2 - 6x) - 10 = -2(x - 3)^2 + 18 - 10 = -2(x - 3)^2 + 8$. The maximum value $k = 8$ is explicitly visible in Choice A. Source: Vespera 800 Gatekeeper Problemset (Page 24, Q24).",
+        "explanationUz": "Kvadrat funksiyaning maksimum yoki minimum qiymatini konstanta sifatida ko'rsatish uchun u cho'qqi (vertex) ko'rinishida yozilishi shart: f(x) = a(x - h)^2 + k. Qavsni to'ldirsak: f(x) = -2(x - 3)^2 + 8 bo'ladi va maksimum qiymat 8 aynan ko'rinadi. Shuning uchun to'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (24-bet).",
         "desmosTrick": "Graph all 4 choices in Desmos. They all produce the same parabola with vertex (3, 8), but only Choice A explicitly displays 8 as an isolated constant!",
         "referenceFormula": "f(x) = a(x - h)^2 + k",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_09",
+        "id": "q_vesp_math_hard_09",
         "section": "MATH",
         "module": 1,
         "tier": "standard",
@@ -26929,8 +26929,8 @@
           "D) g(x) = 140((1.08)^x - 3)"
         ],
         "correctAnswer": "A",
-        "explanationEn": "We are given $g(x) = f(x - 3) = 140(1.08)^{x - 3}$. Expanding using exponent properties: $140(1.08)^{x - 3} = 140(1.08)^{-3}(1.08)^x = \\frac{140}{(1.08)^3}(1.08)^x$. When $x = 0$, $g(0) = \\frac{140}{(1.08)^3}$. In Choice A, this exact value $\\frac{140}{(1.08)^3}$ is displayed directly as the leading coefficient. Source: SATashkent Math Hard Book (Page 23, Q23).",
-        "explanationUz": "g(x) = f(x - 3) = 140(1.08)^(x - 3). Daraja xossasidan foydalansak: 140(1.08)^(-3) * (1.08)^x = [140 / (1.08)^3] * (1.08)^x. x = 0 bo'lganda g(0) = 140 / (1.08)^3 bo'ladi va bu qiymat aynan A javobda koeffitsient sifatida ko'rsatilgan. To'g'ri javob A. Manba: SATashkent Math Hard Book (23-bet).",
+        "explanationEn": "We are given $g(x) = f(x - 3) = 140(1.08)^{x - 3}$. Expanding using exponent properties: $140(1.08)^{x - 3} = 140(1.08)^{-3}(1.08)^x = \\frac{140}{(1.08)^3}(1.08)^x$. When $x = 0$, $g(0) = \\frac{140}{(1.08)^3}$. In Choice A, this exact value $\\frac{140}{(1.08)^3}$ is displayed directly as the leading coefficient. Source: Vespera 800 Gatekeeper Problemset (Page 23, Q23).",
+        "explanationUz": "g(x) = f(x - 3) = 140(1.08)^(x - 3). Daraja xossasidan foydalansak: 140(1.08)^(-3) * (1.08)^x = [140 / (1.08)^3] * (1.08)^x. x = 0 bo'lganda g(0) = 140 / (1.08)^3 bo'ladi va bu qiymat aynan A javobda koeffitsient sifatida ko'rsatilgan. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (23-bet).",
         "desmosTrick": "Calculate g(0) = 140*(1.08)^(-3) ≈ 111.137 in Desmos. The coefficient in Choice A is 140 / 1.08^3 = 111.137!",
         "referenceFormula": "a^{m-n} = \\frac{a^m}{a^n}",
         "diagramPreset": null
@@ -27268,7 +27268,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_12",
+        "id": "q_vesp_math_hard_12",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -27285,14 +27285,14 @@
           "D) 24"
         ],
         "correctAnswer": "A",
-        "explanationEn": "By the complementary angle trigonometric identity, $\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$ for acute angles. Setting the sum of the angles equal to $90^\\circ$: $(3x + 14) + (2x + 6) = 90 \\implies 5x + 20 = 90 \\implies 5x = 70 \\implies x = 14$. Choice A is correct. Source: SATashkent Trigonometric Identities Guide.",
-        "explanationUz": "To'ldiruvchi burchaklar uchun sin(A) = cos(B) <=> A + B = 90 gradus. Demak: (3x + 14) + (2x + 6) = 90 => 5x + 20 = 90 => 5x = 70 => x = 14. To'g'ri javob A. Manba: SATashkent Trigonometric Identities Guide.",
+        "explanationEn": "By the complementary angle trigonometric identity, $\\sin(A) = \\cos(B) \\iff A + B = 90^\\circ$ for acute angles. Setting the sum of the angles equal to $90^\\circ$: $(3x + 14) + (2x + 6) = 90 \\implies 5x + 20 = 90 \\implies 5x = 70 \\implies x = 14$. Choice A is correct. Source: Vespera Trigonometric Identities Guide.",
+        "explanationUz": "To'ldiruvchi burchaklar uchun sin(A) = cos(B) <=> A + B = 90 gradus. Demak: (3x + 14) + (2x + 6) = 90 => 5x + 20 = 90 => 5x = 70 => x = 14. To'g'ri javob A. Manba: Vespera Trigonometric Identities Guide.",
         "desmosTrick": "Type 3x + 14 + 2x + 6 = 90 into Desmos in degree mode. Desmos displays a vertical line at x = 14!",
         "referenceFormula": "A + B = 90^\\circ \\iff \\sin(A) = \\cos(B)",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_13",
+        "id": "q_vesp_math_hard_13",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -27316,7 +27316,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_17",
+        "id": "q_vesp_math_hard_17",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -27980,8 +27980,8 @@
     ]
   },
   {
-    "id": "satashkent-hard-math-800",
-    "title": "SAT Hard Math 800 Challenge Form",
+    "id": "vespera-math-800-gatekeeper",
+    "title": "Vespera 800 Hard Math Gatekeeper Form",
     "formCode": "MATH-800-HARD",
     "descriptionUz": "Faqat 750–800 ballni maqsad qilganlar uchun: Diskriminant, aylanalar, eksponentsial o'sish va Desmos speedhacklar bilan boyitilgan imtihon.",
     "badge": "Math 800 Master",
@@ -28856,7 +28856,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_rw_gramilliy_01",
+        "id": "q_vesp_rw_gramilliy_01",
         "section": "READING_WRITING",
         "module": 2,
         "tier": "hard",
@@ -28873,8 +28873,8 @@
           "D) phenomenon, in"
         ],
         "correctAnswer": "C",
-        "explanationEn": "The sentence consists of two independent clauses: Clause 1 ('Kizomba... has become an international phenomenon') and Clause 2 ('In 2022, the Indian dance duo... defeated performers...'). A comma alone produces a comma splice (Choice D). Choices A and B create ungrammatical run-ons and fragments. Only Choice C with a period correctly separates the two independent clauses. This is an authentic application of SATashkent's Gramilliy 3x1 elimination tactic (3 dependent run-ons vs 1 valid boundary). Source: SATashkent Gramilliy (Page 35).",
-        "explanationUz": "Matn ikkita mustaqil gapdan iborat. Ikkita mustaqil gapni shunchaki vergul bilan bog'lab bo'lmaydi (Comma Splice). Faqatgina C variantida nuqta bilan ikki mustaqil gap to'g'ri ajratilgan (SATashkent Gramilliy 3x1 taktikasi).",
+        "explanationEn": "The sentence consists of two independent clauses: Clause 1 ('Kizomba... has become an international phenomenon') and Clause 2 ('In 2022, the Indian dance duo... defeated performers...'). A comma alone produces a comma splice (Choice D). Choices A and B create ungrammatical run-ons and fragments. Only Choice C with a period correctly separates the two independent clauses. This is an authentic application of Vespera Grammar Methodology's 3x1 elimination tactic (3 dependent run-ons vs 1 valid boundary). Source: Vespera Grammar Methodology (Page 35).",
+        "explanationUz": "Matn ikkita mustaqil gapdan iborat. Ikkita mustaqil gapni shunchaki vergul bilan bog'lab bo'lmaydi (Comma Splice). Faqatgina C variantida nuqta bilan ikki mustaqil gap to'g'ri ajratilgan (Vespera Grammar Methodology 3x1 taktikasi).",
         "desmosTrick": null,
         "referenceFormula": "\\text{IC} . \\text{IC}",
         "diagramPreset": null
@@ -30680,7 +30680,7 @@
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_03",
+        "id": "q_vesp_math_hard_03",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -30697,14 +30697,14 @@
           "D) sx + 3y = 11"
         ],
         "correctAnswer": "B",
-        "explanationEn": "Calculate the slope using points $(-2s, 17)$ and $(-s, 14)$: $m = \\frac{14 - 17}{-s - (-2s)} = \\frac{-3}{s} = -\\frac{3}{s}$. Using point-slope form with point $(s, 8)$: $y - 8 = -\\frac{3}{s}(x - s) \\implies y - 8 = -\\frac{3}{s}x + 3 \\implies y = -\\frac{3}{s}x + 11$. Multiply entire equation by $s$: $sy = -3x + 11s \\implies 3x + sy = 11s$. Source: SATashkent Math Hard Book (Page 10, Q16).",
-        "explanationUz": "Burchak koeffitsientini topamiz: m = (14 - 17) / (-s - (-2s)) = -3 / s. (s, 8) nuqta orqali to'g'ri chiziq tenglamasini yozamiz: y - 8 = -3/s (x - s) => y = -3/s x + 11. Barcha hadlarni s ga ko'paytirsak: sy = -3x + 11s => 3x + sy = 11s. To'g'ri javob B. Manba: SATashkent Math Hard Book (10-bet, 16-savol).",
+        "explanationEn": "Calculate the slope using points $(-2s, 17)$ and $(-s, 14)$: $m = \\frac{14 - 17}{-s - (-2s)} = \\frac{-3}{s} = -\\frac{3}{s}$. Using point-slope form with point $(s, 8)$: $y - 8 = -\\frac{3}{s}(x - s) \\implies y - 8 = -\\frac{3}{s}x + 3 \\implies y = -\\frac{3}{s}x + 11$. Multiply entire equation by $s$: $sy = -3x + 11s \\implies 3x + sy = 11s$. Source: Vespera 800 Gatekeeper Problemset (Page 10, Q16).",
+        "explanationUz": "Burchak koeffitsientini topamiz: m = (14 - 17) / (-s - (-2s)) = -3 / s. (s, 8) nuqta orqali to'g'ri chiziq tenglamasini yozamiz: y - 8 = -3/s (x - s) => y = -3/s x + 11. Barcha hadlarni s ga ko'paytirsak: sy = -3x + 11s => 3x + sy = 11s. To'g'ri javob B. Manba: Vespera 800 Gatekeeper Problemset (10-bet, 16-savol).",
         "desmosTrick": "Assign s = 1. Points become (-2, 17), (-1, 14), (1, 8). Enter points into Desmos table, then test choice B with s = 1: 3x + y = 11. It passes through all 3 points!",
         "referenceFormula": "m = \\frac{y_2 - y_1}{x_2 - x_1}",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_04",
+        "id": "q_vesp_math_hard_04",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -30721,14 +30721,14 @@
           "D) f = 20 + 9/4(p + c)"
         ],
         "correctAnswer": "B",
-        "explanationEn": "Total energy equation: $4.0p + 9.0f + 4.0c = 180$. Group terms with like coefficients: $9f + 4(p + c) = 180 \\implies 9f = 180 - 4(p + c)$. Divide both sides by 9: $f = \\frac{180}{9} - \\frac{4}{9}(p + c) = 20 - \\frac{4}{9}(p + c)$. Source: SATashkent Math Hard Book (Page 8, Q6).",
+        "explanationEn": "Total energy equation: $4.0p + 9.0f + 4.0c = 180$. Group terms with like coefficients: $9f + 4(p + c) = 180 \\implies 9f = 180 - 4(p + c)$. Divide both sides by 9: $f = \\frac{180}{9} - \\frac{4}{9}(p + c) = 20 - \\frac{4}{9}(p + c)$. Source: Vespera 800 Gatekeeper Problemset (Page 8, Q6).",
         "explanationUz": "Jami kaloriya tenglamasi: 4p + 9f + 4c = 180. O'xshash hadlarni guruhlaymiz: 9f + 4(p + c) = 180 => 9f = 180 - 4(p + c). 9 ga bo'lamiz: f = 20 - 4/9(p + c). To'g'ri javob B.",
         "desmosTrick": "Substitute simple values: let p = 0 and c = 0. Then 9f = 180 => f = 20. If p = 9, c = 0, then 4(9) + 9f = 180 => 36 + 9f = 180 => 9f = 144 => f = 16. Choice B gives 20 - 4/9(9) = 16!",
         "referenceFormula": "\\text{Calories} = 4p + 9f + 4c",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_07",
+        "id": "q_vesp_math_hard_07",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -30745,14 +30745,14 @@
           "D) 8"
         ],
         "correctAnswer": "C",
-        "explanationEn": "The slope of line $p$ through $(0, 2)$ and $(6, -1)$ is $m_p = \\frac{-1 - 2}{6 - 0} = -\\frac{3}{6} = -\\frac{1}{2}$. Since line $k$ is perpendicular to line $p$, its slope is the negative reciprocal: $m_k = -\\frac{1}{-1/2} = 2$. Given that $m_k = \\frac{n}{3}$, we have $\\frac{n}{3} = 2 \\implies n = 6$. Source: SATashkent Math Hard Book (Page 26, Q26).",
-        "explanationUz": "p to'g'ri chiziqning burchak koeffitsienti: m_p = (-1 - 2)/(6 - 0) = -3/6 = -1/2. k to'g'ri chiziq unga perpendikulyar bo'lgani uchun uning burchak koeffitsienti qarama-qarshi teskari: m_k = 2 bo'ladi. m_k = n/3 berilganligi sababli, n/3 = 2 => n = 6. To'g'ri javob C. Manba: SATashkent Math Hard Book (26-bet).",
+        "explanationEn": "The slope of line $p$ through $(0, 2)$ and $(6, -1)$ is $m_p = \\frac{-1 - 2}{6 - 0} = -\\frac{3}{6} = -\\frac{1}{2}$. Since line $k$ is perpendicular to line $p$, its slope is the negative reciprocal: $m_k = -\\frac{1}{-1/2} = 2$. Given that $m_k = \\frac{n}{3}$, we have $\\frac{n}{3} = 2 \\implies n = 6$. Source: Vespera 800 Gatekeeper Problemset (Page 26, Q26).",
+        "explanationUz": "p to'g'ri chiziqning burchak koeffitsienti: m_p = (-1 - 2)/(6 - 0) = -3/6 = -1/2. k to'g'ri chiziq unga perpendikulyar bo'lgani uchun uning burchak koeffitsienti qarama-qarshi teskari: m_k = 2 bo'ladi. m_k = n/3 berilganligi sababli, n/3 = 2 => n = 6. To'g'ri javob C. Manba: Vespera 800 Gatekeeper Problemset (26-bet).",
         "desmosTrick": "Calculate slope of p: (-1 - 2)/(6 - 0) = -0.5. Negative reciprocal is 2. Solve n/3 = 2 in Desmos -> n = 6.",
         "referenceFormula": "m_1 \\cdot m_2 = -1",
         "diagramPreset": null
       },
       {
-        "id": "q_satashkent_math_hard_16",
+        "id": "q_vesp_math_hard_16",
         "section": "MATH",
         "module": 2,
         "tier": "hard",
@@ -30769,8 +30769,8 @@
           "D) -6"
         ],
         "correctAnswer": "A",
-        "explanationEn": "For a linear system to have infinitely many solutions, the ratio of coefficients must be equal: $\\frac{4}{6} = \\frac{-k}{9} = \\frac{18}{c}$. Since $\\frac{4}{6} = \\frac{2}{3}$: First, $\\frac{-k}{9} = \\frac{2}{3} \\implies -3k = 18 \\implies k = -6$. Second, $\\frac{18}{c} = \\frac{2}{3} \\implies 2c = 54 \\implies c = 27$. Therefore, $k + c = -6 + 27 = 21$. Choice A is correct. Source: SATashkent Math Hard Book (Page 52, Q52).",
-        "explanationUz": "Chiziqli tenglamalar sistemasi cheksiz ko'p yechimga ega bo'lishi uchun barcha koeffitsientlar nisbati teng bo'lishi shart: 4/6 = -k/9 = 18/c. 4/6 = 2/3. Demak, -k/9 = 2/3 => k = -6. 18/c = 2/3 => c = 27. U holda k + c = -6 + 27 = 21. To'g'ri javob A. Manba: SATashkent Math Hard Book (52-bet).",
+        "explanationEn": "For a linear system to have infinitely many solutions, the ratio of coefficients must be equal: $\\frac{4}{6} = \\frac{-k}{9} = \\frac{18}{c}$. Since $\\frac{4}{6} = \\frac{2}{3}$: First, $\\frac{-k}{9} = \\frac{2}{3} \\implies -3k = 18 \\implies k = -6$. Second, $\\frac{18}{c} = \\frac{2}{3} \\implies 2c = 54 \\implies c = 27$. Therefore, $k + c = -6 + 27 = 21$. Choice A is correct. Source: Vespera 800 Gatekeeper Problemset (Page 52, Q52).",
+        "explanationUz": "Chiziqli tenglamalar sistemasi cheksiz ko'p yechimga ega bo'lishi uchun barcha koeffitsientlar nisbati teng bo'lishi shart: 4/6 = -k/9 = 18/c. 4/6 = 2/3. Demak, -k/9 = 2/3 => k = -6. 18/c = 2/3 => c = 27. U holda k + c = -6 + 27 = 21. To'g'ri javob A. Manba: Vespera 800 Gatekeeper Problemset (52-bet).",
         "desmosTrick": "Type 4/6 = -k/9 and 4/6 = 18/c in Desmos -> k = -6, c = 27 -> sum = 21.",
         "referenceFormula": "\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}",
         "diagramPreset": null

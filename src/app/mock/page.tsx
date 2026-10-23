@@ -609,7 +609,7 @@ export default function BluebookMockPage() {
               Digital SAT Bluebook Simulator
             </h1>
             <p className="text-sm md:text-base text-[var(--text-muted)] max-w-2xl mx-auto">
-              Authentic Bluebook testing interface, official College Board and SAT Tashkent test forms, 2-stage adaptive Multistage Testing (MST) routing engine, and embedded Desmos calculator.
+              Authentic Bluebook testing interface, official College Board and Vespera adaptive test forms, 2-stage Multistage Testing (MST) routing engine, and embedded Desmos calculator.
             </p>
           </div>
 

@@ -1446,7 +1446,7 @@ export default function DashboardPage() {
                 </span>
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                All {stats?.totalBankQuestions || stats?.totalQuestions || 1720}+ practice problems, 7 official Bluebook mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from College Panda, Bluebook, August SAT Predictions, and all {materialsList.length} primary textbooks and authoritative references.
+                All {stats?.totalBankQuestions || stats?.totalQuestions || 1847}+ practice problems, {stats?.totalMockExams || 9} full-length adaptive mock exam forms, formula cheat-sheets, and 16 visual models are synthesized from the Vespera Masterclass Curriculum and all {materialsList.length} indexed primary textbooks and authoritative references.
               </p>
             </div>
           </div>
