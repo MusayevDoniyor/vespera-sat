@@ -6,9 +6,9 @@ import SATashkentVault from "@/components/SATashkentVault";
 import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 
 export const metadata: Metadata = {
-  title: "Digital SAT Masterclass Vault & Archive (61 Books) | Vespera SAT",
+  title: "Digital SAT Curriculum Vault & Masterclass Archive (61 Books) | Vespera SAT",
   description:
-    "Exhaustive 61-book archive: SAT Reading & Writing Professor IV (1,474 pages), College Board Question Banks, August 2026 Predictions, SAT Tashkent archives, Gramilliy grammar bible, Vocabook 3.0, Math Hard Books 1.0 & 2.0, English Elite, Elbek SAT, and 4,000+ real exam questions.",
+    "Exhaustive 61-book Digital SAT curriculum archive: Advanced Reading & Writing Mastery Compendium, College Board Question Banks, High-Yield Prediction Dossiers, Grammar Essentials, Master Lexicon, Modular Math series, and 800-Target Gatekeeper Problemsets.",
 };
 
 export default function SATashkentPage() {

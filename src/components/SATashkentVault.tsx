@@ -202,11 +202,11 @@ export default function SATashkentVault() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--accent-blue)]/15 text-[var(--accent-blue)] font-mono border border-[var(--accent-blue)]/30">
-              🇺🇿 NATIONAL & OFFICIAL DIGITAL SAT REPOSITORY
+              VESPERA DIGITAL SAT CURRICULUM VAULT
             </span>
             <span className="text-[var(--text-muted)]">•</span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              {SATASHKENT_LIBRARY.length} Authentic Textbooks & 4,000+ Real Questions
+              {SATASHKENT_LIBRARY.length} Core Textbooks & 4,000+ Real Questions
             </span>
           </div>
 
@@ -216,7 +216,7 @@ export default function SATashkentVault() {
           </h2>
 
           <p className="text-xs text-[var(--text-muted)] mt-2 max-w-2xl leading-relaxed">
-            Exhaustive {SATASHKENT_LIBRARY.length}-volume national and official repository: SAT Reading & Writing Professor IV (1,474 pages & 1,845 questions by SAT League), College Board Question Banks (940 & 1,090 pages), August 2026 Predictions, SAT Tashkent archives (Gramilliy 3x1, Vocabook 3.0, 20 Modular Math books, Hardbooks 1.0 & 2.0), English Elite, Atlas Agora, Elbek SAT, 650 Real Exam Words (@DSATuz), @satmath_1, and Wiley Math.
+            Exhaustive {SATASHKENT_LIBRARY.length}-volume Digital SAT curriculum repository: Advanced Reading & Writing Mastery Compendium, College Board Question Banks, High-Yield Prediction Dossiers, Grammar Essentials, Master Lexicon, Modular Math series, and 800-Target Gatekeeper Problemsets.
           </p>
         </div>
 
@@ -1257,7 +1257,7 @@ export default function SATashkentVault() {
                   Key Topics & Chapters in this Book:
                 </h5>
                 <div className="space-y-1.5">
-                  {selectedBook.keyTopics.map((t, idx) => (
+                  {selectedBook.keyTopics.map((t: string, idx: number) => (
                     <div
                       key={idx}
                       className="p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-xs text-[var(--text-main)] flex items-center gap-2"

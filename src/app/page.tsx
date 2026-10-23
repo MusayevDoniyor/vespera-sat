@@ -839,7 +839,7 @@ export default function DashboardPage() {
             <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 font-mono">Books/PDFs</span>
           </div>
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
-            SATashkent + Panda + Bluebook + Bobrow
+            Vespera SAT Masterclass Library
           </span>
         </div>
       </div>
@@ -977,7 +977,7 @@ export default function DashboardPage() {
                     Hard Module 2 • Book 2.0
                   </span>
                   <h4 className="text-xs sm:text-sm font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors">
-                    SATashkent Hard Book 2.0
+                    Vespera 800 Gatekeeper Problemset
                   </h4>
                   <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">
                     The 145 most punishing 800-gatekeeper problems collected from real 2024-2025 Digital SAT administrations.

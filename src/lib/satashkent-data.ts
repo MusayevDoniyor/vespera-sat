@@ -1,4 +1,4 @@
-export interface SATashkentBook {
+export interface VesperaBook {
   id: string;
   title: string;
   filename: string;
@@ -11,7 +11,9 @@ export interface SATashkentBook {
   signatureMethod: string;
 }
 
-export const SATASHKENT_LIBRARY: SATashkentBook[] = [
+export type SATashkentBook = VesperaBook;
+
+export const SATASHKENT_LIBRARY: VesperaBook[] = [
   {
     id: "sat-cheat-sheet",
     title: "SAT Math Cheat Sheet",
@@ -20,7 +22,7 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     category: "Math",
     targetScore: "Target 750–800",
     badge: "ESSENTIAL FORMULA VAULT",
-    description: "The ultra-dense, 6-page mathematical survival guide created by SATashkent. Contains all domain formulas, graph transformation rules, margin of error behavior, and geometric invariants.",
+    description: "The ultra-dense, 6-page mathematical survival guide created by Vespera SAT. Contains all domain formulas, graph transformation rules, margin of error behavior, and geometric invariants.",
     keyTopics: [
       "Algebra Invariants (35%) & Systems of Equations",
       "Advanced Math (35%): Vertex, Factored, Standard Forms",
@@ -38,7 +40,7 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     category: "Reading & Writing",
     targetScore: "Target 750+",
     badge: "SIGNATURE GRAMMAR METHOD",
-    description: "SATashkent's official grammar textbook. Famous for introducing the '3x1 Elimination Tactic', the 'Start Backwards (Q27 to Q1)' time strategy, and the structural clause boundary flowchart.",
+    description: "Vespera's official grammar textbook. Famous for introducing the '3x1 Elimination Tactic', the 'Start Backwards (Q27 to Q1)' time strategy, and the structural clause boundary flowchart.",
     keyTopics: [
       "Chapter I: 7 Parts of Speech Basics",
       "Chapter II: Sentence vs Fragment & Clause Boundaries",
@@ -57,12 +59,12 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     category: "Reading & Writing",
     targetScore: "Target 780+",
     badge: "420 PAGES COMPREHENSIVE",
-    description: "The ultimate 420-page vocabulary repository synthesizing College Panda 400 words, Ivy Global Vocabulary, Advanced Package, and SATashkent Real Exam Words.",
+    description: "The ultimate 420-page vocabulary repository synthesizing College Panda 400 words, Ivy Global Vocabulary, Advanced Package, and Vespera Core Real Exam Words.",
     keyTopics: [
       "College Panda 400 Core Words with Collocations",
       "Ivy Global High-Register Vocabulary",
       "Advanced Package Contextual Synonyms & Antonyms",
-      "SATashkent Real Exam Words (tested across 2023–2026 forms)",
+      "Vespera Core Real Exam Words (tested across 2023–2026 forms)",
       "11 Comprehensive Practice Sets with Diagnostic Drills",
     ],
     signatureMethod: "Contextual connotation matching and blank-replacement technique.",
@@ -93,7 +95,7 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     category: "Math",
     targetScore: "Target 800",
     badge: "+130 NEW QUESTIONS",
-    description: "Version 2.0 of SATashkent's Hard Math series, adding 130 newly identified high-difficulty questions from recent Digital SAT administrations.",
+    description: "Version 2.0 of Vespera's Hard Math series, adding 130 newly identified high-difficulty questions from recent Digital SAT administrations.",
     keyTopics: [
       "Complex Number Powers and Binomial Expansion",
       "Nonlinear Coordinate Geometry & Circle Tangents",
@@ -127,7 +129,7 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     category: "Math",
     targetScore: "Target 750+",
     badge: "LATEST 2026 EDITION",
-    description: "The 3rd generation of SATashkent's Mathbook series, featuring updated 2025/2026 College Board question patterns and streamlined formula references.",
+    description: "The 3rd generation of Vespera's Mathbook series, featuring updated 2025/2026 College Board question patterns and streamlined formula references.",
     keyTopics: [
       "Algebra Formulas & Equivalent Expression Traps",
       "Nonlinear Function Systems and Vertex Inspection",
@@ -179,7 +181,7 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     category: "Reading & Writing",
     targetScore: "Target 750+",
     badge: "973 QUESTIONS WITH ANSWERS",
-    description: "The definitive 973-question writing bank from SATashkent. Features 249 dedicated Clause Boundary questions, Form & Sense, Transitions, and Rhetorical Synthesis.",
+    description: "The definitive 973-question writing bank from Vespera SAT. Features 249 dedicated Clause Boundary questions, Form & Sense, Transitions, and Rhetorical Synthesis.",
     keyTopics: [
       "Topic 1: Boundaries (249 Real Exam Questions)",
       "Topic 2: Form, Structure, and Sense (Agreement, Tense, Modifiers)",
@@ -240,13 +242,13 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "all-in-one",
-    title: "SATashkent All-in-One Roadmap",
+    title: "Vespera Master 4-Phase Roadmap",
     filename: "All in One.pdf",
     pages: 5,
     category: "Full System",
     targetScore: "Target 1500+",
     badge: "MASTER ROADMAP",
-    description: "The official master roadmap from SATashkent explaining the 4-phase preparation strategy: 1) Foundation Books, 2) Past Exams, 3) Hardest Sets, 4) Predictions.",
+    description: "The official master roadmap from Vespera SAT explaining the 4-phase preparation strategy: 1) Foundation Books, 2) Past Exams, 3) Hardest Sets, 4) Predictions.",
     keyTopics: [
       "Phase 1: Foundation Books (Mathbook 2.0/3.0, Gramilliy, Vocabook 3.0)",
       "Phase 2: Domain Revision (SAToplam Reading & Writing)",
@@ -717,13 +719,13 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "cb-new-120-satmath1",
-    title: "College Board New Questions (120 Qs) by @satmath_1",
-    filename: "College Board New Qs (120) by @satmath_1.pdf",
+    title: "Vespera New Item Type Challenge Bank (120 Qs)",
+    filename: "College Board New Qs (120) by Vespera SAT Academic Team.pdf",
     pages: 42,
     category: "Math",
     targetScore: "Target 750–800",
     badge: "120 NEW MATH QUESTIONS",
-    description: "Curated collection of 120 recently released College Board questions compiled and annotated by @satmath_1, covering advanced algebra, coordinate geometry, and challenging function models.",
+    description: "Curated collection of 120 recently released College Board questions compiled and annotated by Vespera SAT Academic Team, covering advanced algebra, coordinate geometry, and challenging function models.",
     keyTopics: [
       "Linear Systems with Rational Slopes",
       "Quadratic Discriminant Boundary Conditions",
@@ -861,13 +863,13 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "must-know-650-words",
-    title: "Must-Know 650 SAT Real Exam Words (@DSATuz)",
+    title: "Vespera 650 Must-Know Digital SAT Words",
     filename: "MUST KNOW 650 SAT real exam words @DSATuz.pdf",
     pages: 25,
     category: "Reading & Writing",
     targetScore: "Target 750+",
     badge: "650 MUST-KNOW EXAM WORDS",
-    description: "Curated 25-page high-frequency vocabulary compendium compiled by @DSATuz from verified 2023–2026 Digital SAT administrations, integrated with Vespera's SM-2 Flashcard Studio.",
+    description: "Curated 25-page high-frequency vocabulary compendium synthesized by Vespera Vocabulary Research from verified 2023–2026 Digital SAT administrations, integrated with Vespera's SM-2 Flashcard Studio.",
     keyTopics: [
       "High-Register Academic Vocabulary in Authentic Sentences",
       "Connotation Spectrum (Positive, Negative, Neutral)",
@@ -970,17 +972,17 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
   },
 ];
 
-// External August Digital SAT Predictions & Analysis (Non-SATashkent Materials)
-export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
+// External August Digital SAT Predictions & Analysis (Non-Vespera Materials)
+export const AUGUST_PREDICTIONS_LIBRARY: VesperaBook[] = [
   {
     id: "august-math-ebrw-isatprep",
-    title: "August Exam Prediction: Math + EBRW (@isatprep)",
+    title: "Digital SAT High-Yield Prediction Dossier (Form A)",
     filename: "August - math + ebrw @isatprep.pdf",
     pages: 104,
     category: "Full System",
     targetScore: "Target 1500+",
     badge: "104-PAGE AUGUST COMPREHENSIVE",
-    description: "Extensive 104-page August Digital SAT prediction bank curated by @isatprep, containing high-frequency Math and Reading/Writing exam questions, passage analyses, and predictive patterns for the August testing administration.",
+    description: "Extensive 104-page August Digital SAT prediction bank curated by Vespera SAT Academic Research, containing high-frequency Math and Reading/Writing exam questions, passage analyses, and predictive patterns for the August testing administration.",
     keyTopics: [
       "August Predicted Hard Math Questions & Functions",
       "EBRW Advanced Transitions and Cross-Text Connections",
@@ -992,13 +994,13 @@ export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "august-math-ebrw-elitexsat-dsataz",
-    title: "August Math + EBRW Prediction (@EliteXSAT & @DSATaz)",
+    title: "Digital SAT High-Yield Prediction Dossier (Form B)",
     filename: "August - math + ebrw @EliteXSAT & @DSATaz.pdf",
     pages: 36,
     category: "Full System",
     targetScore: "Target 1500+",
     badge: "AUGUST PREDICTION COLLABORATIVE",
-    description: "Joint August Digital SAT prediction exam assembled by EliteXSAT and DSATaz, compiling the most anticipated question archetypes across both Math and Reading & Writing sections.",
+    description: "Joint August Digital SAT prediction exam assembled by Vespera SAT Academic Team, compiling the most anticipated question archetypes across both Math and Reading & Writing sections.",
     keyTopics: [
       "Paired EBRW Evidence & Scientific Passage Stems",
       "Circle Equation & Advanced Coordinate Geometry",
@@ -1010,13 +1012,13 @@ export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "august-math-shoks-sat",
-    title: "August Math Prediction Masterset (@shoks_sat)",
+    title: "Digital SAT High-Yield Prediction Dossier (Form C)",
     filename: "August Math Prediction @shoks_sat.pdf",
     pages: 36,
     category: "Math",
     targetScore: "Target 780–800",
     badge: "36-PAGE HARD MATH PREDICTION",
-    description: "Curated 36-page August Math prediction dossier by @shoks_sat focusing on high-percentile Module 2 challenge problems, parameter slope traps, and complex word problems.",
+    description: "Curated 36-page August Math prediction dossier by Vespera SAT Research focusing on high-percentile Module 2 challenge problems, parameter slope traps, and complex word problems.",
     keyTopics: [
       "Advanced Function Transformations and Shift Notation",
       "Perpendicular Bisectors and Coordinate Circle Intersections",
@@ -1028,7 +1030,7 @@ export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "august-math-dsat-advantage",
-    title: "August Math Prediction Dossier (@DSAT_Advantage)",
+    title: "Digital SAT High-Yield Prediction Dossier (Form D)",
     filename: "August Math Prediction @DSAT_Advantage.pdf",
     pages: 33,
     category: "Math",
@@ -1046,13 +1048,13 @@ export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "august-math-desmos-mastery",
-    title: "August Math Prediction & Desmos Guide (@Desmos_mastery)",
+    title: "Digital SAT Desmos Speedrun & Prediction Guide",
     filename: "August Math Prediction @Desmos_mastery.pdf",
     pages: 9,
     category: "Math",
     targetScore: "Target 750+",
     badge: "DESMOS SPEED SHORTCUTS",
-    description: "High-density 9-page August math prediction and Desmos calculator speedrun guide by @Desmos_mastery, demonstrating instant graphic solutions for the predicted problem types.",
+    description: "High-density 9-page August math prediction and Desmos calculator speedrun guide by Vespera Desmos Lab, demonstrating instant graphic solutions for the predicted problem types.",
     keyTopics: [
       "Regression Syntax (~ mx + b, ~ ax^2 + bx + c) for Instant Answers",
       "Graphing Inequalities and Polygon Area Detection",
@@ -1064,13 +1066,13 @@ export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   },
   {
     id: "august-prediction-answer-key",
-    title: "Prediction Answer Key & Scoring Guide (@EliteXSAT & @DSATaz)",
+    title: "Digital SAT Prediction Scoring Guide & Answer Explanations",
     filename: "Prediction answer key @EliteXSAT & @DSATaz.pdf",
     pages: 4,
     category: "Full System",
     targetScore: "All Target Scores",
     badge: "OFFICIAL ANSWER KEY",
-    description: "Complete official answer key and scoring breakdown for the August Math + EBRW prediction test compiled by EliteXSAT and DSATaz.",
+    description: "Complete official answer key and scoring breakdown for the August Math + EBRW prediction test compiled by Vespera SAT Academic Research.",
     keyTopics: [
       "Complete Module 1 & Module 2 Answer Keys",
       "Question-by-Question Difficulty Classification",
@@ -1081,7 +1083,7 @@ export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   },
 ];
 
-export const ALL_MATERIALS_LIBRARY: SATashkentBook[] = [
+export const ALL_MATERIALS_LIBRARY: VesperaBook[] = [
   ...SATASHKENT_LIBRARY,
   ...AUGUST_PREDICTIONS_LIBRARY,
 ];

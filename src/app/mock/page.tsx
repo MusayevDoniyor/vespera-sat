@@ -60,7 +60,7 @@ export default function BluebookMockPage() {
   // Active selected test
   const [selectedExam, setSelectedExam] = useState<BluebookExamForm>(BLUEBOOK_EXAMS[0]);
   const [stage, setStage] = useState<ExamStage>("lobby");
-  const [formulaTab, setFormulaTab] = useState<"cb" | "satashkent" | "desmos" | "rw">("cb");
+  const [formulaTab, setFormulaTab] = useState<"cb" | "vespera" | "desmos" | "rw">("cb");
 
   // Section & Module state
   const [currentSection, setCurrentSection] = useState<"READING_WRITING" | "MATH">("READING_WRITING");
@@ -2257,14 +2257,14 @@ export default function BluebookMockPage() {
                 Official Reference (Math)
               </button>
               <button
-                onClick={() => setFormulaTab("satashkent")}
+                onClick={() => setFormulaTab("vespera")}
                 className={`px-3 py-1.5 rounded-lg font-bold transition whitespace-nowrap ${
-                  formulaTab === "satashkent"
+                  formulaTab === "vespera"
                     ? "bg-blue-600 text-white shadow-sm"
                     : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
                 }`}
               >
-                SATashkent Invariants
+                Vespera Math Invariants
               </button>
               <button
                 onClick={() => setFormulaTab("desmos")}
@@ -2330,8 +2330,8 @@ export default function BluebookMockPage() {
               </div>
             )}
 
-            {/* Tab 2: SATashkent High-Yield Math Invariants */}
-            {formulaTab === "satashkent" && (
+            {/* Tab 2: Vespera High-Yield Math Invariants */}
+            {formulaTab === "vespera" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[var(--text-secondary)]">
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1.5">
                   <div className="font-bold text-[var(--accent-blue)]">3 Essential Quadratic Forms</div>
@@ -2407,7 +2407,7 @@ export default function BluebookMockPage() {
             {formulaTab === "rw" && (
               <div className="space-y-3 text-xs text-[var(--text-secondary)]">
                 <div className="p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-1">
-                  <div className="font-bold text-indigo-500">1. 3x1 Elimination Tactic (SATashkent Gramilliy)</div>
+                  <div className="font-bold text-indigo-500">1. 3x1 Elimination Tactic (Vespera Grammar Methodology)</div>
                   <p>
                     If 3 answer choices share the identical grammatical feature or structural flaw (e.g., 3 are past tense while 1 is present tense, or 3 produce comma splices), the 1 distinct outlier choice has a 95%+ probability of being correct!
                   </p>

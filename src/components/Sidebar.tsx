@@ -90,9 +90,9 @@ function SidebarComponent() {
     {
       title: "Test & Review",
       items: [
-        { label: "Bluebook Mock", href: "/mock", icon: FileCheck2 },
+        { label: "Adaptive Mock Exam", href: "/mock", icon: FileCheck2 },
         { label: "Error Notebook", href: "/error-log", icon: Repeat },
-        { label: "55 SATashkent Books", href: "/satashkent", icon: Award },
+        { label: "Curriculum & Vault", href: "/satashkent", icon: BookOpen },
       ],
     },
   ];
