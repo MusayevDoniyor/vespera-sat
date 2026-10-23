@@ -968,6 +968,10 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     ],
     signatureMethod: "The Five-Step Routine: overview text in own words, justify the 1 key, deconstruct the 3 distractors, and verbalize rationale. 'Twenty questions studied properly beat two hundred rushed through.'",
   },
+];
+
+// External August Digital SAT Predictions & Analysis (Non-SATashkent Materials)
+export const AUGUST_PREDICTIONS_LIBRARY: SATashkentBook[] = [
   {
     id: "august-math-ebrw-isatprep",
     title: "August Exam Prediction: Math + EBRW (@isatprep)",
@@ -1075,6 +1079,11 @@ export const SATASHKENT_LIBRARY: SATashkentBook[] = [
     ],
     signatureMethod: "Post-test diagnostic score calibration.",
   },
+];
+
+export const ALL_MATERIALS_LIBRARY: SATashkentBook[] = [
+  ...SATASHKENT_LIBRARY,
+  ...AUGUST_PREDICTIONS_LIBRARY,
 ];
 
 export interface CheatSheetSection {

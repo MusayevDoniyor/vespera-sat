@@ -92,7 +92,7 @@ function SidebarComponent() {
       items: [
         { label: "Bluebook Mock", href: "/mock", icon: FileCheck2 },
         { label: "Error Notebook", href: "/error-log", icon: Repeat },
-        { label: `${SATASHKENT_LIBRARY.length} Prep Books`, href: "/satashkent", icon: Award },
+        { label: "55 SATashkent Books", href: "/satashkent", icon: Award },
       ],
     },
   ];
