@@ -45,7 +45,7 @@ interface QuestionCardProps {
   onOpenDesmosWithEquation?: (equation: string) => void;
 }
 
-export default function QuestionCard({
+export default React.memo(function QuestionCard({
   question,
   onAnswerSubmitted,
   onOpenDesmosWithEquation,
@@ -67,7 +67,6 @@ export default function QuestionCard({
   const [mistakeType, setMistakeType] = useState<string>("CONCEPT_GAP");
   const [isSaving, setIsSaving] = useState(false);
   const [sm2Result, setSm2Result] = useState<any>(null);
-  const [isCardActive, setIsCardActive] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Sync state when question prop changes
@@ -236,24 +235,14 @@ export default function QuestionCard({
       tabIndex={0}
       onMouseEnter={() => {
         (window as any).vespera_active_qid = question.id;
-        setIsCardActive(true);
-      }}
-      onMouseLeave={() => {
-        setIsCardActive(false);
       }}
       onFocus={() => {
         (window as any).vespera_active_qid = question.id;
-        setIsCardActive(true);
       }}
       onClick={() => {
         (window as any).vespera_active_qid = question.id;
-        setIsCardActive(true);
       }}
-      className={`bg-[var(--bg-card)] border rounded-3xl overflow-hidden shadow-sm transition-all outline-none ${
-        isCardActive
-          ? "border-[var(--accent-blue)]/70 ring-1 ring-[var(--accent-blue)]/20 shadow-md"
-          : "border-[var(--border-main)] hover:border-[var(--accent-blue)]/40"
-      }`}
+      className="bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 focus-within:border-[var(--accent-blue)]/70 focus-within:ring-1 focus-within:ring-[var(--accent-blue)]/20 focus-within:shadow-md rounded-3xl overflow-hidden shadow-sm transition-all outline-none"
     >
       {/* Header Info */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-7 py-3 sm:py-4 bg-[var(--bg-surface)] border-b border-[var(--border-main)]">
@@ -700,4 +689,4 @@ export default function QuestionCard({
       </div>
     </div>
   );
-}
+});

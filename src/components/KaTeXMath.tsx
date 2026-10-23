@@ -12,7 +12,7 @@ interface KaTeXMathProps {
 
 // Helper to detect if a string contains human language sentences rather than a bare math formula
 function isSentenceText(str: string): boolean {
-  const sentenceWordRegex = /\b(the|is|of|in|to|and|on|at|for|with|curves|enter|plot|type|deb|yozing|teng|burchak|agar|chunki|bo'ladi|qiymati|javob|variant|which|following|expressions|equivalent|both|identically|overlap|line|slider|graph|touch|peak|vertex)\b/i;
+  const sentenceWordRegex = /\b(the|is|of|in|to|and|on|at|for|with|curves|enter|plot|type|deb|yozing|teng|burchak|agar|chunki|bo'ladi|qiymati|javob|variant|which|following|expressions|equivalent|both|identically|overlap|line|slider|graph|touch|peak|vertex|per|year|each|standard|premium|one|collected|membership|fees|equation|represents|situation|decreases|increases|constant|value|total|percent|points|solution|triangle|circle|meters|seconds|average|median|mean|deviation|statement|true|false)\b/i;
   if (sentenceWordRegex.test(str)) return true;
   if (/[a-zA-Z]{3,}\s+[a-zA-Z]{3,}/.test(str)) return true;
   return false;
@@ -23,25 +23,30 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
   const renderedContent = useMemo(() => {
     if (!actualContent) return "";
 
+    // Fast normalization for unicode exponents, fraction slash, and typographic minus
+    let text = actualContent
+      .replace(/([a-zA-Z0-9\)])²/g, '$1^2')
+      .replace(/([a-zA-Z0-9\)])³/g, '$1^3')
+      .replace(/([0-9]+)⁄([0-9]+)/g, '\\frac{$1}{$2}');
+
     // Ultra-fast path for plain single-line text without LaTeX, markdown, or special formatting
     if (
-      !actualContent.includes("$") &&
-      !actualContent.includes("\\") &&
-      !actualContent.includes("*") &&
-      !actualContent.includes("`") &&
-      !actualContent.includes("|") &&
-      !actualContent.includes("#") &&
-      !actualContent.includes("<") &&
-      !actualContent.includes(">") &&
-      !actualContent.includes("\n") &&
-      !actualContent.includes("^") &&
-      !actualContent.includes("_") &&
-      !actualContent.includes("'")
+      !text.includes("$") &&
+      !text.includes("\\") &&
+      !text.includes("*") &&
+      !text.includes("`") &&
+      !text.includes("|") &&
+      !text.includes("#") &&
+      !text.includes("<") &&
+      !text.includes(">") &&
+      !text.includes("\n") &&
+      !text.includes("^") &&
+      !text.includes("_") &&
+      !text.includes("'")
     ) {
-      return actualContent;
+      return text;
     }
 
-    let text = actualContent;
     const tokens: { id: string; html: string }[] = [];
     const saveToken = (html: string) => {
       const id = `%%%VKATEX_${tokens.length}_${Math.random().toString(36).slice(2, 7)}%%%`;
@@ -49,24 +54,15 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
       return id;
     };
 
-    // 1. Currency fixes ($45, $1,500, $30 billion, etc.)
-    text = text.replace(/\$([0-9]{1,3}(?:,[0-9]{3})+(?:\.[0-9]+)?)(?!\s*[+\-*/=^_\\])/g, '&#36;$1');
+    // 1. Currency fixes ($45, $12, $1.50, $3,600, etc.)
+    text = text.replace(/\$\s*\\+\$\s*([0-9.,{}]+)\s*\$/g, (_, val) => `&#36;${val.replace(/[{}]/g, "")}`);
+    text = text.replace(/\\+\$\s*([0-9.,{}]+)\s*\$/g, (_, val) => `&#36;${val.replace(/[{}]/g, "")}`);
+    text = text.replace(/\\+\$\s*([0-9.,{}]+)/g, (_, val) => `&#36;${val.replace(/[{}]/g, "")}`);
+    text = text.replace(/\$\s*&#36;([0-9.,]+)\s*\$/g, '&#36;$1');
     text = text.replace(/\$([0-9]+(?:\.[0-9]+)?\s+(?:million|billion|trillion|thousand|hundred))\b/gi, '&#36;$1');
-
-    text = text.replace(/\$\s*\\+\$\s*([0-9.,{}]+)\s*\$/g, (_, val) => {
-      const cleanVal = val.replace(/[{}]/g, "");
-      return `&#36;${cleanVal}`;
-    });
-
-    text = text.replace(/\\+\$\s*([0-9.,{}]+)\s*\$/g, (_, val) => {
-      const cleanVal = val.replace(/[{}]/g, "");
-      return `&#36;${cleanVal}`;
-    });
-
-    text = text.replace(/\\+\$\s*([0-9.,{}]+)/g, (_, val) => {
-      const cleanVal = val.replace(/[{}]/g, "");
-      return `&#36;${cleanVal}`;
-    });
+    // Raw currency: $ followed by digits (with optional commas/decimals)
+    // when followed by space + non-operator OR punctuation OR end of line
+    text = text.replace(/(?<!\$)\$([0-9]+(?:,[0-9]{3})*(?:\.[0-9]+)?)(?!\$)(?=\s+(?![+\-*/=^_\\])|[,.;:!?]|$)/g, '&#36;$1');
 
     // 2. Block math: $$ ... $$
     text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, equation) => {
@@ -121,7 +117,10 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
     });
 
     // 4. Inline math: $ ... $
-    text = text.replace(/(?<!\$)\$(?!\$)([^\$\n]+?)\$(?!\$)/g, (_, equation) => {
+    text = text.replace(/(?<!\$)\$(?!\$)([^\$\n]+?)\$(?!\$)/g, (match, equation) => {
+      if (isSentenceText(equation)) {
+        return match;
+      }
       try {
         const rendered = katex.renderToString(equation.trim(), {
           displayMode: false,
@@ -131,7 +130,7 @@ export default React.memo(function KaTeXMath({ content, mathText, className = ""
         });
         return saveToken(`<span class="inline-block px-1 align-baseline font-medium">${rendered}</span>`);
       } catch (e) {
-        return `$${equation}$`;
+        return match;
       }
     });
 
