@@ -222,7 +222,7 @@ export default function DashboardPage() {
                 )
               ) : (
                 <>
-                  Complete Digital SAT preparation with <strong className="text-[var(--text-main)]">1,182 authentic College Board questions</strong>, 13 interactive textbook units, 16 visual models, and Desmos speed hacks. Start with our 5-minute diagnostic or create an account to customize your study plan.
+                  Complete Digital SAT preparation with <strong className="text-[var(--text-main)]">{stats?.totalQuestions || 1847}+ authentic questions</strong> ({stats?.math?.total || 583} Math & {stats?.verbal?.total || 1264} Verbal), {stats?.totalMockExams || 9} full-length adaptive practice tests, 13 interactive textbook units, 16 visual models, and Desmos speed hacks. Start with our 5-minute diagnostic or create an account to customize your study plan.
                 </>
               )}
             </p>
@@ -805,12 +805,12 @@ export default function DashboardPage() {
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black text-[var(--text-main)]">
-              {stats?.totalQuestions || 212}
+              {stats?.totalQuestions || 1847}
             </span>
             <span className="text-xs font-semibold text-[var(--accent-blue)] font-mono">Problems</span>
           </div>
           <span className="text-[11px] text-[var(--text-muted)] mt-1 block">
-            {stats?.math ? `${stats.math.total || 118} Math • ${stats.verbal?.total || 94} Verbal` : "118 Math • 94 Verbal"}
+            {stats?.math ? `${stats.math.total} Math • ${stats.verbal?.total} Verbal` : "583 Math • 1,264 Verbal"}
           </span>
         </div>
 

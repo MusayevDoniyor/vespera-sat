@@ -1,3 +1,5 @@
-# Ignore scripts and build artifacts from Vercel deployment payload
+# Ignore scripts, materials and build artifacts from Vercel deployment payload
 scripts/
+materials/
 .system_generated/
+Screenshot*.png
