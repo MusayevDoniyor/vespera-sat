@@ -24,6 +24,7 @@ import SATashkentVault from "@/components/SATashkentVault";
 import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
 import MathDictionary from "@/components/MathDictionary";
 import KhanAcademyUnitsView from "@/components/KhanAcademyUnitsView";
+import CurriculumSkeleton from "@/components/skeletons/CurriculumSkeleton";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 
 // Fallback initial dataset to guarantee 0ms instant render without network delay
@@ -328,10 +329,7 @@ export default function CurriculumPage() {
 
       {/* Topics Grid */}
       {loading ? (
-        <div className="p-16 text-center text-[var(--text-muted)] bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)]">
-          <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-          Loading curriculum database...
-        </div>
+        <CurriculumSkeleton count={8} />
       ) : filteredTopics.length === 0 ? (
         <div className="p-12 text-center text-[var(--text-muted)] bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)]">
           No topics matched "{searchQuery}".

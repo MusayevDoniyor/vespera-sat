@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import KaTeXMath from "./KaTeXMath";
 import QuestionCard from "./QuestionCard";
+import QuestionCardSkeleton from "./skeletons/QuestionCardSkeleton";
 import { TopicDeepDive, OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 import {
   X,
@@ -447,9 +448,8 @@ export default function TopicStudyModal({
               </div>
 
               {loadingQuestions ? (
-                <div className="p-12 text-center text-[var(--text-muted)]">
-                  <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                  Loading practice questions...
+                <div className="py-4">
+                  <QuestionCardSkeleton count={2} compact />
                 </div>
               ) : questions.length === 0 ? (
                 <div className="p-12 text-center text-[var(--text-muted)] bg-[var(--bg-surface)] rounded-2xl border border-[var(--border-main)]">

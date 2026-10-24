@@ -91,15 +91,18 @@ function SourceBadge({ source, model }: { source?: string; model?: string }) {
 
 function TypingDots() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-sm">
-        <Sparkles size={14} className="text-white" />
+    <div className="flex items-start gap-3 animate-fade-in">
+      <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+        <Sparkles size={14} className="text-white animate-spin" />
       </div>
-      <div className="flex items-center gap-1.5 py-3 px-4 rounded-2xl rounded-tl-sm bg-[var(--bg-surface)] border border-[var(--border-main)] shadow-sm">
-        <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce [animation-delay:-0.3s]" />
-        <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
-        <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" />
-        <span className="ml-2 text-[11px] font-medium text-[var(--text-muted)]">Vespera AI thinking...</span>
+      <div className="p-3.5 rounded-2xl rounded-tl-sm bg-[var(--bg-surface)] border border-[var(--border-main)] shadow-xs space-y-2 min-w-[220px]">
+        <div className="flex items-center gap-1.5 pb-0.5">
+          <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce [animation-delay:-0.3s]" />
+          <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
+          <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" />
+        </div>
+        <div className="h-3 w-44 rounded skeleton" />
+        <div className="h-2.5 w-28 rounded skeleton" />
       </div>
     </div>
   );

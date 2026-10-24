@@ -355,10 +355,16 @@ html.dark .glass-panel {
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-surface-hover) 50%, var(--bg-surface) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 0%,
+    var(--bg-surface-hover) 50%,
+    var(--bg-surface) 100%
+  );
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
+  animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   border-radius: var(--radius-md);
+  opacity: 0.95;
 }
 
 /* --- Tactile Interactive Utilities --- */

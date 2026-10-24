@@ -825,9 +825,15 @@ export default function UnitTextbookClient({ unit }: Props) {
               ))}
 
               {aiLoading && (
-                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 p-2">
-                  <Loader2 size={16} className="animate-spin text-[var(--accent-blue)]" />
-                  <span>AI Mentor is analyzing mathematical principles...</span>
+                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] max-w-[85%] animate-fade-in">
+                  <div className="w-6 h-6 rounded-lg bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] flex items-center justify-center shrink-0 mt-0.5">
+                    <Sparkles size={13} className="animate-spin text-[var(--accent-blue)]" />
+                  </div>
+                  <div className="space-y-2 flex-1">
+                    <div className="h-3.5 w-48 rounded-md skeleton" />
+                    <div className="h-3 w-64 rounded-md skeleton" />
+                    <div className="h-3 w-36 rounded-md skeleton" />
+                  </div>
                 </div>
               )}
             </div>

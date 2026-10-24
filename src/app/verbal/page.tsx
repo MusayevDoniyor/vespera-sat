@@ -5,6 +5,7 @@ import QuestionCard from "@/components/QuestionCard";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import TopicStudyModal from "@/components/TopicStudyModal";
 import Pagination from "@/components/Pagination";
+import QuestionCardSkeleton from "@/components/skeletons/QuestionCardSkeleton";
 import { OFFICIAL_TOPICS_DATA } from "@/lib/curriculum-data";
 import {
   BookOpen,
@@ -827,10 +828,7 @@ function VerbalContent() {
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-[var(--text-muted)] text-sm bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
-            <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-            Loading Reading & Writing questions (Page {page})...
-          </div>
+          <QuestionCardSkeleton count={3} />
         ) : questions.length === 0 ? (
           <div className="p-10 text-center space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-main)] shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] flex items-center justify-center mx-auto text-xl font-bold">
@@ -908,9 +906,10 @@ export default function VerbalAcceleratorPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-16 text-center text-[var(--text-muted)]">
-          <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-          Loading Reading & Writing Studio...
+        <div className="min-h-screen bg-[var(--bg-main)] p-4 md:p-8">
+          <div className="max-w-5xl mx-auto space-y-6">
+            <QuestionCardSkeleton count={3} />
+          </div>
         </div>
       }
     >

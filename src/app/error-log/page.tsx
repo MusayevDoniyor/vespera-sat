@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import QuestionCard from "@/components/QuestionCard";
 import Pagination from "@/components/Pagination";
+import ErrorLogSkeleton from "@/components/skeletons/ErrorLogSkeleton";
 import { Repeat, CheckCircle2, ArrowLeft, Clock, ShieldCheck, Flame } from "lucide-react";
 import Link from "next/link";
 
@@ -161,10 +162,7 @@ export default function ErrorLogPage() {
         )}
 
         {loading ? (
-          <div className="p-12 text-center text-[var(--text-muted)] text-sm bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)]">
-            <div className="w-8 h-8 border-2 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-            Loading error log queue...
-          </div>
+          <ErrorLogSkeleton count={3} />
         ) : errors.length === 0 ? (
           <div className="p-12 text-center text-[var(--text-muted)] bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)] shadow-sm">
             <CheckCircle2 size={44} className="text-[var(--accent-green)] mx-auto mb-3" />

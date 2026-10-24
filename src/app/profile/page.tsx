@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthContext";
+import ProfileSkeleton from "@/components/skeletons/ProfileSkeleton";
 import {
   User,
   Award,
@@ -109,6 +110,14 @@ export default function ProfilePage() {
     if (!stats || !stats.totalSolved) return 0;
     return Math.round((stats.totalCorrect / stats.totalSolved) * 100);
   }, [stats]);
+
+  if (loading) {
+    return (
+      <div className="w-full space-y-8 pb-16 animate-fade-in max-w-7xl mx-auto">
+        <ProfileSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in max-w-7xl mx-auto">

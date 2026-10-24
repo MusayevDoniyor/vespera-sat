@@ -37,6 +37,7 @@ import StudentRadarAnalytics from "@/components/analytics/StudentRadarAnalytics"
 import { isMathDomain, isVerbalDomain } from "@/lib/curriculum-data";
 import { fetchWithDeduplication } from "@/lib/api-cache";
 import { SATASHKENT_LIBRARY } from "@/lib/satashkent-data";
+import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 
 export default function DashboardPage() {
   const { user, openAuthModal, openOnboarding } = useAuth();
@@ -183,6 +184,14 @@ export default function DashboardPage() {
       type: b.badge,
     }));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full space-y-8 pb-16 animate-fade-in">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in">

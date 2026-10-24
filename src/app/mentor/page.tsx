@@ -478,15 +478,16 @@ export default function MentorPage() {
               {isLoading && (
                 <div className="flex items-start gap-4 animate-fadeIn">
                   <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
-                    <Sparkles size={15} />
+                    <Sparkles size={15} className="animate-spin" />
                   </div>
-                  <div className="flex items-center gap-2 py-4 px-6 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xs">
-                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" />
-                    <span className="ml-2.5 text-xs sm:text-sm font-semibold text-[var(--text-muted)]">
-                      Synthesizing SAT explanation from first principles...
-                    </span>
+                  <div className="p-4 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-main)] shadow-xs space-y-2 min-w-[240px]">
+                    <div className="flex items-center gap-1.5 pb-1">
+                      <span className="w-2 h-2 rounded-full bg-blue-600 animate-bounce [animation-delay:-0.3s]" />
+                      <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
+                      <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" />
+                    </div>
+                    <div className="h-3 w-4/5 rounded skeleton" />
+                    <div className="h-3 w-3/5 rounded skeleton" />
                   </div>
                 </div>
               )}

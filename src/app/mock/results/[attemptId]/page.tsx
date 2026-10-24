@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, RotateCcw, AlertCircle, Sparkles } from "lucide-react";
 import MockResultsView from "@/components/mock/MockResultsView";
+import MockResultSkeleton from "@/components/skeletons/MockResultSkeleton";
 import { getAttemptReport, clearExamSession, MockAttemptReport } from "@/lib/mock-storage";
 
 export default function MockResultsPage() {
@@ -51,16 +52,7 @@ export default function MockResultsPage() {
   }, [attemptId]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex items-center justify-center p-4">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-[var(--accent-blue)] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs font-mono text-[var(--text-muted)]">
-            Loading AI Exam Analysis & Score Report...
-          </span>
-        </div>
-      </div>
-    );
+    return <MockResultSkeleton />;
   }
 
   if (!report) {
