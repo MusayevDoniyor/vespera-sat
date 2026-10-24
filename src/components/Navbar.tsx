@@ -93,7 +93,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
           <button
             onClick={() => window.dispatchEvent(new CustomEvent("vespera_open_copilot"))}
             title="AI Mentor Copilot"
-            className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-[var(--accent-blue)]/10 hover:bg-[var(--accent-blue)]/20 text-xs font-semibold text-[var(--accent-blue)] border border-[var(--accent-blue)]/30 transition-all shadow-sm shrink-0"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-[var(--accent-blue)]/10 hover:bg-[var(--accent-blue)]/20 text-xs font-semibold text-[var(--accent-blue)] border border-[var(--accent-blue)]/30 hover:scale-105 active:scale-95 transition-all duration-150 shadow-sm shrink-0 cursor-pointer"
           >
             <Sparkles size={14} className="shrink-0" />
             <span className="hidden sm:inline">AI Mentor</span>
@@ -103,7 +103,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
           <button
             onClick={() => setShowFormulaSheet(true)}
             title="Official Reference Sheet"
-            className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-xs font-medium text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm shrink-0"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-xs font-medium text-[var(--text-main)] border border-[var(--border-main)] hover:scale-105 active:scale-95 transition-all duration-150 shadow-sm shrink-0 cursor-pointer"
           >
             <BookMarked size={14} className="text-amber-500 shrink-0" />
             <span className="hidden md:inline">Reference</span>
@@ -114,7 +114,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
             <button
               onClick={onToggleDesmos}
               title="Live Desmos Calculator"
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs font-semibold border transition-colors shadow-sm shrink-0 ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl text-xs font-semibold border hover:scale-105 active:scale-95 transition-all duration-150 shadow-sm shrink-0 cursor-pointer ${
                 isDesmosOpen
                   ? "bg-[var(--accent-green)]/15 text-[var(--accent-green)] border-[var(--accent-green)]/40"
                   : "bg-[var(--bg-card)] text-[var(--accent-blue)] border-[var(--border-main)] hover:bg-[var(--bg-surface)]"
@@ -131,7 +131,7 @@ function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
             <Link
               href="/profile"
               title={`Personalized as ${user.fullName} • Goal: ${user.targetSatScore || 1550}+ • View Profile & Analytics`}
-              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--border-hover)] transition-all shadow-sm text-xs font-bold shrink-0"
+              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--border-hover)] hover:scale-105 active:scale-95 transition-all duration-150 shadow-sm text-xs font-bold shrink-0"
             >
               <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-mono font-bold shrink-0">
                 {user.fullName.charAt(0).toUpperCase()}

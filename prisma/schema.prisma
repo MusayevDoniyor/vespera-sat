@@ -4,84 +4,165 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  schemas  = ["vespera", "public"]
 }
 
+/// Authentication and core account credentials
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  role         String        @default("student") // "student" | "instructor" | "admin"
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  profile      UserProfile?
+  progress     UserProgress[]
+  errorLogs    ErrorLog[]
+  mockExams    MockExam[]
+
+  @@map("users")
+  @@schema("vespera")
+}
+
+/// Rich candidate academic profile, SAT diagnostic levels, and personalized goals
+model UserProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique @map("user_id")
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName            String   @map("full_name")
+  mathLevel           String   @default("intermediate") @map("math_level") // "beginner" | "intermediate" | "advanced"
+  englishLevel        String   @default("intermediate") @map("english_level")
+  ieltsScore          String?  @map("ielts_score")
+  currentSatScore     Int?     @map("current_sat_score")
+  targetSatScore      Int      @default(1550) @map("target_sat_score")
+  examDate            String?  @map("exam_date")
+  dailyGoalMinutes    Int      @default(45) @map("daily_goal_minutes")
+  priorityWeakness    String?  @map("priority_weakness")
+  onboardingCompleted Boolean  @default(false) @map("onboarding_completed")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([targetSatScore])
+  @@map("user_profiles")
+  @@schema("vespera")
+}
+
+/// SAT Curriculum taxonomy and pedagogical units (13 Units + RW Domains)
 model Topic {
   id            String     @id @default(cuid())
   section       String     // "MATH" | "READING_WRITING"
-  domain        String     // e.g. "Algebra", "Advanced Math", "Craft & Structure"
-  code          String     @unique // e.g. "ALG-01", "ENG-TRANS"
-  titleUz       String
-  titleEn       String
-  descriptionUz String
-  desmosTips    String?
-  order         Int        @default(0)
+  domain        String     // e.g. "Algebra", "Advanced Math", "Craft and Structure"
+  code          String     @unique // e.g. "ALG-01", "ADV-02", "RW-INF-01"
+  titleUz       String     @map("title_uz")
+  titleEn       String     @map("title_en")
+  descriptionUz String     @map("description_uz")
+  desmosTips    String?    @map("desmos_tips")
+  sortOrder     Int        @default(0) @map("sort_order")
+  createdAt     DateTime   @default(now()) @map("created_at")
+
   questions     Question[]
 
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  @@index([section, domain])
+  @@index([sortOrder])
+  @@map("topics")
+  @@schema("vespera")
 }
 
+/// Official Digital SAT Question Bank item with LaTeX, Desmos shortcuts, and vector SVGs
 model Question {
-  id               String         @id @default(cuid())
-  topicId          String
-  topic            Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  id               String         @id
+  topicCode        String         @map("topic_code")
+  topic            Topic          @relation(fields: [topicCode], references: [code], onDelete: Cascade)
   section          String         // "MATH" | "READING_WRITING"
   domain           String
   difficulty       String         // "Easy" | "Medium" | "Hard"
-  prompt           String         // The question text (contains LaTeX like $y = mx + b$)
-  passage          String?        // Reading passage, student notes, or context
-  options          String         // JSON array: ["A. ...", "B. ...", "C. ...", "D. ..."]
-  correctAnswer    String         // "A" | "B" | "C" | "D" (or direct value)
-  explanationUz    String         // Step 1: O'zbekcha sodda hayotiy analogiya
-  explanationEn    String         // Step 2: SAT rasmiy inglizcha yechimi va formulasi
-  desmosTrick      String?        // Step 3: Desmos cheat-code (10-15s shortcut)
-  referenceFormula String?        // LaTeX formula
-  
+  prompt           String         // LaTeX question prompt
+  passage          String?        // Reading passage or context
+  options          Json           // Formatted options array ["A. ...", "B. ...", "C. ...", "D. ..."]
+  correctAnswer    String         @map("correct_answer") // "A" | "B" | "C" | "D"
+  explanationUz    String         @map("explanation_uz")
+  explanationEn    String         @map("explanation_en")
+  desmosTrick      String?        @map("desmos_trick")
+  desmosLatex      String?        @map("desmos_latex")
+  referenceFormula String?        @map("reference_formula")
+  diagramPreset    String?        @map("diagram_preset")
+  diagramSvg       String?        @map("diagram_svg")
+  createdAt        DateTime       @default(now()) @map("created_at")
+
   progress         UserProgress[]
   errorLogs        ErrorLog[]
 
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  @@index([section, domain])
+  @@index([difficulty])
+  @@index([topicCode])
+  @@map("questions")
+  @@schema("vespera")
 }
 
+/// User practice tracking, attempt telemetry, and auto-saved status
 model UserProgress {
-  id          String   @id @default(cuid())
-  questionId  String
-  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  status      String   // "CORRECT" | "INCORRECT" | "BOOKMARKED"
-  userChoice  String?
-  timeSpent   Int      @default(0) // seconds
-  notes       String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id
+  questionId String   @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  userId     String?  @map("user_id")
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status     String   // "CORRECT" | "INCORRECT" | "BOOKMARKED"
+  userChoice String?  @map("user_choice")
+  timeSpent  Int      @default(0) @map("time_spent") // seconds spent
+  notes      String?
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([questionId, userId])
+  @@index([status])
+  @@index([updatedAt(sort: Desc)])
+  @@map("user_progress")
+  @@schema("vespera")
 }
 
+/// Spaced repetition (SuperMemo SM-2) error logs and active recall review schedule
 model ErrorLog {
-  id           String    @id @default(cuid())
-  questionId   String
+  id           String    @id
+  questionId   String    @map("question_id")
   question     Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  mistakeType  String    // "CONCEPT_GAP" | "CALCULATION_SLIP" | "MISREAD_QUESTION" | "DESMOS_MISSED"
+  userId       String?   @map("user_id")
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mistakeType  String    @map("mistake_type") // "CONCEPT_GAP" | "CALCULATION_SLIP" | "MISREAD_QUESTION" | "DESMOS_MISSED"
   notes        String?
   stage        String    @default("STAGE_1_DAY") // "STAGE_1_DAY" | "STAGE_3_DAYS" | "STAGE_7_DAYS" | "MASTERED"
-  nextReviewAt DateTime
-  isResolved   Boolean   @default(false)
+  nextReviewAt DateTime  @map("next_review_at")
+  isResolved   Boolean   @default(false) @map("is_resolved")
+  easeFactor   Float     @default(2.5) @map("ease_factor")
+  repetitions  Int       @default(0)
+  intervalDays Int       @default(1) @map("interval_days")
+  lastQuality  Int       @default(0) @map("last_quality")
+  createdAt    DateTime  @default(now()) @map("created_at")
 
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  @@index([userId])
+  @@index([userId, nextReviewAt, isResolved])
+  @@index([stage])
+  @@map("error_logs")
+  @@schema("vespera")
 }
 
+/// Adaptive College Board Bluebook practice exams and module telemetry
 model MockExam {
-  id             String   @id @default(cuid())
+  id             String    @id
+  userId         String?   @map("user_id")
+  user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title          String
-  section        String   // "FULL" | "MATH" | "READING_WRITING"
+  section        String    // "FULL" | "MATH" | "READING_WRITING"
   score          Int
-  mathScore      Int?
-  readingScore   Int?
-  totalQuestions Int
-  correctCount   Int
-  timeSpent      Int
-  completedAt    DateTime @default(now())
+  mathScore      Int?      @map("math_score")
+  readingScore   Int?      @map("reading_score")
+  totalQuestions Int       @map("total_questions")
+  correctCount   Int       @map("correct_count")
+  timeSpent      Int       @map("time_spent") // seconds
+  domainStats    Json?     @map("domain_stats")
+  completedAt    DateTime  @default(now()) @map("completed_at")
+
+  @@index([userId])
+  @@index([completedAt(sort: Desc)])
+  @@map("mock_exams")
+  @@schema("vespera")
 }

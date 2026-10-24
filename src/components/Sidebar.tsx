@@ -193,15 +193,15 @@ function SidebarComponent() {
                         className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs transition-all duration-200 ${
                           isActive
                             ? "bg-[var(--accent-blue)] text-white shadow-sm font-semibold"
-                            : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)]"
+                            : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] hover:translate-x-1"
                         } ${collapsed ? "justify-center" : ""}`}
                       >
                         <Icon
                           size={17}
-                          className={`shrink-0 transition-colors ${
+                          className={`shrink-0 transition-all duration-200 ${
                             isActive
                               ? "text-white"
-                              : "text-[var(--text-muted)] group-hover:text-[var(--text-main)]"
+                              : "text-[var(--text-muted)] group-hover:text-[var(--text-main)] group-hover:scale-110"
                           }`}
                         />
 

@@ -443,16 +443,16 @@ export default React.memo(function QuestionCard({
                     if (!isSubmitted) setSelectedChoice(letter);
                   }
                 }}
-                className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] ${borderBgStyle} ${
-                  isStrike ? "opacity-35" : ""
-                }`}
+                className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all duration-200 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] ${borderBgStyle} ${
+                  !isSubmitted ? "hover:scale-[1.008] active:scale-[0.992]" : ""
+                } ${isStrike ? "opacity-35" : ""}`}
               >
                 <div className="flex items-center gap-3.5 flex-1 pr-4">
                   <div className="flex items-center gap-2 shrink-0 select-none">
                     <span
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs border transition-colors ${
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs border transition-all duration-200 ${
                         isSelected
-                          ? "bg-[var(--accent-blue)] text-white border-[var(--accent-blue)] shadow-xs"
+                          ? "bg-[var(--accent-blue)] text-white border-[var(--accent-blue)] shadow-xs scale-105"
                           : "bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-main)] group-hover:border-[var(--accent-blue)]/50 group-hover:text-[var(--accent-blue)]"
                       }`}
                     >
@@ -508,9 +508,9 @@ export default React.memo(function QuestionCard({
             <button
               onClick={() => handleSubmit()}
               disabled={!selectedChoice || isSaving}
-              className={`px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-sm ${
+              className={`px-8 py-3 rounded-xl font-bold text-sm transition-all duration-200 shadow-sm ${
                 selectedChoice && !isSaving
-                  ? "bg-[var(--accent-blue)] text-white hover:bg-[var(--accent-blue)]/90 hover:scale-[1.01]"
+                  ? "bg-[var(--accent-blue)] text-white hover:bg-[var(--accent-blue)]/90 hover:scale-[1.02] active:scale-[0.97] animate-glow-pulse cursor-pointer"
                   : "bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-main)]"
               }`}
             >
@@ -524,14 +524,14 @@ export default React.memo(function QuestionCard({
           <div className="pt-4 border-t border-[var(--border-main)] space-y-4">
             {/* Feedback Banner */}
             <div
-              className={`p-4 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-3 ${
+              className={`p-4 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-3 animate-scale-in ${
                 isCorrect
                   ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
                   : "bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400"
               }`}
             >
               <div className="flex items-center gap-3">
-                {isCorrect ? <CheckCircle2 size={24} /> : <XCircle size={24} />}
+                {isCorrect ? <CheckCircle2 size={24} className="animate-pop-in" /> : <XCircle size={24} className="animate-pop-in" />}
                 <div>
                   <h4 className="font-bold text-sm">
                     {isCorrect ? "Correct Solution! 🎉" : "Incorrect Answer"}
@@ -549,14 +549,14 @@ export default React.memo(function QuestionCard({
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={toggleBookmark}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all duration-150 active:scale-95 cursor-pointer ${
                     isBookmarked
                       ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
                       : "bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-main)] border-[var(--border-main)]"
                   }`}
                 >
                   {isBookmarked ? (
-                    <BookmarkCheck size={14} className="fill-current text-amber-500" />
+                    <BookmarkCheck size={14} className="fill-current text-amber-500 animate-pop-in" />
                   ) : (
                     <Bookmark size={14} className="text-[var(--text-muted)]" />
                   )}

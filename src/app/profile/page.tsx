@@ -120,7 +120,7 @@ export default function ProfilePage() {
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* User Info */}
           <div className="flex items-start sm:items-center gap-4 sm:gap-6">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl font-mono shadow-md shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl font-mono shadow-md shrink-0 hover:scale-105 transition-transform duration-300">
               {user ? user.fullName.charAt(0).toUpperCase() : "G"}
             </div>
             <div className="space-y-1.5 min-w-0">
@@ -128,7 +128,7 @@ export default function ProfilePage() {
                 <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--text-main)] tracking-tight">
                   {user ? user.fullName : "Guest Candidate"}
                 </h1>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono">
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono animate-pop-in">
                   {user ? "Personalized Account" : "Guest Mode"}
                 </span>
                 {user?.priorityWeakness && (
@@ -142,7 +142,7 @@ export default function ProfilePage() {
               </p>
               <div className="flex items-center gap-4 text-xs text-[var(--text-muted)] pt-1 flex-wrap font-medium">
                 <span className="flex items-center gap-1.5">
-                  <Flame size={14} className="text-amber-500 fill-amber-500" />
+                  <Flame size={14} className="text-amber-500 fill-amber-500 animate-live-pulse" />
                   <strong className="text-[var(--text-main)] font-mono">
                     {stats?.realStreak || 1}
                   </strong>{" "}
@@ -170,9 +170,9 @@ export default function ProfilePage() {
 
           {/* Quick Score Goals & Edit Profile CTA */}
           <div className="flex flex-wrap items-center gap-3 self-start lg:self-center">
-            <div className="p-3.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex items-center gap-3 shadow-2xs">
+            <div className="p-3.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] flex items-center gap-3 shadow-2xs hover:scale-105 transition-transform duration-200">
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
-                <Target size={20} />
+                <Target size={20} className="animate-pop-in" />
               </div>
               <div>
                 <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider block font-mono">
@@ -187,7 +187,7 @@ export default function ProfilePage() {
             {user ? (
               <button
                 onClick={openOnboarding}
-                className="px-4 py-3 rounded-2xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--border-hover)] text-xs font-semibold text-[var(--text-main)] flex items-center gap-2 transition-all shadow-2xs cursor-pointer"
+                className="px-4 py-3 rounded-2xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] border border-[var(--border-main)] hover:border-[var(--border-hover)] text-xs font-semibold text-[var(--text-main)] flex items-center gap-2 transition-all duration-150 active:scale-95 shadow-2xs cursor-pointer"
               >
                 <Sliders size={14} />
                 <span>Adjust Goals</span>
@@ -195,7 +195,7 @@ export default function ProfilePage() {
             ) : (
               <button
                 onClick={() => openAuthModal("register")}
-                className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all duration-150 active:scale-95 cursor-pointer animate-glow-pulse"
               >
                 <User size={14} />
                 <span>Create Free Account</span>
@@ -204,7 +204,7 @@ export default function ProfilePage() {
 
             <Link
               href="/mock"
-              className="px-4 py-3 rounded-2xl bg-[var(--accent-blue)]/10 hover:bg-[var(--accent-blue)]/20 border border-[var(--accent-blue)]/30 text-xs font-semibold text-[var(--accent-blue)] flex items-center gap-2 transition-all"
+              className="px-4 py-3 rounded-2xl bg-[var(--accent-blue)]/10 hover:bg-[var(--accent-blue)]/20 border border-[var(--accent-blue)]/30 text-xs font-semibold text-[var(--accent-blue)] flex items-center gap-2 transition-all duration-150 active:scale-95"
             >
               <FileCheck2 size={14} />
               <span>Take Full Mock</span>
@@ -216,7 +216,7 @@ export default function ProfilePage() {
       {/* 2. Key High-Level Performance Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         {/* Total Questions Solved */}
-        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs">
+        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs card-interactive">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">
               Questions Solved
@@ -235,7 +235,7 @@ export default function ProfilePage() {
           </div>
           <div className="w-full h-1.5 rounded-full bg-[var(--bg-surface)] overflow-hidden">
             <div
-              className="h-full bg-blue-600 rounded-full transition-all duration-500"
+              className="h-full bg-blue-600 rounded-full transition-all duration-700 ease-out"
               style={{
                 width: `${Math.min(
                   100,
@@ -249,7 +249,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Overall Accuracy */}
-        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs">
+        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs card-interactive">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">
               Accuracy Rate
@@ -268,14 +268,14 @@ export default function ProfilePage() {
           </div>
           <div className="w-full h-1.5 rounded-full bg-[var(--bg-surface)] overflow-hidden">
             <div
-              className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+              className="h-full bg-emerald-500 rounded-full transition-all duration-700 ease-out"
               style={{ width: `${overallAccuracy}%` }}
             />
           </div>
         </div>
 
         {/* Projected Math Score */}
-        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs">
+        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs card-interactive">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">
               Math Projected
@@ -296,7 +296,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Projected Verbal Score */}
-        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs">
+        <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 shadow-2xs card-interactive">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono">
               Reading & Writing
@@ -358,7 +358,7 @@ export default function ProfilePage() {
             return (
               <div
                 key={diff.difficulty}
-                className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-3.5 shadow-2xs"
+                className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-3.5 shadow-2xs card-interactive"
               >
                 <div className="flex items-center justify-between">
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${borderBadge}`}>
@@ -376,7 +376,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="w-full h-2 rounded-full bg-[var(--bg-surface)] overflow-hidden">
                     <div
-                      className={`h-full ${barBgClass} rounded-full transition-all duration-500`}
+                      className={`h-full ${barBgClass} rounded-full transition-all duration-700 ease-out`}
                       style={{
                         width: `${Math.min(
                           100,
@@ -413,7 +413,7 @@ export default function ProfilePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {/* Math Domains */}
-          <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-4 shadow-2xs">
+          <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-4 shadow-2xs card-interactive">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)]">
               <div className="flex items-center gap-2">
                 <Calculator size={16} className="text-[var(--accent-blue)]" />
@@ -454,7 +454,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[var(--bg-surface)] overflow-hidden">
                       <div
-                        className="h-full bg-blue-600 rounded-full transition-all duration-300"
+                        className="h-full bg-blue-600 rounded-full transition-all duration-700 ease-out"
                         style={{ width: `${domain.accuracy}%` }}
                       />
                     </div>
@@ -464,7 +464,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Reading & Writing Domains */}
-          <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-4 shadow-2xs">
+          <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-4 shadow-2xs card-interactive">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--border-main)]">
               <div className="flex items-center gap-2">
                 <GraduationCap size={16} className="text-purple-500" />
@@ -505,7 +505,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[var(--bg-surface)] overflow-hidden">
                       <div
-                        className="h-full bg-purple-600 rounded-full transition-all duration-300"
+                        className="h-full bg-purple-600 rounded-full transition-all duration-700 ease-out"
                         style={{ width: `${domain.accuracy}%` }}
                       />
                     </div>
@@ -621,7 +621,7 @@ export default function ProfilePage() {
               return (
                 <div
                   key={act.id}
-                  className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--border-hover)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs group"
+                  className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/50 hover:translate-x-1 hover:shadow-sm transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs group"
                 >
                   <div className="space-y-1.5 min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -683,10 +683,10 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
                     <Link
                       href={`${targetRoute}?q=${act.question_id}`}
-                      className="px-3.5 py-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--accent-blue)]/10 text-xs font-semibold text-[var(--text-main)] hover:text-[var(--accent-blue)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/30 flex items-center gap-1.5 transition-all shadow-2xs"
+                      className="px-3.5 py-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--accent-blue)]/10 text-xs font-semibold text-[var(--text-main)] hover:text-[var(--accent-blue)] border border-[var(--border-main)] hover:border-[var(--accent-blue)]/30 flex items-center gap-1.5 transition-all duration-150 active:scale-95 shadow-2xs group-hover:border-[var(--accent-blue)]/50"
                     >
                       <span>Re-Attempt</span>
-                      <ExternalLink size={13} />
+                      <ExternalLink size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </Link>
                   </div>
                 </div>
