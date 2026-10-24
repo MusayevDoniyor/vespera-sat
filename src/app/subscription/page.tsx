@@ -23,6 +23,7 @@ import {
   Gift,
   CheckCircle2,
 } from "lucide-react";
+import TelegramPurchaseModal from "@/components/TelegramPurchaseModal";
 
 export default function SubscriptionPage() {
   const { user, openAuthModal } = useAuth();
@@ -32,6 +33,7 @@ export default function SubscriptionPage() {
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
 
   useEffect(() => {
     fetchSub();
@@ -205,18 +207,17 @@ export default function SubscriptionPage() {
             </Link>
             {!isPro ? (
               <button
-                onClick={() => handlePlanAction("PRO")}
-                disabled={isUpgrading}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-sm transition-all active:scale-95 disabled:opacity-60 flex items-center gap-2"
+                onClick={() => setIsTelegramModalOpen(true)}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
               >
                 <Sparkles size={14} />
-                <span>Upgrade to Pro • $4.99</span>
+                <span>Upgrade via Telegram • $4.99</span>
               </button>
             ) : (
               <button
                 onClick={() => handlePlanAction("FREE")}
                 disabled={isUpgrading}
-                className="px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] hover:bg-rose-500/10 text-[var(--text-muted)] hover:text-rose-500 border border-[var(--border-main)] text-xs font-semibold transition-all"
+                className="px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] hover:bg-rose-500/10 text-[var(--text-muted)] hover:text-rose-500 border border-[var(--border-main)] text-xs font-semibold transition-all cursor-pointer"
               >
                 Manage / Downgrade
               </button>
@@ -467,9 +468,9 @@ export default function SubscriptionPage() {
 
           <div className="pt-6 space-y-2">
             <button
-              onClick={() => handlePlanAction(isPro ? "FREE" : "PRO")}
+              onClick={() => isPro ? handlePlanAction("FREE") : setIsTelegramModalOpen(true)}
               disabled={isUpgrading}
-              className={`w-full py-3.5 rounded-2xl text-xs font-bold transition-all text-center shadow-md flex items-center justify-center gap-2 ${
+              className={`w-full py-3.5 rounded-2xl text-xs font-bold transition-all text-center shadow-md flex items-center justify-center gap-2 cursor-pointer ${
                 isPro
                   ? "bg-emerald-600 text-white hover:bg-emerald-500"
                   : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white active:scale-95"
@@ -488,12 +489,12 @@ export default function SubscriptionPage() {
               ) : (
                 <>
                   <Sparkles size={14} />
-                  <span>Get Started with Pro • $4.99/mo</span>
+                  <span>Upgrade to Pro • Telegram Checkout</span>
                 </>
               )}
             </button>
             <p className="text-[11px] text-center text-[var(--text-muted)] font-mono">
-              3-Day Risk-Free Trial • 1-Click Cancellation Anytime
+              Direct activation via Telegram admin • Click, Payme, Cards
             </p>
           </div>
         </div>
@@ -654,6 +655,13 @@ export default function SubscriptionPage() {
         </div>
         <p>Vespera Education Technologies. Built for students worldwide.</p>
       </div>
+
+      <TelegramPurchaseModal
+        isOpen={isTelegramModalOpen}
+        onClose={() => setIsTelegramModalOpen(false)}
+        billingCycle={billingCycle}
+        user={user}
+      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/components/AuthContext";
 import ProfileSkeleton from "@/components/skeletons/ProfileSkeleton";
 import { loadVocabProgress } from "@/lib/vocab-storage";
+import TelegramPurchaseModal from "@/components/TelegramPurchaseModal";
 import {
   User,
   Award,
@@ -86,6 +87,7 @@ export default function ProfilePage() {
   const [stats, setStats] = useState<any>(null);
   const [subData, setSubData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
 
   // Saved Content Counters
   const [savedWordsCount, setSavedWordsCount] = useState<number>(0);
@@ -427,13 +429,23 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <Link
-              href="/subscription"
-              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all duration-150 active:scale-95"
-            >
-              <Sparkles size={14} />
-              <span>{isPro ? "Manage Subscription" : "Upgrade to Pro ($4.99)"}</span>
-            </Link>
+            {!isPro ? (
+              <button
+                onClick={() => setIsTelegramModalOpen(true)}
+                className="px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all duration-150 active:scale-95 cursor-pointer"
+              >
+                <Sparkles size={14} />
+                <span>Upgrade to Pro ($4.99)</span>
+              </button>
+            ) : (
+              <Link
+                href="/subscription"
+                className="px-5 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all duration-150 active:scale-95"
+              >
+                <Sparkles size={14} />
+                <span>Manage Pro Subscription</span>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -1567,6 +1579,12 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+
+      <TelegramPurchaseModal
+        isOpen={isTelegramModalOpen}
+        onClose={() => setIsTelegramModalOpen(false)}
+        user={user}
+      />
     </div>
   );
 }
