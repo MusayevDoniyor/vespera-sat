@@ -2,8 +2,8 @@
 
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
-import { Calculator, BookMarked, Sparkles, Sun, Moon, X, PanelLeft, LogIn, User } from "lucide-react";
-import { useTheme } from "./ThemeContext";
+import { Calculator, BookMarked, Sparkles, X, PanelLeft, LogIn, User } from "lucide-react";
+import ThemeToggleButton from "./ThemeToggleButton";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "./AuthContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
@@ -13,41 +13,6 @@ interface NavbarProps {
   onToggleDesmos?: () => void;
   isDesmosOpen?: boolean;
 }
-
-/**
- * Isolated Theme Toggle button.
- * Subscribes to ThemeContext independently so the parent Navbar
- * NEVER needs to re-render when the user switches themes.
- * Zero-lag render (<1ms) with smooth micro-animation.
- */
-const ThemeToggleButton = React.memo(function ThemeToggleButton() {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
-
-  return (
-    <button
-      onClick={toggleTheme}
-      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-      aria-label="Toggle Theme"
-      className="p-2 sm:p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] active:scale-95 text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-all duration-150 shadow-sm shrink-0 flex items-center justify-center cursor-pointer select-none"
-    >
-      <span className="relative w-4 h-4 flex items-center justify-center overflow-hidden pointer-events-none">
-        <Sun
-          size={15}
-          className={`text-amber-400 absolute transition-all duration-200 ease-out transform ${
-            isDark ? "scale-100 rotate-0 opacity-100" : "scale-0 rotate-90 opacity-0"
-          }`}
-        />
-        <Moon
-          size={15}
-          className={`text-indigo-600 absolute transition-all duration-200 ease-out transform ${
-            !isDark ? "scale-100 rotate-0 opacity-100" : "scale-0 -rotate-90 opacity-0"
-          }`}
-        />
-      </span>
-    </button>
-  );
-});
 
 function NavbarComponent({ onToggleDesmos, isDesmosOpen }: NavbarProps) {
   const [showFormulaSheet, setShowFormulaSheet] = useState(false);

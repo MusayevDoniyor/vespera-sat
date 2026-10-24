@@ -5,13 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, User, ArrowRight, AlertCircle, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
-import { useTheme } from "@/components/ThemeContext";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 import VesperaLogo from "@/components/VesperaLogo";
 
 export default function RegisterPage() {
   const router = useRouter();
   const { register, user } = useAuth();
-  const { theme, toggleTheme } = useTheme();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,17 +64,7 @@ export default function RegisterPage() {
 
       {/* Top Bar with Theme Toggle */}
       <header className="absolute top-6 right-6 z-20 flex items-center gap-3">
-        <button
-          onClick={toggleTheme}
-          title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm"
-        >
-          {theme === "dark" ? (
-            <Sun size={17} className="text-amber-400" />
-          ) : (
-            <Moon size={17} className="text-indigo-600" />
-          )}
-        </button>
+        <ThemeToggleButton className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm flex items-center justify-center cursor-pointer" />
       </header>
 
       {/* Auth Card */}

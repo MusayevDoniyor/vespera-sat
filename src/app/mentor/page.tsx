@@ -22,7 +22,7 @@ import KaTeXMath from "@/components/KaTeXMath";
 import VesperaLogo from "@/components/VesperaLogo";
 import DesmosCalculator from "@/components/DesmosCalculator";
 import { useAuth } from "@/components/AuthContext";
-import { useTheme } from "@/components/ThemeContext";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 
 interface Message {
   id: string;
@@ -228,7 +228,6 @@ const ChatInputBar = React.memo(function ChatInputBar({
 
 export default function MentorPage() {
   const { user } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -390,17 +389,7 @@ export default function MentorPage() {
           </button>
 
           {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            className="p-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors shadow-xs"
-          >
-            {theme === "dark" ? (
-              <Sun size={15} className="text-amber-400" />
-            ) : (
-              <Moon size={15} className="text-indigo-600" />
-            )}
-          </button>
+          <ThemeToggleButton className="p-2 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors shadow-xs flex items-center justify-center cursor-pointer" />
 
           {/* New Chat Button */}
           {hasMessages && (

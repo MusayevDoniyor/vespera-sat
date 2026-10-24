@@ -42,7 +42,7 @@ import {
 import Link from "next/link";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import Portal from "@/components/Portal";
-import { useTheme } from "@/components/ThemeContext";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 import QuestionDiagram from "@/components/QuestionDiagram";
 import { BLUEBOOK_EXAMS, BluebookExamForm, BluebookQuestion, getRwDisplayContent } from "@/lib/bluebook-tests";
 import { isMathDomain } from "@/lib/curriculum-data";
@@ -56,7 +56,6 @@ type ExamStage =
   | "completed";
 
 export default function BluebookMockPage() {
-  const { theme, toggleTheme } = useTheme();
   // Active selected test
   const [selectedExam, setSelectedExam] = useState<BluebookExamForm>(BLUEBOOK_EXAMS[0]);
   const [stage, setStage] = useState<ExamStage>("lobby");
@@ -580,23 +579,10 @@ export default function BluebookMockPage() {
               <ChevronLeft className="w-4 h-4" />
               <span>Return to Dashboard</span>
             </Link>
-            <button
-              onClick={toggleTheme}
-              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm flex items-center gap-2 text-xs font-medium"
-            >
-              {theme === "dark" ? (
-                <>
-                  <Sun size={15} className="text-amber-400" />
-                  <span className="hidden sm:inline">Light Mode</span>
-                </>
-              ) : (
-                <>
-                  <Moon size={15} className="text-indigo-600" />
-                  <span className="hidden sm:inline">Dark Mode</span>
-                </>
-              )}
-            </button>
+            <ThemeToggleButton
+              showLabel={true}
+              className="p-2.5 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] transition-colors shadow-sm flex items-center gap-2 text-xs font-medium cursor-pointer"
+            />
           </div>
 
           {/* Header */}
@@ -1760,13 +1746,10 @@ export default function BluebookMockPage() {
           </button>
 
           {/* Invert / Contrast Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            title={theme === "dark" ? "High-Contrast Light Mode" : "Dark Accommodation Mode"}
-            className="p-1.5 sm:p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center gap-1.5"
-          >
-            {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
-          </button>
+          <ThemeToggleButton
+            iconSize={16}
+            className="p-1.5 sm:p-2 rounded-lg text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-surface)] transition flex items-center justify-center cursor-pointer"
+          />
         </div>
       </header>
 

@@ -8,7 +8,7 @@ import DesmosCalculator from "@/components/DesmosCalculator";
 import QuestionDiagram from "@/components/QuestionDiagram";
 import Portal from "@/components/Portal";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
-import { useTheme } from "@/components/ThemeContext";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 import {
   BLUEBOOK_EXAMS,
   BluebookExamForm,
@@ -64,8 +64,6 @@ export default function BluebookExamRunnerPage() {
   const params = useParams();
   const router = useRouter();
   const examId = (params?.examId as string) || "bluebook-official-1";
-
-  const { theme, toggleTheme } = useTheme();
 
   // Find Exam Form
   const exam: BluebookExamForm = useMemo(() => {
@@ -781,13 +779,7 @@ export default function BluebookExamRunnerPage() {
           )}
 
           {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition"
-            title="Toggle Dark/Light Mode"
-          >
-            {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-          </button>
+          <ThemeToggleButton className="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition flex items-center justify-center cursor-pointer" iconSize={14} />
         </div>
       </header>
 

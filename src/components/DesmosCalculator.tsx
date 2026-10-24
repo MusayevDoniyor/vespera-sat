@@ -88,7 +88,20 @@ export default function DesmosCalculator({
         window.vesperaCalculator = null;
       }
     };
-  }, [initialEquation, theme]);
+  }, [initialEquation]);
+
+  // Update Desmos inverted colors dynamically without destroying the graphing engine
+  useEffect(() => {
+    if (calculatorRef.current) {
+      try {
+        calculatorRef.current.updateSettings({
+          invertedColors: theme === "dark",
+        });
+      } catch (err) {
+        console.error("Failed to update Desmos theme:", err);
+      }
+    }
+  }, [theme]);
 
   // Dragging handler
   const handleMouseDownHeader = (e: React.MouseEvent) => {
