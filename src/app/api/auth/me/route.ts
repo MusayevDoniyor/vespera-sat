@@ -43,6 +43,13 @@ export async function PATCH(req: NextRequest) {
       targetSatScore,
       examDate,
       dailyGoalMinutes,
+      weeklyGoalHours,
+      preferredStudyTime,
+      practiceMode,
+      difficultyMode,
+      showDesmos,
+      showAiExplanations,
+      includeVocabReview,
       priorityWeakness,
       onboardingCompleted,
     } = body;
@@ -82,6 +89,34 @@ export async function PATCH(req: NextRequest) {
     if (dailyGoalMinutes !== undefined) {
       updates.push(`daily_goal_minutes = $${idx++}`);
       values.push(dailyGoalMinutes ? parseInt(dailyGoalMinutes, 10) : 45);
+    }
+    if (weeklyGoalHours !== undefined) {
+      updates.push(`weekly_goal_hours = $${idx++}`);
+      values.push(weeklyGoalHours ? parseInt(weeklyGoalHours, 10) : 12);
+    }
+    if (preferredStudyTime !== undefined) {
+      updates.push(`preferred_study_time = $${idx++}`);
+      values.push(preferredStudyTime || "Evening");
+    }
+    if (practiceMode !== undefined) {
+      updates.push(`practice_mode = $${idx++}`);
+      values.push(practiceMode || "timed");
+    }
+    if (difficultyMode !== undefined) {
+      updates.push(`difficulty_mode = $${idx++}`);
+      values.push(difficultyMode || "adaptive");
+    }
+    if (showDesmos !== undefined) {
+      updates.push(`show_desmos = $${idx++}`);
+      values.push(Boolean(showDesmos));
+    }
+    if (showAiExplanations !== undefined) {
+      updates.push(`show_ai_explanations = $${idx++}`);
+      values.push(Boolean(showAiExplanations));
+    }
+    if (includeVocabReview !== undefined) {
+      updates.push(`include_vocab_review = $${idx++}`);
+      values.push(Boolean(includeVocabReview));
     }
     if (priorityWeakness !== undefined) {
       updates.push(`priority_weakness = $${idx++}`);

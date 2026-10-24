@@ -22,6 +22,8 @@ import {
   X,
   BrainCircuit,
   Zap,
+  Trophy,
+  CreditCard,
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "./AuthContext";
@@ -37,12 +39,22 @@ function SidebarComponent() {
   const { user, openAuthModal, openOnboarding, logout } = useAuth();
   useBodyScrollLock(isMobileOpen);
   const [realStreak, setRealStreak] = useState<number>(0);
+  const [subInfo, setSubInfo] = useState<any>(null);
 
   useEffect(() => {
     fetchWithDeduplication("/api/stats")
       .then((data) => {
         if (data?.realStreak !== undefined) {
           setRealStreak(data.realStreak);
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/subscription")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.subscription) {
+          setSubInfo(data.subscription);
         }
       })
       .catch(() => {});
@@ -68,27 +80,36 @@ function SidebarComponent() {
 
   const sections: NavSection[] = [
     {
+      title: "Core Prep",
       items: [
         { label: "Dashboard", href: "/", icon: Compass },
-        { label: "Profile & Analytics", href: "/profile", icon: User },
-      ],
-    },
-    {
-      title: "Practice & Tests",
-      items: [
-        { label: "Math Bank", href: "/math", icon: Calculator, badge: "580+" },
+        { label: "Math Bank", href: "/math", icon: Calculator, badge: "583" },
         { label: "Reading & Writing", href: "/verbal", icon: GraduationCap, badge: "1.2k" },
-        { label: "13 Units Textbook", href: "/curriculum", icon: BookOpen, matchSubpaths: true, badge: "13" },
-        { label: "Adaptive Mock Exam", href: "/mock", icon: FileCheck2, badge: "PRO" },
+        { label: "Question Bank", href: "/curriculum", icon: BookOpen, matchSubpaths: true, badge: "13 Units" },
+        { label: "Full Mock Exams", href: "/mock", icon: FileCheck2, badge: "Bluebook" },
+        { label: "Error Notebook", href: "/error-log", icon: Repeat, badge: "SM-2" },
       ],
     },
     {
-      title: "Tools & Vault",
+      title: "Learning & Vault",
       items: [
-        { label: "Error Notebook", href: "/error-log", icon: Repeat },
+        { label: "AI Study Mentor", href: "/mentor", icon: Sparkles, badge: "AI" },
+        { label: "SAT Vocab Studio", href: "/vocab", icon: BrainCircuit, badge: "650" },
+        { label: "Official PDF Vault", href: "/satashkent", icon: Award, badge: "61" },
         { label: "Desmos Speed Lab", href: "/desmos", icon: Zap },
-        { label: "SAT Vocab (650)", href: "/vocab", icon: BrainCircuit, badge: "SM-2" },
-        { label: "Official PDF Vault", href: "/satashkent", icon: Award },
+      ],
+    },
+    {
+      title: "Competition",
+      items: [
+        { label: "Leaderboard & Contests", href: "/leaderboard", icon: Trophy, badge: "Live" },
+      ],
+    },
+    {
+      title: "Account & Billing",
+      items: [
+        { label: "Profile & Analytics", href: "/profile", icon: User },
+        { label: "Subscription & Limits", href: "/subscription", icon: CreditCard, badge: subInfo?.isPro ? "PRO" : "$4.99" },
       ],
     },
   ];
@@ -229,6 +250,34 @@ function SidebarComponent() {
             ))}
           </div>
         </div>
+
+        {/* Generous Free / Pro Usage Pill */}
+        {!collapsed && (
+          <div className="pt-2 pb-1">
+            <div className="p-2.5 rounded-2xl bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5 border border-blue-500/20 space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] font-bold">
+                <span className="text-[var(--text-main)] font-mono flex items-center gap-1.5">
+                  <Sparkles size={12} className="text-blue-500" />
+                  {subInfo?.isPro ? "PRO Active" : "Free Plan"}
+                </span>
+                <span className="text-[10px] text-blue-600 dark:text-blue-400 font-mono">
+                  {subInfo?.isPro
+                    ? "Unlimited"
+                    : `${Math.max(0, 5 - (subInfo?.firstTimeExamsUsed || 0))}/5 Mocks Left`}
+                </span>
+              </div>
+              {!subInfo?.isPro && (
+                <Link
+                  href="/subscription"
+                  onClick={() => isMobile && closeMobileSidebar()}
+                  className="block text-center py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] shadow-xs transition-transform active:scale-95"
+                >
+                  Upgrade Pro • $4.99/mo
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* User Profile Card & Quick Goal */}
         <div className="pt-3 border-t border-[var(--border-main)] mt-auto shrink-0">

@@ -13,6 +13,13 @@ export interface FullUserProfile {
   targetSatScore: number;
   examDate: string | null;
   dailyGoalMinutes: number;
+  weeklyGoalHours: number;
+  preferredStudyTime: string;
+  practiceMode: string;
+  difficultyMode: string;
+  showDesmos: boolean;
+  showAiExplanations: boolean;
+  includeVocabReview: boolean;
   priorityWeakness: string | null;
   onboardingCompleted: boolean;
   createdAt?: string;

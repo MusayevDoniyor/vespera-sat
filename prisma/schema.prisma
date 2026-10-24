@@ -19,6 +19,8 @@ model User {
   progress     UserProgress[]
   errorLogs    ErrorLog[]
   mockExams    MockExam[]
+  subscription Subscription?
+  feedback     FeedbackReport[]
 
   @@map("users")
   @@schema("vespera")
@@ -37,6 +39,13 @@ model UserProfile {
   targetSatScore      Int      @default(1550) @map("target_sat_score")
   examDate            String?  @map("exam_date")
   dailyGoalMinutes    Int      @default(45) @map("daily_goal_minutes")
+  weeklyGoalHours     Int      @default(12) @map("weekly_goal_hours")
+  preferredStudyTime  String   @default("Evening") @map("preferred_study_time")
+  practiceMode        String   @default("timed") @map("practice_mode")
+  difficultyMode      String   @default("adaptive") @map("difficulty_mode")
+  showDesmos          Boolean  @default(true) @map("show_desmos")
+  showAiExplanations  Boolean  @default(true) @map("show_ai_explanations")
+  includeVocabReview  Boolean  @default(true) @map("include_vocab_review")
   priorityWeakness    String?  @map("priority_weakness")
   onboardingCompleted Boolean  @default(false) @map("onboarding_completed")
   createdAt           DateTime @default(now()) @map("created_at")
@@ -91,6 +100,7 @@ model Question {
 
   progress         UserProgress[]
   errorLogs        ErrorLog[]
+  feedback         FeedbackReport[]
 
   @@index([section, domain])
   @@index([difficulty])
@@ -164,5 +174,54 @@ model MockExam {
   @@index([userId])
   @@index([completedAt(sort: Desc)])
   @@map("mock_exams")
+  @@schema("vespera")
+}
+
+/// User Subscription and quota tracking (Generous Free tier + Affordable Pro)
+model Subscription {
+  id                  String   @id @default(cuid())
+  userId              String   @unique @map("user_id")
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                String   @default("FREE") // "FREE" | "PRO"
+  billingCycle        String   @default("MONTHLY") @map("billing_cycle") // "MONTHLY" | "QUARTERLY"
+  status              String   @default("ACTIVE") // "ACTIVE" | "TRIAL" | "CANCELLED"
+  firstTimeExamsUsed  Int      @default(0) @map("first_time_exams_used")
+  firstTimeExamsLimit Int      @default(5) @map("first_time_exams_limit") // 5 for Free, -1 for Pro
+  retakeCreditsUsed   Int      @default(0) @map("retake_credits_used")
+  retakeCreditsLimit  Int      @default(5) @map("retake_credits_limit") // 5 for Free, -1 for Pro
+  aiQueriesToday      Int      @default(0) @map("ai_queries_today")
+  aiQueriesDailyLimit Int      @default(20) @map("ai_queries_daily_limit") // 20 for Free, -1 for Pro
+  vocabWordsToday     Int      @default(0) @map("vocab_words_today")
+  vocabWordsDailyLimit Int     @default(15) @map("vocab_words_daily_limit") // 15 for Free, -1 for Pro
+  aiPlanChangesUsed   Int      @default(0) @map("ai_plan_changes_used")
+  aiPlanChangesLimit  Int      @default(3) @map("ai_plan_changes_limit")
+  currentPeriodStart  DateTime @default(now()) @map("current_period_start")
+  currentPeriodEnd    DateTime @default(now()) @map("current_period_end")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("subscriptions")
+  @@schema("vespera")
+}
+
+/// Community feedback, question flagging, and bug reporting with screenshot support
+model FeedbackReport {
+  id          String    @id @default(cuid())
+  userId      String?   @map("user_id")
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  type        String    @default("GENERAL") // "BUG" | "QUESTION_FLAG" | "IDEA" | "GENERAL"
+  questionId  String?   @map("question_id")
+  question    Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  title       String
+  description String
+  imageUrl    String?   @map("image_url")
+  status      String    @default("PENDING") // "PENDING" | "REVIEWING" | "RESOLVED"
+  adminNotes  String?   @map("admin_notes")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@map("feedback_reports")
   @@schema("vespera")
 }

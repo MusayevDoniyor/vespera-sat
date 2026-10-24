@@ -26,6 +26,13 @@ export interface FullUserProfile {
   targetSatScore: number;
   examDate: string | null;
   dailyGoalMinutes: number;
+  weeklyGoalHours: number;
+  preferredStudyTime: string;
+  practiceMode: string;
+  difficultyMode: string;
+  showDesmos: boolean;
+  showAiExplanations: boolean;
+  includeVocabReview: boolean;
   priorityWeakness: string | null;
   onboardingCompleted: boolean;
   createdAt: string;
@@ -102,6 +109,13 @@ export async function getFullUserProfile(userId: string): Promise<FullUserProfil
         p.target_sat_score,
         p.exam_date,
         p.daily_goal_minutes,
+        p.weekly_goal_hours,
+        p.preferred_study_time,
+        p.practice_mode,
+        p.difficulty_mode,
+        p.show_desmos,
+        p.show_ai_explanations,
+        p.include_vocab_review,
         p.priority_weakness,
         p.onboarding_completed
       FROM vespera.users u
@@ -126,6 +140,13 @@ export async function getFullUserProfile(userId: string): Promise<FullUserProfil
       targetSatScore: row.target_sat_score || 1550,
       examDate: row.exam_date || null,
       dailyGoalMinutes: row.daily_goal_minutes || 45,
+      weeklyGoalHours: row.weekly_goal_hours || 12,
+      preferredStudyTime: row.preferred_study_time || "Evening",
+      practiceMode: row.practice_mode || "timed",
+      difficultyMode: row.difficulty_mode || "adaptive",
+      showDesmos: row.show_desmos !== false,
+      showAiExplanations: row.show_ai_explanations !== false,
+      includeVocabReview: row.include_vocab_review !== false,
       priorityWeakness: row.priority_weakness || null,
       onboardingCompleted: Boolean(row.onboarding_completed),
       createdAt: row.created_at,

@@ -138,6 +138,56 @@ export async function initDb() {
       ALTER TABLE vespera.user_progress ADD COLUMN IF NOT EXISTS user_id TEXT;
       ALTER TABLE vespera.error_logs ADD COLUMN IF NOT EXISTS user_id TEXT;
       ALTER TABLE vespera.mock_exams ADD COLUMN IF NOT EXISTS user_id TEXT;
+
+      ALTER TABLE vespera.user_profiles
+        ADD COLUMN IF NOT EXISTS weekly_goal_hours INTEGER DEFAULT 12,
+        ADD COLUMN IF NOT EXISTS preferred_study_time TEXT DEFAULT 'Evening',
+        ADD COLUMN IF NOT EXISTS practice_mode TEXT DEFAULT 'timed',
+        ADD COLUMN IF NOT EXISTS difficulty_mode TEXT DEFAULT 'adaptive',
+        ADD COLUMN IF NOT EXISTS show_desmos BOOLEAN DEFAULT TRUE,
+        ADD COLUMN IF NOT EXISTS show_ai_explanations BOOLEAN DEFAULT TRUE,
+        ADD COLUMN IF NOT EXISTS include_vocab_review BOOLEAN DEFAULT TRUE;
+
+      CREATE TABLE IF NOT EXISTS vespera.subscriptions (
+        id TEXT PRIMARY KEY,
+        user_id TEXT UNIQUE REFERENCES vespera.users(id) ON DELETE CASCADE,
+        plan TEXT NOT NULL DEFAULT 'FREE',
+        billing_cycle TEXT DEFAULT 'MONTHLY',
+        status TEXT NOT NULL DEFAULT 'ACTIVE',
+        first_time_exams_used INTEGER DEFAULT 0,
+        first_time_exams_limit INTEGER DEFAULT 5,
+        retake_credits_used INTEGER DEFAULT 0,
+        retake_credits_limit INTEGER DEFAULT 5,
+        ai_queries_today INTEGER DEFAULT 0,
+        ai_queries_daily_limit INTEGER DEFAULT 20,
+        vocab_words_today INTEGER DEFAULT 0,
+        vocab_words_daily_limit INTEGER DEFAULT 15,
+        ai_plan_changes_used INTEGER DEFAULT 0,
+        ai_plan_changes_limit INTEGER DEFAULT 3,
+        current_period_start TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        current_period_end TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '30 days'),
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS vespera.feedback_reports (
+        id TEXT PRIMARY KEY,
+        user_id TEXT REFERENCES vespera.users(id) ON DELETE SET NULL,
+        type TEXT NOT NULL DEFAULT 'GENERAL',
+        question_id TEXT REFERENCES vespera.questions(id) ON DELETE SET NULL,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        image_url TEXT,
+        status TEXT NOT NULL DEFAULT 'PENDING',
+        admin_notes TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON vespera.subscriptions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_subscriptions_plan ON vespera.subscriptions(plan);
+      CREATE INDEX IF NOT EXISTS idx_feedback_user_id ON vespera.feedback_reports(user_id);
+      CREATE INDEX IF NOT EXISTS idx_feedback_status ON vespera.feedback_reports(status);
+      CREATE INDEX IF NOT EXISTS idx_feedback_type ON vespera.feedback_reports(type);
       CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON vespera.user_progress(user_id);
       CREATE INDEX IF NOT EXISTS idx_user_progress_qid_uid ON vespera.user_progress(question_id, user_id);
       CREATE INDEX IF NOT EXISTS idx_error_logs_user_id ON vespera.error_logs(user_id);
