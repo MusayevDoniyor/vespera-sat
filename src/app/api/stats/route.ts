@@ -27,7 +27,7 @@ export async function GET() {
       });
     }
 
-    // Run all 9 database queries in parallel concurrently
+    // Run all 11 database queries in parallel concurrently
     const [
       questionsRes,
       streakRes,
@@ -38,6 +38,8 @@ export async function GET() {
       mockRes,
       mockHistoryRes,
       paceRes,
+      difficultyRes,
+      recentActivityRes,
     ] = await Promise.all([
       // 1. Total questions in bank and user attempt status
       userId
@@ -218,6 +220,75 @@ export async function GET() {
              WHERE up.time_spent > 0 AND up.time_spent < 600
              GROUP BY q.section;`
           ),
+
+      // 10. Difficulty Breakdown
+      userId
+        ? pool.query(
+            `SELECT 
+               q.difficulty,
+               COUNT(DISTINCT q.id)::int as total,
+               COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
+               COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
+             FROM vespera.questions q
+             LEFT JOIN vespera.user_progress up ON up.question_id = q.id AND up.user_id = $1
+             GROUP BY q.difficulty;`,
+            [userId]
+          )
+        : pool.query(`
+            SELECT 
+               q.difficulty,
+               COUNT(DISTINCT q.id)::int as total,
+               COUNT(DISTINCT CASE WHEN up.id IS NOT NULL THEN q.id END)::int as attempted,
+               COUNT(DISTINCT CASE WHEN up.status = 'CORRECT' THEN q.id END)::int as correct
+             FROM vespera.questions q
+             LEFT JOIN vespera.user_progress up ON up.question_id = q.id
+             GROUP BY q.difficulty;
+          `),
+
+      // 11. Recent Solved Questions Activity
+      userId
+        ? pool.query(
+            `SELECT 
+               up.id,
+               up.question_id,
+               up.status,
+               up.user_choice,
+               up.time_spent,
+               up.updated_at,
+               q.prompt,
+               q.section,
+               q.domain,
+               q.difficulty,
+               q.correct_answer,
+               t.title_en as topic_title
+             FROM vespera.user_progress up
+             JOIN vespera.questions q ON q.id = up.question_id
+             LEFT JOIN vespera.topics t ON t.code = q.topic_code
+             WHERE up.user_id = $1
+             ORDER BY up.updated_at DESC
+             LIMIT 35;`,
+            [userId]
+          )
+        : pool.query(`
+             SELECT 
+               up.id,
+               up.question_id,
+               up.status,
+               up.user_choice,
+               up.time_spent,
+               up.updated_at,
+               q.prompt,
+               q.section,
+               q.domain,
+               q.difficulty,
+               q.correct_answer,
+               t.title_en as topic_title
+             FROM vespera.user_progress up
+             JOIN vespera.questions q ON q.id = up.question_id
+             LEFT JOIN vespera.topics t ON t.code = q.topic_code
+             ORDER BY up.updated_at DESC
+             LIMIT 35;
+          `),
     ]);
 
     let mathTotal = 0, mathAttempted = 0, mathCorrect = 0, mathIncorrect = 0;
@@ -361,6 +432,30 @@ export async function GET() {
       }),
     ];
 
+    const diffMap: Record<string, { total: number; attempted: number; correct: number }> = {
+      Easy: { total: 0, attempted: 0, correct: 0 },
+      Medium: { total: 0, attempted: 0, correct: 0 },
+      Hard: { total: 0, attempted: 0, correct: 0 },
+    };
+
+    for (const r of difficultyRes.rows) {
+      const diff = r.difficulty || "Medium";
+      if (!diffMap[diff]) {
+        diffMap[diff] = { total: 0, attempted: 0, correct: 0 };
+      }
+      diffMap[diff].total += r.total || 0;
+      diffMap[diff].attempted += r.attempted || 0;
+      diffMap[diff].correct += r.correct || 0;
+    }
+
+    const difficultyBreakdown = Object.entries(diffMap).map(([difficulty, data]) => ({
+      difficulty,
+      total: data.total,
+      attempted: data.attempted,
+      correct: data.correct,
+      accuracy: data.attempted > 0 ? Math.round((data.correct / data.attempted) * 100) : 0,
+    }));
+
     const responsePayload = {
       totalQuestions: mathTotal + verbalTotal,
       totalSolved: mathAttempted + verbalAttempted,
@@ -376,6 +471,8 @@ export async function GET() {
       compositeScore,
       paceStats,
       domainMasteryList,
+      difficultyBreakdown,
+      recentActivity: recentActivityRes.rows || [],
       math: {
         total: mathTotal,
         attempted: mathAttempted,

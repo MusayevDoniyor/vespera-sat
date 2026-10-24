@@ -21,6 +21,7 @@ import {
   User,
   X,
   BrainCircuit,
+  Zap,
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "./AuthContext";
@@ -69,30 +70,25 @@ function SidebarComponent() {
     {
       items: [
         { label: "Dashboard", href: "/", icon: Compass },
+        { label: "Profile & Analytics", href: "/profile", icon: User },
       ],
     },
     {
-      title: "AI Studio",
+      title: "Practice & Tests",
       items: [
-        { label: "AI Mentor", href: "/mentor", icon: Sparkles, badge: "LIVE" },
-      ],
-    },
-    {
-      title: "Learn & Practice",
-      items: [
+        { label: "Math Bank", href: "/math", icon: Calculator, badge: "580+" },
+        { label: "Reading & Writing", href: "/verbal", icon: GraduationCap, badge: "1.2k" },
         { label: "13 Units Textbook", href: "/curriculum", icon: BookOpen, matchSubpaths: true, badge: "13" },
-        { label: "Desmos Speed Lab", href: "/desmos", icon: Calculator },
-        { label: "Math Bank", href: "/math", icon: Calculator },
-        { label: "Reading & Writing", href: "/verbal", icon: GraduationCap },
-        { label: "SAT Vocab (650)", href: "/vocab", icon: BrainCircuit, badge: "SM-2" },
+        { label: "Adaptive Mock Exam", href: "/mock", icon: FileCheck2, badge: "PRO" },
       ],
     },
     {
-      title: "Test & Review",
+      title: "Tools & Vault",
       items: [
-        { label: "Adaptive Mock Exam", href: "/mock", icon: FileCheck2 },
         { label: "Error Notebook", href: "/error-log", icon: Repeat },
-        { label: "Curriculum & Vault", href: "/satashkent", icon: BookOpen },
+        { label: "Desmos Speed Lab", href: "/desmos", icon: Zap },
+        { label: "SAT Vocab (650)", href: "/vocab", icon: BrainCircuit, badge: "SM-2" },
+        { label: "Official PDF Vault", href: "/satashkent", icon: Award },
       ],
     },
   ];
@@ -241,17 +237,27 @@ function SidebarComponent() {
               <div className="p-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs font-mono shrink-0 shadow-sm">
+                    <Link
+                      href="/profile"
+                      onClick={() => isMobile && closeMobileSidebar()}
+                      title="View Profile & Full Analytics"
+                      className="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center font-bold text-xs font-mono shrink-0 shadow-sm transition-transform hover:scale-105"
+                    >
                       {user.fullName.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-bold text-[var(--text-main)] truncate">
+                    </Link>
+                    <Link
+                      href="/profile"
+                      onClick={() => isMobile && closeMobileSidebar()}
+                      title="View Profile & Full Analytics"
+                      className="min-w-0 group"
+                    >
+                      <div className="text-xs font-bold text-[var(--text-main)] group-hover:text-[var(--accent-blue)] transition-colors truncate">
                         {user.fullName}
                       </div>
                       <div className="text-[10px] text-[var(--text-muted)] truncate font-mono">
                         {user.email}
                       </div>
-                    </div>
+                    </Link>
                   </div>
 
                   <button
@@ -273,7 +279,7 @@ function SidebarComponent() {
                       if (isMobile) closeMobileSidebar();
                     }}
                     className="px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] flex items-center justify-between text-xs flex-1 cursor-pointer hover:border-[var(--border-hover)] transition-all group"
-                    title="Click to adjust target score"
+                    title="Click to adjust target score & preferences"
                   >
                     <span className="text-[var(--text-muted)] font-medium flex items-center gap-1.5 truncate">
                       <Award size={13} className="text-emerald-500 shrink-0" />
@@ -284,10 +290,15 @@ function SidebarComponent() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1 px-2.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400 font-mono shrink-0">
+                  <Link
+                    href="/profile"
+                    onClick={() => isMobile && closeMobileSidebar()}
+                    title={`${realStreak > 0 ? realStreak : 1} Day Streak • Click to view analytics`}
+                    className="flex items-center gap-1 px-2.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400 font-mono shrink-0 transition-colors"
+                  >
                     <Flame size={13} className="fill-current text-amber-500" />
                     <span>{realStreak > 0 ? `${realStreak}d` : "1d"}</span>
-                  </div>
+                  </Link>
                 </div>
               </div>
             ) : (
@@ -300,25 +311,29 @@ function SidebarComponent() {
                   <LogIn size={14} />
                   <span>Sign In / Register</span>
                 </Link>
-                <div className="flex items-center justify-between px-1 text-[11px] text-[var(--text-muted)]">
+                <Link
+                  href="/profile"
+                  onClick={() => isMobile && closeMobileSidebar()}
+                  className="flex items-center justify-between px-1 text-[11px] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+                >
                   <span className="flex items-center gap-1">
                     <User size={12} />
-                    Guest Mode
+                    Guest Profile
                   </span>
                   <span className="font-mono text-[var(--accent-green)] font-bold">1550+ Goal</span>
-                </div>
+                </Link>
               </div>
             )
           ) : (
             <div className="flex flex-col items-center gap-2">
               {user ? (
-                <button
-                  onClick={openOnboarding}
-                  title={`${user.fullName} • Goal: ${user.targetSatScore || 1550}+ • Click to edit profile`}
+                <Link
+                  href="/profile"
+                  title={`${user.fullName} • Goal: ${user.targetSatScore || 1550}+ • View Profile`}
                   className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs font-mono shadow-sm hover:scale-105 transition-transform"
                 >
                   {user.fullName.charAt(0).toUpperCase()}
-                </button>
+                </Link>
               ) : (
                 <Link
                   href="/login"
@@ -328,12 +343,13 @@ function SidebarComponent() {
                   <LogIn size={15} />
                 </Link>
               )}
-              <div
-                title={`${realStreak > 0 ? realStreak : 1} Day Streak`}
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 cursor-pointer"
+              <Link
+                href="/profile"
+                title={`${realStreak > 0 ? realStreak : 1} Day Streak • View Profile`}
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 hover:scale-105 transition-transform"
               >
                 <Flame size={13} className="fill-current" />
-              </div>
+              </Link>
             </div>
           )}
         </div>

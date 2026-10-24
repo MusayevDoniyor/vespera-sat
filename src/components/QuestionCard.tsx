@@ -17,6 +17,8 @@ import {
   Zap,
   Layers,
   Award,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react";
 
 interface QuestionCardProps {
@@ -67,6 +69,7 @@ export default React.memo(function QuestionCard({
   const [mistakeType, setMistakeType] = useState<string>("CONCEPT_GAP");
   const [isSaving, setIsSaving] = useState(false);
   const [sm2Result, setSm2Result] = useState<any>(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Sync state when question prop changes
@@ -82,7 +85,39 @@ export default React.memo(function QuestionCard({
     );
     setStruckOut({});
     setSm2Result(null);
+
+    // Check if question is bookmarked
+    try {
+      const saved = localStorage.getItem("vespera_bookmarks");
+      if (saved) {
+        const arr = JSON.parse(saved);
+        setIsBookmarked(Array.isArray(arr) && arr.includes(question.id));
+      } else {
+        setIsBookmarked(false);
+      }
+    } catch {
+      setIsBookmarked(false);
+    }
   }, [question.id, question.progress_status, question.user_choice]);
+
+  const toggleBookmark = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    try {
+      const saved = localStorage.getItem("vespera_bookmarks");
+      let arr: string[] = saved ? JSON.parse(saved) : [];
+      if (!Array.isArray(arr)) arr = [];
+      const nextState = !isBookmarked;
+      if (nextState) {
+        if (!arr.includes(question.id)) arr.push(question.id);
+      } else {
+        arr = arr.filter((id) => id !== question.id);
+      }
+      localStorage.setItem("vespera_bookmarks", JSON.stringify(arr));
+      setIsBookmarked(nextState);
+    } catch (err) {
+      console.error("Bookmark toggle failed:", err);
+    }
+  };
 
   // Parse options safely
   let optionsArray: string[] = [];
@@ -202,25 +237,6 @@ export default React.memo(function QuestionCard({
     }
   };
 
-  const handleRateSM2 = async (quality: number) => {
-    try {
-      const res = await fetch("/api/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          questionId: question.id,
-          userChoice: question.correct_answer,
-          timeSpent: 45,
-          qualityRating: quality,
-        }),
-      });
-      const data = await res.json();
-      if (data.sm2) setSm2Result(data.sm2);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const handleReset = () => {
     setSelectedChoice(null);
     setIsSubmitted(false);
@@ -333,6 +349,23 @@ export default React.memo(function QuestionCard({
               <span>Retry</span>
             </button>
           )}
+
+          <button
+            onClick={toggleBookmark}
+            title={isBookmarked ? "Remove Bookmark" : "Bookmark for Review"}
+            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all shadow-sm ${
+              isBookmarked
+                ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30"
+                : "bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-main)] border-[var(--border-main)]"
+            }`}
+          >
+            {isBookmarked ? (
+              <BookmarkCheck size={14} className="fill-current text-amber-500" />
+            ) : (
+              <Bookmark size={14} />
+            )}
+            <span className="hidden sm:inline">{isBookmarked ? "Bookmarked" : "Save"}</span>
+          </button>
         </div>
       </div>
 
@@ -505,86 +538,73 @@ export default React.memo(function QuestionCard({
                   </h4>
                   <p className="text-xs opacity-90 mt-0.5">
                     Correct Option: <strong>Choice {question.correct_answer}</strong>
-                    {sm2Result && (
-                      <span className="ml-2 font-mono text-[11px]">
-                        • SM-2 Interval: {sm2Result.intervalDays} days (Next Review:{" "}
-                        {new Date(sm2Result.nextReviewAt).toLocaleDateString()})
-                      </span>
-                    )}
+                    <span className="ml-2 font-mono text-[11px] opacity-75">
+                      • Saved to Progress
+                    </span>
                   </p>
                 </div>
               </div>
 
-              {/* SM-2 Interactive Confidence Rating (If Correct) */}
-              {isCorrect && (
-                <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
-                  <span className="text-[11px] mr-1">Recall Ease:</span>
-                  <button
-                    onClick={() => handleRateSM2(3)}
-                    title="Required high effort (SM-2: 1-3 days)"
-                    className="px-2.5 py-1 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-amber-500 border border-[var(--border-main)] text-[11px] font-semibold"
-                  >
-                    Hard
-                  </button>
-                  <button
-                    onClick={() => handleRateSM2(4)}
-                    title="Clear recall with standard effort (SM-2: 3-6 days)"
-                    className="px-2.5 py-1 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--accent-blue)] border border-[var(--border-main)] text-[11px] font-semibold"
-                  >
-                    Good
-                  </button>
-                  <button
-                    onClick={() => handleRateSM2(5)}
-                    title="Instant recall / Solved with Desmos in 10s (SM-2: 6+ days)"
-                    className="px-2.5 py-1 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-emerald-500 border border-[var(--border-main)] text-[11px] font-semibold"
-                  >
-                    Easy ⚡
-                  </button>
-                </div>
-              )}
+              {/* Action Buttons: Bookmark & Mistake Diagnosis */}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={toggleBookmark}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
+                    isBookmarked
+                      ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
+                      : "bg-[var(--bg-card)] hover:bg-[var(--bg-surface)] text-[var(--text-main)] border-[var(--border-main)]"
+                  }`}
+                >
+                  {isBookmarked ? (
+                    <BookmarkCheck size={14} className="fill-current text-amber-500" />
+                  ) : (
+                    <Bookmark size={14} className="text-[var(--text-muted)]" />
+                  )}
+                  <span>{isBookmarked ? "Bookmarked" : "Save Question"}</span>
+                </button>
 
-              {/* Mistake Logger & AI Explainer Button (If Incorrect) */}
-              {!isCorrect && (
-                <div className="flex flex-wrap items-center gap-2.5 text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[var(--text-muted)] text-[11px]">Xato Turi:</span>
-                    <select
-                      value={mistakeType}
-                      onChange={(e) => setMistakeType(e.target.value)}
-                      className="bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-2.5 py-1 text-xs outline-none font-medium"
+                {!isCorrect && (
+                  <>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[var(--text-muted)] text-[11px] font-medium">Mistake Type:</span>
+                      <select
+                        value={mistakeType}
+                        onChange={(e) => setMistakeType(e.target.value)}
+                        className="bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-2.5 py-1 text-xs outline-none font-medium"
+                      >
+                        <option value="CONCEPT_GAP">Concept / Formula Gap</option>
+                        <option value="CALCULATION_SLIP">Calculation Slip</option>
+                        <option value="MISREAD_QUESTION">Misread Question Stem</option>
+                        <option value="DESMOS_MISSED">Missed Desmos Shortcut</option>
+                      </select>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        window.dispatchEvent(
+                          new CustomEvent("vespera_open_copilot", {
+                            detail: {
+                              question: question.prompt,
+                              domain: question.domain,
+                              userChoice: selectedChoice,
+                              correctChoice: question.correct_answer,
+                              options: optionsArray,
+                              explanationUz: question.explanation_uz,
+                              explanationEn: question.explanation_en,
+                              desmosTrick: question.desmos_trick,
+                              autoDiagnose: true,
+                            },
+                          })
+                        );
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
                     >
-                      <option value="CONCEPT_GAP">Concept / Formula Gap</option>
-                      <option value="CALCULATION_SLIP">Calculation Slip</option>
-                      <option value="MISREAD_QUESTION">Misread Question Stem</option>
-                      <option value="DESMOS_MISSED">Missed Desmos Shortcut</option>
-                    </select>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      window.dispatchEvent(
-                        new CustomEvent("vespera_open_copilot", {
-                          detail: {
-                            question: question.prompt,
-                            domain: question.domain,
-                            userChoice: selectedChoice,
-                            correctChoice: question.correct_answer,
-                            options: optionsArray,
-                            explanationUz: question.explanation_uz,
-                            explanationEn: question.explanation_en,
-                            desmosTrick: question.desmos_trick,
-                            autoDiagnose: true,
-                          },
-                        })
-                      );
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm active:scale-95 transition-all"
-                  >
-                    <Sparkles size={13} className="text-amber-300 fill-amber-300" />
-                    <span>💡 AI Diagnosis: Why is [{selectedChoice}] wrong?</span>
-                  </button>
-                </div>
-              )}
+                      <Sparkles size={13} className="text-amber-300 fill-amber-300" />
+                      <span>💡 AI Diagnosis: Why is [{selectedChoice}] wrong?</span>
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Structured Explainer Tabs */}
