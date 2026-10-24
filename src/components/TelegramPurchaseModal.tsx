@@ -31,7 +31,7 @@ export default function TelegramPurchaseModal({
   onClose,
   billingCycle = "MONTHLY",
   user,
-  telegramUsername = process.env.NEXT_PUBLIC_TELEGRAM_ADMIN || "MusayevDoniyor",
+  telegramUsername = process.env.NEXT_PUBLIC_TELEGRAM_ADMIN || "Musayev_Doniyor",
 }: TelegramPurchaseModalProps) {
   const [copied, setCopied] = useState(false);
   const [cycle, setCycle] = useState<"MONTHLY" | "QUARTERLY">(billingCycle);
@@ -70,8 +70,11 @@ Accepted Payment Methods:
 Please provide your card or payment transfer details. I will send the confirmation receipt right away to activate Pro on my account. Thank you!`;
   }, [cycle, user, priceUsd, priceUzs, planPeriodText]);
 
-  // Clean username (remove leading @ if present)
-  const cleanUsername = telegramUsername.replace(/^@/, "");
+  // Clean username (remove leading @ or https://t.me/ if present)
+  const cleanUsername = telegramUsername
+    .replace(/^https?:\/\/t\.me\//i, "")
+    .replace(/^@/, "")
+    .trim();
   const telegramUrl = `https://t.me/${cleanUsername}?text=${encodeURIComponent(formattedMessage)}`;
 
   const handleCopy = () => {

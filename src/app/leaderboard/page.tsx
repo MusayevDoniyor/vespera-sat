@@ -16,23 +16,35 @@ import {
   User,
   CheckCircle2,
   Filter,
+  ShieldCheck,
+  Zap,
 } from "lucide-react";
 
-interface LeaderboardEntry {
+interface LeaderboardCandidate {
   rank: number;
+  id: string;
   name: string;
+  email: string;
   country: string;
+  city: string;
   score: number;
   solved: number;
+  correct: number;
   streak: number;
-  isCurrentUser?: boolean;
+  targetScore: number;
+  isCurrentUser: boolean;
 }
 
 export default function LeaderboardPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<"GLOBAL" | "UZBEKISTAN">("GLOBAL");
+  const [candidates, setCandidates] = useState<LeaderboardCandidate[]>([]);
+  const [totalCandidates, setTotalCandidates] = useState<number>(0);
+  const [currentUserRank, setCurrentUserRank] = useState<number | null>(null);
   const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // 1. Fetch user stats
   useEffect(() => {
     fetch("/api/stats")
       .then((res) => res.json())
@@ -40,37 +52,27 @@ export default function LeaderboardPage() {
       .catch(() => {});
   }, [user]);
 
-  const globalLeaders: LeaderboardEntry[] = [
-    { rank: 1, name: "Azizbek Rakhmatov", country: "Uzbekistan", score: 1590, solved: 1812, streak: 42 },
-    { rank: 2, name: "David Kim", country: "United States", score: 1580, solved: 1750, streak: 35 },
-    { rank: 3, name: "Malika Yusupova", country: "Uzbekistan", score: 1570, solved: 1680, streak: 28 },
-    { rank: 4, name: "Arjun Sharma", country: "India", score: 1560, solved: 1610, streak: 31 },
-    { rank: 5, name: "Javokhir Aliev", country: "Uzbekistan", score: 1560, solved: 1590, streak: 21 },
-    { rank: 6, name: "Sophie Chen", country: "Canada", score: 1550, solved: 1530, streak: 19 },
-    { rank: 7, name: "Bekzod Karimov", country: "Uzbekistan", score: 1550, solved: 1490, streak: 24 },
-    { rank: 8, name: "Lucas Müller", country: "Germany", score: 1540, solved: 1420, streak: 15 },
-    { rank: 9, name: "Dilnoza Khasanova", country: "Uzbekistan", score: 1540, solved: 1390, streak: 18 },
-    { rank: 10, name: "Ethan Wright", country: "United States", score: 1530, solved: 1350, streak: 14 },
-  ];
+  // 2. Fetch authentic database leaderboard
+  useEffect(() => {
+    setLoading(true);
+    const url = activeTab === "UZBEKISTAN" ? "/api/leaderboard?region=UZBEKISTAN" : "/api/leaderboard";
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        setCandidates(data.leaderboard || []);
+        setTotalCandidates(data.totalCandidates || (data.leaderboard ? data.leaderboard.length : 0));
+        if (data.currentUserRank) {
+          setCurrentUserRank(data.currentUserRank);
+        }
+      })
+      .catch((err) => console.error("Error loading leaderboard:", err))
+      .finally(() => setLoading(false));
+  }, [activeTab, user]);
 
-  const uzbekistanLeaders: LeaderboardEntry[] = [
-    { rank: 1, name: "Azizbek Rakhmatov", country: "Tashkent", score: 1590, solved: 1812, streak: 42 },
-    { rank: 2, name: "Malika Yusupova", country: "Samarkand", score: 1570, solved: 1680, streak: 28 },
-    { rank: 3, name: "Javokhir Aliev", country: "Tashkent", score: 1560, solved: 1590, streak: 21 },
-    { rank: 4, name: "Bekzod Karimov", country: "Bukhara", score: 1550, solved: 1490, streak: 24 },
-    { rank: 5, name: "Dilnoza Khasanova", country: "Fergana", score: 1540, solved: 1390, streak: 18 },
-    { rank: 6, name: "Shakhzod Tursunov", country: "Namangan", score: 1530, solved: 1320, streak: 16 },
-    { rank: 7, name: "Madina Umarova", country: "Tashkent", score: 1520, solved: 1280, streak: 22 },
-    { rank: 8, name: "Otabek Mirzayev", country: "Andijan", score: 1510, solved: 1240, streak: 12 },
-    { rank: 9, name: "Farrukh Nabiyev", country: "Navoiy", score: 1500, solved: 1190, streak: 14 },
-    { rank: 10, name: "Sevara Karimova", country: "Khorezm", score: 1490, solved: 1150, streak: 17 },
-  ];
-
-  const currentList = activeTab === "GLOBAL" ? globalLeaders : uzbekistanLeaders;
-
-  const userRankGlobal = stats?.globalRank || 128;
-  const userRankCountry = stats?.countryRank || 43;
-  const displayRank = activeTab === "GLOBAL" ? userRankGlobal : userRankCountry;
+  const displayRank =
+    activeTab === "GLOBAL"
+      ? (currentUserRank || stats?.globalRank || 1)
+      : (currentUserRank || stats?.countryRank || 1);
 
   return (
     <div className="w-full space-y-8 pb-16 animate-fade-in max-w-6xl mx-auto">
@@ -80,13 +82,13 @@ export default function LeaderboardPage() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold font-mono">
               <Trophy size={13} className="text-amber-500" />
-              <span>LIVE SAT COMPETITION & RANKINGS</span>
+              <span>AUTHENTIC SAT RANKINGS & TELEMETRY</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-[var(--text-main)] tracking-tight">
-              Contest Leaderboards
+              Live Leaderboard
             </h1>
             <p className="text-xs sm:text-sm text-[var(--text-muted)] max-w-xl">
-              Track your standing across global and national test-takers. Solve questions and take full mock exams to climb the leaderboard!
+              Real-time standings computed directly from verified student practice questions and mock exam telemetry. Zero simulated data.
             </p>
           </div>
 
@@ -94,31 +96,23 @@ export default function LeaderboardPage() {
           <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2.5 max-w-sm shrink-0">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400 font-mono">
-                Upcoming Contest
+                Season 1 Open
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-mono">
-                Free Entry
+                Live Now
               </span>
             </div>
             <div className="text-xs font-bold text-[var(--text-main)]">
-              Vespera SAT Sprint #14: 1550+ Mastery Cup
+              Vespera SAT Mastery Cup: Climb to 1550+
             </div>
-            <div className="flex items-center gap-3 text-[11px] text-[var(--text-muted)] font-mono">
-              <span className="flex items-center gap-1">
-                <Calendar size={12} />
-                This Saturday
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Clock size={12} />
-                2h 14m
-              </span>
-            </div>
+            <p className="text-[11px] text-[var(--text-muted)]">
+              Solve daily questions and complete full adaptive mock tests to boost your standing.
+            </p>
             <Link
-              href="/mock"
+              href="/practice"
               className="w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold text-center block shadow-xs transition-transform active:scale-95"
             >
-              Prepare for Contest
+              Start Practice Session
             </Link>
           </div>
         </div>
@@ -133,15 +127,15 @@ export default function LeaderboardPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-extrabold text-[var(--text-main)]">
-                {user ? user.fullName : "Your Profile"}
+                {user ? user.fullName : "Your Standing"}
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono">
-                {user ? "Registered Candidate" : "Guest"}
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono">
+                {user ? "Verified Candidate" : "Guest"}
               </span>
             </div>
             <p className="text-xs text-[var(--text-muted)] font-mono">
-              Solved: <strong>{stats?.totalSolved || 0}</strong> questions • Composite Score:{" "}
-              <strong>{stats?.compositeScore || 900}</strong>
+              Solved: <strong>{stats?.totalSolved || 0}</strong> questions • Projected / Mock Score:{" "}
+              <strong>{stats?.compositeScore || stats?.userMockStats?.highest_score || 800}</strong>
             </p>
           </div>
         </div>
@@ -149,7 +143,7 @@ export default function LeaderboardPage() {
         <div className="flex items-center gap-4 self-end sm:self-center">
           <div className="text-right">
             <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] font-mono block">
-              {activeTab === "GLOBAL" ? "Global Rank" : "Uzbekistan Rank"}
+              {activeTab === "GLOBAL" ? "Global Rank" : "National Rank"}
             </span>
             <span className="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono">
               #{displayRank}
@@ -169,30 +163,31 @@ export default function LeaderboardPage() {
         <div className="inline-flex items-center p-1 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-main)]">
           <button
             onClick={() => setActiveTab("GLOBAL")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "GLOBAL"
                 ? "bg-[var(--accent-blue)] text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
             <Globe size={14} />
-            <span>Global Standings</span>
+            <span>Global Standings ({totalCandidates})</span>
           </button>
           <button
             onClick={() => setActiveTab("UZBEKISTAN")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "UZBEKISTAN"
                 ? "bg-[var(--accent-blue)] text-white shadow-sm"
                 : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
             <MapPin size={14} />
-            <span>Uzbekistan Top 50</span>
+            <span>Uzbekistan Candidates</span>
           </button>
         </div>
 
-        <div className="text-xs text-[var(--text-muted)] font-mono">
-          Updated in real-time based on verified practice & mock attempts
+        <div className="flex items-center gap-2 text-xs text-[var(--text-muted)] font-mono">
+          <ShieldCheck size={14} className="text-emerald-500" />
+          <span>Real database telemetry • 0 simulated entries</span>
         </div>
       </div>
 
@@ -213,60 +208,103 @@ export default function LeaderboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border-main)] text-[var(--text-main)]">
-              {currentList.map((leader) => {
-                const isTop3 = leader.rank <= 3;
-                const badgeColor =
-                  leader.rank === 1
-                    ? "bg-amber-500 text-white"
-                    : leader.rank === 2
-                    ? "bg-slate-300 text-slate-800"
-                    : leader.rank === 3
-                    ? "bg-amber-700 text-white"
-                    : "bg-[var(--bg-surface)] text-[var(--text-muted)]";
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-[var(--text-muted)] font-mono">
+                    <div className="inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-2" />
+                    <p>Loading live candidate telemetry...</p>
+                  </td>
+                </tr>
+              ) : candidates.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-[var(--text-muted)] font-mono space-y-2">
+                    <Trophy className="mx-auto text-amber-500 opacity-40" size={32} />
+                    <p className="font-bold text-sm text-[var(--text-main)]">No candidates recorded yet</p>
+                    <p className="text-xs">Solve practice questions to claim Rank #1!</p>
+                  </td>
+                </tr>
+              ) : (
+                candidates.map((leader) => {
+                  const badgeColor =
+                    leader.rank === 1
+                      ? "bg-amber-500 text-white"
+                      : leader.rank === 2
+                      ? "bg-slate-300 text-slate-800"
+                      : leader.rank === 3
+                      ? "bg-amber-700 text-white"
+                      : "bg-[var(--bg-surface)] text-[var(--text-muted)]";
 
-                return (
-                  <tr
-                    key={leader.rank}
-                    className="hover:bg-[var(--bg-surface)]/60 transition-colors"
-                  >
-                    <td className="py-4 px-5 text-center">
-                      <span
-                        className={`w-7 h-7 rounded-xl font-bold font-mono inline-flex items-center justify-center text-xs shadow-2xs ${badgeColor}`}
-                      >
-                        {leader.rank}
-                      </span>
-                    </td>
-                    <td className="py-4 px-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs font-mono shadow-2xs">
-                          {leader.name.charAt(0)}
-                        </div>
-                        <span className="font-bold text-xs sm:text-sm text-[var(--text-main)]">
-                          {leader.name}
+                  return (
+                    <tr
+                      key={leader.id || leader.rank}
+                      className={`transition-colors ${
+                        leader.isCurrentUser
+                          ? "bg-blue-500/10 hover:bg-blue-500/15 font-semibold"
+                          : "hover:bg-[var(--bg-surface)]/60"
+                      }`}
+                    >
+                      <td className="py-4 px-5 text-center">
+                        <span
+                          className={`w-7 h-7 rounded-xl font-bold font-mono inline-flex items-center justify-center text-xs shadow-2xs ${badgeColor}`}
+                        >
+                          {leader.rank}
                         </span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-5 text-[var(--text-muted)] font-medium">
-                      {leader.country}
-                    </td>
-                    <td className="py-4 px-5 text-center font-mono font-semibold">
-                      {leader.solved}
-                    </td>
-                    <td className="py-4 px-5 text-center font-mono">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold text-[11px]">
-                        <Flame size={12} className="fill-current text-amber-500" />
-                        {leader.streak}d
-                      </span>
-                    </td>
-                    <td className="py-4 px-5 text-right font-mono font-black text-sm text-emerald-600 dark:text-emerald-400">
-                      {leader.score}
-                    </td>
-                  </tr>
-                );
-              })}
+                      </td>
+                      <td className="py-4 px-5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs font-mono shadow-2xs shrink-0">
+                            {leader.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-xs sm:text-sm text-[var(--text-main)]">
+                              {leader.name}
+                            </span>
+                            {leader.isCurrentUser && (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-600 text-white font-mono">
+                                You
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-5 text-[var(--text-muted)] font-medium">
+                        {activeTab === "GLOBAL" ? leader.country : leader.city || leader.country}
+                      </td>
+                      <td className="py-4 px-5 text-center font-mono font-semibold">
+                        {leader.solved}
+                      </td>
+                      <td className="py-4 px-5 text-center font-mono">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold text-[11px]">
+                          <Flame size={12} className="fill-current text-amber-500" />
+                          {leader.streak}d
+                        </span>
+                      </td>
+                      <td className="py-4 px-5 text-right font-mono font-black text-sm text-emerald-600 dark:text-emerald-400">
+                        {leader.score}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Early Season Notice */}
+      <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] flex items-center justify-between gap-4 text-xs text-[var(--text-muted)]">
+        <div className="flex items-center gap-2">
+          <Zap size={15} className="text-amber-500 shrink-0" />
+          <span>
+            Rankings recalibrate dynamically with every question answered, accuracy percentage, and full mock score.
+          </span>
+        </div>
+        <Link
+          href="/mock"
+          className="text-blue-600 dark:text-blue-400 font-bold hover:underline shrink-0"
+        >
+          Take Full Mock Exam →
+        </Link>
       </div>
     </div>
   );

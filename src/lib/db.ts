@@ -146,7 +146,9 @@ export async function initDb() {
         ADD COLUMN IF NOT EXISTS difficulty_mode TEXT DEFAULT 'adaptive',
         ADD COLUMN IF NOT EXISTS show_desmos BOOLEAN DEFAULT TRUE,
         ADD COLUMN IF NOT EXISTS show_ai_explanations BOOLEAN DEFAULT TRUE,
-        ADD COLUMN IF NOT EXISTS include_vocab_review BOOLEAN DEFAULT TRUE;
+        ADD COLUMN IF NOT EXISTS include_vocab_review BOOLEAN DEFAULT TRUE,
+        ADD COLUMN IF NOT EXISTS country TEXT DEFAULT 'Uzbekistan',
+        ADD COLUMN IF NOT EXISTS city TEXT DEFAULT 'Tashkent';
 
       CREATE TABLE IF NOT EXISTS vespera.subscriptions (
         id TEXT PRIMARY KEY,

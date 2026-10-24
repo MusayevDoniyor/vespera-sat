@@ -42,6 +42,8 @@ export async function GET() {
       recentActivityRes,
       bookmarksRes,
       redoRes,
+      globalRankRes,
+      countryRankRes,
     ] = await Promise.all([
       // 1. Total questions in bank and user attempt status
       userId
@@ -307,6 +309,73 @@ export async function GET() {
             [userId]
           )
         : pool.query("SELECT COUNT(*)::int as count FROM vespera.error_logs WHERE is_resolved = FALSE;"),
+
+      // 14. Authentic Global Rank & Total Registered Users
+      userId
+        ? pool.query(
+            `
+            SELECT 
+              (
+                SELECT COUNT(*)::int + 1
+                FROM (
+                  SELECT 
+                    u.id,
+                    COALESCE(MAX(me.score), 0) as mock_score,
+                    COUNT(DISTINCT up.question_id) as solved_count
+                  FROM vespera.users u
+                  LEFT JOIN vespera.mock_exams me ON me.user_id = u.id
+                  LEFT JOIN vespera.user_progress up ON up.user_id = u.id
+                  GROUP BY u.id
+                  HAVING 
+                    COALESCE(MAX(me.score), 0) > COALESCE((SELECT MAX(score) FROM vespera.mock_exams WHERE user_id = $1), 0)
+                    OR (
+                      COALESCE(MAX(me.score), 0) = COALESCE((SELECT MAX(score) FROM vespera.mock_exams WHERE user_id = $1), 0)
+                      AND COUNT(DISTINCT up.question_id) > COALESCE((SELECT COUNT(DISTINCT question_id) FROM vespera.user_progress WHERE user_id = $1), 0)
+                    )
+                ) higher_users
+              ) as user_rank,
+              (SELECT COUNT(*)::int FROM vespera.users) as total_users;
+          `,
+            [userId]
+          )
+        : pool.query(`SELECT 1 as user_rank, COUNT(*)::int as total_users FROM vespera.users;`),
+
+      // 15. Authentic Country Rank & Total Country Users
+      userId
+        ? pool.query(
+            `
+            SELECT 
+              (
+                SELECT COUNT(*)::int + 1
+                FROM (
+                  SELECT 
+                    u.id,
+                    COALESCE(MAX(me.score), 0) as mock_score,
+                    COUNT(DISTINCT up.question_id) as solved_count
+                  FROM vespera.users u
+                  LEFT JOIN vespera.user_profiles p ON p.user_id = u.id
+                  LEFT JOIN vespera.mock_exams me ON me.user_id = u.id
+                  LEFT JOIN vespera.user_progress up ON up.user_id = u.id
+                  WHERE COALESCE(p.country, 'Uzbekistan') = COALESCE((SELECT country FROM vespera.user_profiles WHERE user_id = $1), 'Uzbekistan')
+                  GROUP BY u.id
+                  HAVING 
+                    COALESCE(MAX(me.score), 0) > COALESCE((SELECT MAX(score) FROM vespera.mock_exams WHERE user_id = $1), 0)
+                    OR (
+                      COALESCE(MAX(me.score), 0) = COALESCE((SELECT MAX(score) FROM vespera.mock_exams WHERE user_id = $1), 0)
+                      AND COUNT(DISTINCT up.question_id) > COALESCE((SELECT COUNT(DISTINCT question_id) FROM vespera.user_progress WHERE user_id = $1), 0)
+                    )
+                ) higher_users
+              ) as country_rank,
+              (
+                SELECT COUNT(*)::int 
+                FROM vespera.users u 
+                LEFT JOIN vespera.user_profiles p ON p.user_id = u.id 
+                WHERE COALESCE(p.country, 'Uzbekistan') = COALESCE((SELECT country FROM vespera.user_profiles WHERE user_id = $1), 'Uzbekistan')
+              ) as total_country_users;
+          `,
+            [userId]
+          )
+        : pool.query(`SELECT 1 as country_rank, COUNT(*)::int as total_country_users FROM vespera.users;`),
     ]);
 
     let mathTotal = 0, mathAttempted = 0, mathCorrect = 0, mathIncorrect = 0;
@@ -512,8 +581,10 @@ export async function GET() {
       targetScore: 1550,
       savedQuestionsCount: bookmarksRes.rows[0]?.count || 0,
       redoQuestionsCount: redoRes.rows[0]?.count || 0,
-      globalRank: Math.max(1, 240 - Math.min(235, Math.floor((mathAttempted + verbalAttempted) / 2) + Math.floor(compositeScore / 20))),
-      countryRank: Math.max(1, 80 - Math.min(78, Math.floor((mathAttempted + verbalAttempted) / 5) + Math.floor(compositeScore / 50))),
+      globalRank: globalRankRes.rows[0]?.user_rank || 1,
+      totalGlobalUsers: globalRankRes.rows[0]?.total_users || 1,
+      countryRank: countryRankRes.rows[0]?.country_rank || 1,
+      totalCountryUsers: countryRankRes.rows[0]?.total_country_users || 1,
     };
 
     // Cache the processed stats for 15s to deduplicate simultaneous requests

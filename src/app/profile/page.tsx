@@ -519,14 +519,14 @@ export default function ProfilePage() {
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-[var(--text-main)] font-mono">
-              #{stats?.globalRank || 128}
+              #{stats?.globalRank || 1}
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              out of 14,200 candidates worldwide
+              out of {stats?.totalGlobalUsers || 1} registered candidates
             </span>
           </div>
           <p className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold">
-            Top 2.5% global tier • Click to view full leaderboard
+            Live verified standing • Click to view full leaderboard
           </p>
         </Link>
 
@@ -537,7 +537,7 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono flex items-center gap-1.5">
               <MapPin size={14} className="text-amber-500" />
-              Country Rank (Uzbekistan)
+              National Rank (Uzbekistan)
             </span>
             <ArrowUpRight
               size={15}
@@ -546,14 +546,14 @@ export default function ProfilePage() {
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">
-              #{stats?.countryRank || 43}
+              #{stats?.countryRank || 1}
             </span>
             <span className="text-xs text-[var(--text-muted)] font-mono">
-              out of 3,180 national scholars
+              out of {stats?.totalCountryUsers || 1} national scholars
             </span>
           </div>
           <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold">
-            Qualified for Vespera SAT Sprint #14 Prize Contest
+            Ranked by authentic questions solved & test score
           </p>
         </Link>
       </div>
