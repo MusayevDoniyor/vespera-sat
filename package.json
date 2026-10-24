@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint"
   },
@@ -16,6 +17,7 @@
     "lucide-react": "^1.58.0",
     "next": "16.4.2",
     "pg": "^8.23.1",
+    "prisma": "^7.10.1",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -28,7 +30,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "pdf-parse": "^2.4.5",
-    "prisma": "^7.10.1",
     "tailwindcss": "^4",
     "tesseract.js": "^7.0.0",
     "typescript": "^5"
