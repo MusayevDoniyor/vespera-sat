@@ -27,6 +27,8 @@ import {
   Clock,
   Compass,
   BrainCircuit,
+  Trophy,
+  User,
 } from "lucide-react";
 import VisualTopicDiagram from "@/components/VisualTopicDiagram";
 import VesperaLogo from "@/components/VesperaLogo";
@@ -307,6 +309,72 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ⚡ SAAS FREEMIUM & COMPETITION HUB */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Link
+          href="/subscription"
+          className="p-5 rounded-3xl bg-gradient-to-br from-blue-500/10 via-[var(--bg-card)] to-indigo-500/10 border border-blue-500/30 hover:border-blue-500/60 space-y-2 card-interactive shadow-xs group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 font-mono flex items-center gap-1.5">
+              <Sparkles size={13} className="text-blue-500" />
+              SaaS Pricing & Quotas
+            </span>
+            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white font-mono">
+              $4.99 / mo
+            </span>
+          </div>
+          <h3 className="text-sm font-bold text-[var(--text-main)] group-hover:text-blue-600 transition-colors">
+            Generous Free Tier vs Pro Champion
+          </h3>
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+            5 full adaptive exams & 20 daily AI queries for $0. Unlimited power on Pro with Telegram 1-click checkout.
+          </p>
+        </Link>
+
+        <Link
+          href="/leaderboard"
+          className="p-5 rounded-3xl bg-gradient-to-br from-amber-500/10 via-[var(--bg-card)] to-rose-500/10 border border-amber-500/30 hover:border-amber-500/60 space-y-2 card-interactive shadow-xs group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 font-mono flex items-center gap-1.5">
+              <Trophy size={13} className="text-amber-500" />
+              Live Competitions
+            </span>
+            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono">
+              Top 50
+            </span>
+          </div>
+          <h3 className="text-sm font-bold text-[var(--text-main)] group-hover:text-amber-600 transition-colors">
+            Contest Rankings & Leaderboards
+          </h3>
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+            Track your standing across global scholars and Uzbekistan national test-takers in real-time.
+          </p>
+        </Link>
+
+        <Link
+          href="/profile"
+          className="p-5 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-[var(--bg-card)] to-teal-500/10 border border-emerald-500/30 hover:border-emerald-500/60 space-y-2 card-interactive shadow-xs group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+              <User size={13} className="text-emerald-500" />
+              Candidate Profile
+            </span>
+            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-600 text-white font-mono">
+              Overhauled
+            </span>
+          </div>
+          <h3 className="text-sm font-bold text-[var(--text-main)] group-hover:text-emerald-600 transition-colors">
+            Full Analytics, Goals & Security
+          </h3>
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+            Domain mastery breakdown, saved words, redo questions, Desmos preferences, and question flagging.
+          </p>
+        </Link>
       </div>
 
       {/* 🎯 TODAY'S PERSONALIZED ADAPTIVE MISSIONS */}
