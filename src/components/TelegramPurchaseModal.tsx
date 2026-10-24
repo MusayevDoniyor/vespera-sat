@@ -38,36 +38,36 @@ export default function TelegramPurchaseModal({
 
   const priceUsd = cycle === "QUARTERLY" ? "$11.99" : "$4.99";
   const priceUzs = cycle === "QUARTERLY" ? "~145,000 UZS" : "~60,000 UZS";
-  const planPeriodText = cycle === "QUARTERLY" ? "3 Oylik (Save 20%)" : "1 Oylik";
+  const planPeriodText = cycle === "QUARTERLY" ? "3 Months (Save 20%)" : "1 Month";
 
   const formattedMessage = useMemo(() => {
-    const today = new Date().toLocaleDateString("uz-UZ", {
-      day: "2-digit",
-      month: "2-digit",
+    const today = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
       year: "numeric",
     });
 
-    const candidateName = user?.fullName || "Yangi O'quvchi";
-    const candidateEmail = user?.email || "Belgilanmagan";
-    const candidateId = user?.id ? user.id.slice(-8) : "Mehmon";
+    const candidateName = user?.fullName || "Prospective Student";
+    const candidateEmail = user?.email || "Not specified";
+    const candidateId = user?.id ? user.id.slice(-8) : "Guest";
 
-    return `👋 Assalomu alaykum Doniyor aka / Vespera SAT Admin!
+    return `Hello Doniyor / Vespera SAT Admin!
 
-Men Vespera Pro Champion obunasini rasmiylashtirmoqchiman.
+I would like to activate the Vespera Pro Champion plan.
 
-📋 Buyurtma Tafsilotlari:
-• Tarif: Vespera Pro Champion (${planPeriodText})
-• Narxi: ${priceUsd} (${priceUzs})
-• O'quvchi: ${candidateName}
+Order Summary:
+• Plan: Vespera Pro Champion (${planPeriodText})
+• Price: ${priceUsd} (${priceUzs})
+• Student: ${candidateName}
 • Email: ${candidateEmail}
-• Hisob ID: ${candidateId}
-• Sana: ${today}
+• Account ID: ${candidateId}
+• Date: ${today}
 
-💳 To'lov Usullari:
+Accepted Payment Methods:
 • Click / Payme / UzCard / Humo
 • Visa / Mastercard
 
-Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni yuborishim bilanoq mening profilimga Pro litsenziyani faollashtirib bersangiz minnatdor bo'lardim. Rahmat!`;
+Please provide your card or payment transfer details. I will send the confirmation receipt right away to activate Pro on my account. Thank you!`;
   }, [cycle, user, priceUsd, priceUzs, planPeriodText]);
 
   // Clean username (remove leading @ if present)
@@ -103,13 +103,13 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
           <div className="space-y-2 text-center sm:text-left pr-8">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold font-mono">
               <MessageCircle size={13} className="text-blue-500" />
-              <span>TELEGRAM ORQALI TO'LOV VA FAOLLASHTIRISH</span>
+              <span>TELEGRAM CHECKOUT & INSTANT ACTIVATION</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight">
-              Vespera Pro Tarifini Faollashtirish
+              Activate Vespera Pro Champion
             </h2>
             <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-              To'lovni amalga oshirish uchun administratorga Telegram orqali quyidagi tayyor xabar bilan yozing. Click, Payme yoki karta orqali to'langach, Pro 5 daqiqa ichida hisobingizga biriktiriladi!
+              Message our administrator on Telegram using the pre-formatted order template below. Once payment via Click, Payme, or Card is verified, your Pro license will be activated within minutes!
             </p>
           </div>
 
@@ -123,7 +123,7 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
               }`}
             >
-              1 Oylik • $4.99 (~60,000 UZS)
+              1 Month • $4.99 (~60,000 UZS)
             </button>
             <button
               onClick={() => setCycle("QUARTERLY")}
@@ -133,9 +133,9 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
                   : "text-[var(--text-muted)] hover:text-[var(--text-main)]"
               }`}
             >
-              <span>3 Oylik • $11.99</span>
+              <span>3 Months • $11.99</span>
               <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full bg-emerald-500 text-white font-mono">
-                -20%
+                Save 20%
               </span>
             </button>
           </div>
@@ -144,7 +144,7 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-[var(--text-muted)] font-mono flex items-center gap-1">
-                <span>Yuboriladigan tayyor xabar matni:</span>
+                <span>Pre-formatted Message Template:</span>
               </span>
               <button
                 onClick={handleCopy}
@@ -153,12 +153,12 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
                 {copied ? (
                   <>
                     <Check size={13} className="text-emerald-500" />
-                    <span className="text-emerald-500">Nusxa olindi!</span>
+                    <span className="text-emerald-500">Copied to Clipboard!</span>
                   </>
                 ) : (
                   <>
                     <Copy size={13} />
-                    <span>Nusxa olish</span>
+                    <span>Copy Text</span>
                   </>
                 )}
               </button>
@@ -172,7 +172,7 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
           {/* Payment Methods Badges */}
           <div className="p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] space-y-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] font-mono block">
-              Qo'llab-quvvatlanadigan to'lov usullari:
+              Supported Payment Methods:
             </span>
             <div className="flex items-center gap-2 flex-wrap text-xs font-semibold text-[var(--text-main)]">
               <span className="px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-main)] text-blue-500 font-bold">
@@ -199,22 +199,22 @@ Iltimos, to'lov uchun karta raqami yoki hisob ma'lumotlarini bersangiz. Chekni y
               className="w-full py-3.5 px-4 rounded-2xl bg-[#229ED9] hover:bg-[#1E88E5] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-95 group cursor-pointer"
             >
               <Send size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              <span>Telegram orqali xabar yuborish (@{cleanUsername})</span>
+              <span>Open in Telegram (@{cleanUsername})</span>
               <ExternalLink size={13} className="opacity-70" />
             </a>
 
             <button
               onClick={handleCopy}
-              className="w-full py-2.5 px-4 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] text-xs font-semibold transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-main)] text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-              <span>{copied ? "Matn nusxalandi!" : "Xabar matnidan nusxa olish"}</span>
+              <span>{copied ? "Message Copied!" : "Copy Message to Clipboard"}</span>
             </button>
           </div>
 
           <div className="text-center text-[10px] text-[var(--text-muted)] font-mono flex items-center justify-center gap-2">
             <ShieldCheck size={12} className="text-emerald-500" />
-            <span>To'lov cheki tasdiqlangach, litsenziya darhol hisobingizga yuklanadi</span>
+            <span>Instant Pro license provisioning upon transfer verification</span>
           </div>
         </div>
       </div>
